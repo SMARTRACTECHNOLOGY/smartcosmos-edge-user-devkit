@@ -1,0 +1,176 @@
+= REST Implementations for Tenant Edge Microservice
+SMARTRAC Technology Fletcher Inc <api@smartrac-group.com>
+:version: 3.0.0-SNAPSHOT
+ifdef::env-github[:USER: SMARTRACTECHNOLOGY]
+ifdef::env-github[:REPO: smartcosmos-ext-things-detail]
+ifdef::env-github[:BRANCH: master]
+
+Microservice which provides extended Tenant logic.
+
+== License
+This is a private licensed repository, and as such, should not be shared publicly.
+
+== REST API
+
+*Available methods*
+
+* <<create1, Create - `POST /`>>
+* <<update1, Update - `PUT /{urn}`>>
+* <<read1, Read - `GET /{urn}`>>
+* <<read2, Read - `GET /?name={name}&page={pageNumber}&size={pageSize}`>>
+
+=== JSON Fields
+[width="100%",options="header"]
+|====================
+| Field | Format | Default | Required | Description
+| `urn` | String representation of a thing identifier in a common scheme, e.g. `urn:tenant:uuid:<UUID>` | generated, value and format depend on the persistence layer implementation | | will be generated if not provided
+| `name` | String | | yes | Name of the tenant organization (e.g. `Example Company`)
+| `active` | boolean |  true | no |
+| `username` | String |  true | yes (for create) | Inital admin account
+|====================
+
+.**URN Scheme**
+Note that the illustrated scheme for URNs is only for documentation purposes. There must not be any assumptions or expectations on the scheme in the REST layer. All URNs or identifiers are just `String` values in the scope of REST modules!
+
+=== URL parameters
+[width="100%",options="header"]
+|====================
+| Parameter | Format | Default | Description
+| `page` | String representation long  |  query parameter, defaults to 0 | page number of multi-element returns, starting at 0
+| `size` | String representation of Integer  |  query parameter, defaults 20 | number of elements per page in multi-element returns
+| `name` | String | | optional search parameter |
+|====================
+
+
+=== API Endpoints
+
+[[create1]]
+==== Create - `POST /`
+
+----
+POST /
+----
+
+*Example 1*
+[source,json]
+----
+{
+    "urn": "urn:tenant:uuid:346e742e-2f1e-4d91-9ffe-7b38eec6219c",
+    "active": true,
+    "name": "Example Company",
+    "username": "waldo@example.com"
+}
+----
+
+.Response
+----
+201 CREATED
+----
+[source,json]
+----
+{
+    "urn": "urn:tenant:uuid:346e742e-2f1e-4d91-9ffe-7b38eec6219c",
+    "admin": {
+        "urn": "urn:user:uuid:34068f4d-12a5-4546-80f8-9f84b762db20",
+        "username": "waldo@example.com",
+        "password": "PleaseChangeMeImmediately",
+        "roles": [
+          "Admin"
+        ]
+    }
+}
+----
+
+*Example 2*
+[source,json]
+----
+{
+    "name": "Example Company",
+    "username": "waldo@example.com"
+}
+----
+
+.Response
+----
+201 CREATED
+----
+[source,json]
+----
+{
+    "urn": "urn:tenant:uuid:346e742e-2f1e-4d91-9ffe-7b38eec6219c",
+    "admin": {
+        "urn": "urn:user:uuid:34068f4d-12a5-4546-80f8-9f84b762db20",
+        "username": "waldo@example.com",
+        "password": "PleaseChangeMeImmediately",
+        "roles": [
+          "Admin"
+        ]
+    }
+}
+----
+
+[[update1]]
+==== Update - `PUT /{urn}`
+
+----
+PUT /urn:tenant:uuid:346e742e-2f1e-4d91-9ffe-7b38eec6219c
+----
+[source,json]
+----
+{
+    "active": false,
+    "name": "My Example Company"
+}
+----
+.Response
+----
+204 NO CONTENT
+----
+
+[[read1]]
+==== Read - `GET /{urn}`
+
+----
+GET /urn:tenant:uuid:346e742e-2f1e-4d91-9ffe-7b38eec6219c
+----
+.Response
+----
+200 OK
+----
+[source,json]
+----
+{
+    "urn": "urn:tenant:uuid:346e742e-2f1e-4d91-9ffe-7b38eec6219c",
+    "active": true,
+    "name": "My Example Company"
+}
+----
+
+[[read2]]
+==== Read - `GET /?name={name}&page={pageNumber}&size={pageSize}`
+
+----
+GET /?name=My%20Example%20Company&page=0&size=100
+----
+.Response
+----
+200 OK
+----
+[source,json]
+----
+{
+    "data": [
+        {
+            "urn": "urn:tenant:uuid:346e742e-2f1e-4d91-9ffe-7b38eec6219c",
+            "active": true,
+            "name": "My Example Company"
+        }
+    ],
+    "page" : {
+        "size" : 100,
+        "totalElements" : 2,
+        "totalPages" : 1,
+        "number" : 0
+    }
+}
+----
