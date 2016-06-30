@@ -2,10 +2,10 @@
 SMARTRAC Technology Fletcher Inc <api@smartrac-group.com>
 :version: 3.0.0-SNAPSHOT
 ifdef::env-github[:USER: SMARTRACTECHNOLOGY]
-ifdef::env-github[:REPO: smartcosmos-ext-things-detail]
+ifdef::env-github[:REPO: smartcosmos-edge-tenant]
 ifdef::env-github[:BRANCH: master]
 
-Microservice which provides extended Tenant logic.
+Microservice which provides basic tenant management functionality.
 
 == License
 This is a private licensed repository, and as such, should not be shared publicly.
@@ -23,10 +23,10 @@ This is a private licensed repository, and as such, should not be shared publicl
 [width="100%",options="header"]
 |====================
 | Field | Format | Default | Required | Description
-| `urn` | String representation of a thing identifier in a common scheme, e.g. `urn:tenant:uuid:<UUID>` | generated, value and format depend on the persistence layer implementation | | will be generated if not provided
+| `urn` | String representation of a tenant identifier in a common scheme, e.g. `urn:tenant:uuid:<UUID>` | generated, value and format depend on the persistence layer implementation | | will be generated if not provided
 | `name` | String | | yes | Name of the tenant organization (e.g. `Example Company`)
 | `active` | boolean |  true | no |
-| `username` | String |  true | yes (for create) | Inital admin account
+| `username` | String | | yes (for create) | Inital admin account
 |====================
 
 .**URN Scheme**
