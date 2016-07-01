@@ -108,6 +108,10 @@
             <artifactId>spring-webmvc</artifactId>
             <version>4.2.5.RELEASE</version>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-security</artifactId>
+        </dependency>
     </dependencies>
 
     <!-- TODO: update SCM URIs when repo was renamed to "smartcosmos-dao-things" -->

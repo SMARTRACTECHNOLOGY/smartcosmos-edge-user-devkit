@@ -49,7 +49,6 @@ public class TenantPersistenceService implements TenantDao {
         TenantEntity tenantEntity = conversionService.convert(createTenantRequest, TenantEntity.class);
         tenantEntity = tenantRepository.save(tenantEntity);
 
-
         UserEntity userEntity = UserEntity.builder()
             .id(UuidUtil.getNewUuid())
             .tenantId(tenantEntity.getId())
@@ -62,6 +61,12 @@ public class TenantPersistenceService implements TenantDao {
         return Optional
             .ofNullable(conversionService.convert(TenantEntityAndUserEntityDto.builder().tenantEntity(tenantEntity).userEntity(userEntity).build(),
                                                   CreateTenantResponse.class));
+    }
+
+    @Override
+    public Optional<CreateTenantResponse> findTenantByUrn(String tenantUrn) {
+
+        tenantRepository.findById(UuidUtil.getUuidFromUrn(tenantUrn));
     }
 
     @Override

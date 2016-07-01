@@ -3,6 +3,8 @@ package net.smartcosmos.dao.tenant.converter;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.format.FormatterRegistrar;
 import org.springframework.format.FormatterRegistry;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import net.smartcosmos.dao.tenant.domain.UserEntity;
 import net.smartcosmos.dao.tenant.util.UuidUtil;
@@ -14,6 +16,8 @@ import net.smartcosmos.dto.tenant.CreateUserRequest;
 public class CreateUserRequestToUserEntityConverter
     implements Converter<CreateUserRequest, UserEntity>, FormatterRegistrar {
 
+    PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
     @Override
     public UserEntity convert(CreateUserRequest createUserRequest) {
         return UserEntity.builder()
@@ -23,7 +27,7 @@ public class CreateUserRequestToUserEntityConverter
             .emailAddress(createUserRequest.getEmailAddress())
             .givenName(createUserRequest.getGivenName())
             .surname(createUserRequest.getSurname())
-            .password("PleaseChangeMeImmediately")
+            .password(passwordEncoder.encode("PleaseChangeMeImmediately"))
             .active(createUserRequest.getActive())
             .build();
     }

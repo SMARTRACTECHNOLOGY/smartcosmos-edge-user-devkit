@@ -17,4 +17,5 @@ public interface TenantRepository extends JpaRepository<TenantEntity, UUID>,
                                         JpaSpecificationExecutor<TenantEntity> {
 
     Optional<TenantEntity> findByName(String name);
+    Optional<TenantEntity> findById(UUID id);
 }
