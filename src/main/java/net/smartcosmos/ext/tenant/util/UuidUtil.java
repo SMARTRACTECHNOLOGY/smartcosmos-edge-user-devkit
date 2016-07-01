@@ -1,4 +1,4 @@
-package net.smartcosmos.ext.util;
+package net.smartcosmos.ext.tenant.util;
 
 import java.util.UUID;
 import java.util.regex.Matcher;

@@ -12,8 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.context.request.async.DeferredResult;
 
-import net.smartcosmos.ext.tenant.rest.dto.RestCreateTenantRequest;
+import net.smartcosmos.ext.tenant.rest.dto.RestCreateUserRequest;
 import net.smartcosmos.ext.tenant.rest.service.CreateTenantService;
+import net.smartcosmos.ext.tenant.rest.service.CreateUserService;
 import net.smartcosmos.security.EndpointMethodControl;
 import net.smartcosmos.spring.SmartCosmosRdao;
 
@@ -26,20 +27,20 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 @Slf4j
 @ConditionalOnProperty(prefix = "smt.endpoints.tenant", name = "enabled", matchIfMissing = true)
 //@Api
-public class CreateTenantResource {
+public class CreateUserResource {
 
-    private CreateTenantService service;
+    private CreateUserService service;
 
     @Autowired
-    public CreateTenantResource(CreateTenantService service) { this.service = service; }
+    public CreateUserResource(CreateUserService service) { this.service = service; }
 
-    @RequestMapping(value = "/tenant", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8_VALUE, consumes = APPLICATION_JSON_UTF8_VALUE)
-    @EndpointMethodControl(key = "tenant.post")
-    @ConditionalOnProperty(prefix = "smt.endpoints.tenant.post", name = "enabled", matchIfMissing = true)
-    public DeferredResult<ResponseEntity> createObject(
-        @RequestBody @Valid RestCreateTenantRequest restCreateTenantRequest) {
+    @RequestMapping(value = "/user", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8_VALUE, consumes = APPLICATION_JSON_UTF8_VALUE)
+    @EndpointMethodControl(key = "user.post")
+    @ConditionalOnProperty(prefix = "smt.endpoints.user.post", name = "enabled", matchIfMissing = true)
+    public DeferredResult<ResponseEntity> createUser(
+        @RequestBody @Valid RestCreateUserRequest restCreateUserRequest) {
 
-        return service.create(restCreateTenantRequest);
+        return service.create(restCreateUserRequest);
     }
 }
 

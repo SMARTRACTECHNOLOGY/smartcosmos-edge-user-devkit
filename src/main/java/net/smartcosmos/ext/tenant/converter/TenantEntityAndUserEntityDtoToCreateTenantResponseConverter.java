@@ -8,7 +8,7 @@ import org.springframework.format.FormatterRegistry;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import net.smartcosmos.ext.util.UuidUtil;
+import net.smartcosmos.ext.tenant.util.UuidUtil;
 import net.smartcosmos.ext.tenant.dto.CreateTenantResponse;
 import net.smartcosmos.ext.tenant.dto.CreateUserResponse;
 import net.smartcosmos.ext.tenant.dto.TenantEntityAndUserEntityDto;

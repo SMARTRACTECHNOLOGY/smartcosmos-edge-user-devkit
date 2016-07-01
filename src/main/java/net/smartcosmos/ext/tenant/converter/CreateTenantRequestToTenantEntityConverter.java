@@ -5,7 +5,7 @@ import org.springframework.format.FormatterRegistrar;
 import org.springframework.format.FormatterRegistry;
 
 import net.smartcosmos.ext.tenant.domain.TenantEntity;
-import net.smartcosmos.ext.util.UuidUtil;
+import net.smartcosmos.ext.tenant.util.UuidUtil;
 import net.smartcosmos.ext.tenant.dto.CreateTenantRequest;
 
 /**

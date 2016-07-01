@@ -1,4 +1,4 @@
-package net.smartcosmos.ext;
+package net.smartcosmos.ext.tenant;
 
 import java.util.Map;
 

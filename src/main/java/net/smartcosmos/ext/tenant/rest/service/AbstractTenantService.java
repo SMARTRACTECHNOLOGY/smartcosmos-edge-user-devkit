@@ -5,11 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.http.ResponseEntity;
 
-import net.smartcosmos.ext.tenant.dao.TenantDao;
-import net.smartcosmos.ext.tenant.rest.dto.MessageDto;
-import net.smartcosmos.ext.tenant.dto.CreateTenantResponse;
 import net.smartcosmos.events.SmartCosmosEventException;
 import net.smartcosmos.events.SmartCosmosEventTemplate;
+import net.smartcosmos.ext.tenant.dao.TenantDao;
+import net.smartcosmos.ext.tenant.rest.dto.MessageDto;
 import net.smartcosmos.security.user.SmartCosmosUser;
 
 @Slf4j
@@ -29,7 +28,7 @@ public class AbstractTenantService {
         this.conversionService = conversionService;
     }
 
-    protected void sendEvent(SmartCosmosUser user, String eventType, CreateTenantResponse entity) {
+    protected void sendEvent(SmartCosmosUser user, String eventType, Object entity) {
         try {
             smartCosmosEventTemplate.sendEvent(entity, eventType, user);
         }

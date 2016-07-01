@@ -7,7 +7,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import net.smartcosmos.ext.tenant.domain.UserEntity;
-import net.smartcosmos.ext.util.UuidUtil;
+import net.smartcosmos.ext.tenant.util.UuidUtil;
 import net.smartcosmos.ext.tenant.dto.CreateUserRequest;
 
 /**

@@ -11,7 +11,7 @@ import net.smartcosmos.ext.tenant.dao.TenantDao;
 import net.smartcosmos.ext.tenant.domain.TenantEntity;
 import net.smartcosmos.ext.tenant.repository.TenantRepository;
 import net.smartcosmos.ext.tenant.repository.UserRepository;
-import net.smartcosmos.ext.util.UuidUtil;
+import net.smartcosmos.ext.tenant.util.UuidUtil;
 import net.smartcosmos.ext.tenant.dto.CreateTenantRequest;
 import net.smartcosmos.ext.tenant.dto.CreateTenantResponse;
 import net.smartcosmos.ext.tenant.dto.CreateUserRequest;
