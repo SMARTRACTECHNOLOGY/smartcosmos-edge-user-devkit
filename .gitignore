@@ -26,8 +26,8 @@ node_modules/
 .checkstyle
 
 server-work
-rest/server-work/
-rest/log
+src/main/java/net/smartcosmos/ext/tenant/rest/server-work/
+src/main/java/net/smartcosmos/ext/tenant/rest/log
 /release.properties
 
 dependency-reduced-pom.xml.bak
