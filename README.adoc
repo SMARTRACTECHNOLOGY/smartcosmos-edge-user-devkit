@@ -1,25 +1,75 @@
-= REST Implementations for Tenant Edge Microservice
+= REST Implementations for User Edge Microservice
 SMARTRAC Technology Fletcher Inc <api@smartrac-group.com>
 :version: 3.0.0-SNAPSHOT
 ifdef::env-github[:USER: SMARTRACTECHNOLOGY]
 ifdef::env-github[:REPO: smartcosmos-edge-tenant]
 ifdef::env-github[:BRANCH: master]
 
-Microservice which provides basic tenant management functionality.
+Microservice which provides basic management functionalities for tenants, user and roles. This services is not recommanded for production purposes.
 
 == License
 This is a private licensed repository, and as such, should not be shared publicly.
 
 == REST API
 
-*Available methods*
+*Available methods for tenants*
 
-* <<create1, Create - `POST /`>>
-* <<update1, Update - `PUT /{urn}`>>
-* <<read1, Read - `GET /{urn}`>>
-* <<read2, Read - `GET /?name={name}&page={pageNumber}&size={pageSize}`>>
+* <<create1, Create - `POST /tenants/`>>
+* <<update1, Update - `PUT /tenants/{urn}`>>
+* <<read1, Read - `GET /tenants/{urn}`>>
+* <<read2, Read - `GET /tenants/?name={name}&page={pageNumber}&size={pageSize}`>>
 
-=== JSON Fields
+*Available methods for users*
+
+* <<createuser1, Create - `POST /users/`>>
+* <<updateuser1, Update - `PUT /users/{urn}`>>
+* <<readuser1, Read - `GET /users/{urn}`>>
+* <<readuser2, Read - `GET /users/?page={pageNumber}&size={pageSize}`>>
+* <<readuser3, Login - `POST /login/`>>
+
+*Available methods for roles*
+
+* <<createrole1, Create - `POST /roles/`>>
+* <<updaterole1, Update - `PUT /roles/{name}`>>
+* <<readrole1, Read - `GET /roles/{name}`>>
+* <<readrole2, Read - `GET /roles/?page={pageNumber}&size={pageSize}`>>
+* <<deleterole1, Delete - `DELETE /roles/{name}`>>
+
+=== JSON Fields for Tenants
+[width="100%",options="header"]
+|====================
+| Field | Format | Default | Required | Description
+| `urn` | String representation of a tenant identifier in a common scheme, e.g. `urn:tenant:uuid:<UUID>` | generated, value and format depend on the persistence layer implementation | | will be generated if not provided
+| `name` | String | | yes | Name of the tenant organization (e.g. `Example Company`)
+| `active` | boolean |  true | no |
+| `username` | String | | yes (for create) | Inital admin account
+|====================
+
+=== JSON Fields for Users
+[width="100%",options="header"]
+|====================
+| Field | Format | Default | Required | Description
+| `urn` | String representation of a user identifier in a common scheme, e.g. `urn:user:uuid:<UUID>` | generated, value and format depend on the persistence layer implementation | | will be generated if not provided
+| `username` | String | | yes | login name, e.g. `bob@example.com`
+| `emailAddress` | String | | no | e.g. `bob@example.com`
+| `active` | boolean |  true | no |
+| `givenName` | String |  | no | 
+| `surname` | String |  | no | 
+| `password` | String |  | no | 
+| `roles` | Array of String |  | yes | e.g. `Admin` or `User`
+| `authorities` | Array of String |  | yes | e.g. `smartcosmos.things.read` or `smartcosmos.things.write`
+| `tenantUrn` | String representation of the tenant identifier in a common scheme, e.g. `urn:tenant:uuid:<UUID>` |  | yes |
+|====================
+
+=== JSON Fields for Roles
+[width="100%",options="header"]
+|====================
+| Field | Format | Default | Required | Description
+| `name` | String | | yes | Unique name of the role, e.g. `Admin`
+| `authorities` | Array of String |  | yes | e.g. `smartcosmos.things.read` or `smartcosmos.things.write`
+|====================
+
+=== JSON Fields for Roles
 [width="100%",options="header"]
 |====================
 | Field | Format | Default | Required | Description
@@ -45,10 +95,10 @@ Note that the illustrated scheme for URNs is only for documentation purposes. Th
 === API Endpoints
 
 [[create1]]
-==== Create - `POST /`
+==== Create - `POST /tenant/`
 
 ----
-POST /
+POST /tenant/
 ----
 
 *Example 1*
@@ -110,10 +160,10 @@ POST /
 ----
 
 [[update1]]
-==== Update - `PUT /{urn}`
+==== Update - `PUT /tenant/{urn}`
 
 ----
-PUT /urn:tenant:uuid:346e742e-2f1e-4d91-9ffe-7b38eec6219c
+PUT /tenant/urn:tenant:uuid:346e742e-2f1e-4d91-9ffe-7b38eec6219c
 ----
 [source,json]
 ----
@@ -147,10 +197,10 @@ GET /urn:tenant:uuid:346e742e-2f1e-4d91-9ffe-7b38eec6219c
 ----
 
 [[read2]]
-==== Read - `GET /?name={name}&page={pageNumber}&size={pageSize}`
+==== Read - `GET /tenant/?name={name}&page={pageNumber}&size={pageSize}`
 
 ----
-GET /?name=My%20Example%20Company&page=0&size=100
+GET /tenant/?name=My%20Example%20Company&page=0&size=100
 ----
 .Response
 ----
@@ -168,9 +218,187 @@ GET /?name=My%20Example%20Company&page=0&size=100
     ],
     "page" : {
         "size" : 100,
+        "totalElements" : 1,
+        "totalPages" : 1,
+        "number" : 0
+    }
+}
+----
+
+[[createuser1]]
+==== Create - `POST /user/`
+
+----
+POST /user/
+----
+
+*Example 1*
+[source,json]
+----
+{
+    "urn": "urn:user:uuid:68a76616-3748-4bc2-93c1-3940b47abb7f",
+    "active": true,
+    "roles": ["User"],
+    "username": "bob@example.com",
+    "emailAddress": "bob@example.com",
+    "givenName": "Bob",
+    "surname: "Smith",
+    "tenantUrn": "urn:tenant:uuid:69bb7c6a-a43b-493d-8e9d-e5a3ed65728a"
+}
+----
+
+.Response
+----
+201 CREATED
+----
+[source,json]
+----
+{
+    "urn": "urn:user:uuid:68a76616-3748-4bc2-93c1-3940b47abb7f",
+    "username": "bob@example.com",
+    "password": "PleaseChangeMeImmediately",
+    "roles": ["User"],
+    "tenantUrn": "urn:tenant:uuid:69bb7c6a-a43b-493d-8e9d-e5a3ed65728a"
+}
+----
+
+*Example 2*
+[source,json]
+----
+{
+    "roles": ["User"],
+    "username": "bob@example.com",
+    "tenantUrn": "urn:tenant:uuid:69bb7c6a-a43b-493d-8e9d-e5a3ed65728a"
+}
+----
+
+.Response
+----
+201 CREATED
+----
+[source,json]
+----
+{
+    "urn": "urn:user:uuid:68a76616-3748-4bc2-93c1-3940b47abb7f",
+    "username": "bob@example.com",
+    "password": "PleaseChangeMeImmediately",
+    "roles": ["User"],
+    "tenantUrn": "urn:tenant:uuid:69bb7c6a-a43b-493d-8e9d-e5a3ed65728a"
+}
+----
+
+[[updateuser1]]
+==== Update - `PUT /user/{urn}`
+
+----
+PUT /user/urn:user:uuid:68a76616-3748-4bc2-93c1-3940b47abb7f
+----
+[source,json]
+----
+{
+    "active": false,
+    "password": "xyz1234567"
+}
+----
+.Response
+----
+204 NO CONTENT
+----
+
+[[readuser1]]
+==== Read - `GET /user/{urn}`
+
+----
+GET /user/urn:user:uuid:68a76616-3748-4bc2-93c1-3940b47abb7f
+----
+.Response
+----
+200 OK
+----
+[source,json]
+----
+{
+    "urn": "urn:user:uuid:68a76616-3748-4bc2-93c1-3940b47abb7f",
+    "active": true,
+    "roles": ["User"],
+    "username": "bob@example.com",
+    "emailAddress": "bob@example.com",
+    "givenName": "Bob",
+    "surname: "Smith",
+    "tenantUrn": "urn:tenant:uuid:69bb7c6a-a43b-493d-8e9d-e5a3ed65728a"
+}
+----
+
+[[readuser2]]
+==== Read - `GET /user/?page={pageNumber}&size={pageSize}`
+
+----
+GET /user/?page=0&size=100
+----
+.Response
+----
+200 OK
+----
+[source,json]
+----
+{
+    "data": [
+        {
+            "urn": "urn:user:uuid:68a76616-3748-4bc2-93c1-3940b47abb7f",
+            "active": true,
+            "roles": ["User"],
+            "username": "bob@example.com",
+            "emailAddress": "bob@example.com",
+            "givenName": "Bob",
+            "surname: "Smith",
+            "tenantUrn": "urn:tenant:uuid:69bb7c6a-a43b-493d-8e9d-e5a3ed65728a"
+        },
+        {
+            "urn": "urn:user:uuid:af37520d-86ad-49fe-be25-92ce269fbda4",
+            "active": true,
+            "roles": ["Admin"],
+            "username": "jane@example.com",
+            "emailAddress": "jane@example.com",
+            "givenName": "Jane",
+            "surname: "Smith",
+            "tenantUrn": "urn:tenant:uuid:69bb7c6a-a43b-493d-8e9d-e5a3ed65728a"
+        }        
+    ],
+    "page" : {
+        "size" : 100,
         "totalElements" : 2,
         "totalPages" : 1,
         "number" : 0
     }
 }
 ----
+
+[[readuser3]]
+==== Login - `POST /login/`
+
+----
+POST /login/
+----
+[source,json]
+----
+{
+    "username": "bob@example.com",
+    "password": "xyz1234567"
+}
+----
+
+.Response
+----
+201 CREATED
+----
+[source,json]
+----
+{
+    "urn": "urn:user:uuid:68a76616-3748-4bc2-93c1-3940b47abb7f",
+    "username": "bob@example.com",
+    "authorities": ["smartcosmos.things.read", "smartcosmos.things.write"],
+    "tenantUrn": "urn:tenant:uuid:69bb7c6a-a43b-493d-8e9d-e5a3ed65728a"
+}
+----
+
+
