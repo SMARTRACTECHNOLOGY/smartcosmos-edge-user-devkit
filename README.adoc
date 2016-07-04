@@ -169,7 +169,7 @@ PUT /tenants/urn:tenant:uuid:346e742e-2f1e-4d91-9ffe-7b38eec6219c
 ----
 
 [[read1]]
-==== Read - `GET /{urn}`
+==== Read - `GET /tenants/{urn}`
 
 ----
 GET /urn:tenant:uuid:346e742e-2f1e-4d91-9ffe-7b38eec6219c
