@@ -232,7 +232,7 @@ POST /users/
     "username": "bob@example.com",
     "emailAddress": "bob@example.com",
     "givenName": "Bob",
-    "surname: "Smith",
+    "surname": "Smith",
     "tenantUrn": "urn:tenant:uuid:69bb7c6a-a43b-493d-8e9d-e5a3ed65728a"
 }
 ----
@@ -314,7 +314,7 @@ GET /users/urn:user:uuid:68a76616-3748-4bc2-93c1-3940b47abb7f
     "username": "bob@example.com",
     "emailAddress": "bob@example.com",
     "givenName": "Bob",
-    "surname: "Smith",
+    "surname": "Smith",
     "tenantUrn": "urn:tenant:uuid:69bb7c6a-a43b-493d-8e9d-e5a3ed65728a"
 }
 ----
@@ -340,7 +340,7 @@ GET /users/?page=0&size=100
             "username": "bob@example.com",
             "emailAddress": "bob@example.com",
             "givenName": "Bob",
-            "surname: "Smith",
+            "surname": "Smith",
             "tenantUrn": "urn:tenant:uuid:69bb7c6a-a43b-493d-8e9d-e5a3ed65728a"
         },
         {
@@ -350,7 +350,7 @@ GET /users/?page=0&size=100
             "username": "jane@example.com",
             "emailAddress": "jane@example.com",
             "givenName": "Jane",
-            "surname: "Smith",
+            "surname": "Smith",
             "tenantUrn": "urn:tenant:uuid:69bb7c6a-a43b-493d-8e9d-e5a3ed65728a"
         }        
     ],
@@ -418,7 +418,7 @@ POST /roles/
     "urn": "urn:role:uuid:fcdf5432-49a8-45ef-96a2-94a022022860",
     "name": "User",
     "authorities": [
-        "smartcosmos.things.read""
+        "smartcosmos.things.read"
     ],
     "tenantUrn": "urn:tenant:uuid:69bb7c6a-a43b-493d-8e9d-e5a3ed65728a"
 }
@@ -471,7 +471,7 @@ GET /roles/?page=0&size=100
             "urn": "urn:role:uuid:fcdf5432-49a8-45ef-96a2-94a022022860",
             "name": "User",
             "authorities": [
-                "smartcosmos.things.read""
+                "smartcosmos.things.read"
             ],
             "tenantUrn": "urn:tenant:uuid:69bb7c6a-a43b-493d-8e9d-e5a3ed65728a"
         }        
