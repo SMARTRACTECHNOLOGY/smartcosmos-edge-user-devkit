@@ -87,17 +87,16 @@ Note that the illustrated scheme for URNs is only for documentation purposes. Th
 === API Endpoints
 
 [[create1]]
-==== Create - `POST /tenant/`
+==== Create - `POST /tenants/`
 
 ----
-POST /tenant/
+POST /tenants/
 ----
 
 *Example 1*
 [source,json]
 ----
 {
-    "urn": "urn:tenant:uuid:346e742e-2f1e-4d91-9ffe-7b38eec6219c",
     "active": true,
     "name": "Example Company",
     "username": "waldo@example.com"
@@ -152,10 +151,10 @@ POST /tenant/
 ----
 
 [[update1]]
-==== Update - `PUT /tenant/{urn}`
+==== Update - `PUT /tenants/{urn}`
 
 ----
-PUT /tenant/urn:tenant:uuid:346e742e-2f1e-4d91-9ffe-7b38eec6219c
+PUT /tenants/urn:tenant:uuid:346e742e-2f1e-4d91-9ffe-7b38eec6219c
 ----
 [source,json]
 ----
@@ -189,10 +188,10 @@ GET /urn:tenant:uuid:346e742e-2f1e-4d91-9ffe-7b38eec6219c
 ----
 
 [[read2]]
-==== Read - `GET /tenant/?name={name}&page={pageNumber}&size={pageSize}`
+==== Read - `GET /tenants/?name={name}&page={pageNumber}&size={pageSize}`
 
 ----
-GET /tenant/?name=My%20Example%20Company&page=0&size=100
+GET /tenants/?name=My%20Example%20Company&page=0&size=100
 ----
 .Response
 ----
@@ -218,17 +217,16 @@ GET /tenant/?name=My%20Example%20Company&page=0&size=100
 ----
 
 [[createuser1]]
-==== Create - `POST /user/`
+==== Create - `POST /users/`
 
 ----
-POST /user/
+POST /users/
 ----
 
 *Example 1*
 [source,json]
 ----
 {
-    "urn": "urn:user:uuid:68a76616-3748-4bc2-93c1-3940b47abb7f",
     "active": true,
     "roles": ["User"],
     "username": "bob@example.com",
@@ -280,10 +278,10 @@ POST /user/
 ----
 
 [[updateuser1]]
-==== Update - `PUT /user/{urn}`
+==== Update - `PUT /users/{urn}`
 
 ----
-PUT /user/urn:user:uuid:68a76616-3748-4bc2-93c1-3940b47abb7f
+PUT /users/urn:user:uuid:68a76616-3748-4bc2-93c1-3940b47abb7f
 ----
 [source,json]
 ----
@@ -298,10 +296,10 @@ PUT /user/urn:user:uuid:68a76616-3748-4bc2-93c1-3940b47abb7f
 ----
 
 [[readuser1]]
-==== Read - `GET /user/{urn}`
+==== Read - `GET /users/{urn}`
 
 ----
-GET /user/urn:user:uuid:68a76616-3748-4bc2-93c1-3940b47abb7f
+GET /users/urn:user:uuid:68a76616-3748-4bc2-93c1-3940b47abb7f
 ----
 .Response
 ----
@@ -322,10 +320,10 @@ GET /user/urn:user:uuid:68a76616-3748-4bc2-93c1-3940b47abb7f
 ----
 
 [[readuser2]]
-==== Read - `GET /user/?name={name}&page={pageNumber}&size={pageSize}`
+==== Read - `GET /users/?name={name}&page={pageNumber}&size={pageSize}`
 
 ----
-GET /user/?page=0&size=100
+GET /users/?page=0&size=100
 ----
 .Response
 ----
