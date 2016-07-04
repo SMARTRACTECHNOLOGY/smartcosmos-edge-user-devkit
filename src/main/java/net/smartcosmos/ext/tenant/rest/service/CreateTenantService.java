@@ -2,7 +2,6 @@ package net.smartcosmos.ext.tenant.rest.service;
 
 import java.net.URI;
 import java.util.Optional;
-
 import javax.inject.Inject;
 
 import lombok.extern.slf4j.Slf4j;
@@ -14,12 +13,13 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.async.DeferredResult;
 
-import net.smartcosmos.ext.tenant.dao.TenantDao;
-import net.smartcosmos.ext.tenant.rest.dto.RestCreateTenantRequest;
-import net.smartcosmos.ext.tenant.dto.CreateTenantRequest;
-import net.smartcosmos.ext.tenant.dto.CreateTenantResponse;
 import net.smartcosmos.events.DefaultEventTypes;
 import net.smartcosmos.events.SmartCosmosEventTemplate;
+import net.smartcosmos.ext.tenant.dao.TenantDao;
+import net.smartcosmos.ext.tenant.dto.CreateTenantRequest;
+import net.smartcosmos.ext.tenant.dto.CreateTenantResponse;
+import net.smartcosmos.ext.tenant.dto.GetTenantResponse;
+import net.smartcosmos.ext.tenant.rest.dto.RestCreateTenantRequest;
 
 /**
  * Initially created by SMART COSMOS Team on July 01, 2016.
@@ -61,7 +61,7 @@ public class CreateTenantService extends AbstractTenantService{
                 response.setResult(responseEntity);
             }
             else {
-                Optional<CreateTenantResponse> alreadyThere = tenantDao.findTenantByUrn(object.get().getUrn());
+                Optional<GetTenantResponse> alreadyThere = tenantDao.findTenantByUrn(object.get().getUrn());
                 response.setResult(ResponseEntity.status(HttpStatus.CONFLICT).build());
                 sendEvent(null, DefaultEventTypes.ThingCreateFailedAlreadyExists, alreadyThere.get());
             }

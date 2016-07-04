@@ -52,7 +52,6 @@ public class UserEntity implements Serializable {
     private UUID id;
 
     @NotEmpty
-    @Size(max = UUID_LENGTH)
     @Column(name = "tenantid", length = UUID_LENGTH, nullable = false, updatable = false)
     private UUID tenantId;
 

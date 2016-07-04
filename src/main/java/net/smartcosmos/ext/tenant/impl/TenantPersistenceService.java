@@ -1,26 +1,34 @@
 package net.smartcosmos.ext.tenant.impl;
 
 import java.util.Optional;
+import java.util.UUID;
 import javax.validation.ConstraintViolationException;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.convert.ConversionService;
+import lombok.extern.slf4j.Slf4j;
 
-import net.smartcosmos.ext.tenant.domain.UserEntity;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.ConversionException;
+import org.springframework.core.convert.ConversionService;
+import org.springframework.stereotype.Service;
+
 import net.smartcosmos.ext.tenant.dao.TenantDao;
 import net.smartcosmos.ext.tenant.domain.TenantEntity;
-import net.smartcosmos.ext.tenant.repository.TenantRepository;
-import net.smartcosmos.ext.tenant.repository.UserRepository;
-import net.smartcosmos.ext.tenant.util.UuidUtil;
+import net.smartcosmos.ext.tenant.domain.UserEntity;
 import net.smartcosmos.ext.tenant.dto.CreateTenantRequest;
 import net.smartcosmos.ext.tenant.dto.CreateTenantResponse;
 import net.smartcosmos.ext.tenant.dto.CreateUserRequest;
 import net.smartcosmos.ext.tenant.dto.CreateUserResponse;
+import net.smartcosmos.ext.tenant.dto.GetTenantResponse;
 import net.smartcosmos.ext.tenant.dto.TenantEntityAndUserEntityDto;
+import net.smartcosmos.ext.tenant.repository.TenantRepository;
+import net.smartcosmos.ext.tenant.repository.UserRepository;
+import net.smartcosmos.ext.tenant.util.UuidUtil;
 
 /**
  * Initially created by SMART COSMOS Team on June 30, 2016.
  */
+@Slf4j
+@Service
 public class TenantPersistenceService implements TenantDao {
 
     private final TenantRepository tenantRepository;
@@ -64,11 +72,27 @@ public class TenantPersistenceService implements TenantDao {
     }
 
     @Override
-    public Optional<CreateTenantResponse> findTenantByUrn(String tenantUrn) {
+    public Optional<GetTenantResponse> findTenantByUrn(String tenantUrn) {
 
-        Optional<TenantEntity> createTenantResponse = tenantRepository.findById(UuidUtil.getUuidFromUrn(tenantUrn));
-        //return conversionService.convert(createTenantResponse, RestCreateTenantResponse.class);
-        return null;
+        if (tenantUrn == null || tenantUrn.isEmpty()) {
+            return Optional.empty();
+        }
+
+        try {
+            UUID id = UuidUtil.getUuidFromUrn(tenantUrn);
+            Optional<TenantEntity> entity = tenantRepository.findById(id);
+            if (entity.isPresent()) {
+                final GetTenantResponse response = conversionService.convert(entity.get(), GetTenantResponse.class);
+                return Optional.ofNullable(response);
+            }
+            return Optional.empty();
+
+        } catch (IllegalArgumentException | ConversionException e) {
+            String msg = String.format("findByUrn failed, tenant: '%s', cause: %s", tenantUrn, e.toString());
+            log.error(msg);
+            log.debug(msg, e);
+            throw e;
+        }
     }
 
     @Override

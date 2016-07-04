@@ -16,9 +16,9 @@ import org.springframework.web.context.request.async.DeferredResult;
 import net.smartcosmos.events.DefaultEventTypes;
 import net.smartcosmos.events.SmartCosmosEventTemplate;
 import net.smartcosmos.ext.tenant.dao.TenantDao;
-import net.smartcosmos.ext.tenant.dto.CreateTenantResponse;
 import net.smartcosmos.ext.tenant.dto.CreateUserRequest;
 import net.smartcosmos.ext.tenant.dto.CreateUserResponse;
+import net.smartcosmos.ext.tenant.dto.GetTenantResponse;
 import net.smartcosmos.ext.tenant.rest.dto.RestCreateUserRequest;
 
 /**
@@ -60,7 +60,7 @@ public class CreateUserService extends AbstractTenantService{
                 response.setResult(responseEntity);
             }
             else {
-                Optional<CreateTenantResponse> alreadyThere = tenantDao.findTenantByUrn(object.get().getUrn());
+                Optional<GetTenantResponse> alreadyThere = tenantDao.findTenantByUrn(object.get().getUrn());
                 response.setResult(ResponseEntity.status(HttpStatus.CONFLICT).build());
                 sendEvent(null, DefaultEventTypes.ThingCreateFailedAlreadyExists, alreadyThere.get());
             }

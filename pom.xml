@@ -24,14 +24,12 @@
             <version>4.1</version>
         </dependency>
         <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-collections4</artifactId>
-            <version>4.1</version>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator</artifactId>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>
-            <version>2.4.2</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.uuid</groupId>
@@ -49,6 +47,7 @@
         <dependency>
             <groupId>net.smartcosmos</groupId>
             <artifactId>smartcosmos-framework</artifactId>
+            <version>3.0.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -63,8 +62,16 @@
             <artifactId>spring-cloud-security</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-oauth2</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-commons</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -116,6 +123,28 @@
             <artifactId>spring-mock-mvc</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+        <groupId>org.json</groupId>
+        <artifactId>json</artifactId>
+        <scope>test</scope>
+    </dependency>
+        <dependency>
+            <groupId>com.jayway.jsonpath</groupId>
+            <artifactId>json-path</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.jayway.jsonpath</groupId>
+            <artifactId>json-path-assert</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+            <version>1.0.0.Final</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
     <!-- TODO: update SCM URIs when repo was renamed to "smartcosmos-dao-things" -->
@@ -124,4 +153,5 @@
         <developerConnection>scm:git@github.com:SMARTRACTECHNOLOGY/smartcosmos-edge-tenant.git</developerConnection>
         <url>https://github.com/SMARTRACTECHNOLOGY/smartcosmos-edge-tenant/tree/master/</url>
     </scm>
+
 </project>
