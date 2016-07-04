@@ -24,22 +24,22 @@ This is a private licensed repository, and as such, should not be shared publicl
 * <<createuser1, Create - `POST /users/`>>
 * <<updateuser1, Update - `PUT /users/{urn}`>>
 * <<readuser1, Read - `GET /users/{urn}`>>
-* <<readuser2, Read - `GET /users/?page={pageNumber}&size={pageSize}`>>
+* <<readuser2, Read - `GET /users/?name={name}&page={pageNumber}&size={pageSize}`>>
 * <<readuser3, Login - `POST /login/`>>
 
 *Available methods for roles*
 
 * <<createrole1, Create - `POST /roles/`>>
-* <<updaterole1, Update - `PUT /roles/{name}`>>
-* <<readrole1, Read - `GET /roles/{name}`>>
-* <<readrole2, Read - `GET /roles/?page={pageNumber}&size={pageSize}`>>
-* <<deleterole1, Delete - `DELETE /roles/{name}`>>
+* <<updaterole1, Update - `PUT /roles/{urn}`>>
+* <<readrole1, Read - `GET /roles/{urn}`>>
+* <<readrole2, Read - `GET /roles/?name={name}&page={pageNumber}&size={pageSize}`>>
+* <<deleterole1, Delete - `DELETE /roles/{urn}`>>
 
 === JSON Fields for Tenants
 [width="100%",options="header"]
 |====================
 | Field | Format | Default | Required | Description
-| `urn` | String representation of a tenant identifier in a common scheme, e.g. `urn:tenant:uuid:<UUID>` | generated, value and format depend on the persistence layer implementation | | will be generated if not provided
+| `urn` | String representation of a tenant identifier in a common scheme, e.g. `urn:tenant:uuid:<UUID>` | generated, value and format depend on the persistence layer implementation | | will be generated 
 | `name` | String | | yes | Name of the tenant organization (e.g. `Example Company`)
 | `active` | boolean |  true | no |
 | `username` | String | | yes (for create) | Inital admin account
@@ -49,7 +49,7 @@ This is a private licensed repository, and as such, should not be shared publicl
 [width="100%",options="header"]
 |====================
 | Field | Format | Default | Required | Description
-| `urn` | String representation of a user identifier in a common scheme, e.g. `urn:user:uuid:<UUID>` | generated, value and format depend on the persistence layer implementation | | will be generated if not provided
+| `urn` | String representation of a user identifier in a common scheme, e.g. `urn:user:uuid:<UUID>` | generated, value and format depend on the persistence layer implementation | | will be generated 
 | `username` | String | | yes | login name, e.g. `bob@example.com`
 | `emailAddress` | String | | no | e.g. `bob@example.com`
 | `active` | boolean |  true | no |
@@ -65,18 +65,10 @@ This is a private licensed repository, and as such, should not be shared publicl
 [width="100%",options="header"]
 |====================
 | Field | Format | Default | Required | Description
+| `urn` | String representation of a user identifier in a common scheme, e.g. `urn:role:uuid:<UUID>` | generated, value and format depend on the persistence layer implementation | | will be generated 
 | `name` | String | | yes | Unique name of the role, e.g. `Admin`
 | `authorities` | Array of String |  | yes | e.g. `smartcosmos.things.read` or `smartcosmos.things.write`
-|====================
-
-=== JSON Fields for Roles
-[width="100%",options="header"]
-|====================
-| Field | Format | Default | Required | Description
-| `urn` | String representation of a tenant identifier in a common scheme, e.g. `urn:tenant:uuid:<UUID>` | generated, value and format depend on the persistence layer implementation | | will be generated if not provided
-| `name` | String | | yes | Name of the tenant organization (e.g. `Example Company`)
-| `active` | boolean |  true | no |
-| `username` | String | | yes (for create) | Inital admin account
+| `tenantUrn` | String representation of the tenant identifier in a common scheme, e.g. `urn:tenant:uuid:<UUID>` |  | yes |
 |====================
 
 .**URN Scheme**
@@ -88,7 +80,7 @@ Note that the illustrated scheme for URNs is only for documentation purposes. Th
 | Parameter | Format | Default | Description
 | `page` | String representation long  |  query parameter, defaults to 0 | page number of multi-element returns, starting at 0
 | `size` | String representation of Integer  |  query parameter, defaults 20 | number of elements per page in multi-element returns
-| `name` | String | | optional search parameter |
+| `name` | String | optional | Optional search parameter to filter the search result by `name` or `username`
 |====================
 
 
@@ -330,7 +322,7 @@ GET /user/urn:user:uuid:68a76616-3748-4bc2-93c1-3940b47abb7f
 ----
 
 [[readuser2]]
-==== Read - `GET /user/?page={pageNumber}&size={pageSize}`
+==== Read - `GET /user/?name={name}&page={pageNumber}&size={pageSize}`
 
 ----
 GET /user/?page=0&size=100
@@ -389,7 +381,7 @@ POST /login/
 
 .Response
 ----
-201 CREATED
+200 OK
 ----
 [source,json]
 ----
@@ -401,4 +393,108 @@ POST /login/
 }
 ----
 
+[[createrole1]]
+==== Create - `POST /roles/`
+
+----
+POST /roles/
+----
+[source,json]
+----
+{
+    "name": "User",
+    "authorities": [
+        "smartcosmos.things.read"
+    ],
+    "tenantUrn": "urn:tenant:uuid:69bb7c6a-a43b-493d-8e9d-e5a3ed65728a"
+}
+----
+
+.Response
+----
+201 CREATED
+----
+[source,json]
+----
+{
+    "urn": "urn:role:uuid:fcdf5432-49a8-45ef-96a2-94a022022860",
+    "name": "User",
+    "authorities": [
+        "smartcosmos.things.read""
+    ],
+    "tenantUrn": "urn:tenant:uuid:69bb7c6a-a43b-493d-8e9d-e5a3ed65728a"
+}
+----
+
+[[updaterole1]]
+==== Update - `PUT /roles/{urn}`
+
+----
+PUT /roles/urn:role:uuid:fcdf5432-49a8-45ef-96a2-94a022022860
+----
+[source,json]
+----
+{
+    "name": "User",
+    "authorities": [
+        "smartcosmos.things.read"
+    ]
+}
+----
+.Response
+----
+204 NO CONTENT
+----
+
+[[readrole1]]
+==== Read - `GET /roles/?name={name}&page={pageNumber}&size={pageSize}`
+
+----
+GET /roles/?page=0&size=100
+----
+.Response
+----
+200 OK
+----
+[source,json]
+----
+{
+    "data": [
+        {
+            "urn": "urn:role:uuid:318a9fae-0218-486c-b9f6-86f76b2ff6af",
+            "name": "Admin",
+            "authorities": [
+                "smartcosmos.things.read",
+                "smartcosmos.things.write"
+            ],
+            "tenantUrn": "urn:tenant:uuid:69bb7c6a-a43b-493d-8e9d-e5a3ed65728a"
+        },
+        {
+            "urn": "urn:role:uuid:fcdf5432-49a8-45ef-96a2-94a022022860",
+            "name": "User",
+            "authorities": [
+                "smartcosmos.things.read""
+            ],
+            "tenantUrn": "urn:tenant:uuid:69bb7c6a-a43b-493d-8e9d-e5a3ed65728a"
+        }        
+    ],
+    "page" : {
+        "size" : 100,
+        "totalElements" : 2,
+        "totalPages" : 1,
+        "number" : 0
+    }
+}
+----
+
+[[deleterole1]]
+==== Delete - `DELETE /{urn}`
+
+----
+DELETE /urn/urn:role:uuid:fcdf5432-49a8-45ef-96a2-94a022022860
+----
+.Response
+----
+204 NO CONTENT
+----
 
