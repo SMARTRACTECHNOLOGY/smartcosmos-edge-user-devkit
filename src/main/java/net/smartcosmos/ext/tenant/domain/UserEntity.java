@@ -51,43 +51,41 @@ public class UserEntity implements Serializable {
     @Column(name = "id", length = UUID_LENGTH)
     private UUID id;
 
-    @NotEmpty
+    @NotNull
+    @Type(type = "uuid-binary")
     @Column(name = "tenantid", length = UUID_LENGTH, nullable = false, updatable = false)
     private UUID tenantId;
 
     @NotEmpty
     @Size(max = STRING_FIELD_LENGTH)
-    @Column(name = "username", length = STRING_FIELD_LENGTH, nullable = false, updatable = false)
+    @Column(name = "username", length = STRING_FIELD_LENGTH, nullable = false, updatable = true)
     private String username;
 
     @NotEmpty
     @Size(max = STRING_FIELD_LENGTH)
-    @Column(name = "emailaddress", length = STRING_FIELD_LENGTH, nullable = false, updatable = false)
+    @Column(name = "emailaddress", length = STRING_FIELD_LENGTH, nullable = false, updatable = true)
     private String emailAddress;
 
-    @NotEmpty
     @Size(max = STRING_FIELD_LENGTH)
-    @Column(name = "givenName", length = STRING_FIELD_LENGTH, nullable = false, updatable = false)
+    @Column(name = "givenName", length = STRING_FIELD_LENGTH, nullable = true, updatable = true)
     private String givenName;
 
-    @NotEmpty
     @Size(max = STRING_FIELD_LENGTH)
-    @Column(name = "surname", length = STRING_FIELD_LENGTH, nullable = false, updatable = false)
+    @Column(name = "surname", length = STRING_FIELD_LENGTH, nullable = true, updatable = true)
     private String surname;
 
     @NotEmpty
     @Size(max = STRING_FIELD_LENGTH)
-    @Column(name = "password", length = STRING_FIELD_LENGTH, nullable = false, updatable = false)
+    @Column(name = "password", length = STRING_FIELD_LENGTH, nullable = false, updatable = true)
     private String password;
 
     @NotEmpty
     @Size(max = STRING_FIELD_LENGTH)
-    @Column(name = "roles", length = STRING_FIELD_LENGTH, nullable = false, updatable = false)
+    @Column(name = "roles", length = STRING_FIELD_LENGTH, nullable = false, updatable = true)
     private String roles;
 
-    @NotEmpty
     @Size(max = BIG_STRING_FIELD_LENGTH)
-    @Column(name = "authorities", length = BIG_STRING_FIELD_LENGTH, nullable = false, updatable = false)
+    @Column(name = "authorities", length = BIG_STRING_FIELD_LENGTH, nullable = true, updatable = true)
     private String authorities;
 
     @CreatedDate
@@ -112,7 +110,8 @@ public class UserEntity implements Serializable {
         We therefore provide our own AllArgsConstructor that is used by the generated builder and takes care of field initialization.
      */
     @Builder
-    @ConstructorProperties({ "id", "tenantId", "name", "username", "created", "lastModified", "active" })
+    @ConstructorProperties({ "id", "tenantId", "name", "username", "emailAddress", "givenName", "surname", "password", "roles",
+                             "authorities", "created", "lastModified", "active" })
     protected UserEntity(
         UUID id,
         UUID tenantId,
@@ -122,6 +121,7 @@ public class UserEntity implements Serializable {
         String surname,
         String password,
         String roles,
+        String authorities,
         Date created,
         Date lastModified,
         Boolean active) {
@@ -134,6 +134,7 @@ public class UserEntity implements Serializable {
         this.surname = surname;
         this.password = password;
         this.roles = roles;
+        this.authorities = authorities;
         this.created = created;
         this.lastModified = lastModified;
         this.active = active != null ? active : true;

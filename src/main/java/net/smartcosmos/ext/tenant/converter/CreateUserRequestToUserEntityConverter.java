@@ -5,6 +5,8 @@ import org.springframework.format.FormatterRegistrar;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import net.smartcosmos.ext.tenant.domain.UserEntity;
 import net.smartcosmos.ext.tenant.util.UuidUtil;
@@ -13,6 +15,7 @@ import net.smartcosmos.ext.tenant.dto.CreateUserRequest;
 /**
  * Initially created by SMART COSMOS Team on June 30, 2016.
  */
+@Component
 public class CreateUserRequestToUserEntityConverter
     implements Converter<CreateUserRequest, UserEntity>, FormatterRegistrar {
 
@@ -27,7 +30,9 @@ public class CreateUserRequestToUserEntityConverter
             .emailAddress(createUserRequest.getEmailAddress())
             .givenName(createUserRequest.getGivenName())
             .surname(createUserRequest.getSurname())
-            .password(passwordEncoder.encode("PleaseChangeMeImmediately"))
+            .password("PleaseChangeMeImmediately")
+            .roles(StringUtils.collectionToDelimitedString(createUserRequest.getRoles(), " "))
+            .authorities(StringUtils.collectionToDelimitedString(createUserRequest.getAuthorities(), " "))
             .active(createUserRequest.getActive())
             .build();
     }

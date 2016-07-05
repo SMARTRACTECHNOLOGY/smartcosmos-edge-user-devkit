@@ -23,16 +23,14 @@ public class CreateTenantRequest {
 
     private String name;
     private String username;
-    private String emailAddress;
     private Boolean active;
 
     @Builder
-    @ConstructorProperties({ "urn", "type", "active"})
-    public CreateTenantRequest(String name, String username, String emailAddress, Boolean active)
+    @ConstructorProperties({ "name", "username", "active"})
+    public CreateTenantRequest(String name, String username, Boolean active)
     {
         this.name = name;
         this.username = username;
-        this.emailAddress = emailAddress;
         this.active = active != null ? active : true;
 
         this.version = VERSION;

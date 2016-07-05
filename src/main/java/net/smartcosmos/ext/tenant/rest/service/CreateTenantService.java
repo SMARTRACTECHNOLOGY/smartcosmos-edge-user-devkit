@@ -53,7 +53,7 @@ public class CreateTenantService extends AbstractTenantService{
 
             if (object.isPresent())
             {
-                sendEvent(null, DefaultEventTypes.ThingCreated, object.get());
+                //sendEvent(null, DefaultEventTypes.ThingCreated, object.get());
 
                 ResponseEntity responseEntity = ResponseEntity
                     .created(URI.create(object.get().getUrn()))
@@ -63,7 +63,7 @@ public class CreateTenantService extends AbstractTenantService{
             else {
                 Optional<GetTenantResponse> alreadyThere = tenantDao.findTenantByUrn(object.get().getUrn());
                 response.setResult(ResponseEntity.status(HttpStatus.CONFLICT).build());
-                sendEvent(null, DefaultEventTypes.ThingCreateFailedAlreadyExists, alreadyThere.get());
+                // sendEvent(null, DefaultEventTypes.ThingCreateFailedAlreadyExists, alreadyThere.get());
             }
 
         } catch (Exception e) {

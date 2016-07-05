@@ -13,8 +13,11 @@ import net.smartcosmos.ext.tenant.domain.UserEntity;
  * Initially created by SMART COSMOS Team on June 30, 2016.
  */
 public interface UserRepository extends JpaRepository<UserEntity, UUID>,
-                                          PagingAndSortingRepository<UserEntity, UUID>,
-                                          JpaSpecificationExecutor<UserEntity> {
+                                        PagingAndSortingRepository<UserEntity, UUID>,
+                                        JpaSpecificationExecutor<UserEntity> {
 
-        Optional<UserEntity> findByUsernameAndTenantId(String username, UUID tenantId);
+    Optional<UserEntity> findByUsernameAndTenantId(String username, UUID tenantId);
+
+    Optional<UserEntity> findById(UUID id);
+
 }

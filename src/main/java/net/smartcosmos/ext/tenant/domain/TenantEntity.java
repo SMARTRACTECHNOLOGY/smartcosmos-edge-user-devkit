@@ -55,11 +55,6 @@ public class TenantEntity implements Serializable {
     @Column(name = "name", length = STRING_FIELD_LENGTH, nullable = false, updatable = false)
     private String name;
 
-    @NotEmpty
-    @Size(max = STRING_FIELD_LENGTH)
-    @Column(name = "username", length = STRING_FIELD_LENGTH, nullable = false, updatable = false)
-    private String username;
-
     @CreatedDate
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created", insertable = true, updatable = false)
@@ -82,17 +77,15 @@ public class TenantEntity implements Serializable {
         We therefore provide our own AllArgsConstructor that is used by the generated builder and takes care of field initialization.
      */
     @Builder
-    @ConstructorProperties({ "id", "name", "username", "created", "lastModified", "active" })
+    @ConstructorProperties({ "id", "name", "created", "lastModified", "active" })
     protected TenantEntity(
         UUID id,
         String name,
-        String username,
         Date created,
         Date lastModified,
         Boolean active) {
         this.id = id;
         this.name = name;
-        this.username = username;
         this.created = created;
         this.lastModified = lastModified;
         this.active = active != null ? active : true;

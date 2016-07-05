@@ -13,15 +13,26 @@ import net.smartcosmos.ext.tenant.util.UuidUtil;
 
 import static org.junit.Assert.*;
 
+@org.springframework.boot.test.SpringApplicationConfiguration(classes = { net.smartcosmos.dao.tenant.TenantPersistenceTestApplication.class,
+                                                                          net.smartcosmos.ext.tenant.TenantPersistenceConfig.class })
 @SuppressWarnings("Duplicates")
 public class UserEntityTest {
 
     private static Validator validator;
 
+    private static java.util.List<String> adminRole = new java.util.ArrayList<>();
+    private static java.util.List<String> userRole = new java.util.ArrayList<>();
+    private static java.util.List<String> twoRoles = new java.util.ArrayList<>();
+
     @BeforeClass
     public static void setUp() {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         validator = factory.getValidator();
+
+        adminRole.add("Admin");
+        userRole.add("User");
+        twoRoles.add("Admin");
+        twoRoles.add("User");
     }
 
     @Test
@@ -33,6 +44,8 @@ public class UserEntityTest {
             .emailAddress("timc@example.com")
             .givenName("Tim")
             .surname("Cross")
+            .password("PleaseChangeMeImmediately")
+            .roles("Admin")
             .build();
 
         Set<ConstraintViolation<UserEntity>> violationSet = validator.validate(userEntity);

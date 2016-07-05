@@ -12,6 +12,8 @@ import net.smartcosmos.ext.tenant.domain.TenantEntity;
 
 import static org.junit.Assert.*;
 
+@org.springframework.boot.test.SpringApplicationConfiguration(classes = { net.smartcosmos.dao.tenant.TenantPersistenceTestApplication.class,
+                                                                          net.smartcosmos.ext.tenant.TenantPersistenceConfig.class })
 @SuppressWarnings("Duplicates")
 public class TenantEntityTest {
 
@@ -28,7 +30,6 @@ public class TenantEntityTest {
 
         TenantEntity tenantEntity = TenantEntity.builder()
             .name("some name")
-            .username("timc@example.com")
             .build();
 
         Set<ConstraintViolation<TenantEntity>> violationSet = validator.validate(tenantEntity);

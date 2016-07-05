@@ -13,12 +13,11 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.async.DeferredResult;
 
-import net.smartcosmos.events.DefaultEventTypes;
 import net.smartcosmos.events.SmartCosmosEventTemplate;
 import net.smartcosmos.ext.tenant.dao.TenantDao;
 import net.smartcosmos.ext.tenant.dto.CreateUserRequest;
 import net.smartcosmos.ext.tenant.dto.CreateUserResponse;
-import net.smartcosmos.ext.tenant.dto.GetTenantResponse;
+import net.smartcosmos.ext.tenant.dto.GetUserResponse;
 import net.smartcosmos.ext.tenant.rest.dto.RestCreateUserRequest;
 
 /**
@@ -48,21 +47,21 @@ public class CreateUserService extends AbstractTenantService{
         try {
             final CreateUserRequest createUserRequest = conversionService.convert(restCreateUserRequest, CreateUserRequest.class);
 
-            Optional<CreateUserResponse> object = tenantDao.createUser(createUserRequest);;
+            Optional<CreateUserResponse> newUser = tenantDao.createUser(createUserRequest);;
 
-            if (object.isPresent())
+            if (newUser.isPresent())
             {
-                sendEvent(null, DefaultEventTypes.ThingCreated, object.get());
+                //sendEvent(null, DefaultEventTypes.ThingCreated, object.get());
 
                 ResponseEntity responseEntity = ResponseEntity
-                    .created(URI.create(object.get().getUrn()))
-                    .body(object.get());
+                    .created(URI.create(newUser.get().getUrn()))
+                    .body(newUser.get());
                 response.setResult(responseEntity);
             }
             else {
-                Optional<GetTenantResponse> alreadyThere = tenantDao.findTenantByUrn(object.get().getUrn());
+                Optional<GetUserResponse> alreadyThere = tenantDao.findUserByUrn(newUser.get().getUrn());
                 response.setResult(ResponseEntity.status(HttpStatus.CONFLICT).build());
-                sendEvent(null, DefaultEventTypes.ThingCreateFailedAlreadyExists, alreadyThere.get());
+                //sendEvent(null, DefaultEventTypes.ThingCreateFailedAlreadyExists, alreadyThere.get());
             }
 
         } catch (Exception e) {

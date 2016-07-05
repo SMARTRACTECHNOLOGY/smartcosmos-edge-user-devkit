@@ -28,11 +28,12 @@ public class TenantEntityAndUserEntityDtoToCreateTenantResponseConverter
 
         CreateUserResponse userResponse = CreateUserResponse.builder()
             .urn(UuidUtil.getUserUrnFromUuid(entityDto.getUserEntity().getId()))
+            .tenantUrn(UuidUtil.getUserUrnFromUuid(entityDto.getTenantEntity().getId()))
             .username(entityDto.getUserEntity().getUsername())
+            .emailAddress(entityDto.getUserEntity().getEmailAddress())
             .password(entityDto.getUserEntity().getPassword())
-            .roles(Arrays.asList(StringUtils.split(entityDto.getUserEntity().getRoles(), " ")))
+            .roles(Arrays.asList(StringUtils.tokenizeToStringArray(entityDto.getUserEntity().getRoles(), " ")))
             .build();
-
 
         return CreateTenantResponse.builder()
             .name(entityDto.getTenantEntity().getName())
