@@ -25,7 +25,6 @@ public class CreateUserResponseToRestCreateUserResponseConverter
             .givenName(createUserResponse.getGivenName())
             .surname(createUserResponse.getSurname())
             .roles(createUserResponse.getRoles())
-            .authorities(createUserResponse.getAuthorities())
             .active(createUserResponse.getActive())
             .build();
     }

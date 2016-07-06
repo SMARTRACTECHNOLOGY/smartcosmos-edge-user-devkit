@@ -3,12 +3,17 @@ package net.smartcosmos.ext.tenant.domain;
 import java.beans.ConstructorProperties;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Set;
 import java.util.UUID;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -30,7 +35,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Entity(name = "user")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Data
-@Table(name = "user", uniqueConstraints = @UniqueConstraint(columnNames = { "username", "tenantId" }) )
+@Table(name = "user", uniqueConstraints = @UniqueConstraint(columnNames = { "username", "tenantId" }))
 @EntityListeners({ AuditingEntityListener.class })
 public class UserEntity implements Serializable {
 
@@ -79,14 +84,11 @@ public class UserEntity implements Serializable {
     @Column(name = "password", length = STRING_FIELD_LENGTH, nullable = false, updatable = true)
     private String password;
 
-    @NotEmpty
-    @Size(max = STRING_FIELD_LENGTH)
-    @Column(name = "roles", length = STRING_FIELD_LENGTH, nullable = false, updatable = true)
-    private String roles;
-
-    @Size(max = BIG_STRING_FIELD_LENGTH)
-    @Column(name = "authorities", length = BIG_STRING_FIELD_LENGTH, nullable = true, updatable = true)
-    private String authorities;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "user_roles",
+               joinColumns = { @JoinColumn(name = "user") },
+               inverseJoinColumns = { @JoinColumn(name = "role") })
+    private Set<RoleEntity> roles;
 
     @CreatedDate
     @Temporal(TemporalType.TIMESTAMP)
@@ -111,7 +113,7 @@ public class UserEntity implements Serializable {
      */
     @Builder
     @ConstructorProperties({ "id", "tenantId", "name", "username", "emailAddress", "givenName", "surname", "password", "roles",
-                             "authorities", "created", "lastModified", "active" })
+                             "created", "lastModified", "active" })
     protected UserEntity(
         UUID id,
         UUID tenantId,
@@ -120,8 +122,7 @@ public class UserEntity implements Serializable {
         String givenName,
         String surname,
         String password,
-        String roles,
-        String authorities,
+        Set<RoleEntity> roles,
         Date created,
         Date lastModified,
         Boolean active) {
@@ -134,7 +135,6 @@ public class UserEntity implements Serializable {
         this.surname = surname;
         this.password = password;
         this.roles = roles;
-        this.authorities = authorities;
         this.created = created;
         this.lastModified = lastModified;
         this.active = active != null ? active : true;

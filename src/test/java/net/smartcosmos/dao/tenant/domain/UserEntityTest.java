@@ -1,5 +1,6 @@
 package net.smartcosmos.dao.tenant.domain;
 
+import java.util.HashSet;
 import java.util.Set;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -8,6 +9,7 @@ import javax.validation.ValidatorFactory;
 
 import org.junit.*;
 
+import net.smartcosmos.ext.tenant.domain.RoleEntity;
 import net.smartcosmos.ext.tenant.domain.UserEntity;
 import net.smartcosmos.ext.tenant.util.UuidUtil;
 
@@ -38,6 +40,10 @@ public class UserEntityTest {
     @Test
     public void thatEverythingIsOk() {
 
+        RoleEntity adminRole = RoleEntity.builder().name("Admin").build();
+        Set<RoleEntity> roleEntities = new HashSet<>();
+        roleEntities.add(adminRole);
+
         UserEntity userEntity = UserEntity.builder()
             .tenantId(UuidUtil.getNewUuid())
             .username("some name")
@@ -45,11 +51,12 @@ public class UserEntityTest {
             .givenName("Tim")
             .surname("Cross")
             .password("PleaseChangeMeImmediately")
-            .roles("Admin")
+            .roles(roleEntities)
             .build();
 
         Set<ConstraintViolation<UserEntity>> violationSet = validator.validate(userEntity);
 
         assertTrue(violationSet.isEmpty());
     }
+
 }

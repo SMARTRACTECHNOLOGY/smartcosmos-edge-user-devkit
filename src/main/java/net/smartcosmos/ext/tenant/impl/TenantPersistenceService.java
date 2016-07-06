@@ -1,9 +1,9 @@
 package net.smartcosmos.ext.tenant.impl;
 
-import java.util.List;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 import javax.validation.ConstraintViolationException;
 
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +14,8 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 
 import net.smartcosmos.ext.tenant.dao.TenantDao;
+import net.smartcosmos.ext.tenant.domain.AuthorityEntity;
+import net.smartcosmos.ext.tenant.domain.RoleEntity;
 import net.smartcosmos.ext.tenant.domain.TenantEntity;
 import net.smartcosmos.ext.tenant.domain.UserEntity;
 import net.smartcosmos.ext.tenant.dto.CreateTenantRequest;
@@ -23,6 +25,7 @@ import net.smartcosmos.ext.tenant.dto.CreateUserResponse;
 import net.smartcosmos.ext.tenant.dto.GetTenantResponse;
 import net.smartcosmos.ext.tenant.dto.GetUserResponse;
 import net.smartcosmos.ext.tenant.dto.TenantEntityAndUserEntityDto;
+import net.smartcosmos.ext.tenant.repository.RoleRepository;
 import net.smartcosmos.ext.tenant.repository.TenantRepository;
 import net.smartcosmos.ext.tenant.repository.UserRepository;
 import net.smartcosmos.ext.tenant.util.UuidUtil;
@@ -36,16 +39,19 @@ public class TenantPersistenceService implements TenantDao {
 
     private final TenantRepository tenantRepository;
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
     private final ConversionService conversionService;
 
     @Autowired
     public TenantPersistenceService(
         TenantRepository tenantRepository,
         UserRepository userRepository,
+        RoleRepository roleRepository,
         ConversionService conversionService) {
 
         this.tenantRepository = tenantRepository;
         this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
         this.conversionService = conversionService;
     }
 
@@ -54,9 +60,16 @@ public class TenantPersistenceService implements TenantDao {
         throws ConstraintViolationException {
 
         // This tenant already exists? we're not creating a new one
-        if (tenantRepository.findByName(createTenantRequest.getName()).isPresent()) {
+        if (tenantRepository.findByName(createTenantRequest.getName())
+            .isPresent()) {
             return Optional.empty();
         }
+
+        Set<RoleEntity> roles = new HashSet<>();
+        // this creates the Admin role if it doesn't already exist.
+        roles.add(getAdminRole());
+        // we also create the User role if it doesn't already exist, but don't give it to the default admin user.
+        getUserRole();
 
         TenantEntity tenantEntity = tenantRepository.save(conversionService.convert(createTenantRequest, TenantEntity.class));
 
@@ -66,14 +79,17 @@ public class TenantPersistenceService implements TenantDao {
             .username(createTenantRequest.getUsername())
             .emailAddress(createTenantRequest.getUsername())
             .password("PleaseChangeMeImmediately")
-            .roles("Admin")
+            .roles(roles)
             .active(createTenantRequest.getActive() == null ? true : createTenantRequest.getActive())
             .build();
 
         userEntity = userRepository.save(userEntity);
 
         return Optional
-            .ofNullable(conversionService.convert(TenantEntityAndUserEntityDto.builder().tenantEntity(tenantEntity).userEntity(userEntity).build(),
+            .ofNullable(conversionService.convert(TenantEntityAndUserEntityDto.builder()
+                                                      .tenantEntity(tenantEntity)
+                                                      .userEntity(userEntity)
+                                                      .build(),
                                                   CreateTenantResponse.class));
     }
 
@@ -108,7 +124,8 @@ public class TenantPersistenceService implements TenantDao {
         // This user already exists? We're not creating a new one.
         if (userRepository.findByUsernameAndTenantId(
             createUserRequest.getUsername(),
-            UuidUtil.getUuidFromUrn(createUserRequest.getTenantUrn())).isPresent()) {
+            UuidUtil.getUuidFromUrn(createUserRequest.getTenantUrn()))
+            .isPresent()) {
 
             return Optional.empty();
         }
@@ -140,5 +157,47 @@ public class TenantPersistenceService implements TenantDao {
             throw e;
         }
     }
+
+    private RoleEntity getAdminRole() {
+        RoleEntity adminRole;
+        Optional<RoleEntity> optionalAdminRole = roleRepository.findByName("Admin");
+        if (optionalAdminRole.isPresent()) {
+            adminRole = optionalAdminRole.get();
+        } else {
+            Set<AuthorityEntity> authorities = new HashSet<>();
+            authorities.add(AuthorityEntity.builder()
+                                .authority("smartcosmos.things.read")
+                                .build());
+            authorities.add(AuthorityEntity.builder()
+                                .authority("smartcosmos.things.write")
+                                .build());
+            adminRole = roleRepository.save(RoleEntity.builder()
+                                                .name("Admin")
+                                                .authorities(authorities)
+                                                .active(true)
+                                                .build());
+        } return adminRole;
+    }
+
+    private RoleEntity getUserRole() {
+        RoleEntity userRole;
+        Optional<RoleEntity> optionalAdminRole = roleRepository.findByName("User");
+        if (optionalAdminRole.isPresent()) {
+            userRole = optionalAdminRole.get();
+        } else {
+            Set<AuthorityEntity> authorities = new HashSet<>();
+            authorities.add(AuthorityEntity.builder()
+                                .authority("smartcosmos.things.read")
+                                .build());
+            userRole = roleRepository.save(RoleEntity.builder()
+                                                .name("User")
+                                                .authorities(authorities)
+                                                .active(true)
+                                                .build());
+        } return userRole;
+    }
+
+
+
 }
 

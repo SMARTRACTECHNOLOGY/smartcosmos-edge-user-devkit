@@ -27,11 +27,10 @@ public class CreateUserResponse {
     private final String surname;
     private final String password;
     private final List<String> roles;
-    private final List<String> authorities;
     private final Boolean active;
 
     @Builder
-    @ConstructorProperties({ "urn", "tenantUrn", "username", "emailAddress", "givenName", "surname", "password", "roles", "authorities", "active" })
+    @ConstructorProperties({ "urn", "tenantUrn", "username", "emailAddress", "givenName", "surname", "password", "roles","active" })
     public CreateUserResponse(
         String urn, String tenantUrn, String username, String emailAddress, String givenName, String surname, String password,
         List<String> roles, List<String> authorities, Boolean active) {
@@ -43,7 +42,6 @@ public class CreateUserResponse {
         this.surname = surname;
         this.password = password;
         this.roles = roles;
-        this.authorities = authorities;
         this.active = active;
 
         this.version = VERSION;

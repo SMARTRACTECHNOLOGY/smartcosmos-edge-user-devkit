@@ -1,13 +1,14 @@
 package net.smartcosmos.ext.tenant.converter;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.format.FormatterRegistrar;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
+import net.smartcosmos.ext.tenant.domain.RoleEntity;
 import net.smartcosmos.ext.tenant.domain.UserEntity;
 import net.smartcosmos.ext.tenant.dto.CreateUserResponse;
 import net.smartcosmos.ext.tenant.util.UuidUtil;
@@ -21,6 +22,14 @@ public class UserEntityToCreateUserResponseConverter
 
     @Override
     public CreateUserResponse convert(UserEntity userEntity) {
+
+        // role entities from role strings
+        List<String> roles = new ArrayList<>();
+        for (RoleEntity role: userEntity.getRoles()) {
+            roles.add(role.getName());
+        }
+
+
         return CreateUserResponse.builder()
             .urn(UuidUtil.getUserUrnFromUuid(userEntity.getId()))
             .tenantUrn(UuidUtil.getTenantUrnFromUuid(userEntity.getTenantId()))
@@ -28,8 +37,7 @@ public class UserEntityToCreateUserResponseConverter
             .emailAddress(userEntity.getEmailAddress())
             .givenName(userEntity.getGivenName())
             .surname(userEntity.getSurname())
-            .roles(Arrays.asList(StringUtils.tokenizeToStringArray(userEntity.getRoles(), " ")))
-            .authorities(Arrays.asList(StringUtils.tokenizeToStringArray(userEntity.getAuthorities(), " ")))
+            .roles(roles)
             .active(userEntity.getActive())
             .build();
     }

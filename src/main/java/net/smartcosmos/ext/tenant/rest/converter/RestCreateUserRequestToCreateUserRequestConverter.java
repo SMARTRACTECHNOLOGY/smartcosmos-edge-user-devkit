@@ -24,7 +24,6 @@ public class RestCreateUserRequestToCreateUserRequestConverter
             .givenName(restCreateUserRequest.getGivenName())
             .surname(restCreateUserRequest.getSurname())
             .roles(restCreateUserRequest.getRoles())
-            .authorities(restCreateUserRequest.getAuthorities())
             .active(restCreateUserRequest.getActive())
             .build();
     }

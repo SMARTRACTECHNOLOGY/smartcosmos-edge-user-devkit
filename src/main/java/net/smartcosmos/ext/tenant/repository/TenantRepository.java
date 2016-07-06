@@ -14,8 +14,9 @@ import net.smartcosmos.ext.tenant.domain.TenantEntity;
  */
 public interface TenantRepository extends JpaRepository<TenantEntity, UUID>,
                                           PagingAndSortingRepository<TenantEntity, UUID>,
-                                        JpaSpecificationExecutor<TenantEntity> {
+                                          JpaSpecificationExecutor<TenantEntity> {
 
     Optional<TenantEntity> findByName(String name);
+
     Optional<TenantEntity> findById(UUID id);
 }
