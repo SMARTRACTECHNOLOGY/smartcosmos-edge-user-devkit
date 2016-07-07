@@ -5,11 +5,6 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.boot.orm.jpa.EntityScan;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.format.FormatterRegistrar;
 import org.springframework.format.FormatterRegistry;
@@ -20,11 +15,6 @@ import net.smartcosmos.spring.EnableSmartCosmos;
 import net.smartcosmos.spring.EnableSmartCosmosExtension;
 import net.smartcosmos.spring.EnableSmartCosmosSecurity;
 
-@EnableJpaRepositories
-@EnableJpaAuditing
-@EntityScan
-@ComponentScan
-@Configuration
 @EnableSmartCosmosExtension
 @EnableSmartCosmos
 @EnableSmartCosmosSecurity

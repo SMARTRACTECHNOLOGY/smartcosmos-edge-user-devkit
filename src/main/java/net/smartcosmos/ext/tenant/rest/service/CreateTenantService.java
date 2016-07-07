@@ -46,24 +46,21 @@ public class CreateTenantService extends AbstractTenantService{
     private void createTenantWorker(DeferredResult<ResponseEntity> response, RestCreateTenantRequest restCreateTenantRequest) {
 
         try {
-            final CreateTenantRequest tenantRequest = conversionService.convert(restCreateTenantRequest, CreateTenantRequest.class);
-
             CreateTenantRequest createTenantRequest = conversionService.convert(restCreateTenantRequest, CreateTenantRequest.class);
-            Optional<CreateTenantResponse> object = tenantDao.createTenant(createTenantRequest);
+            Optional<CreateTenantResponse> createTenantResponse = tenantDao.createTenant(createTenantRequest);
 
-            if (object.isPresent())
+            if (createTenantResponse.isPresent())
             {
                 //sendEvent(null, DefaultEventTypes.ThingCreated, object.get());
 
                 ResponseEntity responseEntity = ResponseEntity
-                    .created(URI.create(object.get().getUrn()))
-                    .body(object.get());
+                    .created(URI.create(createTenantResponse.get().getUrn()))
+                    .body(createTenantResponse.get());
                 response.setResult(responseEntity);
             }
             else {
-                Optional<GetTenantResponse> alreadyThere = tenantDao.findTenantByUrn(object.get().getUrn());
                 response.setResult(ResponseEntity.status(HttpStatus.CONFLICT).build());
-                // sendEvent(null, DefaultEventTypes.ThingCreateFailedAlreadyExists, alreadyThere.get());
+                // sendEvent(createTenantRequest, DefaultEventTypes.ThingCreateFailedAlreadyExists, createTenantRequest);
             }
 
         } catch (Exception e) {

@@ -1,6 +1,8 @@
 package net.smartcosmos.ext.tenant.impl;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -18,6 +20,8 @@ import net.smartcosmos.ext.tenant.domain.AuthorityEntity;
 import net.smartcosmos.ext.tenant.domain.RoleEntity;
 import net.smartcosmos.ext.tenant.domain.TenantEntity;
 import net.smartcosmos.ext.tenant.domain.UserEntity;
+import net.smartcosmos.ext.tenant.dto.CreateRoleRequest;
+import net.smartcosmos.ext.tenant.dto.CreateRoleResponse;
 import net.smartcosmos.ext.tenant.dto.CreateTenantRequest;
 import net.smartcosmos.ext.tenant.dto.CreateTenantResponse;
 import net.smartcosmos.ext.tenant.dto.CreateUserRequest;
@@ -25,7 +29,6 @@ import net.smartcosmos.ext.tenant.dto.CreateUserResponse;
 import net.smartcosmos.ext.tenant.dto.GetTenantResponse;
 import net.smartcosmos.ext.tenant.dto.GetUserResponse;
 import net.smartcosmos.ext.tenant.dto.TenantEntityAndUserEntityDto;
-import net.smartcosmos.ext.tenant.repository.RoleRepository;
 import net.smartcosmos.ext.tenant.repository.TenantRepository;
 import net.smartcosmos.ext.tenant.repository.UserRepository;
 import net.smartcosmos.ext.tenant.util.UuidUtil;
@@ -39,19 +42,19 @@ public class TenantPersistenceService implements TenantDao {
 
     private final TenantRepository tenantRepository;
     private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
+    private final RolePersistenceService rolePersistenceService;
     private final ConversionService conversionService;
 
     @Autowired
     public TenantPersistenceService(
         TenantRepository tenantRepository,
         UserRepository userRepository,
-        RoleRepository roleRepository,
+        RolePersistenceService rolePersistenceService,
         ConversionService conversionService) {
 
         this.tenantRepository = tenantRepository;
         this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
+        this.rolePersistenceService = rolePersistenceService;
         this.conversionService = conversionService;
     }
 
@@ -65,13 +68,14 @@ public class TenantPersistenceService implements TenantDao {
             return Optional.empty();
         }
 
-        Set<RoleEntity> roles = new HashSet<>();
-        // this creates the Admin role if it doesn't already exist.
-        roles.add(getAdminRole());
-        // we also create the User role if it doesn't already exist, but don't give it to the default admin user.
-        getUserRole();
-
         TenantEntity tenantEntity = tenantRepository.save(conversionService.convert(createTenantRequest, TenantEntity.class));
+
+        // by default we create and Admin and a User role for the new tenant, and assign Admin to the default admin user
+        RoleEntity adminRole = createAdminRole(UuidUtil.getTenantUrnFromUuid(tenantEntity.getId()));
+        RoleEntity userRole = createUserRole(UuidUtil.getTenantUrnFromUuid(tenantEntity.getId()));
+
+        Set<RoleEntity> roles = new HashSet<>();
+        roles.add(adminRole);
 
         UserEntity userEntity = UserEntity.builder()
             .id(UuidUtil.getNewUuid())
@@ -158,44 +162,37 @@ public class TenantPersistenceService implements TenantDao {
         }
     }
 
-    private RoleEntity getAdminRole() {
-        RoleEntity adminRole;
-        Optional<RoleEntity> optionalAdminRole = roleRepository.findByName("Admin");
-        if (optionalAdminRole.isPresent()) {
-            adminRole = optionalAdminRole.get();
-        } else {
-            Set<AuthorityEntity> authorities = new HashSet<>();
-            authorities.add(AuthorityEntity.builder()
-                                .authority("smartcosmos.things.read")
-                                .build());
-            authorities.add(AuthorityEntity.builder()
-                                .authority("smartcosmos.things.write")
-                                .build());
-            adminRole = roleRepository.save(RoleEntity.builder()
-                                                .name("Admin")
-                                                .authorities(authorities)
-                                                .active(true)
-                                                .build());
-        } return adminRole;
+    private RoleEntity createAdminRole(String tenantUrn) {
+        List<String> authorities = new ArrayList<>();
+        authorities.add("smartcosmos.things.read");
+        authorities.add("smartcosmos.things.write");
+
+        return createRole(tenantUrn, "Admin", authorities);
     }
 
-    private RoleEntity getUserRole() {
-        RoleEntity userRole;
-        Optional<RoleEntity> optionalAdminRole = roleRepository.findByName("User");
-        if (optionalAdminRole.isPresent()) {
-            userRole = optionalAdminRole.get();
-        } else {
-            Set<AuthorityEntity> authorities = new HashSet<>();
-            authorities.add(AuthorityEntity.builder()
-                                .authority("smartcosmos.things.read")
-                                .build());
-            userRole = roleRepository.save(RoleEntity.builder()
-                                                .name("User")
-                                                .authorities(authorities)
-                                                .active(true)
-                                                .build());
-        } return userRole;
+    private RoleEntity createUserRole(String tenantUrn) {
+        List<String> authorities = new ArrayList<>();
+        authorities.add("smartcosmos.things.read");
+
+        return createRole(tenantUrn, "User", authorities);
     }
+
+    private RoleEntity createRole(String tenantUrn, String name, List<String> authorities) {
+
+        CreateRoleRequest createRoleRequest = CreateRoleRequest.builder()
+            .name(name)
+            .authorities(authorities)
+            .active(true)
+            .build();
+
+        Optional<CreateRoleResponse> optionalRole = rolePersistenceService.createRole(tenantUrn, createRoleRequest);
+        Optional<RoleEntity> savedEntity = rolePersistenceService.findByUrnAsEntity(optionalRole.get().getUrn());
+        if (savedEntity.isPresent()) {
+            return savedEntity.get();
+        }
+        throw new IllegalArgumentException();
+    }
+
 
 
 

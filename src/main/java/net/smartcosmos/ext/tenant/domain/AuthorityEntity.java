@@ -22,7 +22,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Entity(name = "authority")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Data
-@Table(name = "authority", uniqueConstraints = @UniqueConstraint(columnNames = { "name" }))
+@Table(name = "authority", uniqueConstraints = @UniqueConstraint(columnNames = { "authority" }))
 @EntityListeners({ AuditingEntityListener.class })
 
 public class AuthorityEntity {

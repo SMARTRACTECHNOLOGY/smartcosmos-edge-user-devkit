@@ -32,11 +32,6 @@ public class CreateUserResourceTest extends net.smartcosmos.dao.tenant.rest.reso
     @org.junit.Before
     public void setUp() throws Exception {
 
-        adminRoleOnly.add("Admin");
-        userRoleOnly.add("User");
-        adminAndUserRoles.add("Admin");
-        adminAndUserRoles.add("User");
-
         // create tenant with default admin user, so we can create other users
         final String name = "example1.com";
         final String username = "admin@example1.com";
@@ -44,10 +39,6 @@ public class CreateUserResourceTest extends net.smartcosmos.dao.tenant.rest.reso
 
         final String expectedUrn = "urn:tenant:uuid:" + net.smartcosmos.ext.tenant.util.UuidUtil.getNewUuid()
             .toString();
-
-        java.util.List<String> authorities = new java.util.ArrayList<>();
-        java.util.List<String> adminRoles = new java.util.ArrayList<>();
-        adminRoles.add("Admin");
 
         MvcResult mvcResult = this.mockMvc.perform(
             post("/tenant/").content(this.json(net.smartcosmos.ext.tenant.rest.dto.RestCreateTenantRequest.builder()
