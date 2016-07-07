@@ -41,6 +41,7 @@ public class CreateTenantResourceTest extends AbstractTestResource {
      * @throws Exception
      */
     @Test
+    @Ignore
     public void thatCreateTenantSucceeds() throws Exception {
 
         final String name = "example.com";

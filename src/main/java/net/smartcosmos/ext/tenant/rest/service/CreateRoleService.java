@@ -16,40 +16,41 @@ import org.springframework.web.context.request.async.DeferredResult;
 import net.smartcosmos.events.SmartCosmosEventTemplate;
 import net.smartcosmos.ext.tenant.dao.RoleDao;
 import net.smartcosmos.ext.tenant.dao.TenantDao;
-import net.smartcosmos.ext.tenant.dto.CreateUserRequest;
-import net.smartcosmos.ext.tenant.dto.CreateUserResponse;
-import net.smartcosmos.ext.tenant.dto.GetUserResponse;
-import net.smartcosmos.ext.tenant.rest.dto.RestCreateUserRequest;
+import net.smartcosmos.ext.tenant.dto.CreateRoleRequest;
+import net.smartcosmos.ext.tenant.dto.CreateRoleResponse;
+import net.smartcosmos.ext.tenant.dto.GetRoleResponse;
+import net.smartcosmos.ext.tenant.rest.dto.RestCreateRoleRequest;
+import net.smartcosmos.security.user.SmartCosmosUser;
 
 /**
  * Initially created by SMART COSMOS Team on July 01, 2016.
  */
 @Slf4j
 @Service
-public class CreateUserService extends AbstractTenantService{
+public class CreateRoleService extends AbstractTenantService{
 
     @Inject
-    public CreateUserService(TenantDao tenantDao, RoleDao roleDao, SmartCosmosEventTemplate smartCosmosEventTemplate, ConversionService
+    public CreateRoleService(TenantDao tenantDao, RoleDao roleDao, SmartCosmosEventTemplate smartCosmosEventTemplate, ConversionService
         conversionService) {
         super(tenantDao, roleDao, smartCosmosEventTemplate, conversionService);
     }
 
 
-    public DeferredResult<ResponseEntity> create(RestCreateUserRequest restCreateUserRequest) {
+    public DeferredResult<ResponseEntity> create(RestCreateRoleRequest restCreateRoleRequest) {
         // Async worker thread reduces timeouts and disconnects for long queries and processing.
         DeferredResult<ResponseEntity> response = new DeferredResult<>();
-        createUserWorker(response, restCreateUserRequest);
+        createRoleWorker(response, restCreateRoleRequest);
 
         return response;
     }
 
     @Async
-    private void createUserWorker(DeferredResult<ResponseEntity> response, RestCreateUserRequest restCreateUserRequest) {
+    private void createRoleWorker(DeferredResult<ResponseEntity> response, RestCreateRoleRequest restCreateRoleRequest) {
 
         try {
-            final CreateUserRequest createUserRequest = conversionService.convert(restCreateUserRequest, CreateUserRequest.class);
+            final CreateRoleRequest createRoleRequest = conversionService.convert(restCreateRoleRequest, CreateRoleRequest.class);
 
-            Optional<CreateUserResponse> newUser = tenantDao.createUser(createUserRequest);;
+            Optional<CreateRoleResponse> newUser = roleDao.createRole("whatever", createRoleRequest);;
 
             if (newUser.isPresent())
             {
@@ -61,7 +62,7 @@ public class CreateUserService extends AbstractTenantService{
                 response.setResult(responseEntity);
             }
             else {
-                Optional<GetUserResponse> alreadyThere = tenantDao.findUserByUrn(newUser.get().getUrn());
+                Optional<GetRoleResponse> alreadyThere = roleDao.findByNameAndTenantUrn(restCreateRoleRequest.getName(), "tenantUrnHere");
                 response.setResult(ResponseEntity.status(HttpStatus.CONFLICT).build());
                 //sendEvent(null, DefaultEventTypes.ThingCreateFailedAlreadyExists, alreadyThere.get());
             }

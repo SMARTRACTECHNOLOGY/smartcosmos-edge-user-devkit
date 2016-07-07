@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.context.request.async.DeferredResult;
 
 import net.smartcosmos.ext.tenant.rest.dto.RestCreateUserRequest;
-import net.smartcosmos.ext.tenant.rest.service.CreateTenantService;
 import net.smartcosmos.ext.tenant.rest.service.CreateUserService;
 import net.smartcosmos.security.EndpointMethodControl;
 import net.smartcosmos.spring.SmartCosmosRdao;
@@ -34,7 +33,7 @@ public class CreateUserResource {
     @Autowired
     public CreateUserResource(CreateUserService service) { this.service = service; }
 
-    @RequestMapping(value = "/user", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8_VALUE, consumes = APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/users", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8_VALUE, consumes = APPLICATION_JSON_UTF8_VALUE)
     @EndpointMethodControl(key = "user.post")
     @ConditionalOnProperty(prefix = "smt.endpoints.user.post", name = "enabled", matchIfMissing = true)
     public DeferredResult<ResponseEntity> createUser(

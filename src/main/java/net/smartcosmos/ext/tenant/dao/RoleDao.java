@@ -5,6 +5,7 @@ import javax.validation.ConstraintViolationException;
 
 import net.smartcosmos.ext.tenant.dto.CreateRoleRequest;
 import net.smartcosmos.ext.tenant.dto.CreateRoleResponse;
+import net.smartcosmos.ext.tenant.dto.GetRoleResponse;
 import net.smartcosmos.ext.tenant.dto.UpdateRoleRequest;
 import net.smartcosmos.ext.tenant.dto.UpdateRoleResponse;
 
@@ -16,5 +17,7 @@ public interface RoleDao {
     Optional<CreateRoleResponse> createRole(String tenantUrn, CreateRoleRequest createRoleRequest) throws ConstraintViolationException;
 
     Optional<UpdateRoleResponse> updateRole(String tenantUrn, UpdateRoleRequest updateRoleRequest) throws ConstraintViolationException;
+
+    Optional<GetRoleResponse> findByNameAndTenantUrn(String tenantUrn, String name) throws ConstraintViolationException;
 
 }

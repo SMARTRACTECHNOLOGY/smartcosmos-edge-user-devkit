@@ -13,12 +13,11 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.async.DeferredResult;
 
-import net.smartcosmos.events.DefaultEventTypes;
 import net.smartcosmos.events.SmartCosmosEventTemplate;
+import net.smartcosmos.ext.tenant.dao.RoleDao;
 import net.smartcosmos.ext.tenant.dao.TenantDao;
 import net.smartcosmos.ext.tenant.dto.CreateTenantRequest;
 import net.smartcosmos.ext.tenant.dto.CreateTenantResponse;
-import net.smartcosmos.ext.tenant.dto.GetTenantResponse;
 import net.smartcosmos.ext.tenant.rest.dto.RestCreateTenantRequest;
 
 /**
@@ -29,8 +28,9 @@ import net.smartcosmos.ext.tenant.rest.dto.RestCreateTenantRequest;
 public class CreateTenantService extends AbstractTenantService{
 
     @Inject
-    public CreateTenantService(TenantDao tenantDao, SmartCosmosEventTemplate smartCosmosEventTemplate, ConversionService conversionService) {
-        super(tenantDao, smartCosmosEventTemplate, conversionService);
+    public CreateTenantService(TenantDao tenantDao, RoleDao roleDao, SmartCosmosEventTemplate smartCosmosEventTemplate, ConversionService
+        conversionService) {
+        super(tenantDao, roleDao, smartCosmosEventTemplate, conversionService);
     }
 
 
