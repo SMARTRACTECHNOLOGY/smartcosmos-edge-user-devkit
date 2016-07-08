@@ -25,7 +25,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 
 import net.smartcosmos.dao.tenant.TenantPersistenceTestApplication;
-import net.smartcosmos.ext.tenant.TenantPersistenceConfig;
 import net.smartcosmos.ext.tenant.TenantRdao;
 import net.smartcosmos.security.user.SmartCosmosUser;
 
@@ -37,8 +36,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 @WebAppConfiguration
 @ActiveProfiles("test")
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = { TenantPersistenceTestApplication.class,
-                                            TenantPersistenceConfig.class })
+@SpringApplicationConfiguration(classes = { TenantPersistenceTestApplication.class })
 public abstract class AbstractTestResource {
 
     protected MediaType contentType = MediaType.APPLICATION_JSON_UTF8;

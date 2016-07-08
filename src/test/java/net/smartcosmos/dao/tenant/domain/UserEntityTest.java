@@ -15,8 +15,7 @@ import net.smartcosmos.ext.tenant.util.UuidUtil;
 
 import static org.junit.Assert.*;
 
-@org.springframework.boot.test.SpringApplicationConfiguration(classes = { net.smartcosmos.dao.tenant.TenantPersistenceTestApplication.class,
-                                                                          net.smartcosmos.ext.tenant.TenantPersistenceConfig.class })
+@org.springframework.boot.test.SpringApplicationConfiguration(classes = { net.smartcosmos.dao.tenant.TenantPersistenceTestApplication.class })
 @SuppressWarnings("Duplicates")
 public class UserEntityTest {
 

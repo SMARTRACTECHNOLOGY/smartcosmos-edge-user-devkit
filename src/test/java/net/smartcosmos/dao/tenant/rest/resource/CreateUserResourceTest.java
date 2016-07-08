@@ -20,9 +20,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * Unit Testing sample for creating Tenants.
  */
 @SuppressWarnings("Duplicates")
-@org.springframework.boot.test.SpringApplicationConfiguration(classes = { net.smartcosmos.dao.tenant.TenantPersistenceTestApplication.class,
-                                                                          net.smartcosmos.ext.tenant.TenantPersistenceConfig.class })
-public class CreateUserResourceTest extends net.smartcosmos.dao.tenant.rest.resource.AbstractTestResource {
+@org.springframework.boot.test.SpringApplicationConfiguration(classes = { net.smartcosmos.dao.tenant.TenantPersistenceTestApplication.class })
+public class CreateUserResourceTest extends AbstractTestResource {
 
     private String tenantUrn;
 

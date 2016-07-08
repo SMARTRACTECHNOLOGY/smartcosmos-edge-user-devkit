@@ -13,10 +13,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionException;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import net.smartcosmos.ext.tenant.dao.TenantDao;
-import net.smartcosmos.ext.tenant.domain.AuthorityEntity;
 import net.smartcosmos.ext.tenant.domain.RoleEntity;
 import net.smartcosmos.ext.tenant.domain.TenantEntity;
 import net.smartcosmos.ext.tenant.domain.UserEntity;
@@ -44,18 +44,21 @@ public class TenantPersistenceService implements TenantDao {
     private final UserRepository userRepository;
     private final RolePersistenceService rolePersistenceService;
     private final ConversionService conversionService;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
     public TenantPersistenceService(
         TenantRepository tenantRepository,
         UserRepository userRepository,
         RolePersistenceService rolePersistenceService,
-        ConversionService conversionService) {
+        ConversionService conversionService,
+        PasswordEncoder passwordEncoder) {
 
         this.tenantRepository = tenantRepository;
         this.userRepository = userRepository;
         this.rolePersistenceService = rolePersistenceService;
         this.conversionService = conversionService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -82,7 +85,7 @@ public class TenantPersistenceService implements TenantDao {
             .tenantId(tenantEntity.getId())
             .username(createTenantRequest.getUsername())
             .emailAddress(createTenantRequest.getUsername())
-            .password("PleaseChangeMeImmediately")
+            .password(passwordEncoder.encode("PleaseChangeMeImmediately"))
             .roles(roles)
             .active(createTenantRequest.getActive() == null ? true : createTenantRequest.getActive())
             .build();
@@ -119,6 +122,26 @@ public class TenantPersistenceService implements TenantDao {
             log.debug(msg, e);
             throw e;
         }
+    }
+
+    @Override
+    public Optional<GetTenantResponse> findTenantByName(String name) {
+
+        Optional<TenantEntity> entity = tenantRepository.findByName(name);
+        if (entity.isPresent()) {
+            return Optional.of(conversionService.convert(entity.get(), GetTenantResponse.class));
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<GetUserResponse> findUserByName(String name) {
+
+        Optional<UserEntity> entity = userRepository.findByName(name);
+        if (entity.isPresent()) {
+            return Optional.of(conversionService.convert(entity.get(), GetUserResponse.class));
+        }
+        return Optional.empty();
     }
 
     @Override

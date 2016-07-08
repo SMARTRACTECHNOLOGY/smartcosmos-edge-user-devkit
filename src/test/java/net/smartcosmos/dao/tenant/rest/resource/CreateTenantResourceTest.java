@@ -23,8 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * Unit Testing sample for creating Tenants.
  */
-@org.springframework.boot.test.SpringApplicationConfiguration(classes = { net.smartcosmos.dao.tenant.TenantPersistenceTestApplication.class,
-                                                                          net.smartcosmos.ext.tenant.TenantPersistenceConfig.class })
+@org.springframework.boot.test.SpringApplicationConfiguration(classes = { net.smartcosmos.dao.tenant.TenantPersistenceTestApplication.class })
 public class CreateTenantResourceTest extends AbstractTestResource {
 
     @Autowired
