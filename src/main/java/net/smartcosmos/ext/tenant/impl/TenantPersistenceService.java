@@ -20,15 +20,18 @@ import net.smartcosmos.ext.tenant.dao.TenantDao;
 import net.smartcosmos.ext.tenant.domain.RoleEntity;
 import net.smartcosmos.ext.tenant.domain.TenantEntity;
 import net.smartcosmos.ext.tenant.domain.UserEntity;
-import net.smartcosmos.ext.tenant.dto.CreateRoleRequest;
-import net.smartcosmos.ext.tenant.dto.CreateRoleResponse;
+import net.smartcosmos.ext.tenant.dto.CreateOrUpdateUserResponse;
+import net.smartcosmos.ext.tenant.dto.CreateOrUpdateRoleRequest;
+import net.smartcosmos.ext.tenant.dto.CreateOrUpdateRoleResponse;
 import net.smartcosmos.ext.tenant.dto.CreateTenantRequest;
 import net.smartcosmos.ext.tenant.dto.CreateTenantResponse;
 import net.smartcosmos.ext.tenant.dto.CreateUserRequest;
-import net.smartcosmos.ext.tenant.dto.CreateUserResponse;
 import net.smartcosmos.ext.tenant.dto.GetTenantResponse;
 import net.smartcosmos.ext.tenant.dto.GetUserResponse;
 import net.smartcosmos.ext.tenant.dto.TenantEntityAndUserEntityDto;
+import net.smartcosmos.ext.tenant.dto.UpdateTenantRequest;
+import net.smartcosmos.ext.tenant.dto.UpdateTenantResponse;
+import net.smartcosmos.ext.tenant.dto.UpdateUserRequest;
 import net.smartcosmos.ext.tenant.repository.TenantRepository;
 import net.smartcosmos.ext.tenant.repository.UserRepository;
 import net.smartcosmos.ext.tenant.util.UuidUtil;
@@ -46,6 +49,14 @@ public class TenantPersistenceService implements TenantDao {
     private final ConversionService conversionService;
     private final PasswordEncoder passwordEncoder;
 
+    /**
+     *
+     * @param tenantRepository
+     * @param userRepository
+     * @param rolePersistenceService
+     * @param conversionService
+     * @param passwordEncoder
+     */
     @Autowired
     public TenantPersistenceService(
         TenantRepository tenantRepository,
@@ -61,45 +72,101 @@ public class TenantPersistenceService implements TenantDao {
         this.passwordEncoder = passwordEncoder;
     }
 
+    /******************/
+    /* TENANT METHODS */
+    /******************/
+
+    /**
+     *
+     * @param createTenantRequest
+     * @return
+     * @throws ConstraintViolationException
+     */
     @Override
     public Optional<CreateTenantResponse> createTenant(CreateTenantRequest createTenantRequest)
         throws ConstraintViolationException {
 
-        // This tenant already exists? we're not creating a new one
-        if (tenantRepository.findByName(createTenantRequest.getName())
-            .isPresent()) {
-            return Optional.empty();
+        try {
+            // This tenant already exists? we're not creating a new one
+            if (tenantRepository.findByName(createTenantRequest.getName())
+                .isPresent()) {
+                return Optional.empty();
+            }
+
+            TenantEntity tenantEntity = tenantRepository.save(conversionService.convert(createTenantRequest, TenantEntity.class));
+
+            // by default we create and Admin and a User role for the new tenant, and assign Admin to the default admin user
+            RoleEntity adminRole = createAdminRole(UuidUtil.getTenantUrnFromUuid(tenantEntity.getId()));
+            RoleEntity userRole = createUserRole(UuidUtil.getTenantUrnFromUuid(tenantEntity.getId()));
+
+            Set<RoleEntity> roles = new HashSet<>();
+            roles.add(adminRole);
+
+            UserEntity userEntity = UserEntity.builder()
+                .id(UuidUtil.getNewUuid())
+                .tenantId(tenantEntity.getId())
+                .username(createTenantRequest.getUsername())
+                .emailAddress(createTenantRequest.getUsername())
+                .password(passwordEncoder.encode("PleaseChangeMeImmediately"))
+                .roles(roles)
+                .active(createTenantRequest.getActive() == null ? true : createTenantRequest.getActive())
+                .build();
+
+            userEntity = userRepository.save(userEntity);
+
+            return Optional
+                .ofNullable(conversionService.convert(TenantEntityAndUserEntityDto.builder()
+                                                          .tenantEntity(tenantEntity)
+                                                          .userEntity(userEntity)
+                                                          .build(),
+                                                      CreateTenantResponse.class));
+
+        } catch (IllegalArgumentException | ConversionException e) {
+            String msg = String.format("create failed, tenant: '%s', cause: %s", createTenantRequest.getName(), e.toString());
+            log.error(msg);
+            log.debug(msg, e);
+            throw e;
         }
-
-        TenantEntity tenantEntity = tenantRepository.save(conversionService.convert(createTenantRequest, TenantEntity.class));
-
-        // by default we create and Admin and a User role for the new tenant, and assign Admin to the default admin user
-        RoleEntity adminRole = createAdminRole(UuidUtil.getTenantUrnFromUuid(tenantEntity.getId()));
-        RoleEntity userRole = createUserRole(UuidUtil.getTenantUrnFromUuid(tenantEntity.getId()));
-
-        Set<RoleEntity> roles = new HashSet<>();
-        roles.add(adminRole);
-
-        UserEntity userEntity = UserEntity.builder()
-            .id(UuidUtil.getNewUuid())
-            .tenantId(tenantEntity.getId())
-            .username(createTenantRequest.getUsername())
-            .emailAddress(createTenantRequest.getUsername())
-            .password(passwordEncoder.encode("PleaseChangeMeImmediately"))
-            .roles(roles)
-            .active(createTenantRequest.getActive() == null ? true : createTenantRequest.getActive())
-            .build();
-
-        userEntity = userRepository.save(userEntity);
-
-        return Optional
-            .ofNullable(conversionService.convert(TenantEntityAndUserEntityDto.builder()
-                                                      .tenantEntity(tenantEntity)
-                                                      .userEntity(userEntity)
-                                                      .build(),
-                                                  CreateTenantResponse.class));
     }
 
+    /**
+     *
+     * @param updateTenantRequest
+     * @return
+     * @throws ConstraintViolationException
+     */
+    @Override
+    public Optional<UpdateTenantResponse> updateTenant(UpdateTenantRequest updateTenantRequest)
+        throws ConstraintViolationException {
+
+        // This tenant already exists? we're not creating a new one
+        Optional<TenantEntity> tenantEntityOptional = tenantRepository.findById(UuidUtil.getUuidFromUrn(updateTenantRequest.getUrn()));
+
+        try {
+            if (tenantEntityOptional.isPresent()) {
+                if (updateTenantRequest.getActive() != null) {
+                    tenantEntityOptional.get().setActive(updateTenantRequest.getActive());
+                }
+                if (updateTenantRequest.getName() != null) {
+                    tenantEntityOptional.get().setName(updateTenantRequest.getName());
+                }
+                TenantEntity tenantEntity = tenantRepository.save(tenantEntityOptional.get());
+                return Optional.ofNullable(conversionService.convert(tenantEntity, UpdateTenantResponse.class));
+            }
+        } catch (IllegalArgumentException | ConstraintViolationException e) {
+            String msg = String.format("update failed, tenant: 9+-'%s', cause: %s", updateTenantRequest.getUrn(), e.toString());
+            log.error(msg);
+            log.debug(msg, e);
+            throw e;
+        }
+        return Optional.empty();
+    }
+
+    /**
+     *
+     * @param tenantUrn
+     * @return
+     */
     @Override
     public Optional<GetTenantResponse> findTenantByUrn(String tenantUrn) {
 
@@ -124,6 +191,11 @@ public class TenantPersistenceService implements TenantDao {
         }
     }
 
+    /**
+     *
+     * @param name
+     * @return
+     */
     @Override
     public Optional<GetTenantResponse> findTenantByName(String name) {
 
@@ -134,33 +206,89 @@ public class TenantPersistenceService implements TenantDao {
         return Optional.empty();
     }
 
-    @Override
-    public Optional<GetUserResponse> findUserByName(String name) {
+    /****************/
+    /* USER METHODS */
+    /****************/
 
-        Optional<UserEntity> entity = userRepository.findByName(name);
-        if (entity.isPresent()) {
-            return Optional.of(conversionService.convert(entity.get(), GetUserResponse.class));
+    @Override
+    public Optional<CreateOrUpdateUserResponse> createUser(CreateUserRequest createUserRequest)
+        throws ConstraintViolationException {
+
+        try {
+            // This user already exists? We're not creating a new one.
+            if (userRepository.findByUsernameAndTenantId(
+                createUserRequest.getUsername(),
+                UuidUtil.getUuidFromUrn(createUserRequest.getTenantUrn()))
+                .isPresent()) {
+
+                return Optional.empty();
+            }
+
+            UserEntity userEntity = conversionService.convert(createUserRequest, UserEntity.class);
+            userEntity.setPassword(passwordEncoder.encode("PleaseChangeMeImmediately"));
+            userEntity = userRepository.save(userEntity);
+            return Optional.ofNullable(conversionService.convert(userEntity, CreateOrUpdateUserResponse.class));
+
+        } catch (IllegalArgumentException | ConstraintViolationException e) {
+            String msg = String.format("create failed, user: '%s', tenant: '%s', cause: %s", createUserRequest.getUsername(),
+                                       createUserRequest.getTenantUrn(). toString());
+            log.error(msg);
+            log.debug(msg, e);
+            throw e;
+        }
+    }
+
+    /**
+     *
+     * @param updateUserRequest
+     * @return
+     * @throws ConstraintViolationException
+     */
+    @Override
+    public Optional<CreateOrUpdateUserResponse> updateUser(UpdateUserRequest updateUserRequest)
+        throws ConstraintViolationException {
+
+        Optional<UserEntity> userEntityOptional = userRepository.findById(UuidUtil.getUuidFromUrn(updateUserRequest.getUrn()));
+
+        try {
+            if (userEntityOptional.isPresent()) {
+                if (updateUserRequest.getActive() != null) {
+                    userEntityOptional.get().setActive(updateUserRequest.getActive());
+                }
+                if (updateUserRequest.getUsername() != null) {
+                    userEntityOptional.get().setUsername(updateUserRequest.getUsername());
+                }
+                if (updateUserRequest.getGivenName() != null) {
+                    userEntityOptional.get().setGivenName(updateUserRequest.getGivenName());
+                }
+                if (updateUserRequest.getSurname() != null) {
+                    userEntityOptional.get().setSurname(updateUserRequest.getSurname());
+                }
+                if (updateUserRequest.getEmailAddress() != null) {
+                    userEntityOptional.get().setEmailAddress(updateUserRequest.getEmailAddress());
+                }
+                if (updateUserRequest.getPassword() != null) {
+                    userEntityOptional.get().setPassword(passwordEncoder.encode(updateUserRequest.getPassword()));
+                }
+
+                UserEntity userEntity = userRepository.save(userEntityOptional.get());
+                return Optional.ofNullable(conversionService.convert(userEntity, CreateOrUpdateUserResponse.class));
+            }
+
+        } catch (IllegalArgumentException | ConstraintViolationException e) {
+            String msg = String.format("update failed, tenant: 9+-'%s', cause: %s", updateUserRequest.getUrn(), e.toString());
+            log.error(msg);
+            log.debug(msg, e);
+            throw e;
         }
         return Optional.empty();
     }
 
-    @Override
-    public Optional<CreateUserResponse> createUser(CreateUserRequest createUserRequest)
-        throws ConstraintViolationException {
-
-        // This user already exists? We're not creating a new one.
-        if (userRepository.findByUsernameAndTenantId(
-            createUserRequest.getUsername(),
-            UuidUtil.getUuidFromUrn(createUserRequest.getTenantUrn()))
-            .isPresent()) {
-
-            return Optional.empty();
-        }
-
-        UserEntity userEntity = userRepository.save(conversionService.convert(createUserRequest, UserEntity.class));
-        return Optional.ofNullable(conversionService.convert(userEntity, CreateUserResponse.class));
-    }
-
+    /**
+     *
+     * @param userUrn
+     * @return
+     */
     @Override
     public Optional<GetUserResponse> findUserByUrn(String userUrn) {
 
@@ -185,6 +313,25 @@ public class TenantPersistenceService implements TenantDao {
         }
     }
 
+    /**
+     *
+     * @param name
+     * @return
+     */
+    @Override
+    public Optional<GetUserResponse> findUserByName(String name) {
+
+        Optional<UserEntity> entity = userRepository.findByName(name);
+        if (entity.isPresent()) {
+            return Optional.of(conversionService.convert(entity.get(), GetUserResponse.class));
+        }
+        return Optional.empty();
+    }
+
+    /*******************/
+    /* UTILITY METHODS */
+    /*******************/
+
     private RoleEntity createAdminRole(String tenantUrn) {
         List<String> authorities = new ArrayList<>();
         authorities.add("smartcosmos.things.read");
@@ -202,22 +349,18 @@ public class TenantPersistenceService implements TenantDao {
 
     private RoleEntity createRole(String tenantUrn, String name, List<String> authorities) {
 
-        CreateRoleRequest createRoleRequest = CreateRoleRequest.builder()
+        CreateOrUpdateRoleRequest createRoleRequest = CreateOrUpdateRoleRequest.builder()
             .name(name)
             .authorities(authorities)
             .active(true)
             .build();
 
-        Optional<CreateRoleResponse> optionalRole = rolePersistenceService.createRole(tenantUrn, createRoleRequest);
+        Optional<CreateOrUpdateRoleResponse> optionalRole = rolePersistenceService.createRole(tenantUrn, createRoleRequest);
         Optional<RoleEntity> savedEntity = rolePersistenceService.findByUrnAsEntity(optionalRole.get().getUrn());
         if (savedEntity.isPresent()) {
             return savedEntity.get();
         }
         throw new IllegalArgumentException();
     }
-
-
-
-
 }
 

@@ -13,7 +13,7 @@ import lombok.Setter;
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties({ "version" })
-public class CreateRoleResponse {
+public class CreateOrUpdateRoleResponse {
 
     private static final int VERSION = 1;
     @Setter(AccessLevel.NONE)
@@ -26,7 +26,7 @@ public class CreateRoleResponse {
 
     @Builder
     @ConstructorProperties({ "urn", "name", "authorities", "active" })
-    public CreateRoleResponse(String urn, String name, List<String> authorities, Boolean active) {
+    public CreateOrUpdateRoleResponse(String urn, String name, List<String> authorities, Boolean active) {
         this.urn = urn;
         this.name = name;
         this.authorities = authorities;

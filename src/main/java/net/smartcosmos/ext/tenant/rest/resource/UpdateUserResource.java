@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.context.request.async.DeferredResult;
 
-import net.smartcosmos.ext.tenant.rest.dto.RestCreateOrUpdateRoleRequest;
-import net.smartcosmos.ext.tenant.rest.service.CreateRoleService;
+import net.smartcosmos.ext.tenant.rest.dto.RestUpdateUserRequest;
+import net.smartcosmos.ext.tenant.rest.service.UpdateUserService;
 import net.smartcosmos.security.EndpointMethodControl;
 import net.smartcosmos.spring.SmartCosmosRdao;
 
@@ -26,20 +26,20 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 @Slf4j
 @ConditionalOnProperty(prefix = "smt.endpoints.tenant", name = "enabled", matchIfMissing = true)
 //@Api
-public class CreateRoleResource {
+public class UpdateUserResource {
 
-    private CreateRoleService service;
+    private UpdateUserService service;
 
     @Autowired
-    public CreateRoleResource(CreateRoleService service) { this.service = service; }
+    public UpdateUserResource(UpdateUserService service) { this.service = service; }
 
-    @RequestMapping(value = "/roles", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8_VALUE, consumes = APPLICATION_JSON_UTF8_VALUE)
-    @EndpointMethodControl(key = "role.post")
-    @ConditionalOnProperty(prefix = "smt.endpoints.user.post", name = "enabled", matchIfMissing = true)
-    public DeferredResult<ResponseEntity> createRole(
-        @RequestBody @Valid RestCreateOrUpdateRoleRequest restCreateOrUpdateRoleRequest) {
+    @RequestMapping(value = "/users", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8_VALUE, consumes = APPLICATION_JSON_UTF8_VALUE)
+    @EndpointMethodControl(key = "tenant.put")
+    @ConditionalOnProperty(prefix = "smt.endpoints.user.put", name = "enabled", matchIfMissing = true)
+    public DeferredResult<ResponseEntity> updateObject(
+        @RequestBody @Valid RestUpdateUserRequest restUpdateUserRequest) {
 
-        return service.create(restCreateOrUpdateRoleRequest);
+        return service.create(restUpdateUserRequest);
     }
 }
 

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 import net.smartcosmos.ext.tenant.domain.RoleEntity;
 import net.smartcosmos.ext.tenant.domain.UserEntity;
-import net.smartcosmos.ext.tenant.dto.CreateUserResponse;
+import net.smartcosmos.ext.tenant.dto.CreateOrUpdateUserResponse;
 import net.smartcosmos.ext.tenant.util.UuidUtil;
 
 /**
@@ -18,10 +18,10 @@ import net.smartcosmos.ext.tenant.util.UuidUtil;
  */
 @Component
 public class UserEntityToCreateUserResponseConverter
-    implements Converter<UserEntity, CreateUserResponse>, FormatterRegistrar {
+    implements Converter<UserEntity, CreateOrUpdateUserResponse>, FormatterRegistrar {
 
     @Override
-    public CreateUserResponse convert(UserEntity userEntity) {
+    public CreateOrUpdateUserResponse convert(UserEntity userEntity) {
 
         // role entities from role strings
         List<String> roles = new ArrayList<>();
@@ -30,7 +30,7 @@ public class UserEntityToCreateUserResponseConverter
         }
 
 
-        return CreateUserResponse.builder()
+        return CreateOrUpdateUserResponse.builder()
             .urn(UuidUtil.getUserUrnFromUuid(userEntity.getId()))
             .tenantUrn(UuidUtil.getTenantUrnFromUuid(userEntity.getTenantId()))
             .username(userEntity.getUsername())

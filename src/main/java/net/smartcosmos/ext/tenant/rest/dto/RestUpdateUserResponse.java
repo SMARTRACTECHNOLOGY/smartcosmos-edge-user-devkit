@@ -13,14 +13,12 @@ import lombok.Setter;
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties({ "version" })
-public class RestCreateUserResponse {
+public class RestUpdateUserResponse {
 
     private static final int VERSION = 1;
     @Setter(AccessLevel.NONE)
     private int version = VERSION;
 
-    private final String urn;
-    private final String tenantUrn;
     private final String username;
     private final String emailAddress;
     private final String givenName;
@@ -29,11 +27,9 @@ public class RestCreateUserResponse {
     private final Boolean active;
 
     @Builder
-    @ConstructorProperties({ "urn", "tenantUrn", "username", "emailAddress", "givenName", "surname", "password", "roles", "active" })
-    public RestCreateUserResponse(
+    @ConstructorProperties({ "username", "emailAddress", "givenName", "surname", "roles", "active" })
+    public RestUpdateUserResponse(
         String urn, String tenantUrn, String username, String emailAddress, String givenName, String surname,  List<String> roles, Boolean active) {
-        this.urn = urn;
-        this.tenantUrn = tenantUrn;
         this.username = username;
         this.emailAddress = emailAddress;
         this.givenName = givenName;

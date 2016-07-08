@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 import net.smartcosmos.ext.tenant.domain.RoleEntity;
 import net.smartcosmos.ext.tenant.dto.CreateTenantResponse;
-import net.smartcosmos.ext.tenant.dto.CreateUserResponse;
+import net.smartcosmos.ext.tenant.dto.CreateOrUpdateUserResponse;
 import net.smartcosmos.ext.tenant.dto.TenantEntityAndUserEntityDto;
 import net.smartcosmos.ext.tenant.util.UuidUtil;
 /**
@@ -31,7 +31,7 @@ public class TenantEntityAndUserEntityDtoToCreateTenantResponseConverter
         for (RoleEntity roleEntity: entityDto.getUserEntity().getRoles()) {
             rolesAsStrings.add(roleEntity.getName());
         }
-        CreateUserResponse userResponse = CreateUserResponse.builder()
+        CreateOrUpdateUserResponse userResponse = CreateOrUpdateUserResponse.builder()
             .urn(UuidUtil.getUserUrnFromUuid(entityDto.getUserEntity().getId()))
             .tenantUrn(UuidUtil.getUserUrnFromUuid(entityDto.getTenantEntity().getId()))
             .username(entityDto.getUserEntity().getUsername())

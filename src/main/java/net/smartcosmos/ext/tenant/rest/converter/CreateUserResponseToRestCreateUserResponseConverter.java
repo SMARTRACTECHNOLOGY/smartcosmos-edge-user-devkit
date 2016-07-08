@@ -5,7 +5,7 @@ import org.springframework.format.FormatterRegistrar;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.stereotype.Component;
 
-import net.smartcosmos.ext.tenant.dto.CreateUserResponse;
+import net.smartcosmos.ext.tenant.dto.CreateOrUpdateUserResponse;
 import net.smartcosmos.ext.tenant.rest.dto.RestCreateUserResponse;
 
 /**
@@ -13,10 +13,10 @@ import net.smartcosmos.ext.tenant.rest.dto.RestCreateUserResponse;
  */
 @Component
 public class CreateUserResponseToRestCreateUserResponseConverter
-    implements Converter<CreateUserResponse, RestCreateUserResponse>, FormatterRegistrar {
+    implements Converter<CreateOrUpdateUserResponse, RestCreateUserResponse>, FormatterRegistrar {
 
     @Override
-    public RestCreateUserResponse convert(CreateUserResponse createUserResponse) {
+    public RestCreateUserResponse convert(CreateOrUpdateUserResponse createUserResponse) {
         return RestCreateUserResponse.builder()
             .urn(createUserResponse.getUrn())
             .tenantUrn(createUserResponse.getTenantUrn())

@@ -1,4 +1,4 @@
-package net.smartcosmos.ext.tenant.rest.dto;
+package net.smartcosmos.ext.tenant.dto;
 
 import java.beans.ConstructorProperties;
 
@@ -9,31 +9,31 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.Setter;
 
-import net.smartcosmos.ext.tenant.dto.CreateOrUpdateUserResponse;
-
+/**
+ * Initially created by SMART COSMOS Team on June 30, 2016.
+ */
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties({ "version" })
-public class RestCreateTenantResponse {
+public class UpdateTenantRequest {
 
     private static final int VERSION = 1;
     @Setter(AccessLevel.NONE)
     private int version = VERSION;
 
-    private final String urn;
-    private final String name;
-    private final Boolean active;
-
-    private final CreateOrUpdateUserResponse admin;
+    private String urn;
+    private String name;
+    private Boolean active;
 
     @Builder
-    @ConstructorProperties({ "urn", "name", "tenantUrn", "active", "admin" })
-    public RestCreateTenantResponse(String urn, String name, Boolean active, CreateOrUpdateUserResponse admin) {
+    @ConstructorProperties({ "urn", "name", "active"})
+    public UpdateTenantRequest(String urn, String name, String username, Boolean active)
+    {
         this.urn = urn;
         this.name = name;
-        this.active = active;
-        this.admin = admin;
+        this.active = active != null ? active : true;
 
         this.version = VERSION;
     }
+
 }

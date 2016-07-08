@@ -16,24 +16,34 @@ import lombok.Setter;
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties({ "version" })
-public class UpdateRoleRequest {
+public class UpdateUserRequest {
 
     private static final int VERSION = 1;
     @Setter(AccessLevel.NONE)
     private int version = VERSION;
 
     private String urn;
-    private String name;
-    private List<String> authorities;
+    private String username;
+    private String emailAddress;
+    private String givenName;
+    private String surname;
+    private String password;
+    private List<String> roles;
+
     private Boolean active;
 
     @Builder
-    @ConstructorProperties({ "urn", "name", "authorities", "active"})
-    public UpdateRoleRequest(String urn, String name, String tenantUrn, List<String> authorities, Boolean active)
-    {
+    @ConstructorProperties({ "urn", "username", "emailAddress", "givenName", "surname", "password", "roles", "active" })
+    public UpdateUserRequest(
+        String urn, String username, String emailAddress, String givenName, String surname, List<String> roles, Boolean active) {
+
         this.urn = urn;
-        this.name = name;
-        this.authorities = authorities;
+        this.username = username;
+        this.emailAddress = emailAddress;
+        this.givenName = givenName;
+        this.surname = surname;
+        this.roles = roles;
+
         this.active = active != null ? active : true;
 
         this.version = VERSION;

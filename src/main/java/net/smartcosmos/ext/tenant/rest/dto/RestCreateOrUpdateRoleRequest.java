@@ -10,26 +10,33 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.Setter;
 
+/**
+ * Initially created by SMART COSMOS Team on June 30, 2016.
+ */
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties({ "version" })
-public class RestCreateRoleResponse {
+public class RestCreateOrUpdateRoleRequest {
 
     private static final int VERSION = 1;
     @Setter(AccessLevel.NONE)
     private int version = VERSION;
 
-    private final String name;
-    private final List<String> authorities;
-    private final Boolean active;
+    private String urn;
+    private String name;
+    private List<String> authorities;
+    private Boolean active;
 
     @Builder
-    @ConstructorProperties({"name", "authorities", "active"})
-    public RestCreateRoleResponse(String name, List<String> authorities, Boolean active) {
+    @ConstructorProperties({ "urn", "name", "authorities", "active"})
+    public RestCreateOrUpdateRoleRequest(String urn, String name, List<String> authorities, Boolean active)
+    {
+        this.urn = urn;
         this.name = name;
         this.authorities = authorities;
-        this.active = active;
+        this.active = active != null ? active : true;
 
         this.version = VERSION;
     }
+
 }

@@ -22,11 +22,11 @@ public class CreateTenantResponse {
     private final String name;
     private final Boolean active;
 
-    private final CreateUserResponse admin;
+    private final CreateOrUpdateUserResponse admin;
 
     @Builder
     @ConstructorProperties({ "urn", "name", "tenantUrn", "active", "admin" })
-    public CreateTenantResponse(String urn, String name, Boolean active, CreateUserResponse admin) {
+    public CreateTenantResponse(String urn, String name, Boolean active, CreateOrUpdateUserResponse admin) {
         this.urn = urn;
         this.name = name;
         this.active = active;

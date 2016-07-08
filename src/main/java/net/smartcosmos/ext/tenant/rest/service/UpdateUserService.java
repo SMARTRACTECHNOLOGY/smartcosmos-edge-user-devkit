@@ -16,54 +16,51 @@ import org.springframework.web.context.request.async.DeferredResult;
 import net.smartcosmos.events.SmartCosmosEventTemplate;
 import net.smartcosmos.ext.tenant.dao.RoleDao;
 import net.smartcosmos.ext.tenant.dao.TenantDao;
-import net.smartcosmos.ext.tenant.dto.CreateUserRequest;
 import net.smartcosmos.ext.tenant.dto.CreateOrUpdateUserResponse;
-import net.smartcosmos.ext.tenant.dto.GetUserResponse;
-import net.smartcosmos.ext.tenant.rest.dto.RestCreateUserRequest;
+import net.smartcosmos.ext.tenant.dto.UpdateUserRequest;
+import net.smartcosmos.ext.tenant.rest.dto.RestUpdateUserRequest;
 
 /**
  * Initially created by SMART COSMOS Team on July 01, 2016.
  */
 @Slf4j
 @Service
-public class CreateUserService extends AbstractTenantService{
+public class UpdateUserService extends AbstractTenantService{
 
     @Inject
-    public CreateUserService(TenantDao tenantDao, RoleDao roleDao, SmartCosmosEventTemplate smartCosmosEventTemplate, ConversionService
+    public UpdateUserService(TenantDao tenantDao, RoleDao roleDao, SmartCosmosEventTemplate smartCosmosEventTemplate, ConversionService
         conversionService) {
         super(tenantDao, roleDao, smartCosmosEventTemplate, conversionService);
     }
 
 
-    public DeferredResult<ResponseEntity> create(RestCreateUserRequest restCreateUserRequest) {
+    public DeferredResult<ResponseEntity> create(RestUpdateUserRequest restUpdateUserRequest) {
         // Async worker thread reduces timeouts and disconnects for long queries and processing.
         DeferredResult<ResponseEntity> response = new DeferredResult<>();
-        createUserWorker(response, restCreateUserRequest);
+        updateUserWorker(response, restUpdateUserRequest);
 
         return response;
     }
 
     @Async
-    private void createUserWorker(DeferredResult<ResponseEntity> response, RestCreateUserRequest restCreateUserRequest) {
+    private void updateUserWorker(DeferredResult<ResponseEntity> response, RestUpdateUserRequest restUpdateUserRequest) {
 
         try {
-            final CreateUserRequest createUserRequest = conversionService.convert(restCreateUserRequest, CreateUserRequest.class);
+            UpdateUserRequest updateUserRequest = conversionService.convert(restUpdateUserRequest, UpdateUserRequest.class);
+            Optional<CreateOrUpdateUserResponse> updateUserResponse = tenantDao.updateUser(updateUserRequest);
 
-            Optional<CreateOrUpdateUserResponse> newUser = tenantDao.createUser(createUserRequest);;
-
-            if (newUser.isPresent())
+            if (updateUserResponse.isPresent())
             {
                 //sendEvent(null, DefaultEventTypes.ThingCreated, object.get());
 
                 ResponseEntity responseEntity = ResponseEntity
-                    .created(URI.create(newUser.get().getUrn()))
-                    .body(newUser.get());
+                    .created(URI.create(updateUserResponse.get().getUrn()))
+                    .body(updateUserResponse.get());
                 response.setResult(responseEntity);
             }
             else {
-                Optional<GetUserResponse> alreadyThere = tenantDao.findUserByUrn(newUser.get().getUrn());
                 response.setResult(ResponseEntity.status(HttpStatus.CONFLICT).build());
-                //sendEvent(null, DefaultEventTypes.ThingCreateFailedAlreadyExists, alreadyThere.get());
+                // sendEvent(createTenantRequest, DefaultEventTypes.ThingCreateFailedAlreadyExists, createTenantRequest);
             }
 
         } catch (Exception e) {
@@ -71,6 +68,4 @@ public class CreateUserService extends AbstractTenantService{
             response.setErrorResult(e);
         }
     }
-
-
 }

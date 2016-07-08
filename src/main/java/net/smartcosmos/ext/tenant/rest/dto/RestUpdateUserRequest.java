@@ -17,22 +17,31 @@ import lombok.Setter;
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 //@ApiModel(description = "Create a \"Tenant\" in the smartcosmos-edge-tenant Server.")
-public class RestCreateRoleRequest {
+public class RestUpdateUserRequest {
 
     private static final int VERSION = 1;
     @Setter(AccessLevel.NONE)
     private int version = VERSION;
 
-    String name;
-    List<String> authorities;
+    String username;
+    String emailAddress;
+    String givenName;
+    String surname;
+    List<String> roles;
     Boolean active;
 
     @Builder
-    @ConstructorProperties({ "name", "authorities", "active"})
-    public RestCreateRoleRequest(String name, List<String> authorities, Boolean active) {
-        this.name = name;
-        this.authorities = authorities;
+    @ConstructorProperties({ "username", "emailAddress", "givenName", "surname", "roles", "active" })
+    public RestUpdateUserRequest(String username, String emailAddress, String givenName, String surname, List<String> roles,
+                                 Boolean active) {
+        this.username = username;
+        this.emailAddress = emailAddress;
+        this.givenName = givenName;
+        this.surname = surname;
+        this.roles = roles;
+
         this.active = active != null ? active : true;
+
         this.version = VERSION;
     }
 }

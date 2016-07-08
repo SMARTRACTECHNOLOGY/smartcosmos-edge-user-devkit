@@ -14,15 +14,11 @@ import org.springframework.stereotype.Service;
 import net.smartcosmos.ext.tenant.dao.RoleDao;
 import net.smartcosmos.ext.tenant.domain.AuthorityEntity;
 import net.smartcosmos.ext.tenant.domain.RoleEntity;
-import net.smartcosmos.ext.tenant.dto.CreateRoleRequest;
-import net.smartcosmos.ext.tenant.dto.CreateRoleResponse;
+import net.smartcosmos.ext.tenant.dto.CreateOrUpdateRoleRequest;
+import net.smartcosmos.ext.tenant.dto.CreateOrUpdateRoleResponse;
 import net.smartcosmos.ext.tenant.dto.GetRoleResponse;
-import net.smartcosmos.ext.tenant.dto.UpdateRoleRequest;
-import net.smartcosmos.ext.tenant.dto.UpdateRoleResponse;
 import net.smartcosmos.ext.tenant.repository.AuthorityRepository;
 import net.smartcosmos.ext.tenant.repository.RoleRepository;
-import net.smartcosmos.ext.tenant.repository.TenantRepository;
-import net.smartcosmos.ext.tenant.repository.UserRepository;
 import net.smartcosmos.ext.tenant.util.UuidUtil;
 
 /**
@@ -48,7 +44,7 @@ public class RolePersistenceService implements RoleDao {
     }
 
     @Override
-    public Optional<CreateRoleResponse> createRole (String tenantUrn, CreateRoleRequest createRoleRequest)
+    public Optional<CreateOrUpdateRoleResponse> createRole (String tenantUrn, CreateOrUpdateRoleRequest createRoleRequest)
         throws ConstraintViolationException {
 
         // This role already exists? we're not creating a new one
@@ -70,11 +66,11 @@ public class RolePersistenceService implements RoleDao {
                                                   .authorities(authorityEntities)
                                                   .active(createRoleRequest.getActive())
                                                   .build());
-        return Optional.ofNullable(conversionService.convert(role, CreateRoleResponse.class));
+        return Optional.ofNullable(conversionService.convert(role, CreateOrUpdateRoleResponse.class));
     }
 
     @Override
-    public Optional<UpdateRoleResponse> updateRole (String tenantUrn, UpdateRoleRequest updateRoleRequest)
+    public Optional<CreateOrUpdateRoleResponse> updateRole (String tenantUrn, CreateOrUpdateRoleRequest updateRoleRequest)
         throws ConstraintViolationException {
 
         // This role already exists? we're not creating a new one
@@ -94,7 +90,7 @@ public class RolePersistenceService implements RoleDao {
                                                   .authorities(authorityEntities)
                                                   .active(true)
                                                   .build());
-        return Optional.ofNullable(conversionService.convert(role, UpdateRoleResponse.class));
+        return Optional.ofNullable(conversionService.convert(role, CreateOrUpdateRoleResponse.class));
     }
 
     public Optional<GetRoleResponse> findByNameAndTenantUrn(String name, String tenantUrn) {
