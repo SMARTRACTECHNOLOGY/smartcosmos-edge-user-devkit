@@ -47,15 +47,13 @@ public class UpdateTenantService extends AbstractTenantService{
 
         try {
             UpdateTenantRequest updateTenantRequest = conversionService.convert(restUpdateTenantRequest, UpdateTenantRequest.class);
-            Optional<UpdateTenantResponse> updateTenantResponse = tenantDao.updateTenant(updateTenantRequest);
+            Optional<UpdateTenantResponse> updateTenantResponseOptional = tenantDao.updateTenant(updateTenantRequest);
 
-            if (updateTenantResponse.isPresent())
+            if (updateTenantResponseOptional.isPresent())
             {
-                //sendEvent(null, DefaultEventTypes.ThingCreated, object.get());
-
                 ResponseEntity responseEntity = ResponseEntity
-                    .created(URI.create(updateTenantResponse.get().getUrn()))
-                    .body(updateTenantResponse.get());
+                    .created(URI.create(updateTenantResponseOptional.get().getUrn()))
+                    .body(updateTenantResponseOptional.get());
                 response.setResult(responseEntity);
             }
             else {
