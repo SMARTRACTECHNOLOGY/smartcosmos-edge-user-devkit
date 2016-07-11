@@ -78,7 +78,7 @@ Note that the illustrated scheme for URNs is only for documentation purposes. Th
 [width="100%",options="header"]
 |====================
 | Parameter | Format | Default | Description
-| `page` | String representation long  |  query parameter, defaults to 0 | page number of multi-element returns, starting at 0
+| `page` | String representation long  |  query parameter, defaults to 1 | page number of multi-element returns, starting at 1
 | `size` | String representation of Integer  |  query parameter, defaults 20 | number of elements per page in multi-element returns
 | `name` | String | optional | Optional search parameter to filter the search result by `name` or `username`
 |====================
@@ -191,7 +191,7 @@ GET /urn:tenant:uuid:346e742e-2f1e-4d91-9ffe-7b38eec6219c
 ==== Read - `GET /tenants/?name={name}&page={pageNumber}&size={pageSize}`
 
 ----
-GET /tenants/?name=My%20Example%20Company&page=0&size=100
+GET /tenants/?name=My%20Example%20Company&page=1&size=100
 ----
 .Response
 ----
@@ -211,7 +211,7 @@ GET /tenants/?name=My%20Example%20Company&page=0&size=100
         "size" : 100,
         "totalElements" : 1,
         "totalPages" : 1,
-        "number" : 0
+        "number" : 1
     }
 }
 ----
@@ -323,7 +323,7 @@ GET /users/urn:user:uuid:68a76616-3748-4bc2-93c1-3940b47abb7f
 ==== Read - `GET /users/?name={name}&page={pageNumber}&size={pageSize}`
 
 ----
-GET /users/?page=0&size=100
+GET /users/?page=1&size=100
 ----
 .Response
 ----
@@ -358,7 +358,7 @@ GET /users/?page=0&size=100
         "size" : 100,
         "totalElements" : 2,
         "totalPages" : 1,
-        "number" : 0
+        "number" : 1
     }
 }
 ----
@@ -448,7 +448,7 @@ PUT /roles/urn:role:uuid:fcdf5432-49a8-45ef-96a2-94a022022860
 ==== Read - `GET /roles/?name={name}&page={pageNumber}&size={pageSize}`
 
 ----
-GET /roles/?page=0&size=100
+GET /roles/?page=1&size=100
 ----
 .Response
 ----
@@ -480,7 +480,7 @@ GET /roles/?page=0&size=100
         "size" : 100,
         "totalElements" : 2,
         "totalPages" : 1,
-        "number" : 0
+        "number" : 1
     }
 }
 ----
