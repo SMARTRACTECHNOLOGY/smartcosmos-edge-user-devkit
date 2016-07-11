@@ -142,11 +142,10 @@
 
     </dependencies>
 
-    <!-- TODO: update SCM URIs when repo was renamed to "smartcosmos-dao-things" -->
     <scm>
-        <connection>scm:git:git://github.com/SMARTRACTECHNOLOGY/smartcosmos-edge-tenant.git</connection>
-        <developerConnection>scm:git@github.com:SMARTRACTECHNOLOGY/smartcosmos-edge-tenant.git</developerConnection>
-        <url>https://github.com/SMARTRACTECHNOLOGY/smartcosmos-edge-tenant/tree/master/</url>
+        <connection>scm:git:git://github.com/SMARTRACTECHNOLOGY/smartcosmos-edge-user-devkit.git</connection>
+        <developerConnection>scm:git@github.com:SMARTRACTECHNOLOGY/smartcosmos-edge-user-devkit.git</developerConnection>
+        <url>https://github.com/SMARTRACTECHNOLOGY/smartcosmos-edge-user-devkit/tree/master/</url>
     </scm>
 
 </project>
