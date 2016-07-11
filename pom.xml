@@ -15,7 +15,7 @@
     </parent>
     <artifactId>smartcosmos-edge-user-devkit</artifactId>
     <name>SMART COSMOS DAO for Tenant Entities</name>
-    <description>Devkit implementation of tenant management for Smartcosmos Tenants</description>
+    <description>Devkit implementation of tenant management for SMART COSMOS Tenants</description>
 
     <dependencies>
         <dependency>
