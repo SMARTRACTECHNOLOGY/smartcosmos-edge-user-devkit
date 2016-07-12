@@ -2,6 +2,7 @@ package net.smartcosmos.ext.tenant.domain;
 
 import java.beans.ConstructorProperties;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 import javax.persistence.Basic;
@@ -9,6 +10,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -25,6 +27,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.data.annotation.CreatedDate;
@@ -46,6 +49,8 @@ public class RoleEntity {
     private static final int STRING_FIELD_LENGTH = 255;
 
     @Id
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "uuid2")
     @Type(type = "uuid-binary")
     @Column(name = "id", length = UUID_LENGTH)
     private UUID id;
@@ -99,19 +104,27 @@ public class RoleEntity {
     We therefore provide our own AllArgsConstructor that is used by the generated builder and takes care of field initialization.
  */
     @Builder
-    @ConstructorProperties({ "id", "tenantId", "name", "description", "authorities", "active" })
+    @ConstructorProperties({ "id", "tenantId", "name", "description", "users", "authorities", "active" })
     protected RoleEntity(
         UUID id,
         UUID tenantId,
         String name,
         String description,
+        Set<UserEntity> users,
         Set<AuthorityEntity> authorities,
         Boolean active) {
         this.id = id;
         this.tenantId = tenantId;
         this.name = name;
         this.description = description;
-        this.authorities = authorities;
+        this.users = new HashSet<>();
+        if (users != null && !users.isEmpty()) {
+            this.users.addAll(users);
+        }
+        this.authorities = new HashSet<>();
+        if (authorities != null && !authorities.isEmpty()) {
+            this.authorities.addAll(authorities);
+        }
         this.active = active;
     }
 

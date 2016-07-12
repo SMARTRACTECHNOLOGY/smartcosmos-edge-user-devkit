@@ -10,6 +10,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -26,6 +27,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.data.annotation.CreatedDate;
@@ -52,6 +54,8 @@ public class UserEntity implements Serializable {
      */
 
     @Id
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "uuid2")
     @Type(type = "uuid-binary")
     @Column(name = "id", length = UUID_LENGTH)
     private UUID id;
@@ -112,7 +116,7 @@ public class UserEntity implements Serializable {
         We therefore provide our own AllArgsConstructor that is used by the generated builder and takes care of field initialization.
      */
     @Builder
-    @ConstructorProperties({ "id", "tenantId", "name", "username", "emailAddress", "givenName", "surname", "password", "roles",
+    @ConstructorProperties({ "id", "tenantId", "username", "emailAddress", "givenName", "surname", "password", "roles",
                              "created", "lastModified", "active" })
     protected UserEntity(
         UUID id,
