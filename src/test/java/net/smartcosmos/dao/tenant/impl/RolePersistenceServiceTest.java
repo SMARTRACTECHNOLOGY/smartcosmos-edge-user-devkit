@@ -153,4 +153,35 @@ public class RolePersistenceServiceTest {
 
         assertFalse(lookupResponse.isPresent());
     }
+
+    @Test
+    public void thatDeleteRoleByUrnSucceeds() {
+        final String roleName = "deleteTestRole";
+        final String authority = "testAuth";
+
+        List<String> authorities = new ArrayList<>();
+        authorities.add(authority);
+
+        CreateOrUpdateRoleRequest createRole = CreateOrUpdateRoleRequest.builder()
+                .active(true)
+                .authorities(authorities)
+                .name(roleName)
+                .build();
+
+        Optional<CreateOrUpdateRoleResponse> createResponse = rolePersistenceService
+                .createRole(tenantRoleTest, createRole);
+
+        assertTrue(createResponse.isPresent());
+        assertEquals(roleName, createResponse.get().getName());
+        assertEquals(1, createResponse.get().getAuthorities().size());
+        assertEquals(authority, createResponse.get().getAuthorities().get(0));
+
+        String urn = createResponse.get().getUrn();
+
+        List<GetRoleResponse> deleteResponse = rolePersistenceService
+                .delete(tenantRoleTest, urn);
+
+        assertFalse(deleteResponse.isEmpty());
+        assertEquals(1, deleteResponse.size());
+    }
 }

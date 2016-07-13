@@ -1,5 +1,6 @@
 package net.smartcosmos.ext.tenant.dao;
 
+import java.util.List;
 import java.util.Optional;
 import javax.validation.ConstraintViolationException;
 
@@ -43,12 +44,22 @@ public interface RoleDao {
     /**
      * Find a role identified by their name in the given tenant.
      *
-     * @param name name of role
      * @param tenantUrn tenant
+     * @param name name of role
      * @return the role or Optional.empty() in case empty search result
      * @throws ConstraintViolationException
      */
     Optional<GetRoleResponse> findByTenantUrnAndName(String tenantUrn, String name)
         throws ConstraintViolationException;
 
+    /**
+     * Deletes a role identified by its URN in the given tenant.
+     *
+     * @param tenantUrn tenant
+     * @param urn URN of role to be deleted
+     * @return the role or Optional.empty() in case of no role with matching URN
+     * @throws IllegalArgumentException
+     */
+    List<GetRoleResponse> delete(String tenantUrn, String urn)
+        throws IllegalArgumentException;
 }
