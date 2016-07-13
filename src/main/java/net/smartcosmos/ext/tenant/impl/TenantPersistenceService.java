@@ -315,13 +315,13 @@ public class TenantPersistenceService implements TenantDao {
 
     /**
      *
-     * @param name
+     * @param username
      * @return
      */
     @Override
-    public Optional<GetUserResponse> findUserByName(String name) {
+    public Optional<GetUserResponse> findUserByName(String username) {
 
-        Optional<UserEntity> entity = userRepository.findByName(name);
+        Optional<UserEntity> entity = userRepository.findByUsername(username);
         if (entity.isPresent()) {
             return Optional.of(conversionService.convert(entity.get(), GetUserResponse.class));
         }
