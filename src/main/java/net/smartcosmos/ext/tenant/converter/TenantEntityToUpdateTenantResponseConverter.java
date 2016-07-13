@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 public class TenantEntityToUpdateTenantResponseConverter
         implements Converter<TenantEntity, UpdateTenantResponse>, FormatterRegistrar {
 
+    @Override
     public UpdateTenantResponse convert(TenantEntity entity) {
         return UpdateTenantResponse.builder()
                 .active(entity.getActive())
