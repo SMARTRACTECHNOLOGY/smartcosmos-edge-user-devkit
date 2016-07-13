@@ -27,7 +27,7 @@ public class UpdateTenantRequest {
 
     @Builder
     @ConstructorProperties({ "urn", "name", "active"})
-    public UpdateTenantRequest(String urn, String name, String username, Boolean active)
+    public UpdateTenantRequest(String urn, String name, Boolean active)
     {
         this.urn = urn;
         this.name = name;
