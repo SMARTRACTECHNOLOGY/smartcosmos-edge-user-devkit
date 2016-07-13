@@ -11,7 +11,7 @@ ENV ENCRYPT_KEY ''
 ENV SPRING_CLOUD_CONFIG_SERVER_GIT_USERNAME ''
 ENV SPRING_CLOUD_CONFIG_SERVER_GIT_PASSWORD ''
 
-ADD target/smartcosmos-*.jar  /opt/smartcosmos/smartcosmos-config-server.jar
+ADD target/smartcosmos-*.jar  /opt/smartcosmos/smartcosmos-edge-user-devkit.jar
 
 
 EXPOSE 45371
