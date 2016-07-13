@@ -7,6 +7,7 @@ import net.smartcosmos.ext.tenant.dto.CreateTenantResponse;
 import net.smartcosmos.ext.tenant.dto.GetTenantResponse;
 import net.smartcosmos.ext.tenant.impl.TenantPersistenceService;
 import net.smartcosmos.ext.tenant.repository.TenantRepository;
+import net.smartcosmos.ext.tenant.util.UuidUtil;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -69,8 +70,8 @@ public class TenantPersistenceServiceTest {
     @Test
     public void thatLookupTenantByUrnSucceeds() {
 
-        final String TENANT = "lookupTestTenant";
-        final String USER = "lookupTestAdmin";
+        final String TENANT = "lookupByUrnTenant";
+        final String USER = "lookupByUrnAdmin";
 
         CreateTenantRequest createTenantRequest = CreateTenantRequest.builder()
                 .active(true)
@@ -95,5 +96,58 @@ public class TenantPersistenceServiceTest {
 
         assertTrue(getTenantResponse.get().getActive());
         assertEquals(TENANT, getTenantResponse.get().getName());
+        assertEquals(urn, getTenantResponse.get().getUrn());
+    }
+
+    @Test
+    public void thatLookupTenantByUrnFails() {
+
+        String urn = UuidUtil.getTenantUrnFromUuid(UuidUtil.getNewUuid());
+
+        Optional<GetTenantResponse> getTenantResponse = tenantPersistenceService.findTenantByUrn(urn);
+
+        assertFalse(getTenantResponse.isPresent());
+    }
+
+    @Test
+    public void thatLookupTenantByNameSucceeds() {
+
+        final String TENANT = "lookupByNameTenant";
+        final String USER = "lookupByNameAdmin";
+
+        CreateTenantRequest createTenantRequest = CreateTenantRequest.builder()
+                .active(true)
+                .name(TENANT)
+                .username(USER)
+                .build();
+
+        Optional<CreateTenantResponse> createTenantResponse = tenantPersistenceService.createTenant(createTenantRequest);
+
+        assertTrue(createTenantResponse.isPresent());
+
+        assertTrue(createTenantResponse.get().getActive());
+        assertEquals(TENANT, createTenantResponse.get().getName());
+        assertEquals(USER, createTenantResponse.get().getAdmin().getUsername());
+        assertFalse(createTenantResponse.get().getUrn().isEmpty());
+
+        String urn = createTenantResponse.get().getUrn();
+
+        Optional<GetTenantResponse> getTenantResponse = tenantPersistenceService.findTenantByName(TENANT);
+
+        assertTrue(getTenantResponse.isPresent());
+
+        assertTrue(getTenantResponse.get().getActive());
+        assertEquals(TENANT, getTenantResponse.get().getName());
+        assertEquals(urn, getTenantResponse.get().getUrn());
+    }
+
+    @Test
+    public void thatLookupTenantByNameFails() {
+
+        final String TENANT = "noSuchNameTenant";
+
+        Optional<GetTenantResponse> getTenantResponse = tenantPersistenceService.findTenantByName(TENANT);
+
+        assertFalse(getTenantResponse.isPresent());
     }
 }
