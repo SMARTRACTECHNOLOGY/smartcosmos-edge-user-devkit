@@ -43,12 +43,12 @@ public interface RoleDao {
     /**
      * Find a role identified by their name in the given tenant.
      *
-     * @param tenantUrn tenant
      * @param name name of role
+     * @param tenantUrn tenant
      * @return the role or Optional.empty() in case empty search result
      * @throws ConstraintViolationException
      */
-    Optional<GetRoleResponse> findByNameAndTenantUrn(String tenantUrn, String name)
+    Optional<GetRoleResponse> findByTenantUrnAndName(String tenantUrn, String name)
         throws ConstraintViolationException;
 
 }

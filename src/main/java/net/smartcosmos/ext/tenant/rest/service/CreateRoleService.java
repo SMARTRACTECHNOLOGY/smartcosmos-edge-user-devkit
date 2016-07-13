@@ -49,7 +49,7 @@ public class CreateRoleService extends AbstractTenantService{
         try {
             final CreateOrUpdateRoleRequest createRoleRequest = conversionService.convert(restCreateOrUpdateRoleRequest, CreateOrUpdateRoleRequest.class);
 
-            Optional<CreateOrUpdateRoleResponse> newUser = roleDao.createRole("whatever", createRoleRequest);;
+            Optional<CreateOrUpdateRoleResponse> newUser = roleDao.createRole("whatever", createRoleRequest);
 
             if (newUser.isPresent())
             {
@@ -61,7 +61,7 @@ public class CreateRoleService extends AbstractTenantService{
                 response.setResult(responseEntity);
             }
             else {
-                Optional<GetRoleResponse> alreadyThere = roleDao.findByNameAndTenantUrn(restCreateOrUpdateRoleRequest.getName(), "tenantUrnHere");
+                Optional<GetRoleResponse> alreadyThere = roleDao.findByTenantUrnAndName("tenantUrnHere", restCreateOrUpdateRoleRequest.getName());
                 response.setResult(ResponseEntity.status(HttpStatus.CONFLICT).build());
                 //sendEvent(null, DefaultEventTypes.ThingCreateFailedAlreadyExists, alreadyThere.get());
             }

@@ -64,7 +64,7 @@ public class UpdateRoleService extends AbstractTenantService{
                 response.setResult(responseEntity);
             }
             else {
-                Optional<GetRoleResponse> alreadyThere = roleDao.findByNameAndTenantUrn(restCreateOrUpdateRoleRequest.getName(), "tenantUrnHere");
+                Optional<GetRoleResponse> alreadyThere = roleDao.findByTenantUrnAndName("tenantUrnHere", restCreateOrUpdateRoleRequest.getName());
                 response.setResult(ResponseEntity.status(HttpStatus.CONFLICT).build());
                 //sendEvent(null, DefaultEventTypes.ThingCreateFailedAlreadyExists, alreadyThere.get());
             }

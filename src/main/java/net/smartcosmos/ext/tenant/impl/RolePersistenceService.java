@@ -98,10 +98,10 @@ public class RolePersistenceService implements RoleDao {
         return Optional.empty();
     }
 
-    public Optional<GetRoleResponse> findByNameAndTenantUrn(String name, String tenantUrn) {
+    public Optional<GetRoleResponse> findByTenantUrnAndName(String tenantUrn, String name) {
         Optional<RoleEntity> roleEntity = roleRepository.findByNameAndTenantId(name, UuidUtil.getUuidFromUrn(tenantUrn));
         if (roleEntity.isPresent()) {
-            return Optional.ofNullable(conversionService.convert(roleEntity, GetRoleResponse.class));
+            return Optional.ofNullable(conversionService.convert(roleEntity.get(), GetRoleResponse.class));
         }
         return Optional.empty();
     }

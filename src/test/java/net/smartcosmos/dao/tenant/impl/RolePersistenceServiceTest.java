@@ -4,6 +4,7 @@ import net.smartcosmos.dao.tenant.TenantPersistenceTestApplication;
 import net.smartcosmos.ext.tenant.TenantPersistenceConfig;
 import net.smartcosmos.ext.tenant.dto.CreateOrUpdateRoleRequest;
 import net.smartcosmos.ext.tenant.dto.CreateOrUpdateRoleResponse;
+import net.smartcosmos.ext.tenant.dto.GetRoleResponse;
 import net.smartcosmos.ext.tenant.impl.RolePersistenceService;
 import net.smartcosmos.ext.tenant.repository.RoleRepository;
 import net.smartcosmos.ext.tenant.util.UuidUtil;
@@ -22,6 +23,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 
@@ -109,5 +111,46 @@ public class RolePersistenceServiceTest {
         assertTrue(updateResponse.isPresent());
         assertEquals(roleName, updateResponse.get().getName());
         assertEquals(2, updateResponse.get().getAuthorities().size());
+    }
+
+    @Test
+    public void thatLookupRoleByNameSucceeds() {
+        final String roleName = "lookupTestRole";
+        final String authority = "testAuth";
+
+        List<String> authorities = new ArrayList<>();
+        authorities.add(authority);
+
+        CreateOrUpdateRoleRequest createRole = CreateOrUpdateRoleRequest.builder()
+                .active(true)
+                .authorities(authorities)
+                .name(roleName)
+                .build();
+
+        Optional<CreateOrUpdateRoleResponse> createResponse = rolePersistenceService
+                .createRole(tenantRoleTest, createRole);
+
+        assertTrue(createResponse.isPresent());
+        assertEquals(roleName, createResponse.get().getName());
+        assertEquals(1, createResponse.get().getAuthorities().size());
+        assertEquals(authority, createResponse.get().getAuthorities().get(0));
+
+        Optional<GetRoleResponse> lookupResponse = rolePersistenceService
+                .findByTenantUrnAndName(tenantRoleTest, roleName);
+
+        assertTrue(lookupResponse.isPresent());
+        assertEquals(roleName, lookupResponse.get().getName());
+        assertEquals(1, lookupResponse.get().getAuthorities().size());
+        assertEquals(authority, lookupResponse.get().getAuthorities().get(0));
+    }
+
+    @Test
+    public void thatLookupRoleByNameFails() {
+        final String roleName = "noSuchRole";
+
+        Optional<GetRoleResponse> lookupResponse = rolePersistenceService
+                .findByTenantUrnAndName(tenantRoleTest, roleName);
+
+        assertFalse(lookupResponse.isPresent());
     }
 }
