@@ -28,8 +28,7 @@ public class UserDetailsResource {
     @Autowired
     PasswordEncoder passwordEncoder;
 
-    @Autowired
-    ObjectMapper objectMapper;
+    ObjectMapper objectMapper = new ObjectMapper();
 
     @Autowired
     TenantDao tenantDao;

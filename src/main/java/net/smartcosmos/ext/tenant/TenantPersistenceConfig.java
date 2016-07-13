@@ -14,9 +14,7 @@ import java.util.Map;
 
 
 @EnableJpaRepositories
-@EnableJpaAuditing
 @EntityScan
-@ComponentScan
 @Configuration
 public class TenantPersistenceConfig extends WebMvcConfigurerAdapter {
 
