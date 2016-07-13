@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 
@@ -65,5 +66,48 @@ public class RolePersistenceServiceTest {
                 .createRole(tenantRoleTest, createRole);
 
         assertTrue(createResponse.isPresent());
+        assertEquals(roleName, createResponse.get().getName());
+        assertEquals(1, createResponse.get().getAuthorities().size());
+        assertEquals(authority, createResponse.get().getAuthorities().get(0));
+    }
+
+    @Test
+    public void thatUpdateRoleSucceeds() {
+        final String roleName = "updateTestRole";
+        final String authority1 = "testAuth1";
+        final String authority2 = "testAuth2";
+
+        List<String> authorities = new ArrayList<>();
+        authorities.add(authority1);
+
+        CreateOrUpdateRoleRequest createRole = CreateOrUpdateRoleRequest.builder()
+                .active(true)
+                .authorities(authorities)
+                .name(roleName)
+                .build();
+
+        Optional<CreateOrUpdateRoleResponse> createResponse = rolePersistenceService
+                .createRole(tenantRoleTest, createRole);
+
+        assertTrue(createResponse.isPresent());
+        assertEquals(roleName, createResponse.get().getName());
+        assertEquals(1, createResponse.get().getAuthorities().size());
+
+        String urn = createResponse.get().getUrn();
+
+        authorities.add(authority2);
+
+        CreateOrUpdateRoleRequest updateRole = CreateOrUpdateRoleRequest.builder()
+                .active(true)
+                .authorities(authorities)
+                .name(roleName)
+                .build();
+
+        Optional<CreateOrUpdateRoleResponse> updateResponse = rolePersistenceService
+                .updateRole(tenantRoleTest, urn, updateRole);
+
+        assertTrue(updateResponse.isPresent());
+        assertEquals(roleName, updateResponse.get().getName());
+        assertEquals(2, updateResponse.get().getAuthorities().size());
     }
 }

@@ -22,16 +22,16 @@ public class CreateOrUpdateRoleRequest {
     @Setter(AccessLevel.NONE)
     private int version = VERSION;
 
-    private String urn;
+    //private String urn;
     private String name;
     private List<String> authorities;
     private Boolean active;
 
     @Builder
-    @ConstructorProperties({ "urn", "name", "authorities", "active"})
-    public CreateOrUpdateRoleRequest(String urn, String name, List<String> authorities, Boolean active)
+    @ConstructorProperties({"name", "authorities", "active"})
+    public CreateOrUpdateRoleRequest(String name, List<String> authorities, Boolean active)
     {
-        this.urn = urn;
+        //this.urn = urn;
         this.name = name;
         this.authorities = authorities;
         this.active = active != null ? active : true;
