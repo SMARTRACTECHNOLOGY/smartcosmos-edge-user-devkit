@@ -40,7 +40,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Entity(name = "role")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Data
-@Table(name = "role", uniqueConstraints = @UniqueConstraint(columnNames = { "name" }))
+@Table(name = "role", uniqueConstraints = @UniqueConstraint(columnNames = { "name", "tenantId" }))
 @EntityListeners({ AuditingEntityListener.class })
 
 public class RoleEntity {

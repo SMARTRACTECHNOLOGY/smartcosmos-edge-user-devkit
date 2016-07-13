@@ -8,7 +8,6 @@ import net.smartcosmos.ext.tenant.dto.GetTenantResponse;
 import net.smartcosmos.ext.tenant.impl.TenantPersistenceService;
 import net.smartcosmos.ext.tenant.repository.TenantRepository;
 import org.junit.After;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +44,6 @@ public class TenantPersistenceServiceTest {
         tenantRepository.deleteAll();
     }
 
-    /*
     @Test
     public void thatCreateTenantSucceeds() {
 
@@ -66,9 +64,8 @@ public class TenantPersistenceServiceTest {
         assertEquals(TENANT, createTenantResponse.get().getName());
         assertEquals(USER, createTenantResponse.get().getAdmin().getUsername());
         assertFalse(createTenantResponse.get().getUrn().isEmpty());
-    }*/
+    }
 
-    //@Ignore
     @Test
     public void thatLookupTenantByUrnSucceeds() {
 
