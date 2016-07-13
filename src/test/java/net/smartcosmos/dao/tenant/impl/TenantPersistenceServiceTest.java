@@ -7,6 +7,8 @@ import net.smartcosmos.ext.tenant.dto.CreateTenantRequest;
 import net.smartcosmos.ext.tenant.dto.CreateTenantResponse;
 import net.smartcosmos.ext.tenant.dto.CreateUserRequest;
 import net.smartcosmos.ext.tenant.dto.GetTenantResponse;
+import net.smartcosmos.ext.tenant.dto.UpdateTenantRequest;
+import net.smartcosmos.ext.tenant.dto.UpdateTenantResponse;
 import net.smartcosmos.ext.tenant.impl.TenantPersistenceService;
 import net.smartcosmos.ext.tenant.repository.TenantRepository;
 import net.smartcosmos.ext.tenant.util.UuidUtil;
@@ -79,6 +81,109 @@ public class TenantPersistenceServiceTest {
         assertEquals(TENANT, createTenantResponse.get().getName());
         assertEquals(USER, createTenantResponse.get().getAdmin().getUsername());
         assertFalse(createTenantResponse.get().getUrn().isEmpty());
+    }
+
+    @Test
+    public void thatUpdateTenantActiveSucceeds() {
+        final String TENANT = "updateTenantActive";
+        final String USER = "updateAdminActive";
+
+        CreateTenantRequest createTenantRequest = CreateTenantRequest.builder()
+                .active(true)
+                .name(TENANT)
+                .username(USER)
+                .build();
+
+        Optional<CreateTenantResponse> createTenantResponse = tenantPersistenceService.createTenant(createTenantRequest);
+
+        assertTrue(createTenantResponse.isPresent());
+
+        assertTrue(createTenantResponse.get().getActive());
+        assertEquals(TENANT, createTenantResponse.get().getName());
+        assertEquals(USER, createTenantResponse.get().getAdmin().getUsername());
+        assertFalse(createTenantResponse.get().getUrn().isEmpty());
+
+        String urn = createTenantResponse.get().getUrn();
+
+        UpdateTenantRequest updateTenantRequest = UpdateTenantRequest.builder()
+                .urn(urn)
+                .active(false)
+                .build();
+
+        Optional<UpdateTenantResponse> updateResponse = tenantPersistenceService.updateTenant(updateTenantRequest);
+
+        assertTrue(updateResponse.isPresent());
+        assertFalse(updateResponse.get().getActive());
+        assertEquals(TENANT, updateResponse.get().getName());
+        assertEquals(urn, updateResponse.get().getUrn());
+
+        Optional<GetTenantResponse> getTenantResponse = tenantPersistenceService.findTenantByName(TENANT);
+
+        assertTrue(getTenantResponse.isPresent());
+        assertFalse(getTenantResponse.get().getActive());
+        assertEquals(TENANT, getTenantResponse.get().getName());
+        assertEquals(urn, getTenantResponse.get().getUrn());
+    }
+
+    @Test
+    public void thatUpdateTenantNameSucceeds() {
+        final String TENANT = "updateTenantName";
+        final String TENANT_NEW = "updateTenantNewName";
+        final String USER = "updateAdmin";
+
+        CreateTenantRequest createTenantRequest = CreateTenantRequest.builder()
+                .active(true)
+                .name(TENANT)
+                .username(USER)
+                .build();
+
+        Optional<CreateTenantResponse> createTenantResponse = tenantPersistenceService.createTenant(createTenantRequest);
+
+        assertTrue(createTenantResponse.isPresent());
+
+        assertTrue(createTenantResponse.get().getActive());
+        assertEquals(TENANT, createTenantResponse.get().getName());
+        assertEquals(USER, createTenantResponse.get().getAdmin().getUsername());
+        assertFalse(createTenantResponse.get().getUrn().isEmpty());
+
+        String urn = createTenantResponse.get().getUrn();
+
+        UpdateTenantRequest updateTenantRequest = UpdateTenantRequest.builder()
+                .urn(urn)
+                .active(true)
+                .name(TENANT_NEW)
+                .build();
+
+        Optional<UpdateTenantResponse> updateResponse = tenantPersistenceService.updateTenant(updateTenantRequest);
+
+        assertTrue(updateResponse.isPresent());
+        assertTrue(updateResponse.get().getActive());
+        assertEquals(TENANT_NEW, updateResponse.get().getName());
+
+        Optional<GetTenantResponse> getTenantResponse = tenantPersistenceService.findTenantByName(TENANT_NEW);
+
+        assertTrue(getTenantResponse.isPresent());
+
+        assertTrue(getTenantResponse.get().getActive());
+        assertEquals(TENANT_NEW, getTenantResponse.get().getName());
+        assertEquals(urn, getTenantResponse.get().getUrn());
+    }
+
+    @Test
+    public void thatUpdateTenantInvalidUrnFails() {
+        final String TENANT_NEW = "updateTenantNew";
+
+        String urn = UuidUtil.getTenantUrnFromUuid(UuidUtil.getNewUuid());
+
+        UpdateTenantRequest updateTenantRequest = UpdateTenantRequest.builder()
+                .urn(urn)
+                .active(false)
+                .name(TENANT_NEW)
+                .build();
+
+        Optional<UpdateTenantResponse> updateResponse = tenantPersistenceService.updateTenant(updateTenantRequest);
+
+        assertFalse(updateResponse.isPresent());
     }
 
     @Test
