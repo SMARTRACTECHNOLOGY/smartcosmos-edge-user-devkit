@@ -2,13 +2,17 @@ package net.smartcosmos.dao.tenant.impl;
 
 import net.smartcosmos.dao.tenant.TenantPersistenceTestApplication;
 import net.smartcosmos.ext.tenant.TenantPersistenceConfig;
+import net.smartcosmos.ext.tenant.dto.CreateOrUpdateUserResponse;
 import net.smartcosmos.ext.tenant.dto.CreateTenantRequest;
 import net.smartcosmos.ext.tenant.dto.CreateTenantResponse;
+import net.smartcosmos.ext.tenant.dto.CreateUserRequest;
 import net.smartcosmos.ext.tenant.dto.GetTenantResponse;
 import net.smartcosmos.ext.tenant.impl.TenantPersistenceService;
 import net.smartcosmos.ext.tenant.repository.TenantRepository;
 import net.smartcosmos.ext.tenant.util.UuidUtil;
 import org.junit.After;
+import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +22,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
@@ -40,10 +46,18 @@ public class TenantPersistenceServiceTest {
     @Autowired
     TenantRepository tenantRepository;
 
+    @Before
+    public void setup() throws Exception {
+        prepareTenantForUserTests();
+    }
+
+
     @After
     public void tearDown() throws Exception {
         tenantRepository.deleteAll();
     }
+
+    // region TenantPersistenceTests
 
     @Test
     public void thatCreateTenantSucceeds() {
@@ -150,4 +164,66 @@ public class TenantPersistenceServiceTest {
 
         assertFalse(getTenantResponse.isPresent());
     }
+
+    // endregion
+
+    // region UserPersistenceTests
+    private String testUserTenantUrn;
+
+    // prepare the tenant to do tests with users...
+    private void prepareTenantForUserTests() throws Exception {
+
+        final String TENANT = "createUserTestTenant";
+        final String USER = "createUserTestAdmin";
+
+        CreateTenantRequest createTenantRequest = CreateTenantRequest.builder()
+                .active(true)
+                .name(TENANT)
+                .username(USER)
+                .build();
+
+        Optional<CreateTenantResponse> createTenantResponse =
+                tenantPersistenceService.createTenant(createTenantRequest);
+
+        if (!createTenantResponse.isPresent()) {
+            throw new Exception("prepareTenantForUserTests: cannot create tenant to do user tests");
+        }
+        testUserTenantUrn = createTenantResponse.get().getUrn();
+    }
+
+    @Ignore
+    @Test
+    public void thatCreateUserSucceeds() {
+
+        final String emailAddress = "create.user@example.com";
+        final String givenName = "user";
+        final String role = "User";
+        final String surname = "create";
+        final String username = "create.user";
+
+        List<String> roles = new ArrayList<>();
+        roles.add(role);
+
+        CreateUserRequest createUserRequest = CreateUserRequest.builder()
+                .active(true)
+                .emailAddress(emailAddress)
+                .givenName(givenName)
+                .roles(roles)
+                .surname(surname)
+                .username(username)
+                .tenantUrn(testUserTenantUrn)
+                .build();
+
+        Optional<CreateOrUpdateUserResponse> userResponse = tenantPersistenceService.createUser(createUserRequest);
+
+        assertTrue(userResponse.isPresent());
+        assertEquals(emailAddress, userResponse.get().getEmailAddress());
+        assertEquals(givenName, userResponse.get().getGivenName());
+        assertEquals(roles.size(), userResponse.get().getRoles().size());
+        assertEquals(role, userResponse.get().getRoles().get(0));
+        assertEquals(surname, userResponse.get().getSurname());
+        assertEquals(username, userResponse.get().getUsername());
+    }
+
+    // endregion
 }
