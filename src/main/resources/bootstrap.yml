@@ -6,4 +6,4 @@ spring:
   cloud:
     config:
       uri: ${CONFIG_SERVER_URL:http://localhost:8888}
-      failFast: false
+      failFast: true
