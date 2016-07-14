@@ -9,16 +9,18 @@ import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import net.smartcosmos.spring.EnableSmartCosmos;
 import net.smartcosmos.spring.EnableSmartCosmosExtension;
 import net.smartcosmos.spring.EnableSmartCosmosSecurity;
 
-@ComponentScan
+
 @EnableSmartCosmosExtension
 @EnableSmartCosmos
 @EnableSmartCosmosSecurity
+@EnableWebMvc
 public class TenantRdao extends WebMvcConfigurerAdapter {
 
     public static void main(String[] args) {

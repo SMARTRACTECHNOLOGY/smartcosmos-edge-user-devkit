@@ -2,7 +2,7 @@ project:
   artifactId: smartcosmos-generic-service
 spring:
   application:
-    name: smartcosmos-edge-user
+    name: @project.artifactId@
   cloud:
     config:
       uri: ${CONFIG_SERVER_URL:http://localhost:8888}
