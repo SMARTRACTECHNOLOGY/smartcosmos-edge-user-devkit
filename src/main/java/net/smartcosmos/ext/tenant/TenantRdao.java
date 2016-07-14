@@ -17,6 +17,7 @@ import net.smartcosmos.spring.EnableSmartCosmosExtension;
 import net.smartcosmos.spring.EnableSmartCosmosSecurity;
 
 
+@ComponentScan
 @EnableSmartCosmosExtension
 @EnableSmartCosmos
 @EnableSmartCosmosSecurity
