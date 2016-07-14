@@ -1,5 +1,6 @@
 package net.smartcosmos.extension.tenant.repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -19,6 +20,9 @@ public interface RoleRepository extends JpaRepository<RoleEntity, String>,
 
     Optional<RoleEntity> findByNameAndTenantId(String name, UUID tenantId);
 
+    Optional<RoleEntity> findByIdAndTenantId(UUID id, UUID tenantId);
+
     Optional<RoleEntity> findById(UUID id);
 
+    List<RoleEntity> deleteByIdAndTenantId(UUID id, UUID tenantId);
 }

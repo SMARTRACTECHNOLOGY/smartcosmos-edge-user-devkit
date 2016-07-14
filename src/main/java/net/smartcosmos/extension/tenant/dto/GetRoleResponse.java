@@ -26,7 +26,7 @@ public class GetRoleResponse {
 
 
     @Builder
-    @ConstructorProperties({ "urn", "name", "authoriteis", "active"})
+    @ConstructorProperties({ "urn", "name", "authorities", "active"})
     public GetRoleResponse(String urn, String name, List<String> authorities, Boolean active) {
         this.urn = urn;
         this.name = name;
