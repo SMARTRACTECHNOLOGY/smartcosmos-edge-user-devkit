@@ -1,8 +1,10 @@
 package net.smartcosmos.ext.tenant.impl;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 import javax.validation.ConstraintViolationException;
 
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +22,9 @@ import net.smartcosmos.ext.tenant.dto.GetRoleResponse;
 import net.smartcosmos.ext.tenant.repository.AuthorityRepository;
 import net.smartcosmos.ext.tenant.repository.RoleRepository;
 import net.smartcosmos.ext.tenant.util.UuidUtil;
+import org.springframework.transaction.annotation.Transactional;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * Initially created by SMART COSMOS Team on June 30, 2016.
@@ -70,38 +75,56 @@ public class RolePersistenceService implements RoleDao {
     }
 
     @Override
-    public Optional<CreateOrUpdateRoleResponse> updateRole (String tenantUrn, CreateOrUpdateRoleRequest updateRoleRequest)
+    public Optional<CreateOrUpdateRoleResponse> updateRole (String tenantUrn, String urn, CreateOrUpdateRoleRequest updateRoleRequest)
         throws ConstraintViolationException {
 
-        // This role already exists? we're not creating a new one
-        if (roleRepository.findById(UuidUtil.getUuidFromUrn(tenantUrn)).isPresent()) {
-            return Optional.empty();
+        UUID tenantId = UuidUtil.getUuidFromUrn(tenantUrn);
+        UUID id = UuidUtil.getUuidFromUrn(urn);
+
+        // Cancel update if role doesn't exist
+        if (roleRepository.findByIdAndTenantId(id, tenantId).isPresent()) {
+
+            Set<AuthorityEntity> authorityEntities = new HashSet<>();
+            for (String authority : updateRoleRequest.getAuthorities()) {
+                authorityEntities.add(authorityRepository.save(AuthorityEntity.builder().authority(authority).build()));
+            }
+
+            RoleEntity role = roleRepository.save(RoleEntity.builder()
+                    .id(id)
+                    .tenantId(tenantId)
+                    .name(updateRoleRequest.getName())
+                    .authorities(authorityEntities)
+                    .active(updateRoleRequest.getActive())
+                    .build());
+            return Optional.ofNullable(conversionService.convert(role, CreateOrUpdateRoleResponse.class));
         }
 
-        Set<AuthorityEntity> authorityEntities = new HashSet<>();
-        for (String authority: updateRoleRequest.getAuthorities()) {
-            authorityEntities.add(authorityRepository.save(AuthorityEntity.builder().authority(authority).build()));
-        }
-
-        RoleEntity role = roleRepository.save(RoleEntity.builder()
-                                                  .id(UuidUtil.getUuidFromUrn(updateRoleRequest.getUrn()))
-                                                  .tenantId(UuidUtil.getUuidFromUrn(tenantUrn))
-                                                  .name("Admin")
-                                                  .authorities(authorityEntities)
-                                                  .active(true)
-                                                  .build());
-        return Optional.ofNullable(conversionService.convert(role, CreateOrUpdateRoleResponse.class));
+        return Optional.empty();
     }
 
-    public Optional<GetRoleResponse> findByNameAndTenantUrn(String name, String tenantUrn) {
+    public Optional<GetRoleResponse> findByTenantUrnAndName(String tenantUrn, String name) {
         Optional<RoleEntity> roleEntity = roleRepository.findByNameAndTenantId(name, UuidUtil.getUuidFromUrn(tenantUrn));
         if (roleEntity.isPresent()) {
-            return Optional.ofNullable(conversionService.convert(roleEntity, GetRoleResponse.class));
+            return Optional.ofNullable(conversionService.convert(roleEntity.get(), GetRoleResponse.class));
         }
         return Optional.empty();
     }
+
     public Optional<RoleEntity> findByUrnAsEntity(String urn) {
         return roleRepository.findById(UuidUtil.getUuidFromUrn(urn));
+    }
+
+    @Override
+    @Transactional
+    public List<GetRoleResponse> delete(String tenantUrn, String urn)
+            throws IllegalArgumentException {
+
+        List<RoleEntity> roleEntities = roleRepository
+                .deleteByIdAndTenantId(UuidUtil.getUuidFromUrn(urn), UuidUtil.getUuidFromUrn(tenantUrn));
+        return roleEntities
+                .stream()
+                .map(item -> conversionService.convert(item, GetRoleResponse.class))
+                .collect(toList());
     }
 }
 

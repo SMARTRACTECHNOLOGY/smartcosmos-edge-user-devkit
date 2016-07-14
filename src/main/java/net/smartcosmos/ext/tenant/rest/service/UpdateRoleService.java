@@ -43,13 +43,16 @@ public class UpdateRoleService extends AbstractTenantService{
         return response;
     }
 
+    // TODO: create different workers for "create" and "update", and provide the URN for "update" only...
+    // FIXME: implement something for "whatever"...
+
     @Async
     private void updateRoleWorker(DeferredResult<ResponseEntity> response, RestCreateOrUpdateRoleRequest restCreateOrUpdateRoleRequest) {
 
         try {
             final CreateOrUpdateRoleRequest createRoleRequest = conversionService.convert(restCreateOrUpdateRoleRequest, CreateOrUpdateRoleRequest.class);
 
-            Optional<CreateOrUpdateRoleResponse> newUser = roleDao.updateRole("whatever", createRoleRequest);;
+            Optional<CreateOrUpdateRoleResponse> newUser = roleDao.updateRole("whatever", "urn", createRoleRequest);
 
             if (newUser.isPresent())
             {
@@ -61,7 +64,7 @@ public class UpdateRoleService extends AbstractTenantService{
                 response.setResult(responseEntity);
             }
             else {
-                Optional<GetRoleResponse> alreadyThere = roleDao.findByNameAndTenantUrn(restCreateOrUpdateRoleRequest.getName(), "tenantUrnHere");
+                Optional<GetRoleResponse> alreadyThere = roleDao.findByTenantUrnAndName("tenantUrnHere", restCreateOrUpdateRoleRequest.getName());
                 response.setResult(ResponseEntity.status(HttpStatus.CONFLICT).build());
                 //sendEvent(null, DefaultEventTypes.ThingCreateFailedAlreadyExists, alreadyThere.get());
             }
