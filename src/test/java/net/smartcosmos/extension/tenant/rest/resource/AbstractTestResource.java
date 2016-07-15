@@ -3,7 +3,6 @@ package net.smartcosmos.extension.tenant.rest.resource;
 import java.io.IOException;
 import java.util.Arrays;
 
-import net.smartcosmos.extension.tenant.dao.TenantDao;
 import org.junit.*;
 import org.junit.runner.*;
 import org.mockito.*;
@@ -26,6 +25,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 
 import net.smartcosmos.extension.tenant.TenantRdao;
+import net.smartcosmos.extension.tenant.dao.TenantDao;
 import net.smartcosmos.security.user.SmartCosmosUser;
 
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;

@@ -10,18 +10,6 @@ import javax.validation.ConstraintViolationException;
 
 import lombok.extern.slf4j.Slf4j;
 
-import net.smartcosmos.extension.tenant.dao.TenantDao;
-import net.smartcosmos.extension.tenant.domain.RoleEntity;
-import net.smartcosmos.extension.tenant.domain.UserEntity;
-import net.smartcosmos.extension.tenant.dto.CreateOrUpdateRoleRequest;
-import net.smartcosmos.extension.tenant.dto.CreateOrUpdateRoleResponse;
-import net.smartcosmos.extension.tenant.dto.CreateOrUpdateUserResponse;
-import net.smartcosmos.extension.tenant.dto.CreateTenantRequest;
-import net.smartcosmos.extension.tenant.dto.GetTenantResponse;
-import net.smartcosmos.extension.tenant.dto.GetUserResponse;
-import net.smartcosmos.extension.tenant.dto.TenantEntityAndUserEntityDto;
-import net.smartcosmos.extension.tenant.dto.UpdateTenantRequest;
-import net.smartcosmos.extension.tenant.dto.UpdateUserRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionException;
 import org.springframework.core.convert.ConversionService;
@@ -32,9 +20,9 @@ import net.smartcosmos.extension.tenant.dao.TenantDao;
 import net.smartcosmos.extension.tenant.domain.RoleEntity;
 import net.smartcosmos.extension.tenant.domain.TenantEntity;
 import net.smartcosmos.extension.tenant.domain.UserEntity;
-import net.smartcosmos.extension.tenant.dto.CreateOrUpdateUserResponse;
 import net.smartcosmos.extension.tenant.dto.CreateOrUpdateRoleRequest;
 import net.smartcosmos.extension.tenant.dto.CreateOrUpdateRoleResponse;
+import net.smartcosmos.extension.tenant.dto.CreateOrUpdateUserResponse;
 import net.smartcosmos.extension.tenant.dto.CreateTenantRequest;
 import net.smartcosmos.extension.tenant.dto.CreateTenantResponse;
 import net.smartcosmos.extension.tenant.dto.CreateUserRequest;
@@ -62,7 +50,6 @@ public class TenantPersistenceService implements TenantDao {
     private final PasswordEncoder passwordEncoder;
 
     /**
-     *
      * @param tenantRepository
      * @param userRepository
      * @param rolePersistenceService
@@ -89,7 +76,6 @@ public class TenantPersistenceService implements TenantDao {
     /******************/
 
     /**
-     *
      * @param createTenantRequest
      * @return
      * @throws ConstraintViolationException
@@ -142,7 +128,6 @@ public class TenantPersistenceService implements TenantDao {
     }
 
     /**
-     *
      * @param updateTenantRequest
      * @return
      * @throws ConstraintViolationException
@@ -175,7 +160,6 @@ public class TenantPersistenceService implements TenantDao {
     }
 
     /**
-     *
      * @param tenantUrn
      * @return
      */
@@ -204,7 +188,6 @@ public class TenantPersistenceService implements TenantDao {
     }
 
     /**
-     *
      * @param name
      * @return
      */
@@ -220,6 +203,7 @@ public class TenantPersistenceService implements TenantDao {
 
     /****************/
     /* USER METHODS */
+
     /****************/
 
     @Override
@@ -243,7 +227,7 @@ public class TenantPersistenceService implements TenantDao {
 
         } catch (IllegalArgumentException | ConstraintViolationException e) {
             String msg = String.format("create failed, user: '%s', tenant: '%s', cause: %s", createUserRequest.getUsername(),
-                                       createUserRequest.getTenantUrn(). toString());
+                                       createUserRequest.getTenantUrn().toString());
             log.error(msg);
             log.debug(msg, e);
             throw e;
@@ -251,7 +235,6 @@ public class TenantPersistenceService implements TenantDao {
     }
 
     /**
-     *
      * @param updateUserRequest
      * @return
      * @throws ConstraintViolationException
@@ -297,7 +280,6 @@ public class TenantPersistenceService implements TenantDao {
     }
 
     /**
-     *
      * @param userUrn
      * @return
      */
@@ -326,7 +308,6 @@ public class TenantPersistenceService implements TenantDao {
     }
 
     /**
-     *
      * @param username
      * @return
      */
@@ -341,7 +322,6 @@ public class TenantPersistenceService implements TenantDao {
     }
 
     /**
-     *
      * @param urn
      * @return
      */
@@ -358,6 +338,7 @@ public class TenantPersistenceService implements TenantDao {
 
     /*******************/
     /* UTILITY METHODS */
+
     /*******************/
 
     private RoleEntity createAdminRole(String tenantUrn) {
