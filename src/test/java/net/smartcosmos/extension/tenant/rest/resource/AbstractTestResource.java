@@ -3,6 +3,7 @@ package net.smartcosmos.extension.tenant.rest.resource;
 import java.io.IOException;
 import java.util.Arrays;
 
+import net.smartcosmos.extension.tenant.dao.TenantDao;
 import org.junit.*;
 import org.junit.runner.*;
 import org.mockito.*;
@@ -24,7 +25,6 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 
-import net.smartcosmos.extension.tenant.TenantPersistenceTestApplication;
 import net.smartcosmos.extension.tenant.TenantRdao;
 import net.smartcosmos.security.user.SmartCosmosUser;
 
@@ -36,7 +36,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 @WebAppConfiguration
 @ActiveProfiles("test")
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = { TenantPersistenceTestApplication.class })
+@SpringApplicationConfiguration(classes = { TenantRdao.class })
 public abstract class AbstractTestResource {
 
     protected MediaType contentType = MediaType.APPLICATION_JSON_UTF8;
@@ -83,9 +83,9 @@ public abstract class AbstractTestResource {
     @Configuration
     static class ContextConfiguration {
         @Bean
-        public TenantRdao tenantDao() {
+        public TenantDao tenantDao() {
 
-            TenantRdao tenantDao = Mockito.mock(TenantRdao.class);
+            TenantDao tenantDao = Mockito.mock(TenantDao.class);
 
             return tenantDao;
         }
