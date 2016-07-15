@@ -300,7 +300,6 @@ public class TenantPersistenceServiceTest {
         testUserTenantUrn = createTenantResponse.get().getUrn();
     }
 
-    @Ignore
     @Test
     public void thatCreateUserSucceeds() {
 

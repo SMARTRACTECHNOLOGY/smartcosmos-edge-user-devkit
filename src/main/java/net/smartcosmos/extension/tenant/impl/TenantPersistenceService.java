@@ -10,6 +10,7 @@ import javax.validation.ConstraintViolationException;
 
 import lombok.extern.slf4j.Slf4j;
 
+import net.smartcosmos.extension.tenant.repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionException;
 import org.springframework.core.convert.ConversionService;
@@ -46,6 +47,7 @@ public class TenantPersistenceService implements TenantDao {
     private final TenantRepository tenantRepository;
     private final UserRepository userRepository;
     private final RolePersistenceService rolePersistenceService;
+    private final RoleRepository roleRepository;
     private final ConversionService conversionService;
     private final PasswordEncoder passwordEncoder;
 
@@ -61,12 +63,14 @@ public class TenantPersistenceService implements TenantDao {
         TenantRepository tenantRepository,
         UserRepository userRepository,
         RolePersistenceService rolePersistenceService,
+        RoleRepository roleRepository,
         ConversionService conversionService,
         PasswordEncoder passwordEncoder) {
 
         this.tenantRepository = tenantRepository;
         this.userRepository = userRepository;
         this.rolePersistenceService = rolePersistenceService;
+        this.roleRepository = roleRepository;
         this.conversionService = conversionService;
         this.passwordEncoder = passwordEncoder;
     }
@@ -222,6 +226,24 @@ public class TenantPersistenceService implements TenantDao {
 
             UserEntity userEntity = conversionService.convert(createUserRequest, UserEntity.class);
             userEntity.setPassword(passwordEncoder.encode("PleaseChangeMeImmediately"));
+
+            // fetch the roles from the DB since the conversions service converts the role names only
+            Set<RoleEntity> roleEntities = new HashSet<>();
+            for (RoleEntity roleEntity : userEntity.getRoles()) {
+
+                Optional<RoleEntity> effectiveRole = roleRepository.findByNameAndTenantId(
+                        roleEntity.getName(),
+                        UuidUtil.getUuidFromUrn(createUserRequest.getTenantUrn()));
+                if (effectiveRole.isPresent()) {
+                    roleEntities.add(effectiveRole.get());
+                }
+                else {
+                    throw new IllegalArgumentException(
+                            String.format("role %s does not exist", roleEntity.getName()));
+                }
+            }
+            userEntity.setRoles(roleEntities);
+
             userEntity = userRepository.save(userEntity);
             return Optional.ofNullable(conversionService.convert(userEntity, CreateOrUpdateUserResponse.class));
 
