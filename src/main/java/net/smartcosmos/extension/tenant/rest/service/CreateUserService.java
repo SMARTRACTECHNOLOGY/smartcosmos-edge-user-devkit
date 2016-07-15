@@ -19,12 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.async.DeferredResult;
 
 import net.smartcosmos.events.SmartCosmosEventTemplate;
-import net.smartcosmos.extension.tenant.dao.RoleDao;
-import net.smartcosmos.extension.tenant.dao.TenantDao;
 import net.smartcosmos.extension.tenant.dto.CreateUserRequest;
-import net.smartcosmos.extension.tenant.dto.CreateOrUpdateUserResponse;
-import net.smartcosmos.extension.tenant.dto.GetUserResponse;
-import net.smartcosmos.extension.tenant.rest.dto.RestCreateUserRequest;
 
 /**
  * Initially created by SMART COSMOS Team on July 01, 2016.

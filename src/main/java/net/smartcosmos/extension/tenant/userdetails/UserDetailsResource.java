@@ -5,9 +5,6 @@ import java.util.Optional;
 
 import lombok.extern.slf4j.Slf4j;
 
-import net.smartcosmos.extension.tenant.dao.TenantDao;
-import net.smartcosmos.extension.tenant.dto.GetUserResponse;
-import net.smartcosmos.extension.tenant.dto.UserDto;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ObjectNode;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import net.smartcosmos.extension.tenant.dao.TenantDao;
+import net.smartcosmos.extension.tenant.dto.GetUserResponse;
+import net.smartcosmos.extension.tenant.dto.UserDto;
 
 @RestController
 @Slf4j
