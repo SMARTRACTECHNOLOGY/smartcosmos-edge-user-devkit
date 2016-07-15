@@ -7,7 +7,7 @@ import net.smartcosmos.extension.tenant.dto.CreateOrUpdateUserResponse;
 import net.smartcosmos.extension.tenant.dto.CreateTenantRequest;
 import net.smartcosmos.extension.tenant.dto.CreateTenantResponse;
 import net.smartcosmos.extension.tenant.dto.CreateUserRequest;
-import net.smartcosmos.extension.tenant.dto.GetOrDeleteUserResponse;
+import net.smartcosmos.extension.tenant.dto.GetUserResponse;
 import net.smartcosmos.extension.tenant.dto.GetTenantResponse;
 import net.smartcosmos.extension.tenant.dto.UpdateTenantRequest;
 import net.smartcosmos.extension.tenant.dto.UpdateTenantResponse;
@@ -30,10 +30,10 @@ public interface TenantDao {
 
     Optional<CreateOrUpdateUserResponse> updateUser(UpdateUserRequest userUpdate) throws ConstraintViolationException;
 
-    Optional<GetOrDeleteUserResponse> findUserByUrn(String userUrn);
+    Optional<GetUserResponse> findUserByUrn(String userUrn);
 
-    Optional<GetOrDeleteUserResponse> findUserByName(String name);
+    Optional<GetUserResponse> findUserByName(String name);
 
-    Optional<GetOrDeleteUserResponse> deleteUserByUrn(String urn);
+    Optional<GetUserResponse> deleteUserByUrn(String urn);
 
 }

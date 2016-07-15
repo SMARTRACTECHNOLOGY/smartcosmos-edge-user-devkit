@@ -16,7 +16,7 @@ import org.springframework.web.context.request.async.DeferredResult;
 import net.smartcosmos.events.SmartCosmosEventTemplate;
 import net.smartcosmos.extension.tenant.dao.RoleDao;
 import net.smartcosmos.extension.tenant.dao.TenantDao;
-import net.smartcosmos.extension.tenant.dto.GetOrDeleteUserResponse;
+import net.smartcosmos.extension.tenant.dto.GetUserResponse;
 
 /**
  * Initially created by SMART COSMOS Team on July 01, 2016.
@@ -44,7 +44,7 @@ public class DeleteUserService extends AbstractTenantService{
     private void updateUserWorker(DeferredResult<ResponseEntity> response, String urn) {
 
         try {
-            Optional<GetOrDeleteUserResponse> deleteUserResponse = tenantDao.deleteUserByUrn(urn);
+            Optional<GetUserResponse> deleteUserResponse = tenantDao.deleteUserByUrn(urn);
 
             if (deleteUserResponse.isPresent())
             {

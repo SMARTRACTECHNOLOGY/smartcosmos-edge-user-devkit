@@ -9,7 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.smartcosmos.extension.tenant.dao.RoleDao;
 import net.smartcosmos.extension.tenant.dao.TenantDao;
 import net.smartcosmos.extension.tenant.dto.CreateOrUpdateUserResponse;
-import net.smartcosmos.extension.tenant.dto.GetOrDeleteUserResponse;
+import net.smartcosmos.extension.tenant.dto.GetUserResponse;
 import net.smartcosmos.extension.tenant.rest.dto.RestCreateUserRequest;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.http.HttpStatus;
@@ -61,7 +61,7 @@ public class CreateUserService extends AbstractTenantService{
                 response.setResult(responseEntity);
             }
             else {
-                Optional<GetOrDeleteUserResponse> alreadyThere = tenantDao.findUserByUrn(newUser.get().getUrn());
+                Optional<GetUserResponse> alreadyThere = tenantDao.findUserByUrn(newUser.get().getUrn());
                 response.setResult(ResponseEntity.status(HttpStatus.CONFLICT).build());
                 //sendEvent(null, DefaultEventTypes.ThingCreateFailedAlreadyExists, alreadyThere.get());
             }

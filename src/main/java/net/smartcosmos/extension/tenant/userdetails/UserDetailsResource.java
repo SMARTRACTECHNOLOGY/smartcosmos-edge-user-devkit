@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import net.smartcosmos.extension.tenant.dao.TenantDao;
-import net.smartcosmos.extension.tenant.dto.GetOrDeleteUserResponse;
+import net.smartcosmos.extension.tenant.dto.GetUserResponse;
 import net.smartcosmos.extension.tenant.dto.UserDto;
 
 @RestController
@@ -44,10 +44,10 @@ public class UserDetailsResource {
         log.info("Requested information on username {} with {}", username,
                 authentication);
 
-        Optional<GetOrDeleteUserResponse> userResponseOptional = tenantDao.findUserByName(username);
+        Optional<GetUserResponse> userResponseOptional = tenantDao.findUserByName(username);
 
         if (userResponseOptional.isPresent()) {
-            GetOrDeleteUserResponse userResponse = userResponseOptional.get();
+            GetUserResponse userResponse = userResponseOptional.get();
             if (authentication.has("credentials")) {
                 String credentials = authentication.get("credentials").asText();
                 if (passwordEncoder.encode(credentials).equals(userResponse.getPassword())) {
@@ -81,10 +81,10 @@ public class UserDetailsResource {
 
         log.info("Requested information for details only on username {}", username);
 
-        Optional<GetOrDeleteUserResponse> userResponseOptional = tenantDao.findUserByName(username);
+        Optional<GetUserResponse> userResponseOptional = tenantDao.findUserByName(username);
 
         if (userResponseOptional.isPresent()) {
-            GetOrDeleteUserResponse userResponse = userResponseOptional.get();
+            GetUserResponse userResponse = userResponseOptional.get();
             return UserDto.builder()
                 .tenantUrn(userResponse.getTenantUrn())
                 .userUrn(userResponse.getUrn())
