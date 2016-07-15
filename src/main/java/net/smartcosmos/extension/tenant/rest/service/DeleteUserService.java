@@ -50,10 +50,7 @@ public class DeleteUserService extends AbstractTenantService{
             {
                 //sendEvent(null, DefaultEventTypes.ThingCreated, object.get());
 
-                ResponseEntity responseEntity = ResponseEntity
-                    .created(URI.create(deleteUserResponse.get().getUrn()))
-                    .body(deleteUserResponse.get());
-                response.setResult(responseEntity);
+                response.setResult(ResponseEntity.noContent().build());
             }
             else {
                 response.setResult(ResponseEntity.status(HttpStatus.NOT_FOUND).build());

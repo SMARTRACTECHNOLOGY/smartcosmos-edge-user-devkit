@@ -26,6 +26,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import net.smartcosmos.extension.tenant.TenantRdao;
 import net.smartcosmos.extension.tenant.dao.TenantDao;
+import net.smartcosmos.extension.tenant.userdetails.UserDetailsResource;
 import net.smartcosmos.security.user.SmartCosmosUser;
 
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
@@ -82,12 +83,17 @@ public abstract class AbstractTestResource {
 
     @Configuration
     static class ContextConfiguration {
+
         @Bean
         public TenantDao tenantDao() {
 
-            TenantDao tenantDao = Mockito.mock(TenantDao.class);
+            return (Mockito.mock(TenantDao.class));
+        }
 
-            return tenantDao;
+        @Bean
+        public UserDetailsResource userDetailsResource() {
+
+            return( Mockito.mock(UserDetailsResource.class));
         }
 
     }

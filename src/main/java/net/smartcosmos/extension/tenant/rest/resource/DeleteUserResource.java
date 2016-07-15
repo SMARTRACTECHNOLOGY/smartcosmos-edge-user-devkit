@@ -5,9 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.request.async.DeferredResult;
 
 import net.smartcosmos.extension.tenant.rest.service.DeleteUserService;
@@ -31,8 +31,8 @@ public class DeleteUserResource {
     @RequestMapping(value = "/users/{urn}", method = RequestMethod.DELETE)
     @EndpointMethodControl(key = "user.delete")
     @ConditionalOnProperty(prefix = "smt.endpoints.user.delete", name = "enabled", matchIfMissing = true)
-    public DeferredResult<ResponseEntity> updateObject(
-        @RequestParam String urn) {
+    public DeferredResult<ResponseEntity> deleteUser(
+        @PathVariable String urn) {
 
         return service.delete(urn);
     }

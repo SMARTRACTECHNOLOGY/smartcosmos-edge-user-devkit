@@ -2,6 +2,7 @@ package net.smartcosmos.extension.tenant.rest.resource;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.*;
 import org.junit.runner.*;
@@ -13,11 +14,18 @@ import org.springframework.test.web.servlet.MvcResult;
 import net.smartcosmos.extension.tenant.TenantPersistenceConfig;
 import net.smartcosmos.extension.tenant.TenantPersistenceTestApplication;
 import net.smartcosmos.extension.tenant.dao.TenantDao;
+import net.smartcosmos.extension.tenant.dto.CreateOrUpdateUserResponse;
+import net.smartcosmos.extension.tenant.dto.CreateTenantResponse;
+import net.smartcosmos.extension.tenant.dto.UserDto;
 import net.smartcosmos.extension.tenant.rest.dto.RestCreateTenantRequest;
+import net.smartcosmos.extension.tenant.userdetails.UserDetailsResource;
 import net.smartcosmos.extension.tenant.util.UuidUtil;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.startsWith;
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.asyncDispatch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -37,9 +45,12 @@ public class CreateTenantResourceTest extends AbstractTestResource {
     @Autowired
     protected TenantDao tenantDao;
 
+    @Autowired
+    protected UserDetailsResource userDetailsResource;
+
     @After
     public void tearDown() throws Exception {
-        //reset(tenantDao);
+        reset(tenantDao);
     }
 
     /**
@@ -52,17 +63,46 @@ public class CreateTenantResourceTest extends AbstractTestResource {
 
         final String name = "example.com";
         final String username = "spam@example.com";
-        final String expectedPassword = "PleaseChangeMeImmediately";
 
-        final String expectedUrn = "urn:tenant:uuid:" + UuidUtil.getNewUuid()
+        final String expectedTenantUrn = "urn:tenant:uuid:" + UuidUtil.getNewUuid()
             .toString();
 
-        List<String> authorities = new ArrayList<>();
+        final String expectedUserUrn = "urn:user:uuid:" + UuidUtil.getNewUuid()
+            .toString();
+
         List<String> adminRoles = new ArrayList<>();
         adminRoles.add("Admin");
 
+        CreateOrUpdateUserResponse createOrUpdateUserResponse = CreateOrUpdateUserResponse
+            .builder()
+            .urn(expectedUserUrn)
+            .username(username)
+            .emailAddress(username)
+            .active(true)
+            .roles(adminRoles)
+            .build();
+
+        CreateTenantResponse createTenantResponse = CreateTenantResponse
+            .builder()
+            .urn(expectedTenantUrn)
+            .name(name)
+            .active(true)
+            .admin(createOrUpdateUserResponse)
+            .build();
+
+        UserDto userDto = UserDto.builder()
+            .tenantUrn(expectedTenantUrn)
+            .userUrn(expectedUserUrn)
+            .username(username)
+            .passwordHash("whatever")
+            .roles(adminRoles)
+            .build();
+
+        when(tenantDao.createTenant(anyObject())).thenReturn(Optional.ofNullable(createTenantResponse));
+        when(userDetailsResource.authenticate(anyString(), anyObject())).thenReturn(userDto);
+
         MvcResult mvcResult = this.mockMvc.perform(
-            post("/tenant/").content(this.json(RestCreateTenantRequest.builder()
+            post("/tenants").content(this.json(RestCreateTenantRequest.builder()
                                                    .name(name)
                                                    .username(username)
                                                    .build()))
@@ -81,5 +121,4 @@ public class CreateTenantResourceTest extends AbstractTestResource {
             .andExpect(jsonPath("$.admin.urn", startsWith("urn:user:uuid")));
 
     }
-
 }
