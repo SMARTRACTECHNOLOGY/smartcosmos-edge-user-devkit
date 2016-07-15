@@ -1,6 +1,5 @@
 package net.smartcosmos.extension.tenant.rest.service;
 
-import java.net.URI;
 import java.util.Optional;
 import javax.inject.Inject;
 
@@ -16,21 +15,21 @@ import org.springframework.web.context.request.async.DeferredResult;
 import net.smartcosmos.events.SmartCosmosEventTemplate;
 import net.smartcosmos.extension.tenant.dao.RoleDao;
 import net.smartcosmos.extension.tenant.dao.TenantDao;
-import net.smartcosmos.extension.tenant.dto.GetUserResponse;
+import net.smartcosmos.extension.tenant.dto.GetOrDeleteUserResponse;
 
 /**
  * Initially created by SMART COSMOS Team on July 01, 2016.
  */
 @Slf4j
 @Service
-public class DeleteUserService extends AbstractTenantService{
+public class DeleteUserService extends AbstractTenantService {
 
     @Inject
-    public DeleteUserService(TenantDao tenantDao, RoleDao roleDao, SmartCosmosEventTemplate smartCosmosEventTemplate, ConversionService
+    public DeleteUserService(
+        TenantDao tenantDao, RoleDao roleDao, SmartCosmosEventTemplate smartCosmosEventTemplate, ConversionService
         conversionService) {
         super(tenantDao, roleDao, smartCosmosEventTemplate, conversionService);
     }
-
 
     public DeferredResult<ResponseEntity> delete(String urn) {
         // Async worker thread reduces timeouts and disconnects for long queries and processing.
@@ -44,15 +43,13 @@ public class DeleteUserService extends AbstractTenantService{
     private void updateUserWorker(DeferredResult<ResponseEntity> response, String urn) {
 
         try {
-            Optional<GetUserResponse> deleteUserResponse = tenantDao.deleteUserByUrn(urn);
+            Optional<GetOrDeleteUserResponse> deleteUserResponse = tenantDao.deleteUserByUrn(urn);
 
-            if (deleteUserResponse.isPresent())
-            {
+            if (deleteUserResponse.isPresent()) {
                 //sendEvent(null, DefaultEventTypes.ThingCreated, object.get());
 
                 response.setResult(ResponseEntity.noContent().build());
-            }
-            else {
+            } else {
                 response.setResult(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
                 // sendEvent(createTenantRequest, DefaultEventTypes.ThingCreateFailedAlreadyExists, createTenantRequest);
             }

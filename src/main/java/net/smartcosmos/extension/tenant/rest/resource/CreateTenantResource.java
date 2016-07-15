@@ -4,8 +4,6 @@ import javax.validation.Valid;
 
 import lombok.extern.slf4j.Slf4j;
 
-import net.smartcosmos.extension.tenant.rest.dto.RestCreateTenantRequest;
-import net.smartcosmos.extension.tenant.rest.service.CreateTenantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.ResponseEntity;

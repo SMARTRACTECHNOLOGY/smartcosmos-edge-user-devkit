@@ -18,7 +18,7 @@ import net.smartcosmos.extension.tenant.domain.UserEntity;
 
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties({ "version"})
+@JsonIgnoreProperties({ "version" })
 public class TenantEntityAndUserEntityDto {
 
     private static final int VERSION = 1;
@@ -29,8 +29,8 @@ public class TenantEntityAndUserEntityDto {
     private UserEntity userEntity;
 
     @Builder
-    @ConstructorProperties({"tenantEntity", "userEntity"})
-    public TenantEntityAndUserEntityDto (TenantEntity tenantEntity, UserEntity userEntity) {
+    @ConstructorProperties({ "tenantEntity", "userEntity" })
+    public TenantEntityAndUserEntityDto(TenantEntity tenantEntity, UserEntity userEntity) {
 
         this.tenantEntity = tenantEntity;
         this.userEntity = userEntity;

@@ -6,9 +6,6 @@ import javax.inject.Inject;
 
 import lombok.extern.slf4j.Slf4j;
 
-import net.smartcosmos.extension.tenant.dao.TenantDao;
-import net.smartcosmos.extension.tenant.dto.CreateOrUpdateRoleRequest;
-import net.smartcosmos.extension.tenant.dto.GetRoleResponse;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,14 +26,14 @@ import net.smartcosmos.extension.tenant.rest.dto.RestCreateOrUpdateRoleRequest;
  */
 @Slf4j
 @Service
-public class CreateRoleService extends AbstractTenantService{
+public class CreateRoleService extends AbstractTenantService {
 
     @Inject
-    public CreateRoleService(TenantDao tenantDao, RoleDao roleDao, SmartCosmosEventTemplate smartCosmosEventTemplate, ConversionService
+    public CreateRoleService(
+        TenantDao tenantDao, RoleDao roleDao, SmartCosmosEventTemplate smartCosmosEventTemplate, ConversionService
         conversionService) {
         super(tenantDao, roleDao, smartCosmosEventTemplate, conversionService);
     }
-
 
     public DeferredResult<ResponseEntity> create(RestCreateOrUpdateRoleRequest restCreateOrUpdateRoleRequest) {
         // Async worker thread reduces timeouts and disconnects for long queries and processing.
@@ -50,20 +47,19 @@ public class CreateRoleService extends AbstractTenantService{
     private void createRoleWorker(DeferredResult<ResponseEntity> response, RestCreateOrUpdateRoleRequest restCreateOrUpdateRoleRequest) {
 
         try {
-            final CreateOrUpdateRoleRequest createRoleRequest = conversionService.convert(restCreateOrUpdateRoleRequest, CreateOrUpdateRoleRequest.class);
+            final CreateOrUpdateRoleRequest createRoleRequest = conversionService
+                .convert(restCreateOrUpdateRoleRequest, CreateOrUpdateRoleRequest.class);
 
             Optional<CreateOrUpdateRoleResponse> newUser = roleDao.createRole("whatever", createRoleRequest);
 
-            if (newUser.isPresent())
-            {
+            if (newUser.isPresent()) {
                 //sendEvent(null, DefaultEventTypes.ThingCreated, object.get());
 
                 ResponseEntity responseEntity = ResponseEntity
                     .created(URI.create(newUser.get().getUrn()))
                     .body(newUser.get());
                 response.setResult(responseEntity);
-            }
-            else {
+            } else {
                 Optional<GetRoleResponse> alreadyThere = roleDao.findByTenantUrnAndName("tenantUrnHere", restCreateOrUpdateRoleRequest.getName());
                 response.setResult(ResponseEntity.status(HttpStatus.CONFLICT).build());
                 //sendEvent(null, DefaultEventTypes.ThingCreateFailedAlreadyExists, alreadyThere.get());

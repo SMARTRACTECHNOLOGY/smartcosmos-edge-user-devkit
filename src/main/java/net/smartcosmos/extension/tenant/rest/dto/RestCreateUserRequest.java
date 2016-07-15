@@ -33,9 +33,10 @@ public class RestCreateUserRequest {
     Boolean active;
 
     @Builder
-    @ConstructorProperties({ "urn", "active"})
-    public RestCreateUserRequest(String tenantUrn, String username, String emailAddress, String givenName, String surname, List<String> roles,
-                                 List<String> authorities, Boolean active) {
+    @ConstructorProperties({ "urn", "active" })
+    public RestCreateUserRequest(
+        String tenantUrn, String username, String emailAddress, String givenName, String surname, List<String> roles,
+        List<String> authorities, Boolean active) {
         this.tenantUrn = tenantUrn;
         this.username = username;
         this.emailAddress = emailAddress;

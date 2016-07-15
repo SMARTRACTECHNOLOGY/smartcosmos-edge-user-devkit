@@ -31,7 +31,7 @@ public class RestCreateUserResponse {
     @Builder
     @ConstructorProperties({ "urn", "tenantUrn", "username", "emailAddress", "givenName", "surname", "password", "roles", "active" })
     public RestCreateUserResponse(
-        String urn, String tenantUrn, String username, String emailAddress, String givenName, String surname,  List<String> roles, Boolean active) {
+        String urn, String tenantUrn, String username, String emailAddress, String givenName, String surname, List<String> roles, Boolean active) {
         this.urn = urn;
         this.tenantUrn = tenantUrn;
         this.username = username;

@@ -6,8 +6,9 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
-import net.smartcosmos.extension.tenant.TenantPersistenceTestApplication;
 import org.junit.*;
+
+import net.smartcosmos.extension.tenant.TenantPersistenceTestApplication;
 
 import static org.junit.Assert.*;
 

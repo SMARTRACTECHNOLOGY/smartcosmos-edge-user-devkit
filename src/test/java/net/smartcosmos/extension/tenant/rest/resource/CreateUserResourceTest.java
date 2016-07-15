@@ -20,8 +20,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.startsWith;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.asyncDispatch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -54,10 +53,10 @@ public class CreateUserResourceTest extends AbstractTestResource {
     }
 
     /**
-         * Test that creating a Tenant is successful.
-         *
-         * @throws Exception
-         */
+     * Test that creating a Tenant is successful.
+     *
+     * @throws Exception
+     */
     @Test
     public void thatCreateUserSucceeds() throws Exception {
 
@@ -102,9 +101,9 @@ public class CreateUserResourceTest extends AbstractTestResource {
                                                  .roles(userRoleOnly)
                                                  .build()))
                 .contentType(contentType))
-                .andExpect(status().isOk())
-                .andExpect(request().asyncStarted())
-                .andReturn();
+            .andExpect(status().isOk())
+            .andExpect(request().asyncStarted())
+            .andReturn();
 
         MvcResult result = this.mockMvc.perform(asyncDispatch(mvcResult))
             .andExpect(status().isCreated())

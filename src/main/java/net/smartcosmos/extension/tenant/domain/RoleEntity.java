@@ -96,7 +96,6 @@ public class RoleEntity {
     @Column(name = "active", nullable = false)
     private Boolean active;
 
-
     /*
     Lombok's @Builder is not able to deal with field initialization default values. That's a known issue which won't get fixed:
     https://github.com/rzwitserloot/lombok/issues/663

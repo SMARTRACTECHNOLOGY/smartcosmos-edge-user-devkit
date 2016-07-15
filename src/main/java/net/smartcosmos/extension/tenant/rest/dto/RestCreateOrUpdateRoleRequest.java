@@ -28,9 +28,8 @@ public class RestCreateOrUpdateRoleRequest {
     private Boolean active;
 
     @Builder
-    @ConstructorProperties({ "urn", "name", "authorities", "active"})
-    public RestCreateOrUpdateRoleRequest(String urn, String name, List<String> authorities, Boolean active)
-    {
+    @ConstructorProperties({ "urn", "name", "authorities", "active" })
+    public RestCreateOrUpdateRoleRequest(String urn, String name, List<String> authorities, Boolean active) {
         this.urn = urn;
         this.name = name;
         this.authorities = authorities;

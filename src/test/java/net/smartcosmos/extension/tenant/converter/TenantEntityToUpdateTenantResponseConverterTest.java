@@ -1,14 +1,14 @@
 package net.smartcosmos.extension.tenant.converter;
 
-import net.smartcosmos.extension.tenant.converter.TenantEntityToUpdateTenantResponseConverter;
+import java.util.UUID;
+
+import org.junit.*;
+
 import net.smartcosmos.extension.tenant.domain.TenantEntity;
 import net.smartcosmos.extension.tenant.dto.UpdateTenantResponse;
 import net.smartcosmos.extension.tenant.util.UuidUtil;
-import org.junit.Test;
 
-import java.util.UUID;
-
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public class TenantEntityToUpdateTenantResponseConverterTest {
 
@@ -21,10 +21,10 @@ public class TenantEntityToUpdateTenantResponseConverterTest {
         final TenantEntityToUpdateTenantResponseConverter converter = new TenantEntityToUpdateTenantResponseConverter();
 
         TenantEntity entity = TenantEntity.builder()
-                .active(active)
-                .name(name)
-                .id(id)
-                .build();
+            .active(active)
+            .name(name)
+            .id(id)
+            .build();
 
         UpdateTenantResponse updateTenantResponse = converter.convert(entity);
 

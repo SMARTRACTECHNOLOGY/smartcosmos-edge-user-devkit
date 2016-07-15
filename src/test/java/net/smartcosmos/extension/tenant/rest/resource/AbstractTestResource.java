@@ -54,7 +54,7 @@ public abstract class AbstractTestResource {
             .findAny().get();
 
         Assert.assertNotNull("the JSON message converter must not be null",
-            this.mappingJackson2HttpMessageConverter);
+                             this.mappingJackson2HttpMessageConverter);
     }
 
     @Before
@@ -66,7 +66,7 @@ public abstract class AbstractTestResource {
         Authentication authentication = Mockito.mock(Authentication.class);
         Mockito.when(authentication.getPrincipal())
             .thenReturn(new SmartCosmosUser("accountUrn", "urn:userUrn", "username",
-                "password", Arrays.asList(new SimpleGrantedAuthority("USER"))));
+                                            "password", Arrays.asList(new SimpleGrantedAuthority("USER"))));
         SecurityContext securityContext = Mockito.mock(SecurityContext.class);
         Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
         SecurityContextHolder.setContext(securityContext);
@@ -77,7 +77,7 @@ public abstract class AbstractTestResource {
     protected String json(Object o) throws IOException {
         MockHttpOutputMessage mockHttpOutputMessage = new MockHttpOutputMessage();
         this.mappingJackson2HttpMessageConverter.write(o, MediaType.APPLICATION_JSON,
-            mockHttpOutputMessage);
+                                                       mockHttpOutputMessage);
         return mockHttpOutputMessage.getBodyAsString();
     }
 
@@ -93,7 +93,7 @@ public abstract class AbstractTestResource {
         @Bean
         public UserDetailsResource userDetailsResource() {
 
-            return( Mockito.mock(UserDetailsResource.class));
+            return (Mockito.mock(UserDetailsResource.class));
         }
 
     }

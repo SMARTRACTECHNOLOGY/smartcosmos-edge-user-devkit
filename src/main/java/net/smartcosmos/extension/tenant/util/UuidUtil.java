@@ -19,7 +19,7 @@ public class UuidUtil {
 
     public static UUID getUuidFromUrn(String urn) throws IllegalArgumentException {
 
-        String urnScheme="urn:.*:uuid:([A-F0-9]{8}-[A-F0-9]{4}-[A-F0-9]{4}-[A-F0-9]{4}-[A-F0-9]{12})";
+        String urnScheme = "urn:.*:uuid:([A-F0-9]{8}-[A-F0-9]{4}-[A-F0-9]{4}-[A-F0-9]{4}-[A-F0-9]{12})";
 
         Pattern p = Pattern.compile(urnScheme, Pattern.CASE_INSENSITIVE);
         Matcher m = p.matcher(urn);
@@ -27,7 +27,8 @@ public class UuidUtil {
             return UUID.fromString(m.group(1));
         }
 
-        throw new IllegalArgumentException(String.format("Provided URN '%s' does not match the required URN scheme '%s'", urn, "urn:{prefix}:uuid:{uuid}"));
+        throw new IllegalArgumentException(
+            String.format("Provided URN '%s' does not match the required URN scheme '%s'", urn, "urn:{prefix}:uuid:{uuid}"));
     }
 
     public static String getThingUrnFromUuid(UUID uuid) {

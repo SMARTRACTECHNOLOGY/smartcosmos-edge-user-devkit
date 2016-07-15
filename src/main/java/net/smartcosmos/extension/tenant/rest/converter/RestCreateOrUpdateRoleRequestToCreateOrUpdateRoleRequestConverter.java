@@ -1,7 +1,5 @@
 package net.smartcosmos.extension.tenant.rest.converter;
 
-import net.smartcosmos.extension.tenant.dto.CreateOrUpdateRoleRequest;
-import net.smartcosmos.extension.tenant.rest.dto.RestCreateOrUpdateRoleRequest;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.format.FormatterRegistrar;
 import org.springframework.format.FormatterRegistry;
@@ -17,8 +15,8 @@ import net.smartcosmos.extension.tenant.rest.dto.RestCreateOrUpdateRoleRequest;
 public class RestCreateOrUpdateRoleRequestToCreateOrUpdateRoleRequestConverter
     implements Converter<RestCreateOrUpdateRoleRequest, CreateOrUpdateRoleRequest>, FormatterRegistrar {
 
-        @Override
-        public CreateOrUpdateRoleRequest convert(RestCreateOrUpdateRoleRequest restCreateOrUpdateRoleRequest) {
+    @Override
+    public CreateOrUpdateRoleRequest convert(RestCreateOrUpdateRoleRequest restCreateOrUpdateRoleRequest) {
         return CreateOrUpdateRoleRequest.builder()
             .name(restCreateOrUpdateRoleRequest.getName())
             .active(restCreateOrUpdateRoleRequest.getActive())
@@ -26,8 +24,8 @@ public class RestCreateOrUpdateRoleRequestToCreateOrUpdateRoleRequestConverter
             .build();
     }
 
-        @Override
-        public void registerFormatters(FormatterRegistry registry) {
+    @Override
+    public void registerFormatters(FormatterRegistry registry) {
 
         registry.addConverter(this);
     }
