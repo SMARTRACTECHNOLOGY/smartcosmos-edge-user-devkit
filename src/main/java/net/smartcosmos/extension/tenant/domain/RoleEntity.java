@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
@@ -69,13 +70,13 @@ public class RoleEntity {
     @Column(name = "description", length = STRING_FIELD_LENGTH, nullable = true, updatable = true)
     private String description;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = "user_roles",
                joinColumns = { @JoinColumn(name = "role") },
                inverseJoinColumns = { @JoinColumn(name = "user") })
     private Set<UserEntity> users;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = "role_authorities",
                joinColumns = { @JoinColumn(name = "role") },
                inverseJoinColumns = { @JoinColumn(name = "authority") })

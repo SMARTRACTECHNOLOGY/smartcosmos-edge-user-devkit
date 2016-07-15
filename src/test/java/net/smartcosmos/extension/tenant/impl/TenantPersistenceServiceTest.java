@@ -10,6 +10,7 @@ import net.smartcosmos.extension.tenant.dto.GetTenantResponse;
 import net.smartcosmos.extension.tenant.dto.UpdateTenantRequest;
 import net.smartcosmos.extension.tenant.dto.UpdateTenantResponse;
 import net.smartcosmos.extension.tenant.repository.TenantRepository;
+import net.smartcosmos.extension.tenant.repository.UserRepository;
 import net.smartcosmos.extension.tenant.util.UuidUtil;
 
 import org.junit.After;
@@ -47,6 +48,9 @@ public class TenantPersistenceServiceTest {
 
     @Autowired
     TenantRepository tenantRepository;
+
+    @Autowired
+    UserRepository userRepository;
 
     @Before
     public void setup() throws Exception {

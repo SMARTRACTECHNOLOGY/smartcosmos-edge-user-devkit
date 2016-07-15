@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.Set;
 import java.util.UUID;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
@@ -88,7 +89,7 @@ public class UserEntity implements Serializable {
     @Column(name = "password", length = STRING_FIELD_LENGTH, nullable = false, updatable = true)
     private String password;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = "user_roles",
                joinColumns = { @JoinColumn(name = "user") },
                inverseJoinColumns = { @JoinColumn(name = "role") })
