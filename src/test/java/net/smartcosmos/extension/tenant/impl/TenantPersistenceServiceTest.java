@@ -232,7 +232,6 @@ public class TenantPersistenceServiceTest {
         assertFalse(getTenantResponse.isPresent());
     }
 
-    @Test
     public void thatLookupTenantByNameSucceeds() {
 
         final String TENANT = "lookupByNameTenant";
@@ -331,6 +330,31 @@ public class TenantPersistenceServiceTest {
         assertEquals(role, userResponse.get().getRoles().get(0));
         assertEquals(surname, userResponse.get().getSurname());
         assertEquals(username, userResponse.get().getUsername());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void thatCreateUserFailsInvalidRole() {
+
+        final String emailAddress = "create.user@example.com";
+        final String givenName = "user";
+        final String role = "NoSuchRole";
+        final String surname = "create";
+        final String username = "create.user";
+
+        List<String> roles = new ArrayList<>();
+        roles.add(role);
+
+        CreateUserRequest createUserRequest = CreateUserRequest.builder()
+                .active(true)
+                .emailAddress(emailAddress)
+                .givenName(givenName)
+                .roles(roles)
+                .surname(surname)
+                .username(username)
+                .tenantUrn(testUserTenantUrn)
+                .build();
+
+        Optional<CreateOrUpdateUserResponse> userResponse = tenantPersistenceService.createUser(createUserRequest);
     }
 
     // endregion

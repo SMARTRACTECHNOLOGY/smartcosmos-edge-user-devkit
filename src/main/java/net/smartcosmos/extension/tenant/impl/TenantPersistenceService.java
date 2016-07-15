@@ -37,6 +37,8 @@ import net.smartcosmos.extension.tenant.repository.TenantRepository;
 import net.smartcosmos.extension.tenant.repository.UserRepository;
 import net.smartcosmos.extension.tenant.util.UuidUtil;
 
+import static java.util.stream.Collectors.toSet;
+
 /**
  * Initially created by SMART COSMOS Team on June 30, 2016.
  */
@@ -215,10 +217,11 @@ public class TenantPersistenceService implements TenantDao {
         throws ConstraintViolationException {
 
         try {
+            UUID tenantId = UuidUtil.getUuidFromUrn(createUserRequest.getTenantUrn());
+
             // This user already exists? We're not creating a new one.
             if (userRepository.findByUsernameAndTenantId(
-                createUserRequest.getUsername(),
-                UuidUtil.getUuidFromUrn(createUserRequest.getTenantUrn()))
+                createUserRequest.getUsername(), tenantId)
                 .isPresent()) {
 
                 return Optional.empty();
@@ -228,28 +231,31 @@ public class TenantPersistenceService implements TenantDao {
             userEntity.setPassword(passwordEncoder.encode("PleaseChangeMeImmediately"));
 
             // fetch the roles from the DB since the conversions service converts the role names only
-            Set<RoleEntity> roleEntities = new HashSet<>();
-            for (RoleEntity roleEntity : userEntity.getRoles()) {
+            Set<RoleEntity> roleEntities = userEntity.getRoles()
+                .stream()
+                .map(roleEntity -> {
+                    Optional<RoleEntity> effectiveRole = roleRepository
+                            .findByNameAndTenantId(roleEntity.getName(), tenantId);
+                    if (effectiveRole.isPresent()) {
+                        return effectiveRole.get();
+                    }
+                    else {
+                        String msg = String.format("role '%s' does not exist", roleEntity.getName());
+                        throw new IllegalArgumentException(msg);
+                    }
+                })
+                .collect(toSet());
 
-                Optional<RoleEntity> effectiveRole = roleRepository.findByNameAndTenantId(
-                        roleEntity.getName(),
-                        UuidUtil.getUuidFromUrn(createUserRequest.getTenantUrn()));
-                if (effectiveRole.isPresent()) {
-                    roleEntities.add(effectiveRole.get());
-                }
-                else {
-                    throw new IllegalArgumentException(
-                            String.format("role %s does not exist", roleEntity.getName()));
-                }
-            }
             userEntity.setRoles(roleEntities);
 
             userEntity = userRepository.save(userEntity);
             return Optional.ofNullable(conversionService.convert(userEntity, CreateOrUpdateUserResponse.class));
 
         } catch (IllegalArgumentException | ConstraintViolationException e) {
-            String msg = String.format("create failed, user: '%s', tenant: '%s', cause: %s", createUserRequest.getUsername(),
-                                       createUserRequest.getTenantUrn().toString());
+            String msg = String.format("create failed, user: '%s', tenant: '%s', cause: %s",
+                    createUserRequest.getUsername(),
+                    createUserRequest.getTenantUrn().toString(),
+                    e.getMessage());
             log.error(msg);
             log.debug(msg, e);
             throw e;
