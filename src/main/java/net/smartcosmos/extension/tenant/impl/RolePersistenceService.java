@@ -22,16 +22,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 
-import net.smartcosmos.extension.tenant.dao.RoleDao;
-import net.smartcosmos.extension.tenant.domain.AuthorityEntity;
-import net.smartcosmos.extension.tenant.domain.RoleEntity;
-import net.smartcosmos.extension.tenant.dto.CreateOrUpdateRoleRequest;
-import net.smartcosmos.extension.tenant.dto.CreateOrUpdateRoleResponse;
-import net.smartcosmos.extension.tenant.dto.GetRoleResponse;
-import net.smartcosmos.extension.tenant.repository.AuthorityRepository;
-import net.smartcosmos.extension.tenant.repository.RoleRepository;
-import net.smartcosmos.extension.tenant.util.UuidUtil;
-
 import org.springframework.transaction.annotation.Transactional;
 
 import static java.util.stream.Collectors.toList;
