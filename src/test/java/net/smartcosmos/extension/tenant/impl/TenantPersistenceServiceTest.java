@@ -335,11 +335,11 @@ public class TenantPersistenceServiceTest {
     @Test(expected = IllegalArgumentException.class)
     public void thatCreateUserFailsInvalidRole() {
 
-        final String emailAddress = "create.user@example.com";
+        final String emailAddress = "noSuchRole.user@example.com";
         final String givenName = "user";
         final String role = "NoSuchRole";
-        final String surname = "create";
-        final String username = "create.user";
+        final String surname = "noSuchRole";
+        final String username = "noSuchRole.user";
 
         List<String> roles = new ArrayList<>();
         roles.add(role);
@@ -352,6 +352,32 @@ public class TenantPersistenceServiceTest {
                 .surname(surname)
                 .username(username)
                 .tenantUrn(testUserTenantUrn)
+                .build();
+
+        Optional<CreateOrUpdateUserResponse> userResponse = tenantPersistenceService.createUser(createUserRequest);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void thatCreateUserFailsInvalidTenant() {
+
+        final String emailAddress = "noSuchTenant.user@example.com";
+        final String givenName = "user";
+        final String role = "User";
+        final String surname = "noSuchTenant";
+        final String username = "noSuchTenant.user";
+        final String noSuchTenant = UuidUtil.getTenantUrnFromUuid(UuidUtil.getNewUuid());
+
+        List<String> roles = new ArrayList<>();
+        roles.add(role);
+
+        CreateUserRequest createUserRequest = CreateUserRequest.builder()
+                .active(true)
+                .emailAddress(emailAddress)
+                .givenName(givenName)
+                .roles(roles)
+                .surname(surname)
+                .username(username)
+                .tenantUrn(noSuchTenant)
                 .build();
 
         Optional<CreateOrUpdateUserResponse> userResponse = tenantPersistenceService.createUser(createUserRequest);
