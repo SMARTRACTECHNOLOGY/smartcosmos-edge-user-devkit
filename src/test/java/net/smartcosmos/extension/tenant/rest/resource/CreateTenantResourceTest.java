@@ -3,11 +3,15 @@ package net.smartcosmos.extension.tenant.rest.resource;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.smartcosmos.extension.tenant.TenantPersistenceTestApplication;
 import org.junit.*;
+import org.junit.runner.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MvcResult;
 
+import net.smartcosmos.extension.tenant.TenantPersistenceConfig;
+import net.smartcosmos.extension.tenant.TenantPersistenceTestApplication;
 import net.smartcosmos.extension.tenant.dao.TenantDao;
 import net.smartcosmos.extension.tenant.rest.dto.RestCreateTenantRequest;
 import net.smartcosmos.extension.tenant.util.UuidUtil;
@@ -24,7 +28,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * Unit Testing sample for creating Tenants.
  */
-@org.springframework.boot.test.SpringApplicationConfiguration(classes = { TenantPersistenceTestApplication.class })
+@SuppressWarnings("Duplicates")
+@RunWith(SpringJUnit4ClassRunner.class)
+@SpringApplicationConfiguration(classes = { TenantPersistenceTestApplication.class,
+                                            TenantPersistenceConfig.class })
 public class CreateTenantResourceTest extends AbstractTestResource {
 
     @Autowired
@@ -41,7 +48,6 @@ public class CreateTenantResourceTest extends AbstractTestResource {
      * @throws Exception
      */
     @Test
-    @Ignore
     public void thatCreateTenantSucceeds() throws Exception {
 
         final String name = "example.com";
