@@ -74,7 +74,6 @@ public class DeleteUserResourceTest extends AbstractTestResource {
             .roles(userRoles)
             .build();
 
-
         when(tenantDao.deleteUserByUrn(anyString())).thenReturn(Optional.ofNullable(getOrDeleteUserResponse));
         when(userDetailsResource.authenticate(anyString(), anyObject())).thenReturn(userDto);
 

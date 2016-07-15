@@ -1,17 +1,9 @@
 package net.smartcosmos.extension.tenant.impl;
 
-import net.smartcosmos.extension.tenant.TenantPersistenceTestApplication;
-import net.smartcosmos.extension.tenant.TenantPersistenceConfig;
-import net.smartcosmos.extension.tenant.dto.CreateTenantRequest;
-import net.smartcosmos.extension.tenant.dto.CreateTenantResponse;
-import net.smartcosmos.extension.tenant.dto.GetTenantResponse;
-import net.smartcosmos.extension.tenant.dto.UpdateTenantRequest;
-import net.smartcosmos.extension.tenant.dto.UpdateTenantResponse;
-import net.smartcosmos.extension.tenant.repository.TenantRepository;
-import net.smartcosmos.extension.tenant.util.UuidUtil;
-import org.junit.After;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import java.util.Optional;
+
+import org.junit.*;
+import org.junit.runner.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
@@ -19,17 +11,23 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import java.util.Optional;
+import net.smartcosmos.extension.tenant.TenantPersistenceConfig;
+import net.smartcosmos.extension.tenant.TenantPersistenceTestApplication;
+import net.smartcosmos.extension.tenant.dto.CreateTenantRequest;
+import net.smartcosmos.extension.tenant.dto.CreateTenantResponse;
+import net.smartcosmos.extension.tenant.dto.GetTenantResponse;
+import net.smartcosmos.extension.tenant.dto.UpdateTenantRequest;
+import net.smartcosmos.extension.tenant.dto.UpdateTenantResponse;
+import net.smartcosmos.extension.tenant.repository.TenantRepository;
+import net.smartcosmos.extension.tenant.util.UuidUtil;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 @SuppressWarnings("Duplicates")
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = {
-        TenantPersistenceTestApplication.class,
-        TenantPersistenceConfig.class})
+    TenantPersistenceTestApplication.class,
+    TenantPersistenceConfig.class })
 @ActiveProfiles("test")
 @WebAppConfiguration
 @IntegrationTest({ "spring.cloud.config.enabled=false", "eureka.client.enabled:false" })
@@ -53,10 +51,10 @@ public class TenantPersistenceServiceTest {
         final String USER = "createTestAdmin";
 
         CreateTenantRequest createTenantRequest = CreateTenantRequest.builder()
-                .active(true)
-                .name(TENANT)
-                .username(USER)
-                .build();
+            .active(true)
+            .name(TENANT)
+            .username(USER)
+            .build();
 
         Optional<CreateTenantResponse> createTenantResponse = tenantPersistenceService.createTenant(createTenantRequest);
 
@@ -74,10 +72,10 @@ public class TenantPersistenceServiceTest {
         final String USER = "updateAdminActive";
 
         CreateTenantRequest createTenantRequest = CreateTenantRequest.builder()
-                .active(true)
-                .name(TENANT)
-                .username(USER)
-                .build();
+            .active(true)
+            .name(TENANT)
+            .username(USER)
+            .build();
 
         Optional<CreateTenantResponse> createTenantResponse = tenantPersistenceService.createTenant(createTenantRequest);
 
@@ -91,9 +89,9 @@ public class TenantPersistenceServiceTest {
         String urn = createTenantResponse.get().getUrn();
 
         UpdateTenantRequest updateTenantRequest = UpdateTenantRequest.builder()
-                .urn(urn)
-                .active(false)
-                .build();
+            .urn(urn)
+            .active(false)
+            .build();
 
         Optional<UpdateTenantResponse> updateResponse = tenantPersistenceService.updateTenant(updateTenantRequest);
 
@@ -117,10 +115,10 @@ public class TenantPersistenceServiceTest {
         final String USER = "updateAdmin";
 
         CreateTenantRequest createTenantRequest = CreateTenantRequest.builder()
-                .active(true)
-                .name(TENANT)
-                .username(USER)
-                .build();
+            .active(true)
+            .name(TENANT)
+            .username(USER)
+            .build();
 
         Optional<CreateTenantResponse> createTenantResponse = tenantPersistenceService.createTenant(createTenantRequest);
 
@@ -134,10 +132,10 @@ public class TenantPersistenceServiceTest {
         String urn = createTenantResponse.get().getUrn();
 
         UpdateTenantRequest updateTenantRequest = UpdateTenantRequest.builder()
-                .urn(urn)
-                .active(true)
-                .name(TENANT_NEW)
-                .build();
+            .urn(urn)
+            .active(true)
+            .name(TENANT_NEW)
+            .build();
 
         Optional<UpdateTenantResponse> updateResponse = tenantPersistenceService.updateTenant(updateTenantRequest);
 
@@ -161,10 +159,10 @@ public class TenantPersistenceServiceTest {
         String urn = UuidUtil.getTenantUrnFromUuid(UuidUtil.getNewUuid());
 
         UpdateTenantRequest updateTenantRequest = UpdateTenantRequest.builder()
-                .urn(urn)
-                .active(false)
-                .name(TENANT_NEW)
-                .build();
+            .urn(urn)
+            .active(false)
+            .name(TENANT_NEW)
+            .build();
 
         Optional<UpdateTenantResponse> updateResponse = tenantPersistenceService.updateTenant(updateTenantRequest);
 
@@ -178,10 +176,10 @@ public class TenantPersistenceServiceTest {
         final String USER = "lookupByUrnAdmin";
 
         CreateTenantRequest createTenantRequest = CreateTenantRequest.builder()
-                .active(true)
-                .name(TENANT)
-                .username(USER)
-                .build();
+            .active(true)
+            .name(TENANT)
+            .username(USER)
+            .build();
 
         Optional<CreateTenantResponse> createTenantResponse = tenantPersistenceService.createTenant(createTenantRequest);
 
@@ -220,10 +218,10 @@ public class TenantPersistenceServiceTest {
         final String USER = "lookupByNameAdmin";
 
         CreateTenantRequest createTenantRequest = CreateTenantRequest.builder()
-                .active(true)
-                .name(TENANT)
-                .username(USER)
-                .build();
+            .active(true)
+            .name(TENANT)
+            .username(USER)
+            .build();
 
         Optional<CreateTenantResponse> createTenantResponse = tenantPersistenceService.createTenant(createTenantRequest);
 
