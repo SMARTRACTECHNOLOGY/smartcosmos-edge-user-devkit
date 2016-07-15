@@ -1,6 +1,5 @@
 package net.smartcosmos.extension.tenant.converter;
 
-import net.smartcosmos.extension.tenant.converter.TenantEntityToUpdateTenantResponseConverter;
 import net.smartcosmos.extension.tenant.domain.TenantEntity;
 import net.smartcosmos.extension.tenant.dto.UpdateTenantResponse;
 import net.smartcosmos.extension.tenant.util.UuidUtil;

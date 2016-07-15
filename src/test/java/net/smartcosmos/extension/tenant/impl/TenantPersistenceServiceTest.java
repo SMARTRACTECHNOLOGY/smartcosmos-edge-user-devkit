@@ -2,14 +2,20 @@ package net.smartcosmos.extension.tenant.impl;
 
 import net.smartcosmos.extension.tenant.TenantPersistenceTestApplication;
 import net.smartcosmos.extension.tenant.TenantPersistenceConfig;
+import net.smartcosmos.extension.tenant.dto.CreateOrUpdateUserResponse;
 import net.smartcosmos.extension.tenant.dto.CreateTenantRequest;
 import net.smartcosmos.extension.tenant.dto.CreateTenantResponse;
+import net.smartcosmos.extension.tenant.dto.CreateUserRequest;
 import net.smartcosmos.extension.tenant.dto.GetTenantResponse;
 import net.smartcosmos.extension.tenant.dto.UpdateTenantRequest;
 import net.smartcosmos.extension.tenant.dto.UpdateTenantResponse;
 import net.smartcosmos.extension.tenant.repository.TenantRepository;
+import net.smartcosmos.extension.tenant.repository.UserRepository;
 import net.smartcosmos.extension.tenant.util.UuidUtil;
+
 import org.junit.After;
+import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +25,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
@@ -41,10 +49,21 @@ public class TenantPersistenceServiceTest {
     @Autowired
     TenantRepository tenantRepository;
 
+    @Autowired
+    UserRepository userRepository;
+
+    @Before
+    public void setup() throws Exception {
+        prepareTenantForUserTests();
+    }
+
+
     @After
     public void tearDown() throws Exception {
         tenantRepository.deleteAll();
     }
+
+    // region TenantPersistenceTests
 
     @Test
     public void thatCreateTenantSucceeds() {
@@ -213,7 +232,6 @@ public class TenantPersistenceServiceTest {
         assertFalse(getTenantResponse.isPresent());
     }
 
-    @Test
     public void thatLookupTenantByNameSucceeds() {
 
         final String TENANT = "lookupByNameTenant";
@@ -254,4 +272,116 @@ public class TenantPersistenceServiceTest {
 
         assertFalse(getTenantResponse.isPresent());
     }
+
+    // endregion
+
+    // region UserPersistenceTests
+    private String testUserTenantUrn;
+
+    // prepare the tenant to do tests with users...
+    private void prepareTenantForUserTests() throws Exception {
+
+        final String TENANT = "createUserTestTenant";
+        final String USER = "createUserTestAdmin";
+
+        CreateTenantRequest createTenantRequest = CreateTenantRequest.builder()
+                .active(true)
+                .name(TENANT)
+                .username(USER)
+                .build();
+
+        Optional<CreateTenantResponse> createTenantResponse =
+                tenantPersistenceService.createTenant(createTenantRequest);
+
+        if (!createTenantResponse.isPresent()) {
+            throw new Exception("prepareTenantForUserTests: cannot create tenant to do user tests");
+        }
+        testUserTenantUrn = createTenantResponse.get().getUrn();
+    }
+
+    @Test
+    public void thatCreateUserSucceeds() {
+
+        final String emailAddress = "create.user@example.com";
+        final String givenName = "user";
+        final String role = "User";
+        final String surname = "create";
+        final String username = "create.user";
+
+        List<String> roles = new ArrayList<>();
+        roles.add(role);
+
+        CreateUserRequest createUserRequest = CreateUserRequest.builder()
+                .active(true)
+                .emailAddress(emailAddress)
+                .givenName(givenName)
+                .roles(roles)
+                .surname(surname)
+                .username(username)
+                .tenantUrn(testUserTenantUrn)
+                .build();
+
+        Optional<CreateOrUpdateUserResponse> userResponse = tenantPersistenceService.createUser(createUserRequest);
+
+        assertTrue(userResponse.isPresent());
+        assertEquals(emailAddress, userResponse.get().getEmailAddress());
+        assertEquals(givenName, userResponse.get().getGivenName());
+        assertEquals(roles.size(), userResponse.get().getRoles().size());
+        assertEquals(role, userResponse.get().getRoles().get(0));
+        assertEquals(surname, userResponse.get().getSurname());
+        assertEquals(username, userResponse.get().getUsername());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void thatCreateUserFailsInvalidRole() {
+
+        final String emailAddress = "noSuchRole.user@example.com";
+        final String givenName = "user";
+        final String role = "NoSuchRole";
+        final String surname = "noSuchRole";
+        final String username = "noSuchRole.user";
+
+        List<String> roles = new ArrayList<>();
+        roles.add(role);
+
+        CreateUserRequest createUserRequest = CreateUserRequest.builder()
+                .active(true)
+                .emailAddress(emailAddress)
+                .givenName(givenName)
+                .roles(roles)
+                .surname(surname)
+                .username(username)
+                .tenantUrn(testUserTenantUrn)
+                .build();
+
+        Optional<CreateOrUpdateUserResponse> userResponse = tenantPersistenceService.createUser(createUserRequest);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void thatCreateUserFailsInvalidTenant() {
+
+        final String emailAddress = "noSuchTenant.user@example.com";
+        final String givenName = "user";
+        final String role = "User";
+        final String surname = "noSuchTenant";
+        final String username = "noSuchTenant.user";
+        final String noSuchTenant = UuidUtil.getTenantUrnFromUuid(UuidUtil.getNewUuid());
+
+        List<String> roles = new ArrayList<>();
+        roles.add(role);
+
+        CreateUserRequest createUserRequest = CreateUserRequest.builder()
+                .active(true)
+                .emailAddress(emailAddress)
+                .givenName(givenName)
+                .roles(roles)
+                .surname(surname)
+                .username(username)
+                .tenantUrn(noSuchTenant)
+                .build();
+
+        Optional<CreateOrUpdateUserResponse> userResponse = tenantPersistenceService.createUser(createUserRequest);
+    }
+
+    // endregion
 }

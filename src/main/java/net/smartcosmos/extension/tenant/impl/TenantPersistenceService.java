@@ -10,6 +10,7 @@ import javax.validation.ConstraintViolationException;
 
 import lombok.extern.slf4j.Slf4j;
 
+import net.smartcosmos.extension.tenant.repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionException;
 import org.springframework.core.convert.ConversionService;
@@ -36,6 +37,8 @@ import net.smartcosmos.extension.tenant.repository.TenantRepository;
 import net.smartcosmos.extension.tenant.repository.UserRepository;
 import net.smartcosmos.extension.tenant.util.UuidUtil;
 
+import static java.util.stream.Collectors.toSet;
+
 /**
  * Initially created by SMART COSMOS Team on June 30, 2016.
  */
@@ -46,6 +49,7 @@ public class TenantPersistenceService implements TenantDao {
     private final TenantRepository tenantRepository;
     private final UserRepository userRepository;
     private final RolePersistenceService rolePersistenceService;
+    private final RoleRepository roleRepository;
     private final ConversionService conversionService;
     private final PasswordEncoder passwordEncoder;
 
@@ -61,12 +65,14 @@ public class TenantPersistenceService implements TenantDao {
         TenantRepository tenantRepository,
         UserRepository userRepository,
         RolePersistenceService rolePersistenceService,
+        RoleRepository roleRepository,
         ConversionService conversionService,
         PasswordEncoder passwordEncoder) {
 
         this.tenantRepository = tenantRepository;
         this.userRepository = userRepository;
         this.rolePersistenceService = rolePersistenceService;
+        this.roleRepository = roleRepository;
         this.conversionService = conversionService;
         this.passwordEncoder = passwordEncoder;
     }
@@ -211,10 +217,11 @@ public class TenantPersistenceService implements TenantDao {
         throws ConstraintViolationException {
 
         try {
+            UUID tenantId = UuidUtil.getUuidFromUrn(createUserRequest.getTenantUrn());
+
             // This user already exists? We're not creating a new one.
             if (userRepository.findByUsernameAndTenantId(
-                createUserRequest.getUsername(),
-                UuidUtil.getUuidFromUrn(createUserRequest.getTenantUrn()))
+                createUserRequest.getUsername(), tenantId)
                 .isPresent()) {
 
                 return Optional.empty();
@@ -222,12 +229,33 @@ public class TenantPersistenceService implements TenantDao {
 
             UserEntity userEntity = conversionService.convert(createUserRequest, UserEntity.class);
             userEntity.setPassword(passwordEncoder.encode("PleaseChangeMeImmediately"));
+
+            // fetch the roles from the DB since the conversions service converts the role names only
+            Set<RoleEntity> roleEntities = userEntity.getRoles()
+                .stream()
+                .map(roleEntity -> {
+                    Optional<RoleEntity> effectiveRole = roleRepository
+                            .findByNameAndTenantId(roleEntity.getName(), tenantId);
+                    if (effectiveRole.isPresent()) {
+                        return effectiveRole.get();
+                    }
+                    else {
+                        String msg = String.format("role '%s' does not exist", roleEntity.getName());
+                        throw new IllegalArgumentException(msg);
+                    }
+                })
+                .collect(toSet());
+
+            userEntity.setRoles(roleEntities);
+
             userEntity = userRepository.save(userEntity);
             return Optional.ofNullable(conversionService.convert(userEntity, CreateOrUpdateUserResponse.class));
 
         } catch (IllegalArgumentException | ConstraintViolationException e) {
-            String msg = String.format("create failed, user: '%s', tenant: '%s', cause: %s", createUserRequest.getUsername(),
-                                       createUserRequest.getTenantUrn().toString());
+            String msg = String.format("create failed, user: '%s', tenant: '%s', cause: %s",
+                    createUserRequest.getUsername(),
+                    createUserRequest.getTenantUrn().toString(),
+                    e.getMessage());
             log.error(msg);
             log.debug(msg, e);
             throw e;
