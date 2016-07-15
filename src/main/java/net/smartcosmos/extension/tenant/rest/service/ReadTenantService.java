@@ -42,4 +42,19 @@ public class ReadTenantService extends AbstractTenantService {
         // TODO: send event tenant:notFound
         return ResponseEntity.notFound().build();
     }
+
+    public ResponseEntity<?> findByName(String name) {
+
+        Optional<GetTenantResponse> entity = tenantDao.findTenantByName(name);
+
+        if (entity.isPresent()) {
+            // TODO: send event tenant:read
+            return ResponseEntity
+                    .ok()
+                    .body(conversionService.convert(entity.get(), RestTenantSingleResponse.class));
+        }
+
+        // TODO: send event tenant:notFound
+        return ResponseEntity.notFound().build();
+    }
 }
