@@ -10,7 +10,7 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import net.smartcosmos.extension.tenant.TenantPersistenceTestApplication;
 import net.smartcosmos.extension.tenant.dao.TenantDao;
-import net.smartcosmos.extension.tenant.dto.GetUserResponse;
+import net.smartcosmos.extension.tenant.dto.GetOrDeleteUserResponse;
 import net.smartcosmos.extension.tenant.dto.UserDto;
 import net.smartcosmos.extension.tenant.userdetails.UserDetailsResource;
 import net.smartcosmos.extension.tenant.util.UuidUtil;
@@ -56,7 +56,7 @@ public class DeleteUserResourceTest extends AbstractTestResource {
         List<String> userRoles = new ArrayList<>();
         userRoles.add("User");
 
-        GetUserResponse getUserResponse = GetUserResponse
+        GetOrDeleteUserResponse getOrDeleteUserResponse = GetOrDeleteUserResponse
             .builder()
             .urn(expectedUserUrn)
             .tenantUrn(expectedTenantUrn)
@@ -75,7 +75,7 @@ public class DeleteUserResourceTest extends AbstractTestResource {
             .build();
 
 
-        when(tenantDao.deleteUserByUrn(anyString())).thenReturn(Optional.ofNullable(getUserResponse));
+        when(tenantDao.deleteUserByUrn(anyString())).thenReturn(Optional.ofNullable(getOrDeleteUserResponse));
         when(userDetailsResource.authenticate(anyString(), anyObject())).thenReturn(userDto);
 
         MvcResult mvcResult = this.mockMvc.perform(
