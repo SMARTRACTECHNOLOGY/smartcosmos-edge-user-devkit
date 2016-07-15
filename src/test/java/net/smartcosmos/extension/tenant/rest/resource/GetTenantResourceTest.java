@@ -80,4 +80,50 @@ public class GetTenantResourceTest extends AbstractTestResource {
         verify(tenantDao, times(1)).findTenantByUrn(anyString());
         verifyNoMoreInteractions(tenantDao);
     }
+
+    @Test
+    public void thatGetByNameSucceeds() throws Exception {
+
+        String name = "getByName";
+        String urn = UuidUtil.getTenantUrnFromUuid(UuidUtil.getNewUuid());
+
+        GetTenantResponse response1 = GetTenantResponse.builder()
+                .active(true)
+                .name(name)
+                .urn(urn)
+                .build();
+        Optional<GetTenantResponse> response = Optional.of(response1);
+
+        when(tenantDao.findTenantByName(anyString())).thenReturn(response);
+
+        MvcResult mvcResult = mockMvc.perform(
+                get("/tenants/?name={name}", name).contentType(APPLICATION_JSON_UTF8))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.active", is(true)))
+                .andExpect(jsonPath("$.name", is(name)))
+                .andExpect(jsonPath("$.urn", is(urn)))
+                .andReturn();
+
+        verify(tenantDao, times(1)).findTenantByName(anyString());
+        verifyNoMoreInteractions(tenantDao);
+    }
+
+    @Test
+    public void thatGetByNameFails() throws Exception {
+
+        String name = "noSuchTenant";
+
+        Optional<GetTenantResponse> response = Optional.empty();
+
+        when(tenantDao.findTenantByName(anyString())).thenReturn(response);
+
+        MvcResult mvcResult = mockMvc.perform(
+                get("/tenants/?name={name}", name).contentType(APPLICATION_JSON_UTF8))
+                .andExpect(status().isNotFound())
+                .andReturn();
+
+        verify(tenantDao, times(1)).findTenantByName(anyString());
+        verifyNoMoreInteractions(tenantDao);
+    }
 }
