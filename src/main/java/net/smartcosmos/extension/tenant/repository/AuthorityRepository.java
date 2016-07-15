@@ -1,6 +1,5 @@
 package net.smartcosmos.extension.tenant.repository;
 
-import net.smartcosmos.extension.tenant.domain.AuthorityEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.PagingAndSortingRepository;

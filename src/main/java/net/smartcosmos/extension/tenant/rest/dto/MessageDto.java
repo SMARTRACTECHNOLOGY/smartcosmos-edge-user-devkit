@@ -9,7 +9,7 @@ import lombok.Setter;
 /**
  * Data Transfer Object for REST code/message responses.
  */
-@JsonIgnoreProperties({"version"})
+@JsonIgnoreProperties({ "version" })
 @Data
 public class MessageDto {
 

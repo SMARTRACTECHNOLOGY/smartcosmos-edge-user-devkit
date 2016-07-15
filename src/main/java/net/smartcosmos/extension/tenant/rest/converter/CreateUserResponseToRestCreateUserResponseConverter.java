@@ -35,5 +35,4 @@ public class CreateUserResponseToRestCreateUserResponseConverter
         registry.addConverter(this);
     }
 
-
 }

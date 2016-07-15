@@ -30,7 +30,7 @@ public class CreateOrUpdateUserResponse {
     private final Boolean active;
 
     @Builder
-    @ConstructorProperties({ "urn", "tenantUrn", "username", "emailAddress", "givenName", "surname", "password", "roles","active" })
+    @ConstructorProperties({ "urn", "tenantUrn", "username", "emailAddress", "givenName", "surname", "password", "roles", "active" })
     public CreateOrUpdateUserResponse(
         String urn, String tenantUrn, String username, String emailAddress, String givenName, String surname, String password,
         List<String> roles, List<String> authorities, Boolean active) {

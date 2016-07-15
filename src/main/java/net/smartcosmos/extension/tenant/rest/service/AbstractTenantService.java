@@ -23,10 +23,11 @@ public class AbstractTenantService {
 
     protected final ConversionService conversionService;
 
-    public AbstractTenantService(TenantDao tenantDao,
-                                 RoleDao roleDao,
-                                 SmartCosmosEventTemplate smartCosmosEventTemplate,
-                                 ConversionService conversionService) {
+    public AbstractTenantService(
+        TenantDao tenantDao,
+        RoleDao roleDao,
+        SmartCosmosEventTemplate smartCosmosEventTemplate,
+        ConversionService conversionService) {
         this.tenantDao = tenantDao;
         this.roleDao = roleDao;
         this.smartCosmosEventTemplate = smartCosmosEventTemplate;
@@ -36,8 +37,7 @@ public class AbstractTenantService {
     protected void sendEvent(SmartCosmosUser user, String eventType, Object entity) {
         try {
             smartCosmosEventTemplate.sendEvent(entity, eventType, user);
-        }
-        catch (SmartCosmosEventException e) {
+        } catch (SmartCosmosEventException e) {
             log.error(e.getMessage());
             log.debug(e.getMessage(), e);
         }
@@ -46,8 +46,8 @@ public class AbstractTenantService {
     public ResponseEntity<?> buildBadRequestResponse(String responseMessage, int code) {
         return ResponseEntity.badRequest()
             .body(MessageDto.builder()
-                .code(code)
-                .message(responseMessage)
-                .build());
+                      .code(code)
+                      .message(responseMessage)
+                      .build());
     }
 }

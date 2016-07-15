@@ -1,6 +1,5 @@
 package net.smartcosmos.extension.tenant.converter;
 
-import net.smartcosmos.extension.tenant.dto.GetTenantResponse;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.format.FormatterRegistrar;
 import org.springframework.format.FormatterRegistry;
@@ -30,6 +29,7 @@ public class TenantEntityToGetTenantResponseConverter
             .urn(UuidUtil.getTenantUrnFromUuid(tenantEntity.getId()))
             .build();
     }
+
     @Override
     public void registerFormatters(FormatterRegistry registry) {
 

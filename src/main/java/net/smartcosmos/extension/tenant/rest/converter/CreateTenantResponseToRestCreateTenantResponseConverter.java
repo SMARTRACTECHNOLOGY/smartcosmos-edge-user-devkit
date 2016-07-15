@@ -1,7 +1,5 @@
 package net.smartcosmos.extension.tenant.rest.converter;
 
-import net.smartcosmos.extension.tenant.dto.CreateTenantResponse;
-import net.smartcosmos.extension.tenant.rest.dto.RestCreateTenantResponse;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.format.FormatterRegistrar;
 import org.springframework.format.FormatterRegistry;
@@ -32,6 +30,5 @@ public class CreateTenantResponseToRestCreateTenantResponseConverter
 
         registry.addConverter(this);
     }
-
 
 }

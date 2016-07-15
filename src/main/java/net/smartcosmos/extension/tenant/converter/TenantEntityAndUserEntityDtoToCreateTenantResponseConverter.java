@@ -3,17 +3,17 @@ package net.smartcosmos.extension.tenant.converter;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.smartcosmos.extension.tenant.domain.RoleEntity;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.format.FormatterRegistrar;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.stereotype.Component;
 
 import net.smartcosmos.extension.tenant.domain.RoleEntity;
-import net.smartcosmos.extension.tenant.dto.CreateTenantResponse;
 import net.smartcosmos.extension.tenant.dto.CreateOrUpdateUserResponse;
+import net.smartcosmos.extension.tenant.dto.CreateTenantResponse;
 import net.smartcosmos.extension.tenant.dto.TenantEntityAndUserEntityDto;
 import net.smartcosmos.extension.tenant.util.UuidUtil;
+
 /**
  * Initially created by SMART COSMOS Team on June 30, 2016.
  */
@@ -29,7 +29,7 @@ public class TenantEntityAndUserEntityDtoToCreateTenantResponseConverter
         }
 
         List<String> rolesAsStrings = new ArrayList<>();
-        for (RoleEntity roleEntity: entityDto.getUserEntity().getRoles()) {
+        for (RoleEntity roleEntity : entityDto.getUserEntity().getRoles()) {
             rolesAsStrings.add(roleEntity.getName());
         }
         CreateOrUpdateUserResponse userResponse = CreateOrUpdateUserResponse.builder()
@@ -48,6 +48,7 @@ public class TenantEntityAndUserEntityDtoToCreateTenantResponseConverter
             .admin(userResponse)
             .build();
     }
+
     @Override
     public void registerFormatters(FormatterRegistry registry) {
 

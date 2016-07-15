@@ -22,14 +22,14 @@ import net.smartcosmos.extension.tenant.dto.GetOrDeleteUserResponse;
  */
 @Slf4j
 @Service
-public class DeleteUserService extends AbstractTenantService{
+public class DeleteUserService extends AbstractTenantService {
 
     @Inject
-    public DeleteUserService(TenantDao tenantDao, RoleDao roleDao, SmartCosmosEventTemplate smartCosmosEventTemplate, ConversionService
+    public DeleteUserService(
+        TenantDao tenantDao, RoleDao roleDao, SmartCosmosEventTemplate smartCosmosEventTemplate, ConversionService
         conversionService) {
         super(tenantDao, roleDao, smartCosmosEventTemplate, conversionService);
     }
-
 
     public DeferredResult<ResponseEntity> delete(String urn) {
         // Async worker thread reduces timeouts and disconnects for long queries and processing.
@@ -45,13 +45,11 @@ public class DeleteUserService extends AbstractTenantService{
         try {
             Optional<GetOrDeleteUserResponse> deleteUserResponse = tenantDao.deleteUserByUrn(urn);
 
-            if (deleteUserResponse.isPresent())
-            {
+            if (deleteUserResponse.isPresent()) {
                 //sendEvent(null, DefaultEventTypes.ThingCreated, object.get());
 
                 response.setResult(ResponseEntity.noContent().build());
-            }
-            else {
+            } else {
                 response.setResult(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
                 // sendEvent(createTenantRequest, DefaultEventTypes.ThingCreateFailedAlreadyExists, createTenantRequest);
             }

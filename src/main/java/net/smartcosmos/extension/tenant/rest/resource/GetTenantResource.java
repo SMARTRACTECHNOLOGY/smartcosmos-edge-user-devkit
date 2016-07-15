@@ -1,9 +1,7 @@
 package net.smartcosmos.extension.tenant.rest.resource;
 
 import lombok.extern.slf4j.Slf4j;
-import net.smartcosmos.extension.tenant.rest.service.ReadTenantService;
-import net.smartcosmos.security.EndpointMethodControl;
-import net.smartcosmos.spring.SmartCosmosRdao;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.ResponseEntity;
@@ -12,8 +10,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
+import net.smartcosmos.extension.tenant.rest.service.ReadTenantService;
+import net.smartcosmos.security.EndpointMethodControl;
+import net.smartcosmos.spring.SmartCosmosRdao;
 
+import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 
 @Slf4j
 @SmartCosmosRdao
@@ -37,7 +38,7 @@ public class GetTenantResource {
     @EndpointMethodControl(key = "tenant.get")
     @ConditionalOnProperty(prefix = "smt.endpoints.tenant.get", name = "enabled", matchIfMissing = true)
     public ResponseEntity<?> getByName(
-            @RequestParam(value = "name") String name) {
+        @RequestParam(value = "name") String name) {
 
         return readTenantService.findByName(name);
     }

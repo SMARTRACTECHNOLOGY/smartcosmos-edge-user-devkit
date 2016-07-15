@@ -29,7 +29,7 @@ public class RestUpdateUserResponse {
     @Builder
     @ConstructorProperties({ "username", "emailAddress", "givenName", "surname", "roles", "active" })
     public RestUpdateUserResponse(
-        String urn, String tenantUrn, String username, String emailAddress, String givenName, String surname,  List<String> roles, Boolean active) {
+        String urn, String tenantUrn, String username, String emailAddress, String givenName, String surname, List<String> roles, Boolean active) {
         this.username = username;
         this.emailAddress = emailAddress;
         this.givenName = givenName;
