@@ -71,8 +71,8 @@ public class LoginResourceTest extends AbstractTestResource {
             .andExpect(jsonPath("$.username", is("username")))
             .andExpect(jsonPath("$.tenantUrn", is("tenantUrn")))
             .andExpect(jsonPath("$.authorities", hasSize(2)))
-            .andExpect(jsonPath("$.authorities[*]", contains("smartcosmos.things.read")))
-            .andExpect(jsonPath("$.authorities[*]", contains("smartcosmos.things.write")))
+            .andExpect(jsonPath("$.authorities[0]", is("smartcosmos.things.read")))
+            .andExpect(jsonPath("$.authorities[1]", is("smartcosmos.things.write")))
             .andExpect(jsonPath("$.authorities").isArray())
             .andReturn();
 
