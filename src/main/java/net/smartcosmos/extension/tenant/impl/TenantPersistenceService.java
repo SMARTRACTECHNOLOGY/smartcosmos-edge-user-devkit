@@ -28,7 +28,7 @@ import net.smartcosmos.extension.tenant.dto.CreateTenantRequest;
 import net.smartcosmos.extension.tenant.dto.CreateTenantResponse;
 import net.smartcosmos.extension.tenant.dto.CreateUserRequest;
 import net.smartcosmos.extension.tenant.dto.GetTenantResponse;
-import net.smartcosmos.extension.tenant.dto.GetUserResponse;
+import net.smartcosmos.extension.tenant.dto.GetOrDeleteUserResponse;
 import net.smartcosmos.extension.tenant.dto.TenantEntityAndUserEntityDto;
 import net.smartcosmos.extension.tenant.dto.UpdateTenantRequest;
 import net.smartcosmos.extension.tenant.dto.UpdateTenantResponse;
@@ -312,7 +312,7 @@ public class TenantPersistenceService implements TenantDao {
      * @return
      */
     @Override
-    public Optional<GetUserResponse> findUserByUrn(String userUrn) {
+    public Optional<GetOrDeleteUserResponse> findUserByUrn(String userUrn) {
 
         if (userUrn == null || userUrn.isEmpty()) {
             return Optional.empty();
@@ -322,7 +322,7 @@ public class TenantPersistenceService implements TenantDao {
             UUID id = UuidUtil.getUuidFromUrn(userUrn);
             Optional<UserEntity> entity = userRepository.findById(id);
             if (entity.isPresent()) {
-                final GetUserResponse response = conversionService.convert(entity.get(), GetUserResponse.class);
+                final GetOrDeleteUserResponse response = conversionService.convert(entity.get(), GetOrDeleteUserResponse.class);
                 return Optional.ofNullable(response);
             }
             return Optional.empty();
@@ -340,11 +340,11 @@ public class TenantPersistenceService implements TenantDao {
      * @return
      */
     @Override
-    public Optional<GetUserResponse> findUserByName(String username) {
+    public Optional<GetOrDeleteUserResponse> findUserByName(String username) {
 
         Optional<UserEntity> entity = userRepository.findByUsername(username);
         if (entity.isPresent()) {
-            return Optional.of(conversionService.convert(entity.get(), GetUserResponse.class));
+            return Optional.of(conversionService.convert(entity.get(), GetOrDeleteUserResponse.class));
         }
         return Optional.empty();
     }
@@ -354,12 +354,12 @@ public class TenantPersistenceService implements TenantDao {
      * @return
      */
     @Override
-    public Optional<GetUserResponse> deleteUserByUrn(String urn) {
+    public Optional<GetOrDeleteUserResponse> deleteUserByUrn(String urn) {
 
         Optional<UserEntity> entity = userRepository.findById(UuidUtil.getUuidFromUrn(urn));
         if (entity.isPresent()) {
             userRepository.delete(UuidUtil.getUuidFromUrn(urn));
-            return Optional.of(conversionService.convert(entity.get(), GetUserResponse.class));
+            return Optional.of(conversionService.convert(entity.get(), GetOrDeleteUserResponse.class));
         }
         return Optional.empty();
     }
