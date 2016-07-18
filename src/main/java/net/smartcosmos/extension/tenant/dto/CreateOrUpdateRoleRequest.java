@@ -28,9 +28,8 @@ public class CreateOrUpdateRoleRequest {
     private Boolean active;
 
     @Builder
-    @ConstructorProperties({"name", "authorities", "active"})
-    public CreateOrUpdateRoleRequest(String name, List<String> authorities, Boolean active)
-    {
+    @ConstructorProperties({ "name", "authorities", "active" })
+    public CreateOrUpdateRoleRequest(String name, List<String> authorities, Boolean active) {
         //this.urn = urn;
         this.name = name;
         this.authorities = authorities;

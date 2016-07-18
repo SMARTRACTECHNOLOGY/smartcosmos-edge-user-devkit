@@ -6,8 +6,6 @@ import javax.inject.Inject;
 
 import lombok.extern.slf4j.Slf4j;
 
-import net.smartcosmos.extension.tenant.dao.TenantDao;
-import net.smartcosmos.extension.tenant.rest.dto.RestCreateTenantRequest;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,14 +25,14 @@ import net.smartcosmos.extension.tenant.rest.dto.RestCreateTenantRequest;
  */
 @Slf4j
 @Service
-public class CreateTenantService extends AbstractTenantService{
+public class CreateTenantService extends AbstractTenantService {
 
     @Inject
-    public CreateTenantService(TenantDao tenantDao, RoleDao roleDao, SmartCosmosEventTemplate smartCosmosEventTemplate, ConversionService
+    public CreateTenantService(
+        TenantDao tenantDao, RoleDao roleDao, SmartCosmosEventTemplate smartCosmosEventTemplate, ConversionService
         conversionService) {
         super(tenantDao, roleDao, smartCosmosEventTemplate, conversionService);
     }
-
 
     public DeferredResult<ResponseEntity> create(RestCreateTenantRequest restCreateTenantRequest) {
         // Async worker thread reduces timeouts and disconnects for long queries and processing.
@@ -51,16 +49,14 @@ public class CreateTenantService extends AbstractTenantService{
             CreateTenantRequest createTenantRequest = conversionService.convert(restCreateTenantRequest, CreateTenantRequest.class);
             Optional<CreateTenantResponse> createTenantResponse = tenantDao.createTenant(createTenantRequest);
 
-            if (createTenantResponse.isPresent())
-            {
+            if (createTenantResponse.isPresent()) {
                 //sendEvent(null, DefaultEventTypes.ThingCreated, object.get());
 
                 ResponseEntity responseEntity = ResponseEntity
                     .created(URI.create(createTenantResponse.get().getUrn()))
                     .body(createTenantResponse.get());
                 response.setResult(responseEntity);
-            }
-            else {
+            } else {
                 response.setResult(ResponseEntity.status(HttpStatus.CONFLICT).build());
                 // sendEvent(createTenantRequest, DefaultEventTypes.ThingCreateFailedAlreadyExists, createTenantRequest);
             }
@@ -70,6 +66,5 @@ public class CreateTenantService extends AbstractTenantService{
             response.setErrorResult(e);
         }
     }
-
 
 }

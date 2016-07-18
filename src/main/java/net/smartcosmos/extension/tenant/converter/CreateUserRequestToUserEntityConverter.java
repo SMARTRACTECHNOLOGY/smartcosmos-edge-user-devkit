@@ -3,8 +3,6 @@ package net.smartcosmos.extension.tenant.converter;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.smartcosmos.extension.tenant.domain.RoleEntity;
-import net.smartcosmos.extension.tenant.domain.UserEntity;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.format.FormatterRegistrar;
 import org.springframework.format.FormatterRegistry;
@@ -26,13 +24,12 @@ public class CreateUserRequestToUserEntityConverter
 
     PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-
     @Override
     public UserEntity convert(CreateUserRequest createUserRequest) {
 
         // role entities from role strings
         Set<RoleEntity> roleEntities = new HashSet<>();
-        for (String role: createUserRequest.getRoles()) {
+        for (String role : createUserRequest.getRoles()) {
             roleEntities.add(RoleEntity.builder().name(role).build());
         }
 

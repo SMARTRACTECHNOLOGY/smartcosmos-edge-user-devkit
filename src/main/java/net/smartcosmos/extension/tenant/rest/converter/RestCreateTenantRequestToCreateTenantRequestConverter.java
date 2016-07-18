@@ -1,6 +1,5 @@
 package net.smartcosmos.extension.tenant.rest.converter;
 
-import net.smartcosmos.extension.tenant.rest.dto.RestCreateTenantRequest;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.format.FormatterRegistrar;
 import org.springframework.format.FormatterRegistry;
@@ -16,8 +15,8 @@ import net.smartcosmos.extension.tenant.rest.dto.RestCreateTenantRequest;
 public class RestCreateTenantRequestToCreateTenantRequestConverter
     implements Converter<RestCreateTenantRequest, CreateTenantRequest>, FormatterRegistrar {
 
-        @Override
-        public CreateTenantRequest convert(RestCreateTenantRequest restCreateTenantRequest) {
+    @Override
+    public CreateTenantRequest convert(RestCreateTenantRequest restCreateTenantRequest) {
         return CreateTenantRequest.builder()
             .name(restCreateTenantRequest.getName())
             .active(restCreateTenantRequest.getActive())
@@ -25,8 +24,8 @@ public class RestCreateTenantRequestToCreateTenantRequestConverter
             .build();
     }
 
-        @Override
-        public void registerFormatters(FormatterRegistry registry) {
+    @Override
+    public void registerFormatters(FormatterRegistry registry) {
 
         registry.addConverter(this);
     }

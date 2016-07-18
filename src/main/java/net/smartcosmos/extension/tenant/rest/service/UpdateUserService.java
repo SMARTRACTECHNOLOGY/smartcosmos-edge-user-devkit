@@ -6,7 +6,6 @@ import javax.inject.Inject;
 
 import lombok.extern.slf4j.Slf4j;
 
-import net.smartcosmos.extension.tenant.dto.UpdateUserRequest;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,14 +25,14 @@ import net.smartcosmos.extension.tenant.rest.dto.RestUpdateUserRequest;
  */
 @Slf4j
 @Service
-public class UpdateUserService extends AbstractTenantService{
+public class UpdateUserService extends AbstractTenantService {
 
     @Inject
-    public UpdateUserService(TenantDao tenantDao, RoleDao roleDao, SmartCosmosEventTemplate smartCosmosEventTemplate, ConversionService
+    public UpdateUserService(
+        TenantDao tenantDao, RoleDao roleDao, SmartCosmosEventTemplate smartCosmosEventTemplate, ConversionService
         conversionService) {
         super(tenantDao, roleDao, smartCosmosEventTemplate, conversionService);
     }
-
 
     public DeferredResult<ResponseEntity> create(RestUpdateUserRequest restUpdateUserRequest) {
         // Async worker thread reduces timeouts and disconnects for long queries and processing.
@@ -50,16 +49,14 @@ public class UpdateUserService extends AbstractTenantService{
             UpdateUserRequest updateUserRequest = conversionService.convert(restUpdateUserRequest, UpdateUserRequest.class);
             Optional<CreateOrUpdateUserResponse> updateUserResponse = tenantDao.updateUser(updateUserRequest);
 
-            if (updateUserResponse.isPresent())
-            {
+            if (updateUserResponse.isPresent()) {
                 //sendEvent(null, DefaultEventTypes.ThingCreated, object.get());
 
                 ResponseEntity responseEntity = ResponseEntity
                     .created(URI.create(updateUserResponse.get().getUrn()))
                     .body(updateUserResponse.get());
                 response.setResult(responseEntity);
-            }
-            else {
+            } else {
                 response.setResult(ResponseEntity.status(HttpStatus.CONFLICT).build());
                 // sendEvent(createTenantRequest, DefaultEventTypes.ThingCreateFailedAlreadyExists, createTenantRequest);
             }

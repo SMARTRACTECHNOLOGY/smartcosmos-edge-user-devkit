@@ -9,6 +9,11 @@ import javax.validation.ConstraintViolationException;
 
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.ConversionService;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import net.smartcosmos.extension.tenant.dao.RoleDao;
 import net.smartcosmos.extension.tenant.domain.AuthorityEntity;
 import net.smartcosmos.extension.tenant.domain.RoleEntity;
@@ -18,11 +23,6 @@ import net.smartcosmos.extension.tenant.dto.GetRoleResponse;
 import net.smartcosmos.extension.tenant.repository.AuthorityRepository;
 import net.smartcosmos.extension.tenant.repository.RoleRepository;
 import net.smartcosmos.extension.tenant.util.UuidUtil;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.convert.ConversionService;
-import org.springframework.stereotype.Service;
-
-import org.springframework.transaction.annotation.Transactional;
 
 import static java.util.stream.Collectors.toList;
 
@@ -49,7 +49,7 @@ public class RolePersistenceService implements RoleDao {
     }
 
     @Override
-    public Optional<CreateOrUpdateRoleResponse> createRole (String tenantUrn, CreateOrUpdateRoleRequest createRoleRequest)
+    public Optional<CreateOrUpdateRoleResponse> createRole(String tenantUrn, CreateOrUpdateRoleRequest createRoleRequest)
         throws ConstraintViolationException {
 
         // This role already exists? we're not creating a new one
@@ -60,7 +60,7 @@ public class RolePersistenceService implements RoleDao {
 
         Set<AuthorityEntity> authorityEntities = new HashSet<>();
 
-        for (String authority: createRoleRequest.getAuthorities()) {
+        for (String authority : createRoleRequest.getAuthorities()) {
             authorityEntities.add(authorityRepository.save(AuthorityEntity.builder().authority(authority).build()));
         }
 
@@ -75,7 +75,7 @@ public class RolePersistenceService implements RoleDao {
     }
 
     @Override
-    public Optional<CreateOrUpdateRoleResponse> updateRole (String tenantUrn, String urn, CreateOrUpdateRoleRequest updateRoleRequest)
+    public Optional<CreateOrUpdateRoleResponse> updateRole(String tenantUrn, String urn, CreateOrUpdateRoleRequest updateRoleRequest)
         throws ConstraintViolationException {
 
         UUID tenantId = UuidUtil.getUuidFromUrn(tenantUrn);
@@ -90,12 +90,12 @@ public class RolePersistenceService implements RoleDao {
             }
 
             RoleEntity role = roleRepository.save(RoleEntity.builder()
-                    .id(id)
-                    .tenantId(tenantId)
-                    .name(updateRoleRequest.getName())
-                    .authorities(authorityEntities)
-                    .active(updateRoleRequest.getActive())
-                    .build());
+                                                      .id(id)
+                                                      .tenantId(tenantId)
+                                                      .name(updateRoleRequest.getName())
+                                                      .authorities(authorityEntities)
+                                                      .active(updateRoleRequest.getActive())
+                                                      .build());
             return Optional.ofNullable(conversionService.convert(role, CreateOrUpdateRoleResponse.class));
         }
 
@@ -117,14 +117,14 @@ public class RolePersistenceService implements RoleDao {
     @Override
     @Transactional
     public List<GetRoleResponse> delete(String tenantUrn, String urn)
-            throws IllegalArgumentException {
+        throws IllegalArgumentException {
 
         List<RoleEntity> roleEntities = roleRepository
-                .deleteByIdAndTenantId(UuidUtil.getUuidFromUrn(urn), UuidUtil.getUuidFromUrn(tenantUrn));
+            .deleteByIdAndTenantId(UuidUtil.getUuidFromUrn(urn), UuidUtil.getUuidFromUrn(tenantUrn));
         return roleEntities
-                .stream()
-                .map(item -> conversionService.convert(item, GetRoleResponse.class))
-                .collect(toList());
+            .stream()
+            .map(item -> conversionService.convert(item, GetRoleResponse.class))
+            .collect(toList());
     }
 }
 

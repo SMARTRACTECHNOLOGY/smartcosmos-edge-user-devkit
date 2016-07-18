@@ -22,9 +22,8 @@ public class GetTenantResponse {
     private final String name;
     private final Boolean active;
 
-
     @Builder
-    @ConstructorProperties({ "urn", "name", "tenantUrn", "active"})
+    @ConstructorProperties({ "urn", "name", "tenantUrn", "active" })
     public GetTenantResponse(String urn, String name, Boolean active) {
         this.urn = urn;
         this.name = name;

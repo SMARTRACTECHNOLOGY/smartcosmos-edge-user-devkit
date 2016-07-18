@@ -3,8 +3,6 @@ package net.smartcosmos.extension.tenant.converter;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.smartcosmos.extension.tenant.domain.RoleEntity;
-import net.smartcosmos.extension.tenant.domain.UserEntity;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.format.FormatterRegistrar;
 import org.springframework.format.FormatterRegistry;
@@ -27,10 +25,9 @@ public class UserEntityToCreateUserResponseConverter
 
         // role entities from role strings
         List<String> roles = new ArrayList<>();
-        for (RoleEntity role: userEntity.getRoles()) {
+        for (RoleEntity role : userEntity.getRoles()) {
             roles.add(role.getName());
         }
-
 
         return CreateOrUpdateUserResponse.builder()
             .urn(UuidUtil.getUserUrnFromUuid(userEntity.getId()))

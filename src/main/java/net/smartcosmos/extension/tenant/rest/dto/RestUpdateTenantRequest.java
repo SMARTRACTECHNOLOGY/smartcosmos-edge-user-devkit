@@ -26,7 +26,7 @@ public class RestUpdateTenantRequest {
     Boolean active;
 
     @Builder
-    @ConstructorProperties({ "name", "username", "active"})
+    @ConstructorProperties({ "name", "username", "active" })
     public RestUpdateTenantRequest(String name, String username, Boolean active) {
         this.name = name;
         this.active = active != null ? active : true;

@@ -32,8 +32,9 @@ public class RestUpdateUserRequest {
 
     @Builder
     @ConstructorProperties({ "username", "emailAddress", "givenName", "surname", "roles", "active" })
-    public RestUpdateUserRequest(String username, String emailAddress, String givenName, String surname, List<String> roles,
-                                 Boolean active) {
+    public RestUpdateUserRequest(
+        String username, String emailAddress, String givenName, String surname, List<String> roles,
+        Boolean active) {
         this.username = username;
         this.emailAddress = emailAddress;
         this.givenName = givenName;

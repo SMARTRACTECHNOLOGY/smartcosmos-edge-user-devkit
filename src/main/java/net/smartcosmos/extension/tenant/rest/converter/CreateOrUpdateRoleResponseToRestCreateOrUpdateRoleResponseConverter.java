@@ -31,5 +31,4 @@ public class CreateOrUpdateRoleResponseToRestCreateOrUpdateRoleResponseConverter
         registry.addConverter(this);
     }
 
-
 }

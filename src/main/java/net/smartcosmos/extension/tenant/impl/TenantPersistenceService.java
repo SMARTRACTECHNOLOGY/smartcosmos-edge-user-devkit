@@ -10,7 +10,6 @@ import javax.validation.ConstraintViolationException;
 
 import lombok.extern.slf4j.Slf4j;
 
-import net.smartcosmos.extension.tenant.repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionException;
 import org.springframework.core.convert.ConversionService;
@@ -27,12 +26,13 @@ import net.smartcosmos.extension.tenant.dto.CreateOrUpdateUserResponse;
 import net.smartcosmos.extension.tenant.dto.CreateTenantRequest;
 import net.smartcosmos.extension.tenant.dto.CreateTenantResponse;
 import net.smartcosmos.extension.tenant.dto.CreateUserRequest;
-import net.smartcosmos.extension.tenant.dto.GetTenantResponse;
 import net.smartcosmos.extension.tenant.dto.GetOrDeleteUserResponse;
+import net.smartcosmos.extension.tenant.dto.GetTenantResponse;
 import net.smartcosmos.extension.tenant.dto.TenantEntityAndUserEntityDto;
 import net.smartcosmos.extension.tenant.dto.UpdateTenantRequest;
 import net.smartcosmos.extension.tenant.dto.UpdateTenantResponse;
 import net.smartcosmos.extension.tenant.dto.UpdateUserRequest;
+import net.smartcosmos.extension.tenant.repository.RoleRepository;
 import net.smartcosmos.extension.tenant.repository.TenantRepository;
 import net.smartcosmos.extension.tenant.repository.UserRepository;
 import net.smartcosmos.extension.tenant.util.UuidUtil;
@@ -235,11 +235,10 @@ public class TenantPersistenceService implements TenantDao {
                 .stream()
                 .map(roleEntity -> {
                     Optional<RoleEntity> effectiveRole = roleRepository
-                            .findByNameAndTenantId(roleEntity.getName(), tenantId);
+                        .findByNameAndTenantId(roleEntity.getName(), tenantId);
                     if (effectiveRole.isPresent()) {
                         return effectiveRole.get();
-                    }
-                    else {
+                    } else {
                         String msg = String.format("role '%s' does not exist", roleEntity.getName());
                         throw new IllegalArgumentException(msg);
                     }
@@ -253,9 +252,9 @@ public class TenantPersistenceService implements TenantDao {
 
         } catch (IllegalArgumentException | ConstraintViolationException e) {
             String msg = String.format("create failed, user: '%s', tenant: '%s', cause: %s",
-                    createUserRequest.getUsername(),
-                    createUserRequest.getTenantUrn().toString(),
-                    e.getMessage());
+                                       createUserRequest.getUsername(),
+                                       createUserRequest.getTenantUrn().toString(),
+                                       e.getMessage());
             log.error(msg);
             log.debug(msg, e);
             throw e;

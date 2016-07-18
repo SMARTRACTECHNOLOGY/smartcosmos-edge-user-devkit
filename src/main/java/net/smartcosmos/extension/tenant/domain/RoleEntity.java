@@ -70,13 +70,13 @@ public class RoleEntity {
     @Column(name = "description", length = STRING_FIELD_LENGTH, nullable = true, updatable = true)
     private String description;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     @JoinTable(name = "user_roles",
                joinColumns = { @JoinColumn(name = "role") },
                inverseJoinColumns = { @JoinColumn(name = "user") })
     private Set<UserEntity> users;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     @JoinTable(name = "role_authorities",
                joinColumns = { @JoinColumn(name = "role") },
                inverseJoinColumns = { @JoinColumn(name = "authority") })
@@ -96,7 +96,6 @@ public class RoleEntity {
     @NotNull
     @Column(name = "active", nullable = false)
     private Boolean active;
-
 
     /*
     Lombok's @Builder is not able to deal with field initialization default values. That's a known issue which won't get fixed:

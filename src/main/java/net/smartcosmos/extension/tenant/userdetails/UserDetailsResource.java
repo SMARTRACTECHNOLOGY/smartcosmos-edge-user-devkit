@@ -34,15 +34,16 @@ public class UserDetailsResource {
     TenantDao tenantDao;
 
     @RequestMapping(value = "{username}", method = RequestMethod.POST)
-    public UserDto authenticate(@PathVariable("username") String username,
-                                @RequestBody byte[] requestBody)
-                    throws UsernameNotFoundException, IOException {
+    public UserDto authenticate(
+        @PathVariable("username") String username,
+        @RequestBody byte[] requestBody)
+        throws UsernameNotFoundException, IOException {
 
         final ObjectNode authentication = objectMapper.readValue(requestBody,
-                ObjectNode.class);
+                                                                 ObjectNode.class);
 
         log.info("Requested information on username {} with {}", username,
-                authentication);
+                 authentication);
 
         Optional<GetOrDeleteUserResponse> userResponseOptional = tenantDao.findUserByName(username);
 
@@ -77,7 +78,7 @@ public class UserDetailsResource {
      */
     @RequestMapping(value = "{username}")
     public UserDto authenticate(@PathVariable("username") String username)
-            throws UsernameNotFoundException, IOException {
+        throws UsernameNotFoundException, IOException {
 
         log.info("Requested information for details only on username {}", username);
 

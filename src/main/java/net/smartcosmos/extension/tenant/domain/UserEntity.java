@@ -89,7 +89,7 @@ public class UserEntity implements Serializable {
     @Column(name = "password", length = STRING_FIELD_LENGTH, nullable = false, updatable = true)
     private String password;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     @JoinTable(name = "user_roles",
                joinColumns = { @JoinColumn(name = "user") },
                inverseJoinColumns = { @JoinColumn(name = "role") })

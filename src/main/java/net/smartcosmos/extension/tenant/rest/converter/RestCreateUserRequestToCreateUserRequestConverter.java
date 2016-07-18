@@ -15,8 +15,8 @@ import net.smartcosmos.extension.tenant.rest.dto.RestCreateUserRequest;
 public class RestCreateUserRequestToCreateUserRequestConverter
     implements Converter<RestCreateUserRequest, CreateUserRequest>, FormatterRegistrar {
 
-        @Override
-        public CreateUserRequest convert(RestCreateUserRequest restCreateUserRequest) {
+    @Override
+    public CreateUserRequest convert(RestCreateUserRequest restCreateUserRequest) {
         return CreateUserRequest.builder()
             .tenantUrn(restCreateUserRequest.getTenantUrn())
             .username(restCreateUserRequest.getUsername())
@@ -28,8 +28,8 @@ public class RestCreateUserRequestToCreateUserRequestConverter
             .build();
     }
 
-        @Override
-        public void registerFormatters(FormatterRegistry registry) {
+    @Override
+    public void registerFormatters(FormatterRegistry registry) {
 
         registry.addConverter(this);
     }

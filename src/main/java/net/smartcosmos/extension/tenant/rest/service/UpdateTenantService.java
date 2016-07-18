@@ -25,14 +25,14 @@ import net.smartcosmos.extension.tenant.rest.dto.RestUpdateTenantRequest;
  */
 @Slf4j
 @Service
-public class UpdateTenantService extends AbstractTenantService{
+public class UpdateTenantService extends AbstractTenantService {
 
     @Inject
-    public UpdateTenantService(TenantDao tenantDao, RoleDao roleDao, SmartCosmosEventTemplate smartCosmosEventTemplate, ConversionService
+    public UpdateTenantService(
+        TenantDao tenantDao, RoleDao roleDao, SmartCosmosEventTemplate smartCosmosEventTemplate, ConversionService
         conversionService) {
         super(tenantDao, roleDao, smartCosmosEventTemplate, conversionService);
     }
-
 
     public DeferredResult<ResponseEntity> create(RestUpdateTenantRequest restUpdateTenantRequest) {
         // Async worker thread reduces timeouts and disconnects for long queries and processing.
@@ -49,14 +49,12 @@ public class UpdateTenantService extends AbstractTenantService{
             UpdateTenantRequest updateTenantRequest = conversionService.convert(restUpdateTenantRequest, UpdateTenantRequest.class);
             Optional<UpdateTenantResponse> updateTenantResponseOptional = tenantDao.updateTenant(updateTenantRequest);
 
-            if (updateTenantResponseOptional.isPresent())
-            {
+            if (updateTenantResponseOptional.isPresent()) {
                 ResponseEntity responseEntity = ResponseEntity
                     .created(URI.create(updateTenantResponseOptional.get().getUrn()))
                     .body(updateTenantResponseOptional.get());
                 response.setResult(responseEntity);
-            }
-            else {
+            } else {
                 response.setResult(ResponseEntity.status(HttpStatus.CONFLICT).build());
                 // sendEvent(createTenantRequest, DefaultEventTypes.ThingCreateFailedAlreadyExists, createTenantRequest);
             }
@@ -66,6 +64,5 @@ public class UpdateTenantService extends AbstractTenantService{
             response.setErrorResult(e);
         }
     }
-
 
 }
