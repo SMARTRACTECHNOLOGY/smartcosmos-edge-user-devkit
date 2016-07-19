@@ -5,9 +5,7 @@ import org.springframework.format.FormatterRegistrar;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.stereotype.Component;
 
-import net.smartcosmos.extension.tenant.dto.CreateOrUpdateRoleResponse;
 import net.smartcosmos.extension.tenant.dto.GetAuthoritiesResponse;
-import net.smartcosmos.extension.tenant.rest.dto.RestCreateOrUpdateRoleResponse;
 import net.smartcosmos.extension.tenant.rest.dto.RestLoginResponse;
 
 @Component
