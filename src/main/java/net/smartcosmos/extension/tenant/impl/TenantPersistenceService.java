@@ -55,14 +55,14 @@ public class TenantPersistenceService implements TenantDao {
     private final RolePersistenceService rolePersistenceService;
     private final RoleRepository roleRepository;
     private final ConversionService conversionService;
-    private final PasswordEncoder passwordEncoder;
+
+    private static final String INITIAL_PASSWORD = "PleaseChangeMeImmediately";
 
     /**
      * @param tenantRepository
      * @param userRepository
      * @param rolePersistenceService
      * @param conversionService
-     * @param passwordEncoder
      */
     @Autowired
     public TenantPersistenceService(
@@ -70,15 +70,13 @@ public class TenantPersistenceService implements TenantDao {
         UserRepository userRepository,
         RolePersistenceService rolePersistenceService,
         RoleRepository roleRepository,
-        ConversionService conversionService,
-        PasswordEncoder passwordEncoder) {
+        ConversionService conversionService) {
 
         this.tenantRepository = tenantRepository;
         this.userRepository = userRepository;
         this.rolePersistenceService = rolePersistenceService;
         this.roleRepository = roleRepository;
         this.conversionService = conversionService;
-        this.passwordEncoder = passwordEncoder;
     }
 
     // region TENANT METHODS */
@@ -114,7 +112,7 @@ public class TenantPersistenceService implements TenantDao {
                 .tenantId(tenantEntity.getId())
                 .username(createTenantRequest.getUsername())
                 .emailAddress(createTenantRequest.getUsername())
-                .password(passwordEncoder.encode("PleaseChangeMeImmediately"))
+                .password(INITIAL_PASSWORD)
                 .roles(roles)
                 .active(createTenantRequest.getActive() == null ? true : createTenantRequest.getActive())
                 .build();
@@ -236,7 +234,7 @@ public class TenantPersistenceService implements TenantDao {
             }
 
             UserEntity userEntity = conversionService.convert(createUserRequest, UserEntity.class);
-            userEntity.setPassword(passwordEncoder.encode("PleaseChangeMeImmediately"));
+            userEntity.setPassword(INITIAL_PASSWORD);
 
             // fetch the roles from the DB since the conversions service converts the role names only
             Set<RoleEntity> roleEntities = userEntity.getRoles()
@@ -282,7 +280,7 @@ public class TenantPersistenceService implements TenantDao {
 
         try {
             if (userEntityOptional.isPresent()) {
-                UserEntity userEntity = MergeUtil.merge(userEntityOptional.get(), updateUserRequest, passwordEncoder);
+                UserEntity userEntity = MergeUtil.merge(userEntityOptional.get(), updateUserRequest);
                 userEntity = userRepository.save(userEntity);
                 return Optional.ofNullable(conversionService.convert(userEntity, CreateOrUpdateUserResponse.class));
             }
@@ -362,11 +360,8 @@ public class TenantPersistenceService implements TenantDao {
     @Override
     public Optional<GetAuthoritiesResponse> getAuthorities(String username, String password) {
 
-        Assert.notNull(username, "username must not be null");
-        // Assert.notNull(password, "password must not be null");
-
-        Optional<UserEntity> userOptional = userRepository.findByUsername(username);
-        if (!userOptional.isPresent() /* || !password.equals(userOptional.get().getPassword()) */) {
+        Optional<UserEntity> userOptional = userRepository.getUserByCredentials(username, password);
+        if (!userOptional.isPresent()) {
             return Optional.empty();
         }
 
@@ -387,7 +382,7 @@ public class TenantPersistenceService implements TenantDao {
     }
 
     // endregion
-    
+
     // region UTILITY METHODS
 
     private RoleEntity createAdminRole(String tenantUrn) {
