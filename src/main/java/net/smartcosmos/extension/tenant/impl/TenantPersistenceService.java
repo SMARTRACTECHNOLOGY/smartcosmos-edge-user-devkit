@@ -15,8 +15,10 @@ import org.springframework.core.convert.ConversionException;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import net.smartcosmos.extension.tenant.dao.TenantDao;
+import net.smartcosmos.extension.tenant.domain.AuthorityEntity;
 import net.smartcosmos.extension.tenant.domain.RoleEntity;
 import net.smartcosmos.extension.tenant.domain.TenantEntity;
 import net.smartcosmos.extension.tenant.domain.UserEntity;
@@ -26,6 +28,7 @@ import net.smartcosmos.extension.tenant.dto.CreateOrUpdateUserResponse;
 import net.smartcosmos.extension.tenant.dto.CreateTenantRequest;
 import net.smartcosmos.extension.tenant.dto.CreateTenantResponse;
 import net.smartcosmos.extension.tenant.dto.CreateUserRequest;
+import net.smartcosmos.extension.tenant.dto.GetAuthoritiesResponse;
 import net.smartcosmos.extension.tenant.dto.GetOrDeleteUserResponse;
 import net.smartcosmos.extension.tenant.dto.GetTenantResponse;
 import net.smartcosmos.extension.tenant.dto.TenantEntityAndUserEntityDto;
@@ -360,6 +363,33 @@ public class TenantPersistenceService implements TenantDao {
             return Optional.of(conversionService.convert(entity.get(), GetOrDeleteUserResponse.class));
         }
         return Optional.empty();
+    }
+
+    @Override
+    public Optional<GetAuthoritiesResponse> getAuthorities(String username, String password) {
+
+        Assert.notNull(username, "username must not be null");
+        // Assert.notNull(password, "password must not be null");
+
+        Optional<UserEntity> userOptional = userRepository.findByUsername(username);
+        if (!userOptional.isPresent() /* || !password.equals(userOptional.get().getPassword()) */) {
+            return Optional.empty();
+        }
+
+        UserEntity user = userOptional.get();
+        Set<AuthorityEntity> authorityEntities = userRepository.getAuthorities(user.getId(), user.getTenantId());
+        Set<String> authorities = authorityEntities.parallelStream()
+            .map(AuthorityEntity::getAuthority)
+            .collect(toSet());
+
+        GetAuthoritiesResponse response = GetAuthoritiesResponse.builder()
+            .urn(UuidUtil.getUserUrnFromUuid(user.getId()))
+            .tenantUrn(UuidUtil.getTenantUrnFromUuid(user.getTenantId()))
+            .username(user.getUsername())
+            .authorities(authorities)
+            .build();
+
+        return Optional.of(response);
     }
 
     /*******************/

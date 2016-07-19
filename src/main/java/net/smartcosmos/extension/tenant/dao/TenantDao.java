@@ -1,12 +1,14 @@
 package net.smartcosmos.extension.tenant.dao;
 
 import java.util.Optional;
+
 import javax.validation.ConstraintViolationException;
 
 import net.smartcosmos.extension.tenant.dto.CreateOrUpdateUserResponse;
 import net.smartcosmos.extension.tenant.dto.CreateTenantRequest;
 import net.smartcosmos.extension.tenant.dto.CreateTenantResponse;
 import net.smartcosmos.extension.tenant.dto.CreateUserRequest;
+import net.smartcosmos.extension.tenant.dto.GetAuthoritiesResponse;
 import net.smartcosmos.extension.tenant.dto.GetOrDeleteUserResponse;
 import net.smartcosmos.extension.tenant.dto.GetTenantResponse;
 import net.smartcosmos.extension.tenant.dto.UpdateTenantRequest;
@@ -35,5 +37,7 @@ public interface TenantDao {
     Optional<GetOrDeleteUserResponse> findUserByName(String name);
 
     Optional<GetOrDeleteUserResponse> deleteUserByUrn(String urn);
+
+    Optional<GetAuthoritiesResponse> getAuthorities(String username, String password);
 
 }
