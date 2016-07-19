@@ -13,9 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionException;
 import org.springframework.core.convert.ConversionService;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.util.Assert;
 
 import net.smartcosmos.extension.tenant.dao.TenantDao;
 import net.smartcosmos.extension.tenant.domain.AuthorityEntity;
@@ -216,6 +214,10 @@ public class TenantPersistenceService implements TenantDao {
         return userRepository.findByUsernameAndTenantId(username, tenantId).isPresent();
     }
 
+    private boolean userAlreadyExists(String username) {
+        return userRepository.findByUsernameIgnoreCase(username).isPresent();
+    }
+
     /**
      *
      * @param createUserRequest
@@ -226,8 +228,7 @@ public class TenantPersistenceService implements TenantDao {
     public Optional<CreateOrUpdateUserResponse> createUser(CreateUserRequest createUserRequest)
         throws ConstraintViolationException {
 
-        UUID tenantId = UuidUtil.getUuidFromUrn(createUserRequest.getTenantUrn());
-        if (userAlreadyExists(createUserRequest.getUsername(), tenantId)) {
+        if (userAlreadyExists(createUserRequest.getUsername())) {
             // This user already exists? We're not creating a new one.
             return Optional.empty();
         }
@@ -235,7 +236,7 @@ public class TenantPersistenceService implements TenantDao {
         try {
             UserEntity userEntity = conversionService.convert(createUserRequest, UserEntity.class);
             userEntity.setPassword(INITIAL_PASSWORD);
-            userEntity = userRepository.save(userEntity);
+            userEntity = userRepository.persist(userEntity);
             userEntity = userRepository.addRolesToUser(userEntity.getTenantId(), userEntity.getId(), createUserRequest.getRoles()).get();
 
             return Optional.ofNullable(conversionService.convert(userEntity, CreateOrUpdateUserResponse.class));
@@ -265,7 +266,7 @@ public class TenantPersistenceService implements TenantDao {
         try {
             if (userEntityOptional.isPresent()) {
                 UserEntity userEntity = MergeUtil.merge(userEntityOptional.get(), updateUserRequest);
-                userEntity = userRepository.save(userEntity);
+                userEntity = userRepository.persist(userEntity);
                 return Optional.ofNullable(conversionService.convert(userEntity, CreateOrUpdateUserResponse.class));
             }
 
@@ -313,7 +314,7 @@ public class TenantPersistenceService implements TenantDao {
     @Override
     public Optional<GetOrDeleteUserResponse> findUserByName(String username) {
 
-        Optional<UserEntity> entity = userRepository.findByUsername(username);
+        Optional<UserEntity> entity = userRepository.findByUsernameIgnoreCase(username);
         if (entity.isPresent()) {
             return Optional.of(conversionService.convert(entity.get(), GetOrDeleteUserResponse.class));
         }

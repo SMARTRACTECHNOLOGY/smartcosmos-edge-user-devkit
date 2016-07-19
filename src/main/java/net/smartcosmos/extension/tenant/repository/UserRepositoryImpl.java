@@ -2,16 +2,19 @@ package net.smartcosmos.extension.tenant.repository;
 
 import java.util.Collection;
 import java.util.LinkedHashSet;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
+import javax.validation.ConstraintViolationException;
+
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.TransactionException;
 import org.springframework.util.Assert;
 
 import net.smartcosmos.extension.tenant.domain.AuthorityEntity;
@@ -40,12 +43,27 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
     }
 
     @Override
+    public UserEntity persist(UserEntity entity) throws ConstraintViolationException, TransactionException {
+        try {
+            return userRepository.save(entity);
+        } catch (TransactionException e) {
+            // we expect constraint violations to be the root cause for exceptions here,
+            // so we throw this particular exception back to the caller
+            if (ExceptionUtils.getRootCause(e) instanceof ConstraintViolationException) {
+                throw (ConstraintViolationException) ExceptionUtils.getRootCause(e);
+            } else {
+                throw e;
+            }
+        }
+    }
+
+    @Override
     public Optional<UserEntity> getUserByCredentials(String username, String password) {
 
         Assert.notNull(username, "username must not be null");
         // Assert.notNull(password, "password must not be null");
 
-        Optional<UserEntity> userOptional = userRepository.findByUsername(username);
+        Optional<UserEntity> userOptional = userRepository.findByUsernameIgnoreCase(username);
 
         if (userOptional.isPresent() /* && passwordEncoder.matches(password, userOptional.get().getPassword())*/) {
             return userOptional;

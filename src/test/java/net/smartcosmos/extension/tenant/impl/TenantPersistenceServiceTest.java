@@ -606,7 +606,7 @@ public class TenantPersistenceServiceTest {
     }
 
     @Test
-    public void thatCreateUserDuplicateUsernameDifferentTenantSucceeds() throws Exception {
+    public void thatCreateUserDuplicateUsernameDifferentTenantFails() throws Exception {
 
         final String emailAddress1 = "create.tenant.user1@example.com";
         final String emailAddress2 = "create.tenant.user1@example.com";
