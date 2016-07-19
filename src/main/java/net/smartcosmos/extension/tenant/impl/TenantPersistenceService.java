@@ -212,6 +212,10 @@ public class TenantPersistenceService implements TenantDao {
 
     // region USER METHODS
 
+    private boolean userAlreadyExists(String username, UUID tenantId) {
+        return userRepository.findByUsernameAndTenantId(username, tenantId).isPresent();
+    }
+
     /**
      *
      * @param createUserRequest
@@ -222,44 +226,24 @@ public class TenantPersistenceService implements TenantDao {
     public Optional<CreateOrUpdateUserResponse> createUser(CreateUserRequest createUserRequest)
         throws ConstraintViolationException {
 
-        try {
-            UUID tenantId = UuidUtil.getUuidFromUrn(createUserRequest.getTenantUrn());
-
+        UUID tenantId = UuidUtil.getUuidFromUrn(createUserRequest.getTenantUrn());
+        if (userAlreadyExists(createUserRequest.getUsername(), tenantId)) {
             // This user already exists? We're not creating a new one.
-            if (userRepository.findByUsernameAndTenantId(
-                createUserRequest.getUsername(), tenantId)
-                .isPresent()) {
+            return Optional.empty();
+        }
 
-                return Optional.empty();
-            }
-
+        try {
             UserEntity userEntity = conversionService.convert(createUserRequest, UserEntity.class);
             userEntity.setPassword(INITIAL_PASSWORD);
-
-            // fetch the roles from the DB since the conversions service converts the role names only
-            Set<RoleEntity> roleEntities = userEntity.getRoles()
-                .stream()
-                .map(roleEntity -> {
-                    Optional<RoleEntity> effectiveRole = roleRepository
-                        .findByNameAndTenantId(roleEntity.getName(), tenantId);
-                    if (effectiveRole.isPresent()) {
-                        return effectiveRole.get();
-                    } else {
-                        String msg = String.format("role '%s' does not exist", roleEntity.getName());
-                        throw new IllegalArgumentException(msg);
-                    }
-                })
-                .collect(toSet());
-
-            userEntity.setRoles(roleEntities);
-
             userEntity = userRepository.save(userEntity);
+            userEntity = userRepository.addRolesToUser(userEntity.getTenantId(), userEntity.getId(), createUserRequest.getRoles()).get();
+
             return Optional.ofNullable(conversionService.convert(userEntity, CreateOrUpdateUserResponse.class));
 
         } catch (IllegalArgumentException | ConstraintViolationException e) {
             String msg = String.format("create failed, user: '%s', tenant: '%s', cause: %s",
                                        createUserRequest.getUsername(),
-                                       createUserRequest.getTenantUrn().toString(),
+                                       createUserRequest.getTenantUrn(),
                                        e.getMessage());
             log.error(msg);
             log.debug(msg, e);
