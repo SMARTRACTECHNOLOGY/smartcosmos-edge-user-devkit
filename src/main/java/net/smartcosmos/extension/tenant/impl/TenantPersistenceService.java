@@ -209,7 +209,6 @@ public class TenantPersistenceService implements TenantDao {
 
     /****************/
     /* USER METHODS */
-
     /****************/
 
     @Override

@@ -19,6 +19,7 @@ import net.smartcosmos.extension.tenant.dto.CreateOrUpdateUserResponse;
 import net.smartcosmos.extension.tenant.dto.CreateTenantRequest;
 import net.smartcosmos.extension.tenant.dto.CreateTenantResponse;
 import net.smartcosmos.extension.tenant.dto.CreateUserRequest;
+import net.smartcosmos.extension.tenant.dto.GetOrDeleteUserResponse;
 import net.smartcosmos.extension.tenant.dto.GetTenantResponse;
 import net.smartcosmos.extension.tenant.dto.UpdateTenantRequest;
 import net.smartcosmos.extension.tenant.dto.UpdateTenantResponse;
@@ -324,6 +325,62 @@ public class TenantPersistenceServiceTest {
         assertEquals(role, userResponse.get().getRoles().get(0));
         assertEquals(surname, userResponse.get().getSurname());
         assertEquals(username, userResponse.get().getUsername());
+    }
+
+    @Test
+    public void thatDeleteUserSucceeds() {
+
+        // identical to thatCreateUserSucceeds until ***
+        final String emailAddress = "create.user@example.com";
+        final String givenName = "user";
+        final String role = "User";
+        final String surname = "create";
+        final String username = "create.user";
+
+        List<String> roles = new ArrayList<>();
+        roles.add(role);
+
+        CreateUserRequest createUserRequest = CreateUserRequest.builder()
+            .active(true)
+            .emailAddress(emailAddress)
+            .givenName(givenName)
+            .roles(roles)
+            .surname(surname)
+            .username(username)
+            .tenantUrn(testUserTenantUrn)
+            .build();
+
+        Optional<CreateOrUpdateUserResponse> userResponse = tenantPersistenceService.createUser(createUserRequest);
+
+        assertTrue(userResponse.isPresent());
+        assertEquals(emailAddress, userResponse.get().getEmailAddress());
+        assertEquals(givenName, userResponse.get().getGivenName());
+        assertEquals(roles.size(), userResponse.get().getRoles().size());
+        assertEquals(role, userResponse.get().getRoles().get(0));
+        assertEquals(surname, userResponse.get().getSurname());
+        assertEquals(username, userResponse.get().getUsername());
+
+        // *** no longer identical to thatCreateUserSucceeds
+
+        Optional<GetOrDeleteUserResponse> getResponse = tenantPersistenceService.findUserByUrn(userResponse.get().getUrn());
+        Optional<GetOrDeleteUserResponse> deleteResponse = tenantPersistenceService.deleteUserByUrn(getResponse.get().getUrn());
+
+        assertTrue(getResponse.isPresent());
+        assertEquals(emailAddress, getResponse.get().getEmailAddress());
+        assertEquals(givenName, getResponse.get().getGivenName());
+        assertEquals(roles.size(), getResponse.get().getRoles().size());
+        assertEquals(role, getResponse.get().getRoles().get(0));
+        assertEquals(surname, getResponse.get().getSurname());
+        assertEquals(username, getResponse.get().getUsername());
+
+        assertTrue(deleteResponse.isPresent());
+        assertEquals(emailAddress, deleteResponse.get().getEmailAddress());
+        assertEquals(givenName, deleteResponse.get().getGivenName());
+        assertEquals(roles.size(), deleteResponse.get().getRoles().size());
+        assertEquals(role, deleteResponse.get().getRoles().get(0));
+        assertEquals(surname, deleteResponse.get().getSurname());
+        assertEquals(username, deleteResponse.get().getUsername());
+
     }
 
     @Test(expected = IllegalArgumentException.class)
