@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import net.smartcosmos.extension.tenant.domain.AuthorityEntity;
+import net.smartcosmos.extension.tenant.domain.RoleEntity;
 import net.smartcosmos.extension.tenant.domain.UserEntity;
 
 @Component
@@ -33,11 +34,10 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
         if (userOptional.isPresent()) {
 
             UserEntity user = userOptional.get();
-            user.getRoles()
-                .parallelStream()
-                .map(role -> authorities.addAll(role.getAuthorities()));
+            for (RoleEntity role : user.getRoles()) {
+                authorities.addAll(role.getAuthorities());
+            }
         }
-
 
         return authorities;
     }
