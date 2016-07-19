@@ -1,10 +1,13 @@
 package net.smartcosmos.extension.tenant.repository;
 
+import java.util.Collection;
 import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -15,18 +18,24 @@ import net.smartcosmos.extension.tenant.domain.AuthorityEntity;
 import net.smartcosmos.extension.tenant.domain.RoleEntity;
 import net.smartcosmos.extension.tenant.domain.UserEntity;
 
+import static java.util.stream.Collectors.toSet;
+
 @Component
 public class UserRepositoryImpl implements UserRepositoryCustom {
 
     @Lazy
     private final UserRepository userRepository;
 
+    @Lazy
+    private final RoleRepository roleRepository;
+
     private final PasswordEncoder passwordEncoder;
 
     @Lazy
     @Autowired
-    public UserRepositoryImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserRepositoryImpl(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -60,5 +69,48 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
         }
 
         return authorities;
+    }
+
+    @Override
+    public Optional<UserEntity> addRolesToUser(UUID tenantId, UUID id, Collection<String> roleNames) throws IllegalArgumentException {
+
+        Optional<UserEntity> userOptional = userRepository.findByIdAndTenantId(id, tenantId);
+        if (userOptional.isPresent()) {
+            UserEntity user = userOptional.get();
+
+            Set<RoleEntity> roleSet = initRoleEntities(user);
+            Set<RoleEntity> newRoleSet = getRoleEntities(tenantId, roleNames);
+            roleSet.addAll(newRoleSet);
+
+            return Optional.of(user);
+        }
+
+        return Optional.empty();
+    }
+
+    private Set<RoleEntity> getRoleEntities(UUID tenantId, Collection<String> roleNames) {
+
+        return roleNames
+            .stream()
+            .map(roleName -> {
+                Optional<RoleEntity> role = roleRepository.findByNameAndTenantId(roleName, tenantId);
+                if (role.isPresent()) {
+                    return role.get();
+                } else {
+                    String msg = String.format("Role '%s' does not exist", roleName);
+                    throw new IllegalArgumentException(msg);
+                }
+            })
+            .collect(toSet());
+    }
+
+    private Set<RoleEntity> initRoleEntities(UserEntity user) {
+        Set<RoleEntity> roleEntities = user.getRoles();
+
+        if (!Hibernate.isInitialized(roleEntities)) {
+            Hibernate.initialize(roleEntities);
+        }
+
+        return roleEntities;
     }
 }

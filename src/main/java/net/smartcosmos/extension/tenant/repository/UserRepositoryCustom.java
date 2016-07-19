@@ -1,5 +1,6 @@
 package net.smartcosmos.extension.tenant.repository;
 
+import java.util.Collection;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -17,4 +18,6 @@ public interface UserRepositoryCustom {
     @Transactional
     Set<AuthorityEntity> getAuthorities(UUID userId, UUID tenantId);
 
+    @Transactional
+    Optional<UserEntity> addRolesToUser(UUID tenantId, UUID id, Collection<String> roleNames) throws IllegalArgumentException;
 }
