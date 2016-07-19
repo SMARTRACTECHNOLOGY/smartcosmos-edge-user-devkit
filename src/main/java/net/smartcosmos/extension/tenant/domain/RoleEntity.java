@@ -58,7 +58,7 @@ public class RoleEntity {
 
     @NotNull
     @Type(type = "uuid-binary")
-    @Column(name = "tenantid", length = UUID_LENGTH, nullable = false, updatable = false)
+    @Column(name = "tenantId", length = UUID_LENGTH, nullable = false, updatable = false)
     private UUID tenantId;
 
     @NotEmpty

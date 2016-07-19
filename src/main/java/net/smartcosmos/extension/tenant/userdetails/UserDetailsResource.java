@@ -72,7 +72,7 @@ public class UserDetailsResource {
      * method for the user details service.
      *
      * @param username
-     * @return
+     * @return UserDto
      * @throws UsernameNotFoundException
      * @throws IOException
      */

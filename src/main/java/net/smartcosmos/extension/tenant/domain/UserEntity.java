@@ -63,7 +63,7 @@ public class UserEntity implements Serializable {
 
     @NotNull
     @Type(type = "uuid-binary")
-    @Column(name = "tenantid", length = UUID_LENGTH, nullable = false, updatable = false)
+    @Column(name = "tenantId", length = UUID_LENGTH, nullable = false, updatable = false)
     private UUID tenantId;
 
     @NotEmpty
@@ -73,7 +73,7 @@ public class UserEntity implements Serializable {
 
     @NotEmpty
     @Size(max = STRING_FIELD_LENGTH)
-    @Column(name = "emailaddress", length = STRING_FIELD_LENGTH, nullable = false, updatable = true)
+    @Column(name = "emailAddress", length = STRING_FIELD_LENGTH, nullable = false, updatable = true)
     private String emailAddress;
 
     @Size(max = STRING_FIELD_LENGTH)
