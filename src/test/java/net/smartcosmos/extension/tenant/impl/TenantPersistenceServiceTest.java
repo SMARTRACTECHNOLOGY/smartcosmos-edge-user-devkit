@@ -3,6 +3,7 @@ package net.smartcosmos.extension.tenant.impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.junit.*;
 import org.junit.runner.*;
@@ -528,7 +529,7 @@ public class TenantPersistenceServiceTest {
     @Test
     public void thatGetAuthoritiesReturnsNoDuplicates() throws Exception {
 
-        String username = "authorityTestUser";
+        String username = "multipleRoleAuthorityTestUser";
         String emailAddress = "authority.user@example.com";
 
         List<String> roles = new ArrayList<>();
@@ -553,6 +554,105 @@ public class TenantPersistenceServiceTest {
         assertEquals(2, authorities.get().getAuthorities().size());
         assertTrue(authorities.get().getAuthorities().contains("smartcosmos.things.read"));
         assertTrue(authorities.get().getAuthorities().contains("smartcosmos.things.write"));
+    }
+
+    @Test
+    public void thatCreateUserDuplicateUsernameFails() throws Exception {
+
+        final String emailAddress1 = "create.duplicate.user1@example.com";
+        final String emailAddress2 = "create.duplicate.user2@example.com";
+        final String givenName = "user";
+        final String role = "User";
+        final String surname = "create";
+        final String username = "create.duplicate.user";
+
+        List<String> roles = new ArrayList<>();
+        roles.add(role);
+
+        CreateUserRequest createUserRequest1 = CreateUserRequest.builder()
+            .active(true)
+            .emailAddress(emailAddress1)
+            .givenName(givenName)
+            .roles(roles)
+            .surname(surname)
+            .username(username)
+            .tenantUrn(testUserTenantUrn)
+            .build();
+
+        Optional<CreateOrUpdateUserResponse> userResponse1 = tenantPersistenceService.createUser(createUserRequest1);
+
+        assertTrue(userResponse1.isPresent());
+        assertEquals(emailAddress1, userResponse1.get().getEmailAddress());
+        assertEquals(givenName, userResponse1.get().getGivenName());
+        assertEquals(roles.size(), userResponse1.get().getRoles().size());
+        assertEquals(role, userResponse1.get().getRoles().get(0));
+        assertEquals(surname, userResponse1.get().getSurname());
+        assertEquals(username, userResponse1.get().getUsername());
+
+        CreateUserRequest createUserRequest2 = CreateUserRequest.builder()
+            .active(true)
+            .emailAddress(emailAddress2)
+            .givenName(givenName)
+            .roles(roles)
+            .surname(surname)
+            .username(username)
+            .tenantUrn(testUserTenantUrn)
+            .build();
+
+        Optional<CreateOrUpdateUserResponse> userResponse2 = tenantPersistenceService.createUser(createUserRequest2);
+        assertFalse(userResponse2.isPresent());
+    }
+
+    @Test
+    public void thatCreateUserDuplicateUsernameDifferentTenantSucceeds() throws Exception {
+
+        final String emailAddress1 = "create.tenant.user1@example.com";
+        final String emailAddress2 = "create.tenant.user1@example.com";
+        final String givenName = "user";
+        final String role = "User";
+        final String surname = "create";
+        final String username = "create.tenant.user";
+        final String tenantUrn1 = UuidUtil.getTenantUrnFromUuid(UUID.randomUUID());
+        final String tenantUrn2 = UuidUtil.getTenantUrnFromUuid(UUID.randomUUID());
+
+        List<String> roles = new ArrayList<>();
+
+        CreateUserRequest createUserRequest1 = CreateUserRequest.builder()
+            .active(true)
+            .emailAddress(emailAddress1)
+            .givenName(givenName)
+            .roles(roles)
+            .surname(surname)
+            .username(username)
+            .tenantUrn(tenantUrn1)
+            .build();
+
+        Optional<CreateOrUpdateUserResponse> userResponse1 = tenantPersistenceService.createUser(createUserRequest1);
+
+        assertTrue(userResponse1.isPresent());
+        assertEquals(emailAddress1, userResponse1.get().getEmailAddress());
+        assertEquals(givenName, userResponse1.get().getGivenName());
+        assertEquals(roles.size(),userResponse1.get().getRoles().size());
+        assertEquals(surname, userResponse1.get().getSurname());
+        assertEquals(username, userResponse1.get().getUsername());
+
+        CreateUserRequest createUserRequest2 = CreateUserRequest.builder()
+            .active(true)
+            .emailAddress(emailAddress2)
+            .givenName(givenName)
+            .roles(roles)
+            .surname(surname)
+            .username(username)
+            .tenantUrn(tenantUrn2)
+            .build();
+
+        Optional<CreateOrUpdateUserResponse> userResponse2 = tenantPersistenceService.createUser(createUserRequest2);
+        assertTrue(userResponse2.isPresent());
+        assertEquals(emailAddress2, userResponse2.get().getEmailAddress());
+        assertEquals(givenName, userResponse2.get().getGivenName());
+        assertEquals(roles.size(),userResponse2.get().getRoles().size());
+        assertEquals(surname, userResponse2.get().getSurname());
+        assertEquals(username, userResponse2.get().getUsername());
     }
 
     // endregion
