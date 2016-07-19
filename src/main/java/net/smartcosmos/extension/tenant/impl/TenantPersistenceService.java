@@ -38,6 +38,7 @@ import net.smartcosmos.extension.tenant.dto.UpdateUserRequest;
 import net.smartcosmos.extension.tenant.repository.RoleRepository;
 import net.smartcosmos.extension.tenant.repository.TenantRepository;
 import net.smartcosmos.extension.tenant.repository.UserRepository;
+import net.smartcosmos.extension.tenant.util.MergeUtil;
 import net.smartcosmos.extension.tenant.util.UuidUtil;
 
 import static java.util.stream.Collectors.toSet;
@@ -80,9 +81,7 @@ public class TenantPersistenceService implements TenantDao {
         this.passwordEncoder = passwordEncoder;
     }
 
-    /******************/
-    /* TENANT METHODS */
-    /******************/
+    // region TENANT METHODS */
 
     /**
      *
@@ -211,9 +210,9 @@ public class TenantPersistenceService implements TenantDao {
         return Optional.empty();
     }
 
-    /****************/
-    /* USER METHODS */
-    /****************/
+    // endregion
+
+    // region USER METHODS
 
     /**
      *
@@ -283,26 +282,8 @@ public class TenantPersistenceService implements TenantDao {
 
         try {
             if (userEntityOptional.isPresent()) {
-                if (updateUserRequest.getActive() != null) {
-                    userEntityOptional.get().setActive(updateUserRequest.getActive());
-                }
-                if (updateUserRequest.getUsername() != null) {
-                    userEntityOptional.get().setUsername(updateUserRequest.getUsername());
-                }
-                if (updateUserRequest.getGivenName() != null) {
-                    userEntityOptional.get().setGivenName(updateUserRequest.getGivenName());
-                }
-                if (updateUserRequest.getSurname() != null) {
-                    userEntityOptional.get().setSurname(updateUserRequest.getSurname());
-                }
-                if (updateUserRequest.getEmailAddress() != null) {
-                    userEntityOptional.get().setEmailAddress(updateUserRequest.getEmailAddress());
-                }
-                if (updateUserRequest.getPassword() != null) {
-                    userEntityOptional.get().setPassword(passwordEncoder.encode(updateUserRequest.getPassword()));
-                }
-
-                UserEntity userEntity = userRepository.save(userEntityOptional.get());
+                UserEntity userEntity = MergeUtil.merge(userEntityOptional.get(), updateUserRequest, passwordEncoder);
+                userEntity = userRepository.save(userEntity);
                 return Optional.ofNullable(conversionService.convert(userEntity, CreateOrUpdateUserResponse.class));
             }
 
@@ -405,10 +386,9 @@ public class TenantPersistenceService implements TenantDao {
         return Optional.of(response);
     }
 
-    /*******************/
-    /* UTILITY METHODS */
-
-    /*******************/
+    // endregion
+    
+    // region UTILITY METHODS
 
     private RoleEntity createAdminRole(String tenantUrn) {
         List<String> authorities = new ArrayList<>();
@@ -440,5 +420,7 @@ public class TenantPersistenceService implements TenantDao {
         }
         throw new IllegalArgumentException();
     }
+
+    // endregion
 }
 
