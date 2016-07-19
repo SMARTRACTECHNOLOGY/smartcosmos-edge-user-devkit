@@ -1,13 +1,16 @@
 package net.smartcosmos.extension.tenant.converter;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.format.FormatterRegistrar;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.stereotype.Component;
 
+import net.smartcosmos.extension.tenant.domain.AuthorityEntity;
 import net.smartcosmos.extension.tenant.domain.RoleEntity;
 import net.smartcosmos.extension.tenant.domain.UserEntity;
 import net.smartcosmos.extension.tenant.dto.GetOrDeleteUserResponse;
@@ -23,11 +26,16 @@ public class UserEntityToGetOrDeleteUserResponseConverter
     @Override
     public GetOrDeleteUserResponse convert(UserEntity userEntity) {
 
-        // role entities from role strings
+        // role and authority strings from role entities
         List<String> roles = new ArrayList<>();
+        Set<String> authoritiesSet = new HashSet<>();
         for (RoleEntity role : userEntity.getRoles()) {
             roles.add(role.getName());
+            for (AuthorityEntity authorityEntity : role.getAuthorities()) {
+                authoritiesSet.add(authorityEntity.getAuthority());
+            }
         }
+        List<String> authorities = new ArrayList<>(authoritiesSet);
 
         return GetOrDeleteUserResponse.builder()
             .urn(UuidUtil.getUserUrnFromUuid(userEntity.getId()))
@@ -37,6 +45,7 @@ public class UserEntityToGetOrDeleteUserResponseConverter
             .givenName(userEntity.getGivenName())
             .surname(userEntity.getSurname())
             .roles(roles)
+            .authorities(authorities)
             .active(userEntity.getActive())
             .build();
     }
