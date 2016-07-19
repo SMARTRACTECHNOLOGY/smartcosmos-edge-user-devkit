@@ -440,7 +440,7 @@ public class TenantPersistenceServiceTest {
 
         String username = "authorityTestUser";
         String emailAddress = "authority.user@example.com";
-        String role = "User";
+        String role = "Admin";
 
         List<String> roles = new ArrayList<>();
         roles.add(role);
@@ -460,6 +460,9 @@ public class TenantPersistenceServiceTest {
 
         assertTrue(authorities.isPresent());
         assertFalse(authorities.get().getAuthorities().isEmpty());
+        assertEquals(2, authorities.get().getAuthorities().size());
+        assertTrue(authorities.get().getAuthorities().contains("smartcosmos.things.read"));
+        assertTrue(authorities.get().getAuthorities().contains("smartcosmos.things.write"));
     }
 
     // endregion
