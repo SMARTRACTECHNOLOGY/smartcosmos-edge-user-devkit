@@ -329,6 +329,42 @@ public class TenantPersistenceServiceTest {
     }
 
     @Test
+    public void thatCreateUserMultipleRolesSucceeds() {
+
+        final String emailAddress = "create.user@example.com";
+        final String givenName = "user";
+        final String role1 = "User";
+        final String role2 = "Admin";
+        final String surname = "create";
+        final String username = "create.user";
+
+        List<String> roles = new ArrayList<>();
+        roles.add(role1);
+        roles.add(role2);
+
+        CreateUserRequest createUserRequest = CreateUserRequest.builder()
+            .active(true)
+            .emailAddress(emailAddress)
+            .givenName(givenName)
+            .roles(roles)
+            .surname(surname)
+            .username(username)
+            .tenantUrn(testUserTenantUrn)
+            .build();
+
+        Optional<CreateOrUpdateUserResponse> userResponse = tenantPersistenceService.createUser(createUserRequest);
+
+        assertTrue(userResponse.isPresent());
+        assertEquals(emailAddress, userResponse.get().getEmailAddress());
+        assertEquals(givenName, userResponse.get().getGivenName());
+        assertEquals(roles.size(), userResponse.get().getRoles().size());
+        assertTrue(userResponse.get().getRoles().contains(role1));
+        assertTrue(userResponse.get().getRoles().contains(role2));
+        assertEquals(surname, userResponse.get().getSurname());
+        assertEquals(username, userResponse.get().getUsername());
+    }
+
+    @Test
     public void thatDeleteUserSucceeds() {
 
         // identical to thatCreateUserSucceeds until ***
@@ -436,14 +472,13 @@ public class TenantPersistenceServiceTest {
     }
 
     @Test
-    public void thatGetAuthorititiesSucceeds() throws Exception {
+    public void thatGetAuthoritiesSucceeds() throws Exception {
 
         String username = "authorityTestUser";
         String emailAddress = "authority.user@example.com";
-        String role = "Admin";
 
         List<String> roles = new ArrayList<>();
-        roles.add(role);
+        roles.add("Admin");
 
         CreateUserRequest userRequest = CreateUserRequest.builder()
             .username(username)
@@ -456,7 +491,62 @@ public class TenantPersistenceServiceTest {
             .build();
         String password = tenantPersistenceService.createUser(userRequest).get().getPassword();
 
-        Optional<GetAuthoritiesResponse> authorities = tenantPersistenceService.getAuthorities("authorityTestUser", password);
+        Optional<GetAuthoritiesResponse> authorities = tenantPersistenceService.getAuthorities(username, password);
+
+        assertTrue(authorities.isPresent());
+        assertFalse(authorities.get().getAuthorities().isEmpty());
+        assertEquals(2, authorities.get().getAuthorities().size());
+        assertTrue(authorities.get().getAuthorities().contains("smartcosmos.things.read"));
+        assertTrue(authorities.get().getAuthorities().contains("smartcosmos.things.write"));
+    }
+
+    @Test
+    public void thatGetAuthoritiesReturnsEmptySetForMissingRole() throws Exception {
+
+        String username = "NoAuthorityTestUser";
+        String emailAddress = "authority.user@example.com";
+
+        List<String> roles = new ArrayList<>();
+
+        CreateUserRequest userRequest = CreateUserRequest.builder()
+            .username(username)
+            .active(true)
+            .emailAddress(emailAddress)
+            .roles(roles)
+            .givenName("John")
+            .surname("Doe")
+            .tenantUrn(testUserTenantUrn)
+            .build();
+        String password = tenantPersistenceService.createUser(userRequest).get().getPassword();
+
+        Optional<GetAuthoritiesResponse> authorities = tenantPersistenceService.getAuthorities(username, password);
+
+        assertTrue(authorities.isPresent());
+        assertTrue(authorities.get().getAuthorities().isEmpty());
+    }
+    
+    @Test
+    public void thatGetAuthoritiesReturnsNoDuplicates() throws Exception {
+
+        String username = "authorityTestUser";
+        String emailAddress = "authority.user@example.com";
+
+        List<String> roles = new ArrayList<>();
+        roles.add("Admin");
+        roles.add("User");
+
+        CreateUserRequest userRequest = CreateUserRequest.builder()
+            .username(username)
+            .active(true)
+            .emailAddress(emailAddress)
+            .roles(roles)
+            .givenName("John")
+            .surname("Doe")
+            .tenantUrn(testUserTenantUrn)
+            .build();
+        String password = tenantPersistenceService.createUser(userRequest).get().getPassword();
+
+        Optional<GetAuthoritiesResponse> authorities = tenantPersistenceService.getAuthorities(username, password);
 
         assertTrue(authorities.isPresent());
         assertFalse(authorities.get().getAuthorities().isEmpty());
