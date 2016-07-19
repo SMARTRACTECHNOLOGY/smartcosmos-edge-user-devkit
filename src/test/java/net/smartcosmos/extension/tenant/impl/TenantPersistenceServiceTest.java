@@ -19,6 +19,7 @@ import net.smartcosmos.extension.tenant.dto.CreateOrUpdateUserResponse;
 import net.smartcosmos.extension.tenant.dto.CreateTenantRequest;
 import net.smartcosmos.extension.tenant.dto.CreateTenantResponse;
 import net.smartcosmos.extension.tenant.dto.CreateUserRequest;
+import net.smartcosmos.extension.tenant.dto.GetAuthoritiesResponse;
 import net.smartcosmos.extension.tenant.dto.GetTenantResponse;
 import net.smartcosmos.extension.tenant.dto.UpdateTenantRequest;
 import net.smartcosmos.extension.tenant.dto.UpdateTenantResponse;
@@ -375,6 +376,33 @@ public class TenantPersistenceServiceTest {
             .build();
 
         Optional<CreateOrUpdateUserResponse> userResponse = tenantPersistenceService.createUser(createUserRequest);
+    }
+
+    @Test
+    public void thatGetAuthorititiesSucceeds() throws Exception {
+
+        String username = "authorityTestUser";
+        String emailAddress = "authority.user@example.com";
+        String role = "User";
+
+        List<String> roles = new ArrayList<>();
+        roles.add(role);
+
+        CreateUserRequest userRequest = CreateUserRequest.builder()
+            .username(username)
+            .active(true)
+            .emailAddress(emailAddress)
+            .roles(roles)
+            .givenName("John")
+            .surname("Doe")
+            .tenantUrn(testUserTenantUrn)
+            .build();
+        String password = tenantPersistenceService.createUser(userRequest).get().getPassword();
+
+        Optional<GetAuthoritiesResponse> authorities = tenantPersistenceService.getAuthorities("authorityTestUser", password);
+
+        assertTrue(authorities.isPresent());
+        assertFalse(authorities.get().getAuthorities().isEmpty());
     }
 
     // endregion
