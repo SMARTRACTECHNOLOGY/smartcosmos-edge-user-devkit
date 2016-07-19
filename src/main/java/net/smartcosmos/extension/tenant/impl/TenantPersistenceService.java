@@ -387,7 +387,7 @@ public class TenantPersistenceService implements TenantDao {
     }
 
     // endregion
-    
+
     // region UTILITY METHODS
 
     private RoleEntity createAdminRole(String tenantUrn) {
