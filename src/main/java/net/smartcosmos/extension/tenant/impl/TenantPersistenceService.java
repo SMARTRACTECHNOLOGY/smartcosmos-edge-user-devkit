@@ -372,7 +372,7 @@ public class TenantPersistenceService implements TenantDao {
         // Assert.notNull(password, "password must not be null");
 
         Optional<UserEntity> userOptional = userRepository.findByUsername(username);
-        if (!userOptional.isPresent() /* || !password.equals(userOptional.get().getPassword()) */) {
+        if (!userOptional.isPresent() /*|| !passwordEncoder.matches(password, userOptional.get().getPassword())*/) {
             return Optional.empty();
         }
 
