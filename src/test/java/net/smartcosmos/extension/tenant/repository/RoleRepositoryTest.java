@@ -54,7 +54,7 @@ public class RoleRepositoryTest {
 
     @After
     public void tearDown() throws Exception {
-        repository.deleteAll();
+//        repository.deleteAll();
     }
 
     @Test
