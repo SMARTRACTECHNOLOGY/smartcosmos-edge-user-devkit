@@ -7,7 +7,7 @@ import net.smartcosmos.extension.tenant.dto.UpdateUserRequest;
 
 public class MergeUtil {
 
-    public static UserEntity merge(UserEntity user, UpdateUserRequest request, PasswordEncoder encoder) {
+    public static UserEntity merge(UserEntity user, UpdateUserRequest request) {
         
         if (request.getActive() != null) {
             user.setActive(request.getActive());
@@ -25,7 +25,7 @@ public class MergeUtil {
             user.setEmailAddress(request.getEmailAddress());
         }
         if (request.getPassword() != null) {
-            user.setPassword(encoder.encode(request.getPassword()));
+            user.setPassword(request.getPassword());
         }
 
         return user;

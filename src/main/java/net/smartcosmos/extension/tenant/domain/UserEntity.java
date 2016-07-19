@@ -8,6 +8,7 @@ import java.util.UUID;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
@@ -34,6 +35,8 @@ import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import net.smartcosmos.extension.tenant.converter.attribute.PasswordEncodingConverter;
 
 @Entity(name = "user")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -87,6 +90,7 @@ public class UserEntity implements Serializable {
     @NotEmpty
     @Size(max = STRING_FIELD_LENGTH)
     @Column(name = "password", length = STRING_FIELD_LENGTH, nullable = false, updatable = true)
+    @Convert(converter = PasswordEncodingConverter.class)
     private String password;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
