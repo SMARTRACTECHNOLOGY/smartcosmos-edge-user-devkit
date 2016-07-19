@@ -2,7 +2,7 @@ package net.smartcosmos.extension.tenant.rest.dto;
 
 import java.beans.ConstructorProperties;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -20,11 +20,11 @@ public class RestLoginResponse {
 
     private final String urn;
     private final String username;
-    private final List<String> authorities;
+    private final Collection<String> authorities;
     private final String tenantUrn;
 
     @ConstructorProperties({ "urn", "username", "authorities", "tenantUrn" })
-    public RestLoginResponse(String urn, String username, List<String> authorities, String tenantUrn) {
+    public RestLoginResponse(String urn, String username, Collection<String> authorities, String tenantUrn) {
         this.urn = urn;
         this.username = username;
         this.authorities = new ArrayList<>();
