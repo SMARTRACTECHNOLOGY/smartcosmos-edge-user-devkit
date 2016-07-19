@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.apache.commons.lang.RandomStringUtils;
 import org.junit.*;
 import org.junit.runner.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +21,8 @@ import net.smartcosmos.extension.tenant.dto.CreateOrUpdateUserResponse;
 import net.smartcosmos.extension.tenant.dto.CreateTenantRequest;
 import net.smartcosmos.extension.tenant.dto.CreateTenantResponse;
 import net.smartcosmos.extension.tenant.dto.CreateUserRequest;
-import net.smartcosmos.extension.tenant.dto.GetOrDeleteUserResponse;
 import net.smartcosmos.extension.tenant.dto.GetAuthoritiesResponse;
+import net.smartcosmos.extension.tenant.dto.GetOrDeleteUserResponse;
 import net.smartcosmos.extension.tenant.dto.GetTenantResponse;
 import net.smartcosmos.extension.tenant.dto.UpdateTenantRequest;
 import net.smartcosmos.extension.tenant.dto.UpdateTenantResponse;
@@ -58,6 +59,7 @@ public class TenantPersistenceServiceTest {
     @After
     public void tearDown() throws Exception {
         tenantRepository.deleteAll();
+        userRepository.deleteAll();
     }
 
     // region TenantPersistenceTests
@@ -647,12 +649,12 @@ public class TenantPersistenceServiceTest {
             .build();
 
         Optional<CreateOrUpdateUserResponse> userResponse2 = tenantPersistenceService.createUser(createUserRequest2);
-        assertTrue(userResponse2.isPresent());
-        assertEquals(emailAddress2, userResponse2.get().getEmailAddress());
-        assertEquals(givenName, userResponse2.get().getGivenName());
-        assertEquals(roles.size(),userResponse2.get().getRoles().size());
-        assertEquals(surname, userResponse2.get().getSurname());
-        assertEquals(username, userResponse2.get().getUsername());
+        assertFalse(userResponse2.isPresent());
+//        assertEquals(emailAddress2, userResponse2.get().getEmailAddress());
+//        assertEquals(givenName, userResponse2.get().getGivenName());
+//        assertEquals(roles.size(),userResponse2.get().getRoles().size());
+//        assertEquals(surname, userResponse2.get().getSurname());
+//        assertEquals(username, userResponse2.get().getUsername());
     }
 
     // endregion
