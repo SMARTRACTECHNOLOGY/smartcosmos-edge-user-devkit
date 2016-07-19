@@ -17,14 +17,14 @@ This is a private licensed repository, and as such, should not be shared publicl
 * <<create1, Create - `POST /tenants/`>>
 * <<update1, Update - `PUT /tenants/{urn}`>>
 * <<read1, Read - `GET /tenants/{urn}`>>
-* <<read2, Read - `GET /tenants/?name={name}&page={pageNumber}&size={pageSize}`>>
+* <<read2, Read - `GET /tenants/?name={name}`>>
 
 *Available methods for users*
 
 * <<createuser1, Create - `POST /users/`>>
 * <<updateuser1, Update - `PUT /users/{urn}`>>
 * <<readuser1, Read - `GET /users/{urn}`>>
-* <<readuser2, Read - `GET /users/?name={name}&page={pageNumber}&size={pageSize}`>>
+* <<readuser2, Read - `GET /users/?name={name}`>>
 * <<readuser3, Login - `POST /login/`>>
 
 *Available methods for roles*
@@ -32,14 +32,14 @@ This is a private licensed repository, and as such, should not be shared publicl
 * <<createrole1, Create - `POST /roles/`>>
 * <<updaterole1, Update - `PUT /roles/{urn}`>>
 * <<readrole1, Read - `GET /roles/{urn}`>>
-* <<readrole2, Read - `GET /roles/?name={name}&page={pageNumber}&size={pageSize}`>>
+* <<readrole2, Read - `GET /roles/?name={name}`>>
 * <<deleterole1, Delete - `DELETE /roles/{urn}`>>
 
 === JSON Fields for Tenants
 [width="100%",options="header"]
 |====================
 | Field | Format | Default | Required | Description
-| `urn` | String representation of a tenant identifier in a common scheme, e.g. `urn:tenant:uuid:<UUID>` | generated, value and format depend on the persistence layer implementation | | will be generated 
+| `urn` | String representation of a tenant identifier in a common scheme, e.g. `urn:tenant:uuid:<UUID>` | generated, value and format depend on the persistence layer implementation | | will be generated
 | `name` | String | | yes | Name of the tenant organization (e.g. `Example Company`)
 | `active` | boolean |  true | no |
 | `username` | String | | yes (for create) | Initial admin account
@@ -49,13 +49,13 @@ This is a private licensed repository, and as such, should not be shared publicl
 [width="100%",options="header"]
 |====================
 | Field | Format | Default | Required | Description
-| `urn` | String representation of a user identifier in a common scheme, e.g. `urn:user:uuid:<UUID>` | generated, value and format depend on the persistence layer implementation | | will be generated 
+| `urn` | String representation of a user identifier in a common scheme, e.g. `urn:user:uuid:<UUID>` | generated, value and format depend on the persistence layer implementation | | will be generated
 | `username` | String | | yes | login name, e.g. `bob@example.com`
 | `emailAddress` | String | | no | e.g. `bob@example.com`
 | `active` | boolean |  true | no |
-| `givenName` | String |  | no | 
-| `surname` | String |  | no | 
-| `password` | String |  | no | 
+| `givenName` | String |  | no |
+| `surname` | String |  | no |
+| `password` | String |  | no |
 | `roles` | Array of String |  | yes | e.g. `Admin` or `User`
 | `authorities` | Array of String |  | yes | e.g. `https://authorities.smartcosmos.net/things/read` or `https://authorities.smartcosmos.net/things/create`
 | `tenantUrn` | String representation of the tenant identifier in a common scheme, e.g. `urn:tenant:uuid:<UUID>` |  | yes |
@@ -65,7 +65,7 @@ This is a private licensed repository, and as such, should not be shared publicl
 [width="100%",options="header"]
 |====================
 | Field | Format | Default | Required | Description
-| `urn` | String representation of a user identifier in a common scheme, e.g. `urn:role:uuid:<UUID>` | generated, value and format depend on the persistence layer implementation | | will be generated 
+| `urn` | String representation of a user identifier in a common scheme, e.g. `urn:role:uuid:<UUID>` | generated, value and format depend on the persistence layer implementation | | will be generated
 | `name` | String | | yes | Unique name of the role, e.g. `Admin`
 | `authorities` | Array of String |  | yes | e.g. `https://authorities.smartcosmos.net/things/read` or `https://authorities.smartcosmos.net/things/create`
 | `tenantUrn` | String representation of the tenant identifier in a common scheme, e.g. `urn:tenant:uuid:<UUID>` |  | yes |
@@ -78,8 +78,6 @@ Note that the illustrated scheme for URNs is only for documentation purposes. Th
 [width="100%",options="header"]
 |====================
 | Parameter | Format | Default | Description
-| `page` | String representation long  |  query parameter, defaults to 1 | page number of multi-element returns, starting at 1
-| `size` | String representation of Integer  |  query parameter, defaults 20 | number of elements per page in multi-element returns
 | `name` | String | optional | Optional search parameter to filter the search result by `name` or `username`
 |====================
 
@@ -188,10 +186,10 @@ GET /urn:tenant:uuid:346e742e-2f1e-4d91-9ffe-7b38eec6219c
 ----
 
 [[read2]]
-==== Read - `GET /tenants/?name={name}&page={pageNumber}&size={pageSize}`
+==== Read - `GET /tenants/?name={name}`
 
 ----
-GET /tenants/?name=My%20Example%20Company&page=1&size=100
+GET /tenants/?name=My%20Example%20Company
 ----
 .Response
 ----
@@ -206,13 +204,7 @@ GET /tenants/?name=My%20Example%20Company&page=1&size=100
             "active": true,
             "name": "My Example Company"
         }
-    ],
-    "page" : {
-        "size" : 100,
-        "totalElements" : 1,
-        "totalPages" : 1,
-        "number" : 1
-    }
+    ]
 }
 ----
 
@@ -320,10 +312,10 @@ GET /users/urn:user:uuid:68a76616-3748-4bc2-93c1-3940b47abb7f
 ----
 
 [[readuser2]]
-==== Read - `GET /users/?name={name}&page={pageNumber}&size={pageSize}`
+==== Read - `GET /users/?name={name}`
 
 ----
-GET /users/?page=1&size=100
+GET /users/
 ----
 .Response
 ----
@@ -352,14 +344,8 @@ GET /users/?page=1&size=100
             "givenName": "Jane",
             "surname": "Smith",
             "tenantUrn": "urn:tenant:uuid:69bb7c6a-a43b-493d-8e9d-e5a3ed65728a"
-        }        
-    ],
-    "page" : {
-        "size" : 100,
-        "totalElements" : 2,
-        "totalPages" : 1,
-        "number" : 1
-    }
+        }
+    ]
 }
 ----
 
@@ -445,10 +431,10 @@ PUT /roles/urn:role:uuid:fcdf5432-49a8-45ef-96a2-94a022022860
 ----
 
 [[readrole1]]
-==== Read - `GET /roles/?name={name}&page={pageNumber}&size={pageSize}`
+==== Read - `GET /roles/?name={name}`
 
 ----
-GET /roles/?page=1&size=100
+GET /roles/
 ----
 .Response
 ----
@@ -474,14 +460,8 @@ GET /roles/?page=1&size=100
                 "https://authorities.smartcosmos.net/things/read"
             ],
             "tenantUrn": "urn:tenant:uuid:69bb7c6a-a43b-493d-8e9d-e5a3ed65728a"
-        }        
-    ],
-    "page" : {
-        "size" : 100,
-        "totalElements" : 2,
-        "totalPages" : 1,
-        "number" : 1
-    }
+        }
+    ]
 }
 ----
 
