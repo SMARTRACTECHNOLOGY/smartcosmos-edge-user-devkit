@@ -360,11 +360,8 @@ public class TenantPersistenceService implements TenantDao {
     @Override
     public Optional<GetAuthoritiesResponse> getAuthorities(String username, String password) {
 
-        Assert.notNull(username, "username must not be null");
-        // Assert.notNull(password, "password must not be null");
-
-        Optional<UserEntity> userOptional = userRepository.findByUsername(username);
-        if (!userOptional.isPresent() /*|| !passwordEncoder.matches(password, userOptional.get().getPassword())*/) {
+        Optional<UserEntity> userOptional = userRepository.getUserByCredentials(username, password);
+        if (!userOptional.isPresent()) {
             return Optional.empty();
         }
 
