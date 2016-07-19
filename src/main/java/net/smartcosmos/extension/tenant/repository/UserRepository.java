@@ -14,11 +14,14 @@ import net.smartcosmos.extension.tenant.domain.UserEntity;
  */
 public interface UserRepository extends JpaRepository<UserEntity, UUID>,
                                         PagingAndSortingRepository<UserEntity, UUID>,
-                                        JpaSpecificationExecutor<UserEntity> {
+                                        JpaSpecificationExecutor<UserEntity>,
+                                        UserRepositoryCustom {
 
     Optional<UserEntity> findByUsernameAndTenantId(String username, UUID tenantId);
 
     Optional<UserEntity> findById(UUID id);
+
+    Optional<UserEntity> findByIdAndTenantId(UUID id, UUID tenantId);
 
     Optional<UserEntity> findByUsername(String username);
 
