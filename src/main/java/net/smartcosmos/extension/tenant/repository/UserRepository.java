@@ -23,6 +23,6 @@ public interface UserRepository extends JpaRepository<UserEntity, UUID>,
 
     Optional<UserEntity> findByIdAndTenantId(UUID id, UUID tenantId);
 
-    Optional<UserEntity> findByUsername(String username);
+    Optional<UserEntity> findByUsernameIgnoreCase(String username);
 
 }

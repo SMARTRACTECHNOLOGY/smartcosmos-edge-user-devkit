@@ -41,7 +41,9 @@ import net.smartcosmos.extension.tenant.converter.attribute.PasswordEncodingConv
 @Entity(name = "user")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Data
-@Table(name = "user", uniqueConstraints = @UniqueConstraint(columnNames = { "username", "tenantId" }))
+@Table(name = "user", uniqueConstraints = @UniqueConstraint(columnNames = { "username" }))
+// this will be the future, but currently isn't supported:
+//@Table(name = "user", uniqueConstraints = @UniqueConstraint(columnNames = { "username", "tenantId" }))
 @EntityListeners({ AuditingEntityListener.class })
 public class UserEntity implements Serializable {
 

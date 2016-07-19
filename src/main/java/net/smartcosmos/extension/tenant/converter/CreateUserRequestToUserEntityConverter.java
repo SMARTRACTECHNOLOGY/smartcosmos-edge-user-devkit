@@ -1,8 +1,5 @@
 package net.smartcosmos.extension.tenant.converter;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.format.FormatterRegistrar;
 import org.springframework.format.FormatterRegistry;
@@ -10,7 +7,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import net.smartcosmos.extension.tenant.domain.RoleEntity;
 import net.smartcosmos.extension.tenant.domain.UserEntity;
 import net.smartcosmos.extension.tenant.dto.CreateUserRequest;
 import net.smartcosmos.extension.tenant.util.UuidUtil;
@@ -27,11 +23,10 @@ public class CreateUserRequestToUserEntityConverter
     @Override
     public UserEntity convert(CreateUserRequest createUserRequest) {
 
-        // role entities from role strings
-        Set<RoleEntity> roleEntities = new HashSet<>();
-        for (String role : createUserRequest.getRoles()) {
-            roleEntities.add(RoleEntity.builder().name(role).build());
-        }
+        /*
+            The converter ignores the roles, because it isn't able to completely convert them.
+            We therefore have to separately add the roles later on.
+         */
 
         return UserEntity.builder()
             .id(UuidUtil.getNewUuid())
@@ -40,8 +35,6 @@ public class CreateUserRequestToUserEntityConverter
             .emailAddress(createUserRequest.getEmailAddress())
             .givenName(createUserRequest.getGivenName())
             .surname(createUserRequest.getSurname())
-            .password("PleaseChangeMeImmediately")
-            .roles(roleEntities)
             .active(createUserRequest.getActive())
             .build();
     }
