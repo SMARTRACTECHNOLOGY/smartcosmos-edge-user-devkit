@@ -85,8 +85,9 @@ public class TenantPersistenceService implements TenantDao {
     /******************/
 
     /**
+     *
      * @param createTenantRequest
-     * @return
+     * @return Optional<CreateTenantResponse>
      * @throws ConstraintViolationException
      */
     @Override
@@ -138,7 +139,7 @@ public class TenantPersistenceService implements TenantDao {
 
     /**
      * @param updateTenantRequest
-     * @return
+     * @return Optional<UpdateTenantResponse>
      * @throws ConstraintViolationException
      */
     @Override
@@ -170,7 +171,7 @@ public class TenantPersistenceService implements TenantDao {
 
     /**
      * @param tenantUrn
-     * @return
+     * @return Optional<GetTenantResponse>
      */
     @Override
     public Optional<GetTenantResponse> findTenantByUrn(String tenantUrn) {
@@ -198,7 +199,7 @@ public class TenantPersistenceService implements TenantDao {
 
     /**
      * @param name
-     * @return
+     * @return Optional<GetTenantResponse>
      */
     @Override
     public Optional<GetTenantResponse> findTenantByName(String name) {
@@ -214,6 +215,12 @@ public class TenantPersistenceService implements TenantDao {
     /* USER METHODS */
     /****************/
 
+    /**
+     *
+     * @param createUserRequest
+     * @return Optional<CreateOrUpdateUserResponse>
+     * @throws ConstraintViolationException
+     */
     @Override
     public Optional<CreateOrUpdateUserResponse> createUser(CreateUserRequest createUserRequest)
         throws ConstraintViolationException {
@@ -265,7 +272,7 @@ public class TenantPersistenceService implements TenantDao {
 
     /**
      * @param updateUserRequest
-     * @return
+     * @return Optional<CreateOrUpdateUserResponse>
      * @throws ConstraintViolationException
      */
     @Override
@@ -310,7 +317,7 @@ public class TenantPersistenceService implements TenantDao {
 
     /**
      * @param userUrn
-     * @return
+     * @return Optional<GetOrDeleteUserResponse>
      */
     @Override
     public Optional<GetOrDeleteUserResponse> findUserByUrn(String userUrn) {
@@ -338,7 +345,7 @@ public class TenantPersistenceService implements TenantDao {
 
     /**
      * @param username
-     * @return
+     * @return Optional<GetOrDeleteUserResponse>
      */
     @Override
     public Optional<GetOrDeleteUserResponse> findUserByName(String username) {
@@ -352,7 +359,7 @@ public class TenantPersistenceService implements TenantDao {
 
     /**
      * @param urn
-     * @return
+     * @return Optional<GetOrDeleteUserResponse>
      */
     @Override
     public Optional<GetOrDeleteUserResponse> deleteUserByUrn(String urn) {
@@ -365,6 +372,12 @@ public class TenantPersistenceService implements TenantDao {
         return Optional.empty();
     }
 
+    /**
+     *
+     * @param username
+     * @param password
+     * @return Optional<GetAuthoritiesResponse>
+     */
     @Override
     public Optional<GetAuthoritiesResponse> getAuthorities(String username, String password) {
 
