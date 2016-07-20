@@ -368,6 +368,7 @@ public class TenantPersistenceService implements TenantDao {
             .urn(UuidUtil.getUserUrnFromUuid(user.getId()))
             .tenantUrn(UuidUtil.getTenantUrnFromUuid(user.getTenantId()))
             .username(user.getUsername())
+            .passwordHash(user.getPassword())
             .authorities(authorities)
             .build();
 

@@ -496,6 +496,7 @@ public class TenantPersistenceServiceTest {
         Optional<GetAuthoritiesResponse> authorities = tenantPersistenceService.getAuthorities(username, password);
 
         assertTrue(authorities.isPresent());
+        assertNotNull(authorities.get().getPasswordHash());
         assertFalse(authorities.get().getAuthorities().isEmpty());
         assertEquals(2, authorities.get().getAuthorities().size());
         assertTrue(authorities.get().getAuthorities().contains("smartcosmos.things.read"));
@@ -525,6 +526,7 @@ public class TenantPersistenceServiceTest {
 
         assertTrue(authorities.isPresent());
         assertTrue(authorities.get().getAuthorities().isEmpty());
+        assertNotNull(authorities.get().getPasswordHash());
     }
 
     @Test
@@ -551,6 +553,7 @@ public class TenantPersistenceServiceTest {
         Optional<GetAuthoritiesResponse> authorities = tenantPersistenceService.getAuthorities(username, password);
 
         assertTrue(authorities.isPresent());
+        assertNotNull(authorities.get().getPasswordHash());
         assertFalse(authorities.get().getAuthorities().isEmpty());
         assertEquals(2, authorities.get().getAuthorities().size());
         assertTrue(authorities.get().getAuthorities().contains("smartcosmos.things.read"));
@@ -753,6 +756,7 @@ public class TenantPersistenceServiceTest {
         assertEquals(testUserTenantUrn, getResponse.get().getTenantUrn());
     }
 
+    @Ignore
     @Test
     public void thatUpdateUpserSucceeds() throws Exception {
         // TODO updateUser(UpdateUserRequest updateUserRequest)
