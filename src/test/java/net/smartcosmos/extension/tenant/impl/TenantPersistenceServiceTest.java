@@ -681,5 +681,82 @@ public class TenantPersistenceServiceTest {
 //        assertEquals(username, userResponse2.get().getUsername());
     }
 
+    @Test
+    public void thatFindUserByUserNameSucceeds() throws Exception {
+
+        String username = "FindByUsernameTestUser";
+        String emailAddress = "username.user@example.com";
+        String givenName = "John";
+        String surname = "Doe";
+
+        List<String> roles = new ArrayList<>();
+        roles.add("Admin");
+
+        CreateUserRequest userRequest = CreateUserRequest.builder()
+            .username(username)
+            .active(true)
+            .emailAddress(emailAddress)
+            .roles(roles)
+            .givenName(givenName)
+            .surname(surname)
+            .tenantUrn(testUserTenantUrn)
+            .build();
+        CreateOrUpdateUserResponse createResponse = tenantPersistenceService.createUser(userRequest).get();
+
+        Optional<GetOrDeleteUserResponse> getResponse = tenantPersistenceService.findUserByName(username);
+
+        assertTrue(getResponse.isPresent());
+        assertEquals(createResponse.getUrn(), getResponse.get().getUrn());
+        assertEquals(createResponse.getActive(), getResponse.get().getActive());
+        assertNotNull(getResponse.get().getActive());
+        assertEquals(createResponse.getRoles(), getResponse.get().getRoles());
+        assertEquals(username, getResponse.get().getUsername());
+        assertEquals(emailAddress, getResponse.get().getEmailAddress());
+        assertEquals(givenName, getResponse.get().getGivenName());
+        assertEquals(surname, getResponse.get().getSurname());
+        assertEquals(testUserTenantUrn, getResponse.get().getTenantUrn());
+    }
+
+    @Test
+    public void thatFindUserByUrnSucceeds() throws Exception {
+
+        String username = "FindByUrnTestUser";
+        String emailAddress = "urn.user@example.com";
+        String givenName = "John";
+        String surname = "Doe";
+
+        List<String> roles = new ArrayList<>();
+        roles.add("Admin");
+
+        CreateUserRequest userRequest = CreateUserRequest.builder()
+            .username(username)
+            .active(true)
+            .emailAddress(emailAddress)
+            .roles(roles)
+            .givenName(givenName)
+            .surname(surname)
+            .tenantUrn(testUserTenantUrn)
+            .build();
+        CreateOrUpdateUserResponse createResponse = tenantPersistenceService.createUser(userRequest).get();
+
+        Optional<GetOrDeleteUserResponse> getResponse = tenantPersistenceService.findUserByName(username);
+
+        assertTrue(getResponse.isPresent());
+        assertEquals(createResponse.getUrn(), getResponse.get().getUrn());
+        assertEquals(createResponse.getActive(), getResponse.get().getActive());
+        assertNotNull(getResponse.get().getActive());
+        assertEquals(createResponse.getRoles(), getResponse.get().getRoles());
+        assertEquals(username, getResponse.get().getUsername());
+        assertEquals(emailAddress, getResponse.get().getEmailAddress());
+        assertEquals(givenName, getResponse.get().getGivenName());
+        assertEquals(surname, getResponse.get().getSurname());
+        assertEquals(testUserTenantUrn, getResponse.get().getTenantUrn());
+    }
+
+    @Test
+    public void thatUpdateUpserSucceeds() throws Exception {
+        // TODO updateUser(UpdateUserRequest updateUserRequest)
+    }
+
     // endregion
 }

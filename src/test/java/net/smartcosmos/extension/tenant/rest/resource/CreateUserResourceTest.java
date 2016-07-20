@@ -13,13 +13,11 @@ import net.smartcosmos.extension.tenant.dao.TenantDao;
 import net.smartcosmos.extension.tenant.dto.CreateOrUpdateUserResponse;
 import net.smartcosmos.extension.tenant.dto.UserDto;
 import net.smartcosmos.extension.tenant.rest.dto.RestCreateUserRequest;
-import net.smartcosmos.extension.tenant.userdetails.UserDetailsResource;
 import net.smartcosmos.extension.tenant.util.UuidUtil;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.startsWith;
 import static org.mockito.Matchers.anyObject;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.asyncDispatch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -37,9 +35,6 @@ public class CreateUserResourceTest extends AbstractTestResource {
 
     @Autowired
     protected TenantDao tenantDao;
-
-    @Autowired
-    protected UserDetailsResource userDetailsResource;
 
     private String tenantUrn;
 
@@ -91,7 +86,6 @@ public class CreateUserResourceTest extends AbstractTestResource {
             .build();
 
         when(tenantDao.createUser(anyObject())).thenReturn(Optional.ofNullable(createOrUpdateUserResponse));
-        when(userDetailsResource.authenticate(anyString(), anyObject())).thenReturn(userDto);
 
         org.springframework.test.web.servlet.MvcResult mvcResult = this.mockMvc.perform(
             post("/users").content(this.json(RestCreateUserRequest.builder()

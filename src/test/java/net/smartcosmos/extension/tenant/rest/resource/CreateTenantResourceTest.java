@@ -18,13 +18,11 @@ import net.smartcosmos.extension.tenant.dto.CreateOrUpdateUserResponse;
 import net.smartcosmos.extension.tenant.dto.CreateTenantResponse;
 import net.smartcosmos.extension.tenant.dto.UserDto;
 import net.smartcosmos.extension.tenant.rest.dto.RestCreateTenantRequest;
-import net.smartcosmos.extension.tenant.userdetails.UserDetailsResource;
 import net.smartcosmos.extension.tenant.util.UuidUtil;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.startsWith;
 import static org.mockito.Matchers.anyObject;
-import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.asyncDispatch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -44,9 +42,6 @@ public class CreateTenantResourceTest extends AbstractTestResource {
 
     @Autowired
     protected TenantDao tenantDao;
-
-    @Autowired
-    protected UserDetailsResource userDetailsResource;
 
     @After
     public void tearDown() throws Exception {
@@ -99,7 +94,6 @@ public class CreateTenantResourceTest extends AbstractTestResource {
             .build();
 
         when(tenantDao.createTenant(anyObject())).thenReturn(Optional.ofNullable(createTenantResponse));
-        when(userDetailsResource.authenticate(anyString(), anyObject())).thenReturn(userDto);
 
         MvcResult mvcResult = this.mockMvc.perform(
             post("/tenants").content(this.json(RestCreateTenantRequest.builder()
