@@ -19,12 +19,12 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 
 @RestController
 @Slf4j
-public class LoginResource {
+public class AuthenticationResource {
 
     private final LoginService loginService;
 
     @Autowired
-    public LoginResource(LoginService loginService) {
+    public AuthenticationResource(LoginService loginService) {
         this.loginService = loginService;
     }
 
