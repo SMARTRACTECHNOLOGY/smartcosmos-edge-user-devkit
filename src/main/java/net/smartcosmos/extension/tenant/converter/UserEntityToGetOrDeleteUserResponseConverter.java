@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.format.FormatterRegistrar;
@@ -31,11 +32,11 @@ public class UserEntityToGetOrDeleteUserResponseConverter
         Set<String> authoritiesSet = new HashSet<>();
         for (RoleEntity role : userEntity.getRoles()) {
             roles.add(role.getName());
-            for (AuthorityEntity authorityEntity : role.getAuthorities()) {
-                authoritiesSet.add(authorityEntity.getAuthority());
-            }
+            authoritiesSet.addAll(role.getAuthorities()
+                .stream()
+                .map(AuthorityEntity::getAuthority)
+                .collect(Collectors.toList()));
         }
-        List<String> authorities = new ArrayList<>(authoritiesSet);
 
         return GetOrDeleteUserResponse.builder()
             .urn(UuidUtil.getUserUrnFromUuid(userEntity.getId()))
@@ -45,7 +46,6 @@ public class UserEntityToGetOrDeleteUserResponseConverter
             .givenName(userEntity.getGivenName())
             .surname(userEntity.getSurname())
             .roles(roles)
-            .authorities(authorities)
             .active(userEntity.getActive())
             .build();
     }
