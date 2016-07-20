@@ -24,7 +24,7 @@ public class CreateOrUpdateUserResponse {
     private final String emailAddress;
     private final String givenName;
     private final String surname;
-    private final String password;
+    private String password;
     private final List<String> roles;
     private final Boolean active;
 }
