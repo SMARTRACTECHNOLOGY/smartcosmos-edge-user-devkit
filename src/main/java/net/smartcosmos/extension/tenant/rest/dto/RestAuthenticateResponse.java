@@ -15,7 +15,7 @@ import lombok.ToString;
 @JsonIgnoreProperties({ "version" })
 @Builder
 @ToString(exclude = "passwordHash")
-public class RestLoginResponse {
+public class RestAuthenticateResponse {
 
     private static final int VERSION = 1;
     private final int version = VERSION;
@@ -27,7 +27,7 @@ public class RestLoginResponse {
     private final String tenantUrn;
 
     @ConstructorProperties({ "urn", "username", "passwordHash", "authorities", "tenantUrn" })
-    public RestLoginResponse(String urn, String username, String passwordHash, Collection<String> authorities, String tenantUrn) {
+    public RestAuthenticateResponse(String urn, String username, String passwordHash, Collection<String> authorities, String tenantUrn) {
         this.urn = urn;
         this.username = username;
         this.passwordHash = passwordHash;

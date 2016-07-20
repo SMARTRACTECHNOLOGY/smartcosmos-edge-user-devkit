@@ -9,14 +9,11 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import net.smartcosmos.extension.tenant.dao.TenantDao;
 import net.smartcosmos.extension.tenant.dto.GetAuthoritiesResponse;
-import net.smartcosmos.extension.tenant.dto.GetTenantResponse;
-import net.smartcosmos.extension.tenant.rest.dto.RestLoginRequest;
-import net.smartcosmos.extension.tenant.util.UuidUtil;
+import net.smartcosmos.extension.tenant.rest.dto.RestAuthenticateRequest;
 
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
@@ -43,7 +40,7 @@ public class LoginResourceTest extends AbstractTestResource {
     @Test
     public void thatLoginSucceeds() throws Exception {
 
-        RestLoginRequest request = RestLoginRequest.builder()
+        RestAuthenticateRequest request = RestAuthenticateRequest.builder()
             .username("username")
             .password("password")
             .build();
@@ -83,7 +80,7 @@ public class LoginResourceTest extends AbstractTestResource {
     @Test
     public void thatLoginUnauthorizedFails() throws Exception {
 
-        RestLoginRequest request = RestLoginRequest.builder()
+        RestAuthenticateRequest request = RestAuthenticateRequest.builder()
             .username("invalid")
             .password("invalid")
             .build();

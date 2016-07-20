@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class RestLoginRequest {
+public class RestAuthenticateRequest {
 
     private static final int VERSION = 1;
     private final int version = VERSION;
