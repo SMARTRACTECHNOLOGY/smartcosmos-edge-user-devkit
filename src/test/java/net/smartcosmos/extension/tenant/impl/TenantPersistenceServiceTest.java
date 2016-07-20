@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import org.apache.commons.lang.RandomStringUtils;
 import org.junit.*;
 import org.junit.runner.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -556,6 +555,31 @@ public class TenantPersistenceServiceTest {
         assertEquals(2, authorities.get().getAuthorities().size());
         assertTrue(authorities.get().getAuthorities().contains("smartcosmos.things.read"));
         assertTrue(authorities.get().getAuthorities().contains("smartcosmos.things.write"));
+    }
+
+    @Test
+    public void thatGetAuthoritiesInvalidPasswordFails() throws Exception {
+
+        String username = "invalidAuthorityTestUser";
+        String emailAddress = "invalid.user@example.com";
+
+        List<String> roles = new ArrayList<>();
+        roles.add("Admin");
+
+        CreateUserRequest userRequest = CreateUserRequest.builder()
+            .username(username)
+            .active(true)
+            .emailAddress(emailAddress)
+            .roles(roles)
+            .givenName("John")
+            .surname("Doe")
+            .tenantUrn(testUserTenantUrn)
+            .build();
+        tenantPersistenceService.createUser(userRequest);
+
+        Optional<GetAuthoritiesResponse> authorities = tenantPersistenceService.getAuthorities(username, "invalid");
+
+        assertFalse(authorities.isPresent());
     }
 
     @Test
