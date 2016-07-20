@@ -18,7 +18,7 @@ public interface UserRepositoryCustom {
     UserEntity persist(UserEntity entity) throws ConstraintViolationException, TransactionException;
 
     @Transactional
-    Optional<UserEntity> getUserByCredentials(String username, String password);
+    Optional<UserEntity> getUserByCredentials(String username, String password) throws IllegalArgumentException;
 
     @Transactional
     Set<AuthorityEntity> getAuthorities(UUID userId, UUID tenantId);

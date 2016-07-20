@@ -58,14 +58,14 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
     }
 
     @Override
-    public Optional<UserEntity> getUserByCredentials(String username, String password) {
+    public Optional<UserEntity> getUserByCredentials(String username, String password) throws IllegalArgumentException {
 
         Assert.notNull(username, "username must not be null");
-        // Assert.notNull(password, "password must not be null");
+        Assert.notNull(password, "password must not be null");
 
         Optional<UserEntity> userOptional = userRepository.findByUsernameIgnoreCase(username);
 
-        if (userOptional.isPresent() /* && passwordEncoder.matches(password, userOptional.get().getPassword())*/) {
+        if (userOptional.isPresent() && passwordEncoder.matches(password, userOptional.get().getPassword())) {
             return userOptional;
         }
 
