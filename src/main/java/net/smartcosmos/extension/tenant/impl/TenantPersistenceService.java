@@ -2,6 +2,7 @@ package net.smartcosmos.extension.tenant.impl;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -228,18 +229,24 @@ public class TenantPersistenceService implements TenantDao {
     public Optional<CreateOrUpdateUserResponse> createUser(CreateUserRequest createUserRequest)
         throws ConstraintViolationException {
 
+
         if (userAlreadyExists(createUserRequest.getUsername())) {
             // This user already exists? We're not creating a new one.
             return Optional.empty();
         }
 
+        String password = INITIAL_PASSWORD;
+
         try {
             UserEntity userEntity = conversionService.convert(createUserRequest, UserEntity.class);
-            userEntity.setPassword(INITIAL_PASSWORD);
+            userEntity.setPassword(password);
             userEntity = userRepository.persist(userEntity);
             userEntity = userRepository.addRolesToUser(userEntity.getTenantId(), userEntity.getId(), createUserRequest.getRoles()).get();
 
-            return Optional.ofNullable(conversionService.convert(userEntity, CreateOrUpdateUserResponse.class));
+            CreateOrUpdateUserResponse response = conversionService.convert(userEntity, CreateOrUpdateUserResponse.class);
+            response.setPassword(password);
+
+            return Optional.of(response);
 
         } catch (IllegalArgumentException | ConstraintViolationException e) {
             String msg = String.format("create failed, user: '%s', tenant: '%s', cause: %s",
@@ -351,7 +358,8 @@ public class TenantPersistenceService implements TenantDao {
         }
 
         UserEntity user = userOptional.get();
-        Set<AuthorityEntity> authorityEntities = userRepository.getAuthorities(user.getId(), user.getTenantId());
+        Optional<Set<AuthorityEntity>> authorityOptional = userRepository.getAuthorities(user.getTenantId(), user.getId());
+        Set<AuthorityEntity> authorityEntities = authorityOptional.isPresent() ? authorityOptional.get() : new LinkedHashSet<>();
         Set<String> authorities = authorityEntities.parallelStream()
             .map(AuthorityEntity::getAuthority)
             .collect(toSet());

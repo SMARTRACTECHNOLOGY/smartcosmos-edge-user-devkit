@@ -58,14 +58,14 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
     }
 
     @Override
-    public Optional<UserEntity> getUserByCredentials(String username, String password) {
+    public Optional<UserEntity> getUserByCredentials(String username, String password) throws IllegalArgumentException {
 
         Assert.notNull(username, "username must not be null");
-        // Assert.notNull(password, "password must not be null");
+        Assert.notNull(password, "password must not be null");
 
         Optional<UserEntity> userOptional = userRepository.findByUsernameIgnoreCase(username);
 
-        if (userOptional.isPresent() /* && passwordEncoder.matches(password, userOptional.get().getPassword())*/) {
+        if (userOptional.isPresent() && passwordEncoder.matches(password, userOptional.get().getPassword())) {
             return userOptional;
         }
 
@@ -73,20 +73,21 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
     }
 
     @Override
-    public Set<AuthorityEntity> getAuthorities(UUID userId, UUID tenantId) {
-
-        Set<AuthorityEntity> authorities = new LinkedHashSet<>();
+    public Optional<Set<AuthorityEntity>> getAuthorities(UUID tenantId, UUID userId) {
 
         Optional<UserEntity> userOptional = userRepository.findByIdAndTenantId(userId, tenantId);
         if (userOptional.isPresent()) {
+            Set<AuthorityEntity> authorities = new LinkedHashSet<>();
 
             UserEntity user = userOptional.get();
             for (RoleEntity role : user.getRoles()) {
                 authorities.addAll(role.getAuthorities());
             }
+
+            return Optional.of(authorities);
         }
 
-        return authorities;
+        return Optional.empty();
     }
 
     @Override
