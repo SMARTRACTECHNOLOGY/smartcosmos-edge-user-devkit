@@ -12,7 +12,6 @@ import net.smartcosmos.extension.tenant.TenantPersistenceTestApplication;
 import net.smartcosmos.extension.tenant.dao.TenantDao;
 import net.smartcosmos.extension.tenant.dto.GetOrDeleteUserResponse;
 import net.smartcosmos.extension.tenant.dto.UserDto;
-import net.smartcosmos.extension.tenant.userdetails.UserDetailsResource;
 import net.smartcosmos.extension.tenant.util.UuidUtil;
 
 import static org.mockito.Mockito.*;
@@ -32,9 +31,6 @@ public class DeleteUserResourceTest extends AbstractTestResource {
 
     @Autowired
     protected TenantDao tenantDao;
-
-    @Autowired
-    protected UserDetailsResource userDetailsResource;
 
     @After
     public void tearDown() throws Exception {
@@ -75,7 +71,6 @@ public class DeleteUserResourceTest extends AbstractTestResource {
             .build();
 
         when(tenantDao.deleteUserByUrn(anyString())).thenReturn(Optional.ofNullable(getOrDeleteUserResponse));
-        when(userDetailsResource.authenticate(anyString(), anyObject())).thenReturn(userDto);
 
         MvcResult mvcResult = this.mockMvc.perform(
             delete("/users/" + expectedUserUrn).contentType(contentType))
