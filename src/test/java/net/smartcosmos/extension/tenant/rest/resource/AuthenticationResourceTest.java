@@ -9,7 +9,6 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import net.smartcosmos.extension.tenant.dao.TenantDao;
 import net.smartcosmos.extension.tenant.dto.GetAuthoritiesResponse;
-import net.smartcosmos.extension.tenant.rest.dto.RestAuthenticateRequest;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
@@ -53,7 +52,7 @@ public class AuthenticationResourceTest extends AbstractTestResource {
         when(tenantDao.getAuthorities(anyString(), anyString())).thenReturn(response);
 
         MvcResult mvcResult = mockMvc.perform(
-            post("/login")
+            post("/authenticate")
                 .content(json(request))
                 .contentType(APPLICATION_JSON_UTF8))
             .andExpect(status().isOk())
@@ -82,7 +81,7 @@ public class AuthenticationResourceTest extends AbstractTestResource {
         when(tenantDao.getAuthorities(anyString(), anyString())).thenReturn(Optional.empty());
 
         MvcResult mvcResult = mockMvc.perform(
-            post("/login")
+            post("/authenticate")
                 .content(json(request))
                 .contentType(APPLICATION_JSON_UTF8))
             .andExpect(status().isUnauthorized())

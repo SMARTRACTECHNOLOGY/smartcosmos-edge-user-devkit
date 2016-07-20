@@ -9,7 +9,8 @@ import net.smartcosmos.extension.tenant.dto.GetAuthoritiesResponse;
 import net.smartcosmos.extension.tenant.rest.dto.RestAuthenticateResponse;
 
 @Component
-public class GetAuthoritiesResponseToRestLoginResponseConverter implements Converter<GetAuthoritiesResponse, RestAuthenticateResponse>, FormatterRegistrar {
+public class GetAuthoritiesResponseToRestAuthenticateResponseConverter
+    implements Converter<GetAuthoritiesResponse, RestAuthenticateResponse>, FormatterRegistrar {
 
     @Override
     public RestAuthenticateResponse convert(GetAuthoritiesResponse source) {
@@ -17,6 +18,7 @@ public class GetAuthoritiesResponseToRestLoginResponseConverter implements Conve
         return RestAuthenticateResponse.builder()
             .urn(source.getUrn())
             .username(source.getUsername())
+            .passwordHash(source.getPasswordHash())
             .tenantUrn(source.getTenantUrn())
             .authorities(source.getAuthorities())
             .build();

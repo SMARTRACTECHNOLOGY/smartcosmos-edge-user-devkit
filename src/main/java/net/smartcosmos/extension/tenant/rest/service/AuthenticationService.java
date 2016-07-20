@@ -1,6 +1,7 @@
 package net.smartcosmos.extension.tenant.rest.service;
 
 import java.util.Optional;
+
 import javax.inject.Inject;
 
 import org.springframework.core.convert.ConversionService;
@@ -17,10 +18,10 @@ import net.smartcosmos.extension.tenant.rest.dto.RestAuthenticateResponse;
 import net.smartcosmos.security.user.SmartCosmosUser;
 
 @Service
-public class LoginService extends AbstractTenantService {
+public class AuthenticationService extends AbstractTenantService {
 
     @Inject
-    public LoginService(
+    public AuthenticationService(
         TenantDao tenantDao,
         RoleDao roleDao,
         SmartCosmosEventTemplate smartCosmosEventTemplate,
@@ -31,7 +32,7 @@ public class LoginService extends AbstractTenantService {
 
     public ResponseEntity<?> authenticate(RestAuthenticateRequest authenticate, SmartCosmosUser user) {
 
-        Optional<GetAuthoritiesResponse> entity = tenantDao.getAuthorities(authenticate.getUsername(), authenticate.getPassword());
+        Optional<GetAuthoritiesResponse> entity = tenantDao.getAuthorities(authenticate.getName(), authenticate.getCredentials());
         if (entity.isPresent()) {
 
             return ResponseEntity.ok(conversionService.convert(entity.get(), RestAuthenticateResponse.class));

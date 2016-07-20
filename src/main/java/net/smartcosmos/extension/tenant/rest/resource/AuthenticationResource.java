@@ -21,15 +21,16 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 @Slf4j
 public class AuthenticationResource {
 
-    private final LoginService loginService;
+    private final AuthenticationService authenticationService;
 
     @Autowired
-    public AuthenticationResource(LoginService loginService) {
-        this.loginService = loginService;
+    public AuthenticationResource(AuthenticationService authenticationService) {
+        this.authenticationService = authenticationService;
     }
 
-    @RequestMapping(value = "login", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8_VALUE, consumes = APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "authenticate", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8_VALUE,
+                    consumes = APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> authenticate(@RequestBody @Valid RestAuthenticateRequest authenticate, SmartCosmosUser user){
-        return loginService.authenticate(authenticate, user);
+        return authenticationService.authenticate(authenticate, user);
     }
 }

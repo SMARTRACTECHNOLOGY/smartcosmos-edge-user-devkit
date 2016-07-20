@@ -1,21 +1,35 @@
 package net.smartcosmos.extension.tenant.rest.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.util.List;
+
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * DTO representation of serialized {@link UsernamePasswordAuthenticationToken}.
+ */
 @Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @NoArgsConstructor
 @Builder
 @AllArgsConstructor
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class RestAuthenticateRequest {
 
-    private static final int VERSION = 1;
-    private final int version = VERSION;
+    private RestAuthenticateDetails details;
 
-    private String username;
-    private String password;
+    private List<String> authorities;
+
+    private Boolean authenticated;
+
+    private String principal;
+
+    private String credentials;
+
+    private String name;
 }
