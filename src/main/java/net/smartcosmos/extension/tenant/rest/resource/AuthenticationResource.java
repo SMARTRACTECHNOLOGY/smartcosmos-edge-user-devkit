@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import net.smartcosmos.extension.tenant.rest.dto.RestAuthenticateRequest;
-import net.smartcosmos.extension.tenant.rest.service.LoginService;
+import net.smartcosmos.extension.tenant.rest.service.AuthenticationService;
 import net.smartcosmos.security.user.SmartCosmosUser;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;

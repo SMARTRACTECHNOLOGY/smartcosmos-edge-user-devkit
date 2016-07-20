@@ -9,6 +9,7 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import net.smartcosmos.extension.tenant.dao.TenantDao;
 import net.smartcosmos.extension.tenant.dto.GetAuthoritiesResponse;
+import net.smartcosmos.extension.tenant.rest.dto.RestAuthenticateRequest;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
@@ -34,8 +35,8 @@ public class AuthenticationResourceTest extends AbstractTestResource {
     public void thatLoginSucceeds() throws Exception {
 
         RestAuthenticateRequest request = RestAuthenticateRequest.builder()
-            .username("username")
-            .password("password")
+            .name("username")
+            .credentials("password")
             .build();
 
 
@@ -74,8 +75,8 @@ public class AuthenticationResourceTest extends AbstractTestResource {
     public void thatLoginUnauthorizedFails() throws Exception {
 
         RestAuthenticateRequest request = RestAuthenticateRequest.builder()
-            .username("invalid")
-            .password("invalid")
+            .name("invalid")
+            .credentials("invalid")
             .build();
 
         when(tenantDao.getAuthorities(anyString(), anyString())).thenReturn(Optional.empty());
