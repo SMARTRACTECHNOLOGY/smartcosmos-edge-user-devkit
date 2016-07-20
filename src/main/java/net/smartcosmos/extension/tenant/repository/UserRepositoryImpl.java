@@ -73,20 +73,21 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
     }
 
     @Override
-    public Set<AuthorityEntity> getAuthorities(UUID userId, UUID tenantId) {
-
-        Set<AuthorityEntity> authorities = new LinkedHashSet<>();
+    public Optional<Set<AuthorityEntity>> getAuthorities(UUID tenantId, UUID userId) {
 
         Optional<UserEntity> userOptional = userRepository.findByIdAndTenantId(userId, tenantId);
         if (userOptional.isPresent()) {
+            Set<AuthorityEntity> authorities = new LinkedHashSet<>();
 
             UserEntity user = userOptional.get();
             for (RoleEntity role : user.getRoles()) {
                 authorities.addAll(role.getAuthorities());
             }
+
+            return Optional.of(authorities);
         }
 
-        return authorities;
+        return Optional.empty();
     }
 
     @Override

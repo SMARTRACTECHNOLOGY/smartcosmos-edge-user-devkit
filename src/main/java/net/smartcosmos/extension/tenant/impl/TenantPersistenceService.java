@@ -2,6 +2,7 @@ package net.smartcosmos.extension.tenant.impl;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -357,7 +358,8 @@ public class TenantPersistenceService implements TenantDao {
         }
 
         UserEntity user = userOptional.get();
-        Set<AuthorityEntity> authorityEntities = userRepository.getAuthorities(user.getId(), user.getTenantId());
+        Optional<Set<AuthorityEntity>> authorityOptional = userRepository.getAuthorities(user.getTenantId(), user.getId());
+        Set<AuthorityEntity> authorityEntities = authorityOptional.isPresent() ? authorityOptional.get() : new LinkedHashSet<>();
         Set<String> authorities = authorityEntities.parallelStream()
             .map(AuthorityEntity::getAuthority)
             .collect(toSet());
