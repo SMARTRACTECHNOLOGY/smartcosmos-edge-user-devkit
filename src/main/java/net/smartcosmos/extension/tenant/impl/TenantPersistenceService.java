@@ -157,7 +157,8 @@ public class TenantPersistenceService implements TenantDao {
                 return Optional.ofNullable(conversionService.convert(tenantEntity, UpdateTenantResponse.class));
             }
         } catch (IllegalArgumentException | ConstraintViolationException e) {
-            String msg = String.format("update failed, tenant: 9+-'%s', cause: %s", tenantUrn, e.toString());
+            String msg = String.format("update failed, tenant: '%s', request: '%s', cause: %s", tenantUrn, updateTenantRequest.toString(), e
+                .toString());
             log.error(msg);
             log.debug(msg, e);
             throw e;
