@@ -253,9 +253,9 @@ public class TenantPersistenceService implements TenantDao {
             return Optional.of(response);
 
         } catch (IllegalArgumentException | ConstraintViolationException e) {
-            String msg = String.format("create failed, user: '%s', tenant: '%s', cause: %s",
-                                       createUserRequest.getUsername(),
+            String msg = String.format("create user failed, tenant: '%s', request: '%s', cause: %s",
                                        tenantUrn,
+                                       createUserRequest.toString(),
                                        e.getMessage());
             log.error(msg);
             log.debug(msg, e);
