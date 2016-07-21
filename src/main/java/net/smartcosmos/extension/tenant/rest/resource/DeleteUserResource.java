@@ -12,6 +12,7 @@ import org.springframework.web.context.request.async.DeferredResult;
 
 import net.smartcosmos.extension.tenant.rest.service.DeleteUserService;
 import net.smartcosmos.security.EndpointMethodControl;
+import net.smartcosmos.security.user.SmartCosmosUser;
 import net.smartcosmos.spring.SmartCosmosRdao;
 
 /**
@@ -32,7 +33,8 @@ public class DeleteUserResource {
     @EndpointMethodControl(key = "user.delete")
     @ConditionalOnProperty(prefix = "smt.endpoints.user.delete", name = "enabled", matchIfMissing = true)
     public DeferredResult<ResponseEntity> deleteUser(
-        @PathVariable String urn) {
+        @PathVariable String urn,
+        SmartCosmosUser user) {
 
         return service.delete(urn);
     }
