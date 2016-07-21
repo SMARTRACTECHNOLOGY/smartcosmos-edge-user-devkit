@@ -15,6 +15,7 @@ import org.springframework.web.context.request.async.DeferredResult;
 import net.smartcosmos.extension.tenant.rest.dto.RestUpdateUserRequest;
 import net.smartcosmos.extension.tenant.rest.service.UpdateUserService;
 import net.smartcosmos.security.EndpointMethodControl;
+import net.smartcosmos.security.user.SmartCosmosUser;
 import net.smartcosmos.spring.SmartCosmosRdao;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
@@ -37,9 +38,10 @@ public class UpdateUserResource {
     @EndpointMethodControl(key = "tenant.put")
     @ConditionalOnProperty(prefix = "smt.endpoints.user.put", name = "enabled", matchIfMissing = true)
     public DeferredResult<ResponseEntity> updateObject(
-        @RequestBody @Valid RestUpdateUserRequest restUpdateUserRequest) {
+        @RequestBody @Valid RestUpdateUserRequest restUpdateUserRequest,
+        SmartCosmosUser user) {
 
-        return service.create(restUpdateUserRequest);
+        return service.create(restUpdateUserRequest, user);
     }
 }
 

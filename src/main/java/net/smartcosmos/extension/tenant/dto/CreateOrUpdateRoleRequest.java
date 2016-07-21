@@ -1,14 +1,13 @@
 package net.smartcosmos.extension.tenant.dto;
 
 import java.beans.ConstructorProperties;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
-import lombok.Setter;
 
 /**
  * Initially created by SMART COSMOS Team on June 30, 2016.
@@ -19,10 +18,8 @@ import lombok.Setter;
 public class CreateOrUpdateRoleRequest {
 
     private static final int VERSION = 1;
-    @Setter(AccessLevel.NONE)
-    private int version = VERSION;
+    private final int version = VERSION;
 
-    //private String urn;
     private String name;
     private List<String> authorities;
     private Boolean active;
@@ -30,12 +27,12 @@ public class CreateOrUpdateRoleRequest {
     @Builder
     @ConstructorProperties({ "name", "authorities", "active" })
     public CreateOrUpdateRoleRequest(String name, List<String> authorities, Boolean active) {
-        //this.urn = urn;
         this.name = name;
-        this.authorities = authorities;
+        this.authorities = new ArrayList<>();
+        if (authorities != null && !authorities.isEmpty()) {
+            this.authorities.addAll(authorities);
+        }
         this.active = active != null ? active : true;
-
-        this.version = VERSION;
     }
 
 }

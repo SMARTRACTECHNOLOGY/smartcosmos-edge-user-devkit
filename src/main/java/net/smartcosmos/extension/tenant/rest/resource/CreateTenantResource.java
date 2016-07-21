@@ -15,6 +15,7 @@ import org.springframework.web.context.request.async.DeferredResult;
 import net.smartcosmos.extension.tenant.rest.dto.RestCreateTenantRequest;
 import net.smartcosmos.extension.tenant.rest.service.CreateTenantService;
 import net.smartcosmos.security.EndpointMethodControl;
+import net.smartcosmos.security.user.SmartCosmosUser;
 import net.smartcosmos.spring.SmartCosmosRdao;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
@@ -37,7 +38,8 @@ public class CreateTenantResource {
     @EndpointMethodControl(key = "tenant.post")
     @ConditionalOnProperty(prefix = "smt.endpoints.tenant.post", name = "enabled", matchIfMissing = true)
     public DeferredResult<ResponseEntity> createObject(
-        @RequestBody @Valid RestCreateTenantRequest restCreateTenantRequest) {
+        @RequestBody @Valid RestCreateTenantRequest restCreateTenantRequest,
+        SmartCosmosUser user) {
 
         return service.create(restCreateTenantRequest);
     }

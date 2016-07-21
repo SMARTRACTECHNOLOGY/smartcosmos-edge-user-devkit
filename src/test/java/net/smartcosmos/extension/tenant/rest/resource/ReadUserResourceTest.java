@@ -45,7 +45,7 @@ public class ReadUserResourceTest extends AbstractTestResource {
             .build();
         Optional<GetOrDeleteUserResponse> response = Optional.of(response1);
 
-        when(tenantDao.findUserByUrn(anyString())).thenReturn(response);
+        when(tenantDao.findUserByUrn(anyString(), anyString())).thenReturn(response);
 
         MvcResult mvcResult = mockMvc.perform(
             get("/users/{urn}", urn).contentType(APPLICATION_JSON_UTF8))
@@ -57,7 +57,7 @@ public class ReadUserResourceTest extends AbstractTestResource {
             .andExpect(jsonPath("$.tenantUrn", is(tenantUrn)))
             .andReturn();
 
-        verify(tenantDao, times(1)).findUserByUrn(anyString());
+        verify(tenantDao, times(1)).findUserByUrn(anyString(), anyString());
         verifyNoMoreInteractions(tenantDao);
     }
 
@@ -68,14 +68,14 @@ public class ReadUserResourceTest extends AbstractTestResource {
 
         Optional<GetOrDeleteUserResponse> response = Optional.empty();
 
-        when(tenantDao.findUserByUrn(anyString())).thenReturn(response);
+        when(tenantDao.findUserByUrn(anyString(), anyString())).thenReturn(response);
 
         MvcResult mvcResult = mockMvc.perform(
             get("/users/{urn}", urn).contentType(APPLICATION_JSON_UTF8))
             .andExpect(status().isNotFound())
             .andReturn();
 
-        verify(tenantDao, times(1)).findUserByUrn(anyString());
+        verify(tenantDao, times(1)).findUserByUrn(anyString(), anyString());
         verifyNoMoreInteractions(tenantDao);
     }
 
@@ -94,7 +94,7 @@ public class ReadUserResourceTest extends AbstractTestResource {
             .build();
         Optional<GetOrDeleteUserResponse> response = Optional.of(response1);
 
-        when(tenantDao.findUserByName(anyString())).thenReturn(response);
+        when(tenantDao.findUserByName(anyString(), anyString())).thenReturn(response);
 
         MvcResult mvcResult = mockMvc.perform(
             get("/users/?name={name}", name).contentType(APPLICATION_JSON_UTF8))
@@ -106,7 +106,7 @@ public class ReadUserResourceTest extends AbstractTestResource {
             .andExpect(jsonPath("$.tenantUrn", is(tenantUrn)))
             .andReturn();
 
-        verify(tenantDao, times(1)).findUserByName(anyString());
+        verify(tenantDao, times(1)).findUserByName(anyString(), anyString());
         verifyNoMoreInteractions(tenantDao);
     }
 
@@ -117,14 +117,14 @@ public class ReadUserResourceTest extends AbstractTestResource {
 
         Optional<GetOrDeleteUserResponse> response = Optional.empty();
 
-        when(tenantDao.findUserByName(anyString())).thenReturn(response);
+        when(tenantDao.findUserByName(anyString(), anyString())).thenReturn(response);
 
         MvcResult mvcResult = mockMvc.perform(
             get("/users/?name={name}", name).contentType(APPLICATION_JSON_UTF8))
             .andExpect(status().isNotFound())
             .andReturn();
 
-        verify(tenantDao, times(1)).findUserByName(anyString());
+        verify(tenantDao, times(1)).findUserByName(anyString(), anyString());
         verifyNoMoreInteractions(tenantDao);
     }
 }

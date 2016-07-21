@@ -19,7 +19,7 @@ public interface UserRepository extends JpaRepository<UserEntity, UUID>,
 
     Optional<UserEntity> findByUsernameAndTenantId(String username, UUID tenantId);
 
-    Optional<UserEntity> findById(UUID id);
+    Optional<UserEntity> findByTenantIdAndId(UUID tenantId, UUID id);
 
     Optional<UserEntity> findByIdAndTenantId(UUID id, UUID tenantId);
 

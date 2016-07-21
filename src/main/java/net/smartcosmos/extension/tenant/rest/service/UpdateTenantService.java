@@ -19,6 +19,7 @@ import net.smartcosmos.extension.tenant.dao.TenantDao;
 import net.smartcosmos.extension.tenant.dto.UpdateTenantRequest;
 import net.smartcosmos.extension.tenant.dto.UpdateTenantResponse;
 import net.smartcosmos.extension.tenant.rest.dto.RestUpdateTenantRequest;
+import net.smartcosmos.security.user.SmartCosmosUser;
 
 /**
  * Initially created by SMART COSMOS Team on July 01, 2016.
@@ -34,20 +35,20 @@ public class UpdateTenantService extends AbstractTenantService {
         super(tenantDao, roleDao, smartCosmosEventTemplate, conversionService);
     }
 
-    public DeferredResult<ResponseEntity> create(RestUpdateTenantRequest restUpdateTenantRequest) {
+    public DeferredResult<ResponseEntity> create(RestUpdateTenantRequest restUpdateTenantRequest, SmartCosmosUser user) {
         // Async worker thread reduces timeouts and disconnects for long queries and processing.
         DeferredResult<ResponseEntity> response = new DeferredResult<>();
-        createTenantWorker(response, restUpdateTenantRequest);
+        createTenantWorker(response, user.getAccountUrn(), restUpdateTenantRequest);
 
         return response;
     }
 
     @Async
-    private void createTenantWorker(DeferredResult<ResponseEntity> response, RestUpdateTenantRequest restUpdateTenantRequest) {
+    private void createTenantWorker(DeferredResult<ResponseEntity> response, String tenantUrn, RestUpdateTenantRequest restUpdateTenantRequest) {
 
         try {
             UpdateTenantRequest updateTenantRequest = conversionService.convert(restUpdateTenantRequest, UpdateTenantRequest.class);
-            Optional<UpdateTenantResponse> updateTenantResponseOptional = tenantDao.updateTenant(updateTenantRequest);
+            Optional<UpdateTenantResponse> updateTenantResponseOptional = tenantDao.updateTenant(tenantUrn, updateTenantRequest);
 
             if (updateTenantResponseOptional.isPresent()) {
                 ResponseEntity responseEntity = ResponseEntity

@@ -85,11 +85,10 @@ public class CreateUserResourceTest extends AbstractTestResource {
             .roles(userRoles)
             .build();
 
-        when(tenantDao.createUser(anyObject())).thenReturn(Optional.ofNullable(createOrUpdateUserResponse));
+        when(tenantDao.createUser(anyString(), anyObject())).thenReturn(Optional.ofNullable(createOrUpdateUserResponse));
 
         org.springframework.test.web.servlet.MvcResult mvcResult = this.mockMvc.perform(
             post("/users").content(this.json(RestCreateUserRequest.builder()
-                                                 .tenantUrn(tenantUrn)
                                                  .username(username)
                                                  .emailAddress(emailAddress)
                                                  .roles(userRoleOnly)

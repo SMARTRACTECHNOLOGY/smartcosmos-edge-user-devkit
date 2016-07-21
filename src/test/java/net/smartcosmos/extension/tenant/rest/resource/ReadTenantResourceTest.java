@@ -33,7 +33,7 @@ public class ReadTenantResourceTest extends AbstractTestResource {
     public void thatGetByUrnSucceeds() throws Exception {
 
         String name = "getByUrn";
-        String urn = UuidUtil.getTenantUrnFromUuid(UuidUtil.getNewUuid());
+        String urn = "accountUrn"; // Tenant URN from AbstractTestResource
 
         GetTenantResponse response1 = GetTenantResponse.builder()
             .active(true)
@@ -58,7 +58,7 @@ public class ReadTenantResourceTest extends AbstractTestResource {
     }
 
     @Test
-    public void thatGetByUrnFails() throws Exception {
+    public void thatGetByForeignUrnFails() throws Exception {
 
         String urn = UuidUtil.getTenantUrnFromUuid(UuidUtil.getNewUuid());
 
@@ -68,10 +68,10 @@ public class ReadTenantResourceTest extends AbstractTestResource {
 
         MvcResult mvcResult = mockMvc.perform(
             get("/tenants/{urn}", urn).contentType(APPLICATION_JSON_UTF8))
-            .andExpect(status().isNotFound())
+            .andExpect(status().isBadRequest())
             .andReturn();
 
-        verify(tenantDao, times(1)).findTenantByUrn(anyString());
+        verify(tenantDao, times(0)).findTenantByUrn(anyString());
         verifyNoMoreInteractions(tenantDao);
     }
 
@@ -88,7 +88,7 @@ public class ReadTenantResourceTest extends AbstractTestResource {
             .build();
         Optional<GetTenantResponse> response = Optional.of(response1);
 
-        when(tenantDao.findTenantByName(anyString())).thenReturn(response);
+        when(tenantDao.findTenantByName(anyString(), anyString())).thenReturn(response);
 
         MvcResult mvcResult = mockMvc.perform(
             get("/tenants/?name={name}", name).contentType(APPLICATION_JSON_UTF8))
@@ -99,7 +99,7 @@ public class ReadTenantResourceTest extends AbstractTestResource {
             .andExpect(jsonPath("$.urn", is(urn)))
             .andReturn();
 
-        verify(tenantDao, times(1)).findTenantByName(anyString());
+        verify(tenantDao, times(1)).findTenantByName(anyString(), anyString());
         verifyNoMoreInteractions(tenantDao);
     }
 
@@ -110,14 +110,14 @@ public class ReadTenantResourceTest extends AbstractTestResource {
 
         Optional<GetTenantResponse> response = Optional.empty();
 
-        when(tenantDao.findTenantByName(anyString())).thenReturn(response);
+        when(tenantDao.findTenantByName(anyString(), anyString())).thenReturn(response);
 
         MvcResult mvcResult = mockMvc.perform(
             get("/tenants/?name={name}", name).contentType(APPLICATION_JSON_UTF8))
             .andExpect(status().isNotFound())
             .andReturn();
 
-        verify(tenantDao, times(1)).findTenantByName(anyString());
+        verify(tenantDao, times(1)).findTenantByName(anyString(), anyString());
         verifyNoMoreInteractions(tenantDao);
     }
 }
