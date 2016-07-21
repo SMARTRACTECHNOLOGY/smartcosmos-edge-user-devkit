@@ -23,18 +23,10 @@ public class ServiceUserAccessSecurityConfiguration extends WebSecurityConfigure
         auth.authenticationProvider(authProvider);
     }
 
-//    @Override
-//    protected void configure(HttpSecurity http) throws Exception {
-//
-//        http.authenticationProvider(authProvider)
-//            .csrf().disable()
-//            .antMatcher("/authenticate/**").authorizeRequests()
-//            .anyRequest().authenticated();
-//    }
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable()
+        http.authenticationProvider(authProvider)
+            .csrf().disable()
             .antMatcher("/authenticate/**")
             .authorizeRequests().anyRequest().authenticated()
             .and()
