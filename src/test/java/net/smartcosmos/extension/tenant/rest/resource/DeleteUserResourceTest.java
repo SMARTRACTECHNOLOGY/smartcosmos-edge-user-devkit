@@ -70,7 +70,7 @@ public class DeleteUserResourceTest extends AbstractTestResource {
             .roles(userRoles)
             .build();
 
-        when(tenantDao.deleteUserByUrn(anyString())).thenReturn(Optional.ofNullable(getOrDeleteUserResponse));
+        when(tenantDao.deleteUserByUrn(anyString(), anyString())).thenReturn(Optional.ofNullable(getOrDeleteUserResponse));
 
         MvcResult mvcResult = this.mockMvc.perform(
             delete("/users/" + expectedUserUrn).contentType(contentType))

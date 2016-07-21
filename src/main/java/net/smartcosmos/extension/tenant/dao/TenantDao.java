@@ -22,21 +22,21 @@ public interface TenantDao {
 
     Optional<CreateTenantResponse> createTenant(CreateTenantRequest tenantCreate) throws ConstraintViolationException;
 
-    Optional<UpdateTenantResponse> updateTenant(UpdateTenantRequest tenantUpdate) throws ConstraintViolationException;
+    Optional<UpdateTenantResponse> updateTenant(String tenantUrn, UpdateTenantRequest tenantUpdate) throws ConstraintViolationException;
 
     Optional<GetTenantResponse> findTenantByUrn(String tenantUrn);
 
-    Optional<GetTenantResponse> findTenantByName(String name);
+    Optional<GetTenantResponse> findTenantByName(String tenantUrn, String name);
 
-    Optional<CreateOrUpdateUserResponse> createUser(CreateUserRequest userCreate) throws ConstraintViolationException;
+    Optional<CreateOrUpdateUserResponse> createUser(String tenantUrn, CreateUserRequest userCreate) throws ConstraintViolationException;
 
-    Optional<CreateOrUpdateUserResponse> updateUser(UpdateUserRequest userUpdate) throws ConstraintViolationException;
+    Optional<CreateOrUpdateUserResponse> updateUser(String tenantUrn, UpdateUserRequest userUpdate) throws ConstraintViolationException;
 
-    Optional<GetOrDeleteUserResponse> findUserByUrn(String userUrn);
+    Optional<GetOrDeleteUserResponse> findUserByUrn(String tenantUrn, String userUrn);
 
-    Optional<GetOrDeleteUserResponse> findUserByName(String name);
+    Optional<GetOrDeleteUserResponse> findUserByName(String tenantUrn, String name);
 
-    Optional<GetOrDeleteUserResponse> deleteUserByUrn(String urn);
+    Optional<GetOrDeleteUserResponse> deleteUserByUrn(String tenantUrn, String urn);
 
     Optional<GetAuthoritiesResponse> getAuthorities(String username, String password);
 

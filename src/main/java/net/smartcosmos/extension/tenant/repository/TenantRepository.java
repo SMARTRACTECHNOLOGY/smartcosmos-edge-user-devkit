@@ -16,7 +16,9 @@ public interface TenantRepository extends JpaRepository<TenantEntity, UUID>,
                                           PagingAndSortingRepository<TenantEntity, UUID>,
                                           JpaSpecificationExecutor<TenantEntity> {
 
-    Optional<TenantEntity> findByName(String name);
+    Optional<TenantEntity> findByIdAndNameIgnoreCase(UUID id, String name);
 
     Optional<TenantEntity> findById(UUID id);
+
+    Optional<TenantEntity> findByNameIgnoreCase(String name);
 }

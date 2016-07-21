@@ -32,7 +32,7 @@ public class ReadUserResource {
     @ConditionalOnProperty(prefix = "smt.endpoints.user.urn.get", name = "enabled", matchIfMissing = true)
     public ResponseEntity<?> getByUrn(@PathVariable String urn, SmartCosmosUser user) {
 
-        return readUserService.findByUrn(urn);
+        return readUserService.findByUrn(urn, user);
     }
 
     @RequestMapping(value = "/users", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8_VALUE)
@@ -41,6 +41,6 @@ public class ReadUserResource {
     public ResponseEntity<?> getByName(
         @RequestParam(value = "name") String name, SmartCosmosUser user) {
 
-        return readUserService.findByName(name);
+        return readUserService.findByName(name, user);
     }
 }

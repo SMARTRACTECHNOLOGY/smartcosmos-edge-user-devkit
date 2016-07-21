@@ -36,6 +36,6 @@ public class DeleteUserResource {
         @PathVariable String urn,
         SmartCosmosUser user) {
 
-        return service.delete(urn);
+        return service.delete(urn, user);
     }
 }

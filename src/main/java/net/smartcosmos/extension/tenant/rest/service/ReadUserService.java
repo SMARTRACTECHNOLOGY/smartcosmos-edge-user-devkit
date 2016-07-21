@@ -13,6 +13,7 @@ import net.smartcosmos.events.SmartCosmosEventTemplate;
 import net.smartcosmos.extension.tenant.dao.RoleDao;
 import net.smartcosmos.extension.tenant.dao.TenantDao;
 import net.smartcosmos.extension.tenant.dto.GetOrDeleteUserResponse;
+import net.smartcosmos.security.user.SmartCosmosUser;
 
 @Slf4j
 @Service
@@ -28,9 +29,9 @@ public class ReadUserService extends AbstractTenantService {
         super(tenantDao, roleDao, smartCosmosEventTemplate, conversionService);
     }
 
-    public ResponseEntity<?> findByUrn(String urn) {
+    public ResponseEntity<?> findByUrn(String urn, SmartCosmosUser user) {
 
-        Optional<GetOrDeleteUserResponse> entity = tenantDao.findUserByUrn(urn);
+        Optional<GetOrDeleteUserResponse> entity = tenantDao.findUserByUrn(user.getAccountUrn(), urn);
 
         if (entity.isPresent()) {
             // TODO: send event user:read
@@ -43,9 +44,9 @@ public class ReadUserService extends AbstractTenantService {
         return ResponseEntity.notFound().build();
     }
 
-    public ResponseEntity<?> findByName(String name) {
+    public ResponseEntity<?> findByName(String name, SmartCosmosUser user) {
 
-        Optional<GetOrDeleteUserResponse> entity = tenantDao.findUserByName(name);
+        Optional<GetOrDeleteUserResponse> entity = tenantDao.findUserByName(user.getAccountUrn(), name);
 
         if (entity.isPresent()) {
             // TODO: send event tenant:read

@@ -224,8 +224,7 @@ POST /users
     "username": "bob@example.com",
     "emailAddress": "bob@example.com",
     "givenName": "Bob",
-    "surname": "Smith",
-    "tenantUrn": "urn:tenant:uuid:69bb7c6a-a43b-493d-8e9d-e5a3ed65728a"
+    "surname": "Smith"
 }
 ----
 
@@ -239,8 +238,7 @@ POST /users
     "urn": "urn:user:uuid:68a76616-3748-4bc2-93c1-3940b47abb7f",
     "username": "bob@example.com",
     "password": "PleaseChangeMeImmediately",
-    "roles": ["User"],
-    "tenantUrn": "urn:tenant:uuid:69bb7c6a-a43b-493d-8e9d-e5a3ed65728a"
+    "roles": ["User"]
 }
 ----
 
@@ -249,8 +247,7 @@ POST /users
 ----
 {
     "roles": ["User"],
-    "username": "bob@example.com",
-    "tenantUrn": "urn:tenant:uuid:69bb7c6a-a43b-493d-8e9d-e5a3ed65728a"
+    "username": "bob@example.com"
 }
 ----
 
@@ -401,8 +398,7 @@ POST /roles/
     "name": "User",
     "authorities": [
         "https://authorities.smartcosmos.net/things/read"
-    ],
-    "tenantUrn": "urn:tenant:uuid:69bb7c6a-a43b-493d-8e9d-e5a3ed65728a"
+    ]
 }
 ----
 

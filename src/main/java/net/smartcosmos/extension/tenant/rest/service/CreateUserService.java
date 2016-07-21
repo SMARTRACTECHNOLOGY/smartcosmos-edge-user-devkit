@@ -20,6 +20,7 @@ import net.smartcosmos.extension.tenant.dto.CreateOrUpdateUserResponse;
 import net.smartcosmos.extension.tenant.dto.CreateUserRequest;
 import net.smartcosmos.extension.tenant.dto.GetOrDeleteUserResponse;
 import net.smartcosmos.extension.tenant.rest.dto.RestCreateUserRequest;
+import net.smartcosmos.security.user.SmartCosmosUser;
 
 /**
  * Initially created by SMART COSMOS Team on July 01, 2016.
@@ -35,22 +36,21 @@ public class CreateUserService extends AbstractTenantService {
         super(tenantDao, roleDao, smartCosmosEventTemplate, conversionService);
     }
 
-    public DeferredResult<ResponseEntity> create(RestCreateUserRequest restCreateUserRequest) {
+    public DeferredResult<ResponseEntity> create(RestCreateUserRequest restCreateUserRequest, SmartCosmosUser user) {
         // Async worker thread reduces timeouts and disconnects for long queries and processing.
         DeferredResult<ResponseEntity> response = new DeferredResult<>();
-        createUserWorker(response, restCreateUserRequest);
+        createUserWorker(response, user.getAccountUrn(), restCreateUserRequest);
 
         return response;
     }
 
     @Async
-    private void createUserWorker(DeferredResult<ResponseEntity> response, RestCreateUserRequest restCreateUserRequest) {
+    private void createUserWorker(DeferredResult<ResponseEntity> response, String tenantUrn, RestCreateUserRequest restCreateUserRequest) {
 
         try {
             final CreateUserRequest createUserRequest = conversionService.convert(restCreateUserRequest, CreateUserRequest.class);
 
-            Optional<CreateOrUpdateUserResponse> newUser = tenantDao.createUser(createUserRequest);
-            ;
+            Optional<CreateOrUpdateUserResponse> newUser = tenantDao.createUser(tenantUrn, createUserRequest);
 
             if (newUser.isPresent()) {
                 //sendEvent(null, DefaultEventTypes.ThingCreated, object.get());
@@ -60,7 +60,7 @@ public class CreateUserService extends AbstractTenantService {
                     .body(newUser.get());
                 response.setResult(responseEntity);
             } else {
-                Optional<GetOrDeleteUserResponse> alreadyThere = tenantDao.findUserByUrn(newUser.get().getUrn());
+                Optional<GetOrDeleteUserResponse> alreadyThere = tenantDao.findUserByName(tenantUrn, createUserRequest.getUsername());
                 response.setResult(ResponseEntity.status(HttpStatus.CONFLICT).build());
                 //sendEvent(null, DefaultEventTypes.ThingCreateFailedAlreadyExists, alreadyThere.get());
             }

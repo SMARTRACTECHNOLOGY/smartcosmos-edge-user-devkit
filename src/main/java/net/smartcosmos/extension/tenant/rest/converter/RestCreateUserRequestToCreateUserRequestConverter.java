@@ -18,7 +18,6 @@ public class RestCreateUserRequestToCreateUserRequestConverter
     @Override
     public CreateUserRequest convert(RestCreateUserRequest restCreateUserRequest) {
         return CreateUserRequest.builder()
-            .tenantUrn(restCreateUserRequest.getTenantUrn())
             .username(restCreateUserRequest.getUsername())
             .emailAddress(restCreateUserRequest.getEmailAddress())
             .givenName(restCreateUserRequest.getGivenName())

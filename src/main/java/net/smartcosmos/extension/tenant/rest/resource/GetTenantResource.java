@@ -32,7 +32,7 @@ public class GetTenantResource {
     @ConditionalOnProperty(prefix = "smt.endpoints.tenant.urn.get", name = "enabled", matchIfMissing = true)
     public ResponseEntity<?> getByUrn(@PathVariable String urn, SmartCosmosUser user) {
 
-        return readTenantService.findByUrn(urn);
+        return readTenantService.findByUrn(urn, user);
     }
 
     @RequestMapping(value = "/tenants", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8_VALUE)
@@ -41,6 +41,6 @@ public class GetTenantResource {
     public ResponseEntity<?> getByName(
         @RequestParam(value = "name") String name, SmartCosmosUser user) {
 
-        return readTenantService.findByName(name);
+        return readTenantService.findByName(name, user);
     }
 }

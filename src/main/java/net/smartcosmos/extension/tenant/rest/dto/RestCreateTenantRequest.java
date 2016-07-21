@@ -3,11 +3,9 @@ package net.smartcosmos.extension.tenant.rest.dto;
 import java.beans.ConstructorProperties;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 /**
  * Initially created by SMART COSMOS Team on July 01, 2016.
@@ -19,8 +17,7 @@ import lombok.Setter;
 public class RestCreateTenantRequest {
 
     private static final int VERSION = 1;
-    @Setter(AccessLevel.NONE)
-    private int version = VERSION;
+    private final int version = VERSION;
 
     String name;
     String username;
@@ -32,6 +29,5 @@ public class RestCreateTenantRequest {
         this.name = name;
         this.username = username;
         this.active = active != null ? active : true;
-        this.version = VERSION;
     }
 }

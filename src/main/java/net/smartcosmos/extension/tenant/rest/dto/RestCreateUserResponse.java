@@ -1,14 +1,13 @@
 package net.smartcosmos.extension.tenant.rest.dto;
 
 import java.beans.ConstructorProperties;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
-import lombok.Setter;
 
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -16,8 +15,7 @@ import lombok.Setter;
 public class RestCreateUserResponse {
 
     private static final int VERSION = 1;
-    @Setter(AccessLevel.NONE)
-    private int version = VERSION;
+    private final int version = VERSION;
 
     private final String urn;
     private final String tenantUrn;
@@ -38,9 +36,10 @@ public class RestCreateUserResponse {
         this.emailAddress = emailAddress;
         this.givenName = givenName;
         this.surname = surname;
-        this.roles = roles;
+        this.roles = new ArrayList<>();
+        if (roles != null && !roles.isEmpty()) {
+            this.roles.addAll(roles);
+        }
         this.active = active;
-
-        this.version = VERSION;
     }
 }

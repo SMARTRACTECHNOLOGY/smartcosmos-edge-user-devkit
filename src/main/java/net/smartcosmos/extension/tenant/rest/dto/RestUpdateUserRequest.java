@@ -1,14 +1,13 @@
 package net.smartcosmos.extension.tenant.rest.dto;
 
 import java.beans.ConstructorProperties;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 /**
  * Initially created by SMART COSMOS Team on July 01, 2016.
@@ -20,8 +19,7 @@ import lombok.Setter;
 public class RestUpdateUserRequest {
 
     private static final int VERSION = 1;
-    @Setter(AccessLevel.NONE)
-    private int version = VERSION;
+    private final int version = VERSION;
 
     String username;
     String emailAddress;
@@ -39,10 +37,10 @@ public class RestUpdateUserRequest {
         this.emailAddress = emailAddress;
         this.givenName = givenName;
         this.surname = surname;
-        this.roles = roles;
-
+        this.roles = new ArrayList<>();
+        if (roles != null && !roles.isEmpty()) {
+            this.roles.addAll(roles);
+        }
         this.active = active != null ? active : true;
-
-        this.version = VERSION;
     }
 }
