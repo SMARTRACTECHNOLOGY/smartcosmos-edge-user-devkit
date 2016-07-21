@@ -4,10 +4,8 @@ import java.beans.ConstructorProperties;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
-import lombok.Setter;
 
 /**
  * Initially created by SMART COSMOS Team on June 30, 2016.
@@ -18,8 +16,7 @@ import lombok.Setter;
 public class CreateTenantRequest {
 
     private static final int VERSION = 1;
-    @Setter(AccessLevel.NONE)
-    private int version = VERSION;
+    private final int version = VERSION;
 
     private String name;
     private String username;
@@ -31,8 +28,6 @@ public class CreateTenantRequest {
         this.name = name;
         this.username = username;
         this.active = active != null ? active : true;
-
-        this.version = VERSION;
     }
 
 }
