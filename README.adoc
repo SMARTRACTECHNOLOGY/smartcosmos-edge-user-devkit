@@ -14,22 +14,22 @@ This is a private licensed repository, and as such, should not be shared publicl
 
 *Available methods for tenants*
 
-* <<create1, Create - `POST /tenants/`>>
+* <<create1, Create - `POST /tenants`>>
 * <<update1, Update - `PUT /tenants/{urn}`>>
 * <<read1, Read - `GET /tenants/{urn}`>>
 * <<read2, Read - `GET /tenants/?name={name}`>>
 
 *Available methods for users*
 
-* <<createuser1, Create - `POST /users/`>>
+* <<createuser1, Create - `POST /users`>>
 * <<updateuser1, Update - `PUT /users/{urn}`>>
 * <<readuser1, Read - `GET /users/{urn}`>>
 * <<readuser2, Read - `GET /users/?name={name}`>>
-* <<readuser3, Login - `POST /login/`>>
+* <<readuser3, Authenticate - `POST /authenticate`>>
 
 *Available methods for roles*
 
-* <<createrole1, Create - `POST /roles/`>>
+* <<createrole1, Create - `POST /roles`>>
 * <<updaterole1, Update - `PUT /roles/{urn}`>>
 * <<readrole1, Read - `GET /roles/{urn}`>>
 * <<readrole2, Read - `GET /roles/?name={name}`>>
@@ -85,10 +85,10 @@ Note that the illustrated scheme for URNs is only for documentation purposes. Th
 === API Endpoints
 
 [[create1]]
-==== Create - `POST /tenants/`
+==== Create - `POST /tenants`
 
 ----
-POST /tenants/
+POST /tenants
 ----
 
 *Example 1*
@@ -170,7 +170,7 @@ PUT /tenants/urn:tenant:uuid:346e742e-2f1e-4d91-9ffe-7b38eec6219c
 ==== Read - `GET /tenants/{urn}`
 
 ----
-GET /urn:tenant:uuid:346e742e-2f1e-4d91-9ffe-7b38eec6219c
+GET /tenants/urn:tenant:uuid:346e742e-2f1e-4d91-9ffe-7b38eec6219c
 ----
 .Response
 ----
@@ -209,10 +209,10 @@ GET /tenants/?name=My%20Example%20Company
 ----
 
 [[createuser1]]
-==== Create - `POST /users/`
+==== Create - `POST /users`
 
 ----
-POST /users/
+POST /users
 ----
 
 *Example 1*
@@ -309,10 +309,10 @@ GET /users/urn:user:uuid:68a76616-3748-4bc2-93c1-3940b47abb7f
 ----
 
 [[readuser2]]
-==== Read - `GET /users/?name={name}`
+==== Read - `GET /users?name={name}`
 
 ----
-GET /users/
+GET /users
 ----
 .Response
 ----
@@ -347,16 +347,24 @@ GET /users/
 ----
 
 [[readuser3]]
-==== Login - `POST /login/`
+==== Login - `POST /authenticate`
 
 ----
-POST /login/
+POST /authenticate
 ----
 [source,json]
 ----
 {
-    "username": "bob@example.com",
-    "password": "xyz1234567"
+    "details": {
+        "grant_type": "password",
+        "scope": "read",
+        "username": "bob"
+    },
+    "authorities": [],
+    "authenticated": false,
+    "principal": "bob",
+    "credentials": "xyz1234567",
+    "name": "bob"
 }
 ----
 
@@ -368,8 +376,12 @@ POST /login/
 ----
 {
     "urn": "urn:user:uuid:68a76616-3748-4bc2-93c1-3940b47abb7f",
-    "username": "bob@example.com",
-    "authorities": ["https://authorities.smartcosmos.net/things/read", "https://authorities.smartcosmos.net/things/create"],
+    "username": "bob",
+    "passwordHash": "",
+    "authorities": [
+        "https://authorities.smartcosmos.net/things/read",
+        "https://authorities.smartcosmos.net/things/create"
+    ],
     "tenantUrn": "urn:tenant:uuid:69bb7c6a-a43b-493d-8e9d-e5a3ed65728a"
 }
 ----
