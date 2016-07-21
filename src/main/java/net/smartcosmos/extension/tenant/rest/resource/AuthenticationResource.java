@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import net.smartcosmos.extension.tenant.rest.dto.RestAuthenticateRequest;
 import net.smartcosmos.extension.tenant.rest.service.AuthenticationService;
-import net.smartcosmos.security.user.SmartCosmosUser;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 
@@ -30,7 +29,7 @@ public class AuthenticationResource {
 
     @RequestMapping(value = "authenticate", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8_VALUE,
                     consumes = APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<?> authenticate(@RequestBody @Valid RestAuthenticateRequest authenticate, SmartCosmosUser user){
-        return authenticationService.authenticate(authenticate, user);
+    public ResponseEntity<?> authenticate(@RequestBody @Valid RestAuthenticateRequest authenticate){
+        return authenticationService.authenticate(authenticate);
     }
 }
