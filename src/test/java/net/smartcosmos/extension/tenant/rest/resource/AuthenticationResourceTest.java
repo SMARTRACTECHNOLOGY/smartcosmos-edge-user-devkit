@@ -32,7 +32,7 @@ public class AuthenticationResourceTest extends AbstractTestResource {
     }
 
     @Test
-    public void thatLoginSucceeds() throws Exception {
+    public void thatAuthenticationSucceeds() throws Exception {
 
         RestAuthenticateRequest request = RestAuthenticateRequest.builder()
             .name("username")
@@ -58,7 +58,7 @@ public class AuthenticationResourceTest extends AbstractTestResource {
                 .contentType(APPLICATION_JSON_UTF8))
             .andExpect(status().isOk())
             .andExpect(content().contentType(APPLICATION_JSON_UTF8))
-            .andExpect(jsonPath("$.urn", is("urn")))
+            .andExpect(jsonPath("$.userUrn", is("urn")))
             .andExpect(jsonPath("$.username", is("username")))
             .andExpect(jsonPath("$.tenantUrn", is("tenantUrn")))
             .andExpect(jsonPath("$.authorities", hasSize(2)))
@@ -72,7 +72,7 @@ public class AuthenticationResourceTest extends AbstractTestResource {
     }
 
     @Test
-    public void thatLoginUnauthorizedFails() throws Exception {
+    public void thatAuthenticationUnauthorizedFails() throws Exception {
 
         RestAuthenticateRequest request = RestAuthenticateRequest.builder()
             .name("invalid")
