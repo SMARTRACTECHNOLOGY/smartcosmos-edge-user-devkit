@@ -16,7 +16,7 @@ public class GetAuthoritiesResponseToRestAuthenticateResponseConverter
     public RestAuthenticateResponse convert(GetAuthoritiesResponse source) {
 
         return RestAuthenticateResponse.builder()
-            .urn(source.getUrn())
+            .userUrn(source.getUrn())
             .username(source.getUsername())
             .passwordHash(source.getPasswordHash())
             .tenantUrn(source.getTenantUrn())

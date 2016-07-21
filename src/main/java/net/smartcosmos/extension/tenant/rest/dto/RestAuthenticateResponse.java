@@ -20,15 +20,15 @@ public class RestAuthenticateResponse {
     private static final int VERSION = 1;
     private final int version = VERSION;
 
-    private final String urn;
+    private final String userUrn;
     private final String username;
     private String passwordHash;
     private final Collection<String> authorities;
     private final String tenantUrn;
 
     @ConstructorProperties({ "urn", "username", "passwordHash", "authorities", "tenantUrn" })
-    public RestAuthenticateResponse(String urn, String username, String passwordHash, Collection<String> authorities, String tenantUrn) {
-        this.urn = urn;
+    public RestAuthenticateResponse(String userUrn, String username, String passwordHash, Collection<String> authorities, String tenantUrn) {
+        this.userUrn = userUrn;
         this.username = username;
         this.passwordHash = passwordHash;
         this.authorities = new ArrayList<>();
