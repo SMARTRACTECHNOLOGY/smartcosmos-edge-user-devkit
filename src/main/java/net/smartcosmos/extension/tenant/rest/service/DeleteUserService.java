@@ -16,6 +16,7 @@ import net.smartcosmos.events.SmartCosmosEventTemplate;
 import net.smartcosmos.extension.tenant.dao.RoleDao;
 import net.smartcosmos.extension.tenant.dao.TenantDao;
 import net.smartcosmos.extension.tenant.dto.GetOrDeleteUserResponse;
+import net.smartcosmos.security.user.SmartCosmosUser;
 
 /**
  * Initially created by SMART COSMOS Team on July 01, 2016.
@@ -31,7 +32,7 @@ public class DeleteUserService extends AbstractTenantService {
         super(tenantDao, roleDao, smartCosmosEventTemplate, conversionService);
     }
 
-    public DeferredResult<ResponseEntity> delete(String urn) {
+    public DeferredResult<ResponseEntity> delete(String urn, SmartCosmosUser user) {
         // Async worker thread reduces timeouts and disconnects for long queries and processing.
         DeferredResult<ResponseEntity> response = new DeferredResult<>();
         updateUserWorker(response, urn);

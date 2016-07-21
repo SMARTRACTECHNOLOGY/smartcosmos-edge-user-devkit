@@ -28,7 +28,7 @@ public interface TenantDao {
 
     Optional<GetTenantResponse> findTenantByName(String name);
 
-    Optional<CreateOrUpdateUserResponse> createUser(CreateUserRequest userCreate) throws ConstraintViolationException;
+    Optional<CreateOrUpdateUserResponse> createUser(String tenantUrn, CreateUserRequest userCreate) throws ConstraintViolationException;
 
     Optional<CreateOrUpdateUserResponse> updateUser(UpdateUserRequest userUpdate) throws ConstraintViolationException;
 

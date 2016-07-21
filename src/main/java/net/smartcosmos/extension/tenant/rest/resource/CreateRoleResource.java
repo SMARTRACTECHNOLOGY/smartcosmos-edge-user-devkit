@@ -41,7 +41,7 @@ public class CreateRoleResource {
         @RequestBody @Valid RestCreateOrUpdateRoleRequest restCreateOrUpdateRoleRequest,
         SmartCosmosUser user) {
 
-        return service.create(restCreateOrUpdateRoleRequest);
+        return service.create(restCreateOrUpdateRoleRequest, user);
     }
 }
 

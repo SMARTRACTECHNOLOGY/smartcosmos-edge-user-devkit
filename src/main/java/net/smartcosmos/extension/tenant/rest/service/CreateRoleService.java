@@ -20,6 +20,7 @@ import net.smartcosmos.extension.tenant.dto.CreateOrUpdateRoleRequest;
 import net.smartcosmos.extension.tenant.dto.CreateOrUpdateRoleResponse;
 import net.smartcosmos.extension.tenant.dto.GetRoleResponse;
 import net.smartcosmos.extension.tenant.rest.dto.RestCreateOrUpdateRoleRequest;
+import net.smartcosmos.security.user.SmartCosmosUser;
 
 /**
  * Initially created by SMART COSMOS Team on July 01, 2016.
@@ -35,7 +36,7 @@ public class CreateRoleService extends AbstractTenantService {
         super(tenantDao, roleDao, smartCosmosEventTemplate, conversionService);
     }
 
-    public DeferredResult<ResponseEntity> create(RestCreateOrUpdateRoleRequest restCreateOrUpdateRoleRequest) {
+    public DeferredResult<ResponseEntity> create(RestCreateOrUpdateRoleRequest restCreateOrUpdateRoleRequest, SmartCosmosUser user) {
         // Async worker thread reduces timeouts and disconnects for long queries and processing.
         DeferredResult<ResponseEntity> response = new DeferredResult<>();
         createRoleWorker(response, restCreateOrUpdateRoleRequest);

@@ -14,6 +14,7 @@ import net.smartcosmos.extension.tenant.dao.RoleDao;
 import net.smartcosmos.extension.tenant.dao.TenantDao;
 import net.smartcosmos.extension.tenant.dto.GetTenantResponse;
 import net.smartcosmos.extension.tenant.rest.dto.RestTenantSingleResponse;
+import net.smartcosmos.security.user.SmartCosmosUser;
 
 @Slf4j
 @Service
@@ -44,7 +45,7 @@ public class ReadTenantService extends AbstractTenantService {
         return ResponseEntity.notFound().build();
     }
 
-    public ResponseEntity<?> findByName(String name) {
+    public ResponseEntity<?> findByName(String name, SmartCosmosUser user) {
 
         Optional<GetTenantResponse> entity = tenantDao.findTenantByName(name);
 

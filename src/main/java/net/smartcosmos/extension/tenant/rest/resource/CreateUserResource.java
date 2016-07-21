@@ -40,7 +40,7 @@ public class CreateUserResource {
     public DeferredResult<ResponseEntity> createUser(
         @RequestBody @Valid RestCreateUserRequest restCreateUserRequest, SmartCosmosUser user) {
 
-        return service.create(restCreateUserRequest);
+        return service.create(restCreateUserRequest, user);
     }
 }
 

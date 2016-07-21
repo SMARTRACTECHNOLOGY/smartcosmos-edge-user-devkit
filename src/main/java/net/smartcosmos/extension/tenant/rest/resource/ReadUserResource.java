@@ -41,6 +41,6 @@ public class ReadUserResource {
     public ResponseEntity<?> getByName(
         @RequestParam(value = "name") String name, SmartCosmosUser user) {
 
-        return readUserService.findByName(name);
+        return readUserService.findByName(name, user);
     }
 }

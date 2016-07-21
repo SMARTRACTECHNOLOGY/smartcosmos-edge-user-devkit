@@ -226,7 +226,7 @@ public class TenantPersistenceService implements TenantDao {
      * @throws ConstraintViolationException
      */
     @Override
-    public Optional<CreateOrUpdateUserResponse> createUser(CreateUserRequest createUserRequest)
+    public Optional<CreateOrUpdateUserResponse> createUser(String tenantUrn, CreateUserRequest createUserRequest)
         throws ConstraintViolationException {
 
 
@@ -251,7 +251,7 @@ public class TenantPersistenceService implements TenantDao {
         } catch (IllegalArgumentException | ConstraintViolationException e) {
             String msg = String.format("create failed, user: '%s', tenant: '%s', cause: %s",
                                        createUserRequest.getUsername(),
-                                       createUserRequest.getTenantUrn(),
+                                       tenantUrn,
                                        e.getMessage());
             log.error(msg);
             log.debug(msg, e);

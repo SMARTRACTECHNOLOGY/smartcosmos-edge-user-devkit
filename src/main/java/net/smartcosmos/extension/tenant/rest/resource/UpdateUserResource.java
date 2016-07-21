@@ -41,7 +41,7 @@ public class UpdateUserResource {
         @RequestBody @Valid RestUpdateUserRequest restUpdateUserRequest,
         SmartCosmosUser user) {
 
-        return service.create(restUpdateUserRequest);
+        return service.create(restUpdateUserRequest, user);
     }
 }
 
