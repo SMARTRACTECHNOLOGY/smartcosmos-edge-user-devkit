@@ -30,7 +30,6 @@ public class CreateUserRequestToUserEntityConverter
 
         return UserEntity.builder()
             .id(UuidUtil.getNewUuid())
-            .tenantId(UuidUtil.getUuidFromUrn(createUserRequest.getTenantUrn()))
             .username(createUserRequest.getUsername())
             .emailAddress(createUserRequest.getEmailAddress())
             .givenName(createUserRequest.getGivenName())
