@@ -35,16 +35,16 @@ public class DeleteUserService extends AbstractTenantService {
     public DeferredResult<ResponseEntity> delete(String urn, SmartCosmosUser user) {
         // Async worker thread reduces timeouts and disconnects for long queries and processing.
         DeferredResult<ResponseEntity> response = new DeferredResult<>();
-        updateUserWorker(response, urn);
+        updateUserWorker(response, user.getAccountUrn(), urn);
 
         return response;
     }
 
     @Async
-    private void updateUserWorker(DeferredResult<ResponseEntity> response, String urn) {
+    private void updateUserWorker(DeferredResult<ResponseEntity> response, String tenantUrn, String urn) {
 
         try {
-            Optional<GetOrDeleteUserResponse> deleteUserResponse = tenantDao.deleteUserByUrn(urn);
+            Optional<GetOrDeleteUserResponse> deleteUserResponse = tenantDao.deleteUserByUrn(tenantUrn, urn);
 
             if (deleteUserResponse.isPresent()) {
                 //sendEvent(null, DefaultEventTypes.ThingCreated, object.get());

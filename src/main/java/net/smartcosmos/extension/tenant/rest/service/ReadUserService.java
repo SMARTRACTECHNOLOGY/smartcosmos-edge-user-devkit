@@ -29,9 +29,9 @@ public class ReadUserService extends AbstractTenantService {
         super(tenantDao, roleDao, smartCosmosEventTemplate, conversionService);
     }
 
-    public ResponseEntity<?> findByUrn(String urn) {
+    public ResponseEntity<?> findByUrn(String urn, SmartCosmosUser user) {
 
-        Optional<GetOrDeleteUserResponse> entity = tenantDao.findUserByUrn(urn);
+        Optional<GetOrDeleteUserResponse> entity = tenantDao.findUserByUrn(user.getAccountUrn(), urn);
 
         if (entity.isPresent()) {
             // TODO: send event user:read
@@ -46,7 +46,7 @@ public class ReadUserService extends AbstractTenantService {
 
     public ResponseEntity<?> findByName(String name, SmartCosmosUser user) {
 
-        Optional<GetOrDeleteUserResponse> entity = tenantDao.findUserByName(name);
+        Optional<GetOrDeleteUserResponse> entity = tenantDao.findUserByName(user.getAccountUrn(), name);
 
         if (entity.isPresent()) {
             // TODO: send event tenant:read

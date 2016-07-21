@@ -18,14 +18,12 @@ public class UpdateTenantRequest {
     private static final int VERSION = 1;
     private final int version = VERSION;
 
-    private String urn;
     private String name;
     private Boolean active;
 
     @Builder
-    @ConstructorProperties({ "urn", "name", "active" })
-    public UpdateTenantRequest(String urn, String name, Boolean active) {
-        this.urn = urn;
+    @ConstructorProperties({ "name", "active" })
+    public UpdateTenantRequest(String name, Boolean active) {
         this.name = name;
         this.active = active != null ? active : true;
     }

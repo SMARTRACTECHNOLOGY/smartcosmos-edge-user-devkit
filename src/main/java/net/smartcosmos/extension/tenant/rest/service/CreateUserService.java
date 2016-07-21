@@ -60,7 +60,7 @@ public class CreateUserService extends AbstractTenantService {
                     .body(newUser.get());
                 response.setResult(responseEntity);
             } else {
-                Optional<GetOrDeleteUserResponse> alreadyThere = tenantDao.findUserByUrn(newUser.get().getUrn());
+                Optional<GetOrDeleteUserResponse> alreadyThere = tenantDao.findUserByName(tenantUrn, createUserRequest.getUsername());
                 response.setResult(ResponseEntity.status(HttpStatus.CONFLICT).build());
                 //sendEvent(null, DefaultEventTypes.ThingCreateFailedAlreadyExists, alreadyThere.get());
             }
