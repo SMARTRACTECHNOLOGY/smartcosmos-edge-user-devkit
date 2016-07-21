@@ -229,7 +229,6 @@ public class TenantPersistenceService implements TenantDao {
     public Optional<CreateOrUpdateUserResponse> createUser(String tenantUrn, CreateUserRequest createUserRequest)
         throws ConstraintViolationException {
 
-
         if (userAlreadyExists(createUserRequest.getUsername())) {
             // This user already exists? We're not creating a new one.
             return Optional.empty();
@@ -238,7 +237,10 @@ public class TenantPersistenceService implements TenantDao {
         String password = INITIAL_PASSWORD;
 
         try {
+            UUID tenantId = UuidUtil.getUuidFromUrn(tenantUrn);
+
             UserEntity userEntity = conversionService.convert(createUserRequest, UserEntity.class);
+            userEntity.setTenantId(tenantId);
             userEntity.setPassword(password);
             userEntity = userRepository.persist(userEntity);
             userEntity = userRepository.addRolesToUser(userEntity.getTenantId(), userEntity.getId(), createUserRequest.getRoles()).get();
