@@ -39,29 +39,30 @@ public class CreateRoleService extends AbstractTenantService {
     public DeferredResult<ResponseEntity> create(RestCreateOrUpdateRoleRequest restCreateOrUpdateRoleRequest, SmartCosmosUser user) {
         // Async worker thread reduces timeouts and disconnects for long queries and processing.
         DeferredResult<ResponseEntity> response = new DeferredResult<>();
-        createRoleWorker(response, restCreateOrUpdateRoleRequest);
+        createRoleWorker(response, user.getAccountUrn(), restCreateOrUpdateRoleRequest);
 
         return response;
     }
 
     @Async
-    private void createRoleWorker(DeferredResult<ResponseEntity> response, RestCreateOrUpdateRoleRequest restCreateOrUpdateRoleRequest) {
+    private void createRoleWorker(DeferredResult<ResponseEntity> response, String tenantUrn, RestCreateOrUpdateRoleRequest
+        restCreateOrUpdateRoleRequest) {
 
         try {
             final CreateOrUpdateRoleRequest createRoleRequest = conversionService
                 .convert(restCreateOrUpdateRoleRequest, CreateOrUpdateRoleRequest.class);
 
-            Optional<CreateOrUpdateRoleResponse> newUser = roleDao.createRole("whatever", createRoleRequest);
+            Optional<CreateOrUpdateRoleResponse> newRole = roleDao.createRole(tenantUrn, createRoleRequest);
 
-            if (newUser.isPresent()) {
+            if (newRole.isPresent()) {
                 //sendEvent(null, DefaultEventTypes.ThingCreated, object.get());
 
                 ResponseEntity responseEntity = ResponseEntity
-                    .created(URI.create(newUser.get().getUrn()))
-                    .body(newUser.get());
+                    .created(URI.create(newRole.get().getUrn()))
+                    .body(newRole.get());
                 response.setResult(responseEntity);
             } else {
-                Optional<GetRoleResponse> alreadyThere = roleDao.findByTenantUrnAndName("tenantUrnHere", restCreateOrUpdateRoleRequest.getName());
+                Optional<GetRoleResponse> alreadyThere = roleDao.findByTenantUrnAndName(tenantUrn, restCreateOrUpdateRoleRequest.getName());
                 response.setResult(ResponseEntity.status(HttpStatus.CONFLICT).build());
                 //sendEvent(null, DefaultEventTypes.ThingCreateFailedAlreadyExists, alreadyThere.get());
             }
