@@ -274,10 +274,10 @@ public class TenantPersistenceService implements TenantDao {
     public Optional<CreateOrUpdateUserResponse> updateUser(String tenantUrn, UpdateUserRequest updateUserRequest)
         throws ConstraintViolationException {
 
-        UUID tenantId = UuidUtil.getUuidFromUrn(tenantUrn);
-        Optional<UserEntity> userEntityOptional = userRepository.findByTenantIdAndId(tenantId, UuidUtil.getUuidFromUrn(updateUserRequest.getUrn()));
-
         try {
+            UUID tenantId = UuidUtil.getUuidFromUrn(tenantUrn);
+            Optional<UserEntity> userEntityOptional = userRepository.findByTenantIdAndId(tenantId, UuidUtil.getUuidFromUrn(updateUserRequest.getUrn()));
+
             if (userEntityOptional.isPresent()) {
                 UserEntity userEntity = MergeUtil.merge(userEntityOptional.get(), updateUserRequest);
                 userEntity = userRepository.persist(userEntity);
@@ -285,11 +285,13 @@ public class TenantPersistenceService implements TenantDao {
             }
 
         } catch (IllegalArgumentException | ConstraintViolationException e) {
-            String msg = String.format("update failed, tenant: 9+-'%s', cause: %s", updateUserRequest.getUrn(), e.toString());
+            String msg = String.format("update failed, tenant: '%s', request: '%s', cause: %s", tenantUrn, updateUserRequest.toString(), e.toString
+                ());
             log.error(msg);
             log.debug(msg, e);
             throw e;
         }
+
         return Optional.empty();
     }
 
