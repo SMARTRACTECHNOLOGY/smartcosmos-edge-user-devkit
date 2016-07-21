@@ -14,6 +14,7 @@ import net.smartcosmos.extension.tenant.config.ServiceUserProperties;
 @Component
 public class ServiceUserAccessAuthenticationProvider implements AuthenticationProvider {
 
+//    @Lazy
     @Autowired
     private ServiceUserProperties serviceUser;
 
