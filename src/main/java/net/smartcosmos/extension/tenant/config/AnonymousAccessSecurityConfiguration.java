@@ -13,9 +13,13 @@ public class AnonymousAccessSecurityConfiguration extends WebSecurityConfigurerA
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().ignoringAntMatchers("/tenants").disable()
-            .antMatcher("/tenants/**").authorizeRequests()
-            .antMatchers(HttpMethod.POST, "/tenants").permitAll()
-            .anyRequest().authenticated();
+        http.requestMatchers()
+            .antMatchers("/tenants/**", "/authenticate/**")
+            .and()
+            .authorizeRequests().antMatchers(HttpMethod.POST, "/tenants").permitAll()
+            .and()
+            .authorizeRequests().antMatchers(HttpMethod.POST, "/authorize").permitAll()
+            .and()
+            .csrf().disable();
     }
 }
