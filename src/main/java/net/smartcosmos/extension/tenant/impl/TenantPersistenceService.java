@@ -90,6 +90,11 @@ public class TenantPersistenceService implements TenantDao {
     public Optional<CreateTenantResponse> createTenant(CreateTenantRequest createTenantRequest)
         throws ConstraintViolationException {
 
+        // Usernames have to be unique in the system for now, so we need that:
+        if (userAlreadyExists(createTenantRequest.getUsername())) {
+            return Optional.empty();
+        }
+
         try {
             // This tenant already exists? we're not creating a new one
             if (tenantRepository.findByName(createTenantRequest.getName())
