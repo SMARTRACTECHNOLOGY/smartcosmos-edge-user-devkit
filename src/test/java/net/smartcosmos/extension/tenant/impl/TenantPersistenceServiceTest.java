@@ -492,8 +492,8 @@ public class TenantPersistenceServiceTest {
         assertNotNull(authorities.get().getPasswordHash());
         assertFalse(authorities.get().getAuthorities().isEmpty());
         assertEquals(2, authorities.get().getAuthorities().size());
-        assertTrue(authorities.get().getAuthorities().contains("smartcosmos.things.read"));
-        assertTrue(authorities.get().getAuthorities().contains("smartcosmos.things.write"));
+        assertTrue(authorities.get().getAuthorities().contains("https://authorities.smartcosmos.net/things/read"));
+        assertTrue(authorities.get().getAuthorities().contains("https://authorities.smartcosmos.net/things/read"));
     }
 
     @Test
@@ -547,8 +547,8 @@ public class TenantPersistenceServiceTest {
         assertNotNull(authorities.get().getPasswordHash());
         assertFalse(authorities.get().getAuthorities().isEmpty());
         assertEquals(2, authorities.get().getAuthorities().size());
-        assertTrue(authorities.get().getAuthorities().contains("smartcosmos.things.read"));
-        assertTrue(authorities.get().getAuthorities().contains("smartcosmos.things.write"));
+        assertTrue(authorities.get().getAuthorities().contains("https://authorities.smartcosmos.net/things/read"));
+        assertTrue(authorities.get().getAuthorities().contains("https://authorities.smartcosmos.net/things/write"));
     }
 
     @Test

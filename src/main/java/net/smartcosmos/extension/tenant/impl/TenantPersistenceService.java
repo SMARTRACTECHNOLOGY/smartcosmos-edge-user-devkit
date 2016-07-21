@@ -399,15 +399,15 @@ public class TenantPersistenceService implements TenantDao {
 
     private RoleEntity createAdminRole(String tenantUrn) {
         List<String> authorities = new ArrayList<>();
-        authorities.add("smartcosmos.things.read");
-        authorities.add("smartcosmos.things.write");
+        authorities.add("https://authorities.smartcosmos.net/things/read");
+        authorities.add("https://authorities.smartcosmos.net/things/write");
 
         return createRole(tenantUrn, "Admin", authorities);
     }
 
     private RoleEntity createUserRole(String tenantUrn) {
         List<String> authorities = new ArrayList<>();
-        authorities.add("smartcosmos.things.read");
+        authorities.add("https://authorities.smartcosmos.net/things/read");
 
         return createRole(tenantUrn, "User", authorities);
     }
