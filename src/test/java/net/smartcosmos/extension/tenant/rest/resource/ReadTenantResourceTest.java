@@ -68,10 +68,10 @@ public class ReadTenantResourceTest extends AbstractTestResource {
 
         MvcResult mvcResult = mockMvc.perform(
             get("/tenants/{urn}", urn).contentType(APPLICATION_JSON_UTF8))
-            .andExpect(status().isBadRequest())
+            .andExpect(status().isNotFound())
             .andReturn();
 
-        verify(tenantDao, times(0)).findTenantByUrn(anyString());
+        verify(tenantDao, times(1)).findTenantByUrn(anyString());
         verifyNoMoreInteractions(tenantDao);
     }
 

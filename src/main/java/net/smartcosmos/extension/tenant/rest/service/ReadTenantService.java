@@ -31,7 +31,7 @@ public class ReadTenantService extends AbstractTenantService {
     }
 
     public ResponseEntity<?> findByUrn(String urn, SmartCosmosUser user) {
-        
+
         Optional<GetTenantResponse> entity = tenantDao.findTenantByUrn(urn);
 
         if (entity.isPresent()) {
