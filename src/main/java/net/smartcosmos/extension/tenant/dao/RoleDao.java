@@ -5,8 +5,8 @@ import java.util.Optional;
 import javax.validation.ConstraintViolationException;
 
 import net.smartcosmos.extension.tenant.dto.CreateOrUpdateRoleRequest;
-import net.smartcosmos.extension.tenant.dto.CreateOrUpdateRoleResponse;
-import net.smartcosmos.extension.tenant.dto.GetRoleResponse;
+import net.smartcosmos.extension.tenant.dto.RoleResponse;
+import net.smartcosmos.extension.tenant.dto.RoleResponse;
 
 /**
  * Initially created by SMART COSMOS Team on June 30, 2016.
@@ -21,7 +21,7 @@ public interface RoleDao {
      * @return the new role or Optional.empty() in case of failure
      * @throws ConstraintViolationException
      */
-    Optional<CreateOrUpdateRoleResponse> createRole(
+    Optional<RoleResponse> createRole(
         String tenantUrn,
         CreateOrUpdateRoleRequest createRoleRequest)
         throws ConstraintViolationException;
@@ -35,7 +35,7 @@ public interface RoleDao {
      * @return the updated role or Optional.empty() in case of failure
      * @throws ConstraintViolationException
      */
-    Optional<CreateOrUpdateRoleResponse> updateRole(
+    Optional<RoleResponse> updateRole(
         String tenantUrn,
         String urn,
         CreateOrUpdateRoleRequest updateRoleRequest)
@@ -49,7 +49,7 @@ public interface RoleDao {
      * @return the role or Optional.empty() in case empty search result
      * @throws ConstraintViolationException
      */
-    Optional<GetRoleResponse> findByTenantUrnAndName(String tenantUrn, String name)
+    Optional<RoleResponse> findByTenantUrnAndName(String tenantUrn, String name)
         throws ConstraintViolationException;
 
     /**
@@ -60,6 +60,6 @@ public interface RoleDao {
      * @return the role or Optional.empty() in case of no role with matching URN
      * @throws IllegalArgumentException
      */
-    List<GetRoleResponse> delete(String tenantUrn, String urn)
+    List<RoleResponse> delete(String tenantUrn, String urn)
         throws IllegalArgumentException;
 }

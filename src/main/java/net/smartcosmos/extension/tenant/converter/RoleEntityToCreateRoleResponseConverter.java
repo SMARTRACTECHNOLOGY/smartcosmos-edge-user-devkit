@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 import net.smartcosmos.extension.tenant.domain.AuthorityEntity;
 import net.smartcosmos.extension.tenant.domain.RoleEntity;
-import net.smartcosmos.extension.tenant.dto.CreateOrUpdateRoleResponse;
+import net.smartcosmos.extension.tenant.dto.RoleResponse;
 import net.smartcosmos.extension.tenant.util.UuidUtil;
 
 /**
@@ -18,10 +18,10 @@ import net.smartcosmos.extension.tenant.util.UuidUtil;
  */
 @Component
 public class RoleEntityToCreateRoleResponseConverter
-    implements Converter<RoleEntity, CreateOrUpdateRoleResponse>, FormatterRegistrar {
+    implements Converter<RoleEntity, RoleResponse>, FormatterRegistrar {
 
     @Override
-    public CreateOrUpdateRoleResponse convert(RoleEntity roleEntity) {
+    public RoleResponse convert(RoleEntity roleEntity) {
 
         // role entities from role strings
         List<String> authorities = new ArrayList<>();
@@ -29,7 +29,7 @@ public class RoleEntityToCreateRoleResponseConverter
             authorities.add(authorityEntity.getAuthority());
         }
 
-        return CreateOrUpdateRoleResponse.builder()
+        return RoleResponse.builder()
             .urn(UuidUtil.getUserUrnFromUuid(roleEntity.getId()))
             .name(roleEntity.getName())
             .active(roleEntity.getActive())

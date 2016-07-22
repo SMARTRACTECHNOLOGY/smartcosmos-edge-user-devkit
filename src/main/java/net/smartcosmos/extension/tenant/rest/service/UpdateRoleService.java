@@ -17,8 +17,8 @@ import net.smartcosmos.events.SmartCosmosEventTemplate;
 import net.smartcosmos.extension.tenant.dao.RoleDao;
 import net.smartcosmos.extension.tenant.dao.TenantDao;
 import net.smartcosmos.extension.tenant.dto.CreateOrUpdateRoleRequest;
-import net.smartcosmos.extension.tenant.dto.CreateOrUpdateRoleResponse;
-import net.smartcosmos.extension.tenant.dto.GetRoleResponse;
+import net.smartcosmos.extension.tenant.dto.RoleResponse;
+import net.smartcosmos.extension.tenant.dto.RoleResponse;
 import net.smartcosmos.extension.tenant.rest.dto.RestCreateOrUpdateRoleRequest;
 
 /**
@@ -53,7 +53,7 @@ public class UpdateRoleService extends AbstractTenantService {
             final CreateOrUpdateRoleRequest createRoleRequest = conversionService
                 .convert(restCreateOrUpdateRoleRequest, CreateOrUpdateRoleRequest.class);
 
-            Optional<CreateOrUpdateRoleResponse> newUser = roleDao.updateRole("whatever", "urn", createRoleRequest);
+            Optional<RoleResponse> newUser = roleDao.updateRole("whatever", "urn", createRoleRequest);
 
             if (newUser.isPresent()) {
                 //sendEvent(null, DefaultEventTypes.ThingCreated, object.get());
@@ -63,7 +63,7 @@ public class UpdateRoleService extends AbstractTenantService {
                     .body(newUser.get());
                 response.setResult(responseEntity);
             } else {
-                Optional<GetRoleResponse> alreadyThere = roleDao.findByTenantUrnAndName("tenantUrnHere", restCreateOrUpdateRoleRequest.getName());
+                Optional<RoleResponse> alreadyThere = roleDao.findByTenantUrnAndName("tenantUrnHere", restCreateOrUpdateRoleRequest.getName());
                 response.setResult(ResponseEntity.status(HttpStatus.CONFLICT).build());
                 //sendEvent(null, DefaultEventTypes.ThingCreateFailedAlreadyExists, alreadyThere.get());
             }

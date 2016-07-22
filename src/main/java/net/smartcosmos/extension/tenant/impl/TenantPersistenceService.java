@@ -22,7 +22,7 @@ import net.smartcosmos.extension.tenant.domain.RoleEntity;
 import net.smartcosmos.extension.tenant.domain.TenantEntity;
 import net.smartcosmos.extension.tenant.domain.UserEntity;
 import net.smartcosmos.extension.tenant.dto.CreateOrUpdateRoleRequest;
-import net.smartcosmos.extension.tenant.dto.CreateOrUpdateRoleResponse;
+import net.smartcosmos.extension.tenant.dto.RoleResponse;
 import net.smartcosmos.extension.tenant.dto.CreateOrUpdateUserResponse;
 import net.smartcosmos.extension.tenant.dto.CreateTenantRequest;
 import net.smartcosmos.extension.tenant.dto.CreateTenantResponse;
@@ -422,7 +422,7 @@ public class TenantPersistenceService implements TenantDao {
             .active(true)
             .build();
 
-        Optional<CreateOrUpdateRoleResponse> optionalRole = rolePersistenceService.createRole(tenantUrn, createRoleRequest);
+        Optional<RoleResponse> optionalRole = rolePersistenceService.createRole(tenantUrn, createRoleRequest);
         Optional<RoleEntity> savedEntity = rolePersistenceService.findByUrnAsEntity(optionalRole.get().getUrn());
         if (savedEntity.isPresent()) {
             return savedEntity.get();

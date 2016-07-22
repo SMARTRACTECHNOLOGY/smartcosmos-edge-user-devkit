@@ -16,8 +16,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import net.smartcosmos.extension.tenant.TenantPersistenceConfig;
 import net.smartcosmos.extension.tenant.TenantPersistenceTestApplication;
 import net.smartcosmos.extension.tenant.dto.CreateOrUpdateRoleRequest;
-import net.smartcosmos.extension.tenant.dto.CreateOrUpdateRoleResponse;
-import net.smartcosmos.extension.tenant.dto.GetRoleResponse;
+import net.smartcosmos.extension.tenant.dto.RoleResponse;
 import net.smartcosmos.extension.tenant.repository.RoleRepository;
 import net.smartcosmos.extension.tenant.util.UuidUtil;
 
@@ -60,7 +59,7 @@ public class RolePersistenceServiceTest {
             .name(roleName)
             .build();
 
-        Optional<CreateOrUpdateRoleResponse> createResponse = rolePersistenceService
+        Optional<RoleResponse> createResponse = rolePersistenceService
             .createRole(tenantRoleTest, createRole);
 
         assertTrue(createResponse.isPresent());
@@ -84,7 +83,7 @@ public class RolePersistenceServiceTest {
             .name(roleName)
             .build();
 
-        Optional<CreateOrUpdateRoleResponse> createResponse = rolePersistenceService
+        Optional<RoleResponse> createResponse = rolePersistenceService
             .createRole(tenantRoleTest, createRole);
 
         assertTrue(createResponse.isPresent());
@@ -101,7 +100,7 @@ public class RolePersistenceServiceTest {
             .name(roleName)
             .build();
 
-        Optional<CreateOrUpdateRoleResponse> updateResponse = rolePersistenceService
+        Optional<RoleResponse> updateResponse = rolePersistenceService
             .updateRole(tenantRoleTest, urn, updateRole);
 
         assertTrue(updateResponse.isPresent());
@@ -123,7 +122,7 @@ public class RolePersistenceServiceTest {
             .name(roleName)
             .build();
 
-        Optional<CreateOrUpdateRoleResponse> createResponse = rolePersistenceService
+        Optional<RoleResponse> createResponse = rolePersistenceService
             .createRole(tenantRoleTest, createRole);
 
         assertTrue(createResponse.isPresent());
@@ -131,7 +130,7 @@ public class RolePersistenceServiceTest {
         assertEquals(1, createResponse.get().getAuthorities().size());
         assertEquals(authority, createResponse.get().getAuthorities().get(0));
 
-        Optional<GetRoleResponse> lookupResponse = rolePersistenceService
+        Optional<RoleResponse> lookupResponse = rolePersistenceService
             .findByTenantUrnAndName(tenantRoleTest, roleName);
 
         assertTrue(lookupResponse.isPresent());
@@ -144,7 +143,7 @@ public class RolePersistenceServiceTest {
     public void thatLookupRoleByNameFails() {
         final String roleName = "noSuchRole";
 
-        Optional<GetRoleResponse> lookupResponse = rolePersistenceService
+        Optional<RoleResponse> lookupResponse = rolePersistenceService
             .findByTenantUrnAndName(tenantRoleTest, roleName);
 
         assertFalse(lookupResponse.isPresent());
@@ -164,7 +163,7 @@ public class RolePersistenceServiceTest {
             .name(roleName)
             .build();
 
-        Optional<CreateOrUpdateRoleResponse> createResponse = rolePersistenceService
+        Optional<RoleResponse> createResponse = rolePersistenceService
             .createRole(tenantRoleTest, createRole);
 
         assertTrue(createResponse.isPresent());
@@ -174,7 +173,7 @@ public class RolePersistenceServiceTest {
 
         String urn = createResponse.get().getUrn();
 
-        List<GetRoleResponse> deleteResponse = rolePersistenceService
+        List<RoleResponse> deleteResponse = rolePersistenceService
             .delete(tenantRoleTest, urn);
 
         assertFalse(deleteResponse.isEmpty());

@@ -5,19 +5,19 @@ import org.springframework.format.FormatterRegistrar;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.stereotype.Component;
 
-import net.smartcosmos.extension.tenant.dto.CreateOrUpdateRoleResponse;
-import net.smartcosmos.extension.tenant.rest.dto.RestCreateOrUpdateRoleResponse;
+import net.smartcosmos.extension.tenant.dto.RoleResponse;
+import net.smartcosmos.extension.tenant.rest.dto.RestRoleResponse;
 
 /**
  * Initially created by SMART COSMOS Team on July 01, 2016.
  */
 @Component
-public class CreateOrUpdateRoleResponseToRestCreateOrUpdateRoleResponseConverter
-    implements Converter<CreateOrUpdateRoleResponse, RestCreateOrUpdateRoleResponse>, FormatterRegistrar {
+public class RoleResponseToRestRoleResponseConverter
+    implements Converter<RoleResponse, RestRoleResponse>, FormatterRegistrar {
 
     @Override
-    public RestCreateOrUpdateRoleResponse convert(CreateOrUpdateRoleResponse createIOrUpdateRoleResponse) {
-        return RestCreateOrUpdateRoleResponse.builder()
+    public RestRoleResponse convert(RoleResponse createIOrUpdateRoleResponse) {
+        return RestRoleResponse.builder()
             .urn(createIOrUpdateRoleResponse.getUrn())
             .name(createIOrUpdateRoleResponse.getName())
             .active(createIOrUpdateRoleResponse.getActive())

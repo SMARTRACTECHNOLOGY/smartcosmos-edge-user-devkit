@@ -18,8 +18,8 @@ import net.smartcosmos.extension.tenant.dao.RoleDao;
 import net.smartcosmos.extension.tenant.domain.AuthorityEntity;
 import net.smartcosmos.extension.tenant.domain.RoleEntity;
 import net.smartcosmos.extension.tenant.dto.CreateOrUpdateRoleRequest;
-import net.smartcosmos.extension.tenant.dto.CreateOrUpdateRoleResponse;
-import net.smartcosmos.extension.tenant.dto.GetRoleResponse;
+import net.smartcosmos.extension.tenant.dto.RoleResponse;
+import net.smartcosmos.extension.tenant.dto.RoleResponse;
 import net.smartcosmos.extension.tenant.repository.AuthorityRepository;
 import net.smartcosmos.extension.tenant.repository.RoleRepository;
 import net.smartcosmos.extension.tenant.util.UuidUtil;
@@ -49,7 +49,7 @@ public class RolePersistenceService implements RoleDao {
     }
 
     @Override
-    public Optional<CreateOrUpdateRoleResponse> createRole(String tenantUrn, CreateOrUpdateRoleRequest createRoleRequest)
+    public Optional<RoleResponse> createRole(String tenantUrn, CreateOrUpdateRoleRequest createRoleRequest)
         throws ConstraintViolationException {
 
         // This role already exists? we're not creating a new one
@@ -71,11 +71,11 @@ public class RolePersistenceService implements RoleDao {
                                                   .authorities(authorityEntities)
                                                   .active(createRoleRequest.getActive())
                                                   .build());
-        return Optional.ofNullable(conversionService.convert(role, CreateOrUpdateRoleResponse.class));
+        return Optional.ofNullable(conversionService.convert(role, RoleResponse.class));
     }
 
     @Override
-    public Optional<CreateOrUpdateRoleResponse> updateRole(String tenantUrn, String urn, CreateOrUpdateRoleRequest updateRoleRequest)
+    public Optional<RoleResponse> updateRole(String tenantUrn, String urn, CreateOrUpdateRoleRequest updateRoleRequest)
         throws ConstraintViolationException {
 
         UUID tenantId = UuidUtil.getUuidFromUrn(tenantUrn);
@@ -96,16 +96,16 @@ public class RolePersistenceService implements RoleDao {
                                                       .authorities(authorityEntities)
                                                       .active(updateRoleRequest.getActive())
                                                       .build());
-            return Optional.ofNullable(conversionService.convert(role, CreateOrUpdateRoleResponse.class));
+            return Optional.ofNullable(conversionService.convert(role, RoleResponse.class));
         }
 
         return Optional.empty();
     }
 
-    public Optional<GetRoleResponse> findByTenantUrnAndName(String tenantUrn, String name) {
+    public Optional<RoleResponse> findByTenantUrnAndName(String tenantUrn, String name) {
         Optional<RoleEntity> roleEntity = roleRepository.findByNameAndTenantId(name, UuidUtil.getUuidFromUrn(tenantUrn));
         if (roleEntity.isPresent()) {
-            return Optional.ofNullable(conversionService.convert(roleEntity.get(), GetRoleResponse.class));
+            return Optional.ofNullable(conversionService.convert(roleEntity.get(), RoleResponse.class));
         }
         return Optional.empty();
     }
@@ -116,14 +116,14 @@ public class RolePersistenceService implements RoleDao {
 
     @Override
     @Transactional
-    public List<GetRoleResponse> delete(String tenantUrn, String urn)
+    public List<RoleResponse> delete(String tenantUrn, String urn)
         throws IllegalArgumentException {
 
         List<RoleEntity> roleEntities = roleRepository
             .deleteByIdAndTenantId(UuidUtil.getUuidFromUrn(urn), UuidUtil.getUuidFromUrn(tenantUrn));
         return roleEntities
             .stream()
-            .map(item -> conversionService.convert(item, GetRoleResponse.class))
+            .map(item -> conversionService.convert(item, RoleResponse.class))
             .collect(toList());
     }
 }

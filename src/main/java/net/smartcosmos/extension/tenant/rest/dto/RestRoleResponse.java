@@ -12,7 +12,7 @@ import lombok.Data;
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties({ "version" })
-public class RestCreateOrUpdateRoleResponse {
+public class RestRoleResponse {
 
     private static final int VERSION = 1;
     private final int version = VERSION;
@@ -24,7 +24,7 @@ public class RestCreateOrUpdateRoleResponse {
 
     @Builder
     @ConstructorProperties({ "urn", "name", "authorities", "active" })
-    public RestCreateOrUpdateRoleResponse(String urn, String name, List<String> authorities, Boolean active) {
+    public RestRoleResponse(String urn, String name, List<String> authorities, Boolean active) {
         this.urn = urn;
         this.name = name;
         this.authorities = new ArrayList<>();
