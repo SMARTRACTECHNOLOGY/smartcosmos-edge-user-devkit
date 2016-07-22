@@ -29,13 +29,13 @@ public class DeleteUserResource {
     @Autowired
     public DeleteUserResource(DeleteUserService service) { this.service = service; }
 
-    @RequestMapping(value = "/users/{urn}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/users/{userUrn}", method = RequestMethod.DELETE)
     @EndpointMethodControl(key = "user.delete")
     @ConditionalOnProperty(prefix = "smt.endpoints.user.delete", name = "enabled", matchIfMissing = true)
     public DeferredResult<ResponseEntity> deleteUser(
-        @PathVariable String urn,
+        @PathVariable String userUrn,
         SmartCosmosUser user) {
 
-        return service.delete(urn, user);
+        return service.delete(userUrn, user);
     }
 }
