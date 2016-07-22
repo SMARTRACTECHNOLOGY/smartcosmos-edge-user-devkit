@@ -17,7 +17,7 @@ import net.smartcosmos.extension.tenant.util.UuidUtil;
  * Initially created by SMART COSMOS Team on June 30, 2016.
  */
 @Component
-public class UserEntityToCreateUserResponseConverter
+public class UserEntityToCreateOrUpdateUserResponseConverter
     implements Converter<UserEntity, CreateOrUpdateUserResponse>, FormatterRegistrar {
 
     @Override

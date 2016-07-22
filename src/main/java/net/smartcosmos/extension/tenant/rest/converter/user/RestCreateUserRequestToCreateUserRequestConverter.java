@@ -12,7 +12,7 @@ import net.smartcosmos.extension.tenant.rest.dto.user.RestCreateOrUpdateUserRequ
  * Initially created by SMART COSMOS Team on July 01, 2016.
  */
 @Component
-public class RestCreateOrUpdateUserRequestToCreateUserRequestConverter
+public class RestCreateUserRequestToCreateUserRequestConverter
     implements Converter<RestCreateOrUpdateUserRequest, CreateUserRequest>, FormatterRegistrar {
 
     @Override

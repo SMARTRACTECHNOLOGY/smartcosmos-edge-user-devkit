@@ -25,7 +25,6 @@ public class UpdateUserRequest {
     private String surname;
     private String password;
     private List<String> roles;
-
     private Boolean active;
 
     @Builder

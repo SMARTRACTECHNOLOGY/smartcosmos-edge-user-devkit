@@ -9,7 +9,7 @@ import net.smartcosmos.extension.tenant.dto.tenant.TenantResponse;
 import net.smartcosmos.extension.tenant.rest.dto.tenant.RestTenantSingleResponse;
 
 @Component
-public class GetTenantResponseToRestTenantSingleResponseConverter
+public class TenantResponseToRestTenantSingleResponseConverter
     implements Converter<TenantResponse, RestTenantSingleResponse>, FormatterRegistrar {
 
     @Override

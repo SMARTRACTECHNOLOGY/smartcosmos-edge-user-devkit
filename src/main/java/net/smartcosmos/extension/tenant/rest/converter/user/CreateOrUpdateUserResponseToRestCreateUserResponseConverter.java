@@ -12,7 +12,7 @@ import net.smartcosmos.extension.tenant.rest.dto.user.RestCreateUserResponse;
  * Initially created by SMART COSMOS Team on July 01, 2016.
  */
 @Component
-public class CreateUserResponseToRestCreateUserResponseConverter
+public class CreateOrUpdateUserResponseToRestCreateUserResponseConverter
     implements Converter<CreateOrUpdateUserResponse, RestCreateUserResponse>, FormatterRegistrar {
 
     @Override
