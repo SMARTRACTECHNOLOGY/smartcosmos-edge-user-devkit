@@ -24,6 +24,7 @@ import net.smartcosmos.extension.tenant.dto.authentication.GetAuthoritiesRespons
 import net.smartcosmos.extension.tenant.dto.user.GetOrDeleteUserResponse;
 import net.smartcosmos.extension.tenant.dto.tenant.UpdateTenantRequest;
 import net.smartcosmos.extension.tenant.dto.tenant.TenantResponse;
+import net.smartcosmos.extension.tenant.dto.user.UpdateUserRequest;
 import net.smartcosmos.extension.tenant.repository.TenantRepository;
 import net.smartcosmos.extension.tenant.repository.UserRepository;
 import net.smartcosmos.extension.tenant.util.UuidUtil;
@@ -739,10 +740,45 @@ public class TenantPersistenceServiceTest {
         assertEquals(testUserTenantUrn, getResponse.get().getTenantUrn());
     }
 
-    @Ignore
     @Test
     public void thatUpdateUpserSucceeds() throws Exception {
-        // TODO updateUser(UpdateUserRequest updateUserRequest)
+
+        String username = "UpdateTestUser";
+        String emailAddress1 = "update.user1@example.com";
+        String emailAddress2 = "update.user1@example.com";
+        String givenName = "John";
+        String surname = "Doe";
+
+        List<String> roles = new ArrayList<>();
+        roles.add("Admin");
+
+        CreateUserRequest createRequest = CreateUserRequest.builder()
+            .username(username)
+            .active(true)
+            .emailAddress(emailAddress1)
+            .roles(roles)
+            .givenName(givenName)
+            .surname(surname)
+            .build();
+        CreateOrUpdateUserResponse createResponse = tenantPersistenceService.createUser(testUserTenantUrn, createRequest).get();
+
+        UpdateUserRequest updateRequest = UpdateUserRequest.builder()
+            .active(false)
+            .emailAddress(emailAddress2)
+            .build();
+
+        Optional<CreateOrUpdateUserResponse> updateResponse = tenantPersistenceService.updateUser(testUserTenantUrn, createResponse.getUrn(),
+            updateRequest);
+        assertTrue(updateResponse.isPresent());
+        assertEquals(createResponse.getUrn(), updateResponse.get().getUrn());
+        assertEquals(false, updateResponse.get().getActive());
+        assertEquals(emailAddress2, updateResponse.get().getEmailAddress());
+
+        Optional<GetOrDeleteUserResponse> findResponse = tenantPersistenceService.findUserByUrn(testUserTenantUrn, createResponse.getUrn());
+        assertTrue(findResponse.isPresent());
+        assertEquals(createResponse.getUrn(), findResponse.get().getUrn());
+        assertEquals(false, findResponse.get().getActive());
+        assertEquals(emailAddress2, findResponse.get().getEmailAddress());
     }
 
     // endregion
