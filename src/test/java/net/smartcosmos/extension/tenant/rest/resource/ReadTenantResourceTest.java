@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MvcResult;
 
 import net.smartcosmos.extension.tenant.dao.TenantDao;
-import net.smartcosmos.extension.tenant.dto.tenant.GetTenantResponse;
+import net.smartcosmos.extension.tenant.dto.tenant.TenantResponse;
 import net.smartcosmos.extension.tenant.util.UuidUtil;
 
 import static org.hamcrest.Matchers.is;
@@ -35,12 +35,12 @@ public class ReadTenantResourceTest extends AbstractTestResource {
         String name = "getByUrn";
         String urn = "accountUrn"; // Tenant URN from AbstractTestResource
 
-        GetTenantResponse response1 = GetTenantResponse.builder()
+        TenantResponse response1 = TenantResponse.builder()
             .active(true)
             .name(name)
             .urn(urn)
             .build();
-        Optional<GetTenantResponse> response = Optional.of(response1);
+        Optional<TenantResponse> response = Optional.of(response1);
 
         when(tenantDao.findTenantByUrn(anyString())).thenReturn(response);
 
@@ -62,7 +62,7 @@ public class ReadTenantResourceTest extends AbstractTestResource {
 
         String urn = UuidUtil.getTenantUrnFromUuid(UuidUtil.getNewUuid());
 
-        Optional<GetTenantResponse> response = Optional.empty();
+        Optional<TenantResponse> response = Optional.empty();
 
         when(tenantDao.findTenantByUrn(anyString())).thenReturn(response);
 
@@ -81,12 +81,12 @@ public class ReadTenantResourceTest extends AbstractTestResource {
         String name = "getByName";
         String urn = UuidUtil.getTenantUrnFromUuid(UuidUtil.getNewUuid());
 
-        GetTenantResponse response1 = GetTenantResponse.builder()
+        TenantResponse response1 = TenantResponse.builder()
             .active(true)
             .name(name)
             .urn(urn)
             .build();
-        Optional<GetTenantResponse> response = Optional.of(response1);
+        Optional<TenantResponse> response = Optional.of(response1);
 
         when(tenantDao.findTenantByName(anyString())).thenReturn(response);
 
@@ -108,7 +108,7 @@ public class ReadTenantResourceTest extends AbstractTestResource {
 
         String name = "noSuchTenant";
 
-        Optional<GetTenantResponse> response = Optional.empty();
+        Optional<TenantResponse> response = Optional.empty();
 
         when(tenantDao.findTenantByName(anyString())).thenReturn(response);
 

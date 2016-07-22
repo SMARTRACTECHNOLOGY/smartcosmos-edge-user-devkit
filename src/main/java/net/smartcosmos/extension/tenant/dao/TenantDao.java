@@ -10,9 +10,8 @@ import net.smartcosmos.extension.tenant.dto.tenant.CreateTenantResponse;
 import net.smartcosmos.extension.tenant.dto.user.CreateUserRequest;
 import net.smartcosmos.extension.tenant.dto.authentication.GetAuthoritiesResponse;
 import net.smartcosmos.extension.tenant.dto.user.GetOrDeleteUserResponse;
-import net.smartcosmos.extension.tenant.dto.tenant.GetTenantResponse;
 import net.smartcosmos.extension.tenant.dto.tenant.UpdateTenantRequest;
-import net.smartcosmos.extension.tenant.dto.tenant.UpdateTenantResponse;
+import net.smartcosmos.extension.tenant.dto.tenant.TenantResponse;
 import net.smartcosmos.extension.tenant.dto.user.UpdateUserRequest;
 
 /**
@@ -22,11 +21,11 @@ public interface TenantDao {
 
     Optional<CreateTenantResponse> createTenant(CreateTenantRequest tenantCreate) throws ConstraintViolationException;
 
-    Optional<UpdateTenantResponse> updateTenant(String tenantUrn, UpdateTenantRequest tenantUpdate) throws ConstraintViolationException;
+    Optional<TenantResponse> updateTenant(String tenantUrn, UpdateTenantRequest tenantUpdate) throws ConstraintViolationException;
 
-    Optional<GetTenantResponse> findTenantByUrn(String tenantUrn);
+    Optional<TenantResponse> findTenantByUrn(String tenantUrn);
 
-    Optional<GetTenantResponse> findTenantByName(String name);
+    Optional<TenantResponse> findTenantByName(String name);
 
     Optional<CreateOrUpdateUserResponse> createUser(String tenantUrn, CreateUserRequest userCreate) throws ConstraintViolationException;
 

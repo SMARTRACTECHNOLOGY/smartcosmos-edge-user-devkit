@@ -17,7 +17,7 @@ import net.smartcosmos.events.SmartCosmosEventTemplate;
 import net.smartcosmos.extension.tenant.dao.RoleDao;
 import net.smartcosmos.extension.tenant.dao.TenantDao;
 import net.smartcosmos.extension.tenant.dto.tenant.UpdateTenantRequest;
-import net.smartcosmos.extension.tenant.dto.tenant.UpdateTenantResponse;
+import net.smartcosmos.extension.tenant.dto.tenant.TenantResponse;
 import net.smartcosmos.extension.tenant.rest.dto.tenant.RestUpdateTenantRequest;
 import net.smartcosmos.security.user.SmartCosmosUser;
 
@@ -48,12 +48,12 @@ public class UpdateTenantService extends AbstractTenantService {
 
         try {
             UpdateTenantRequest updateTenantRequest = conversionService.convert(restUpdateTenantRequest, UpdateTenantRequest.class);
-            Optional<UpdateTenantResponse> updateTenantResponseOptional = tenantDao.updateTenant(tenantUrn, updateTenantRequest);
+            Optional<TenantResponse> TenantResponseOptional = tenantDao.updateTenant(tenantUrn, updateTenantRequest);
 
-            if (updateTenantResponseOptional.isPresent()) {
+            if (TenantResponseOptional.isPresent()) {
                 ResponseEntity responseEntity = ResponseEntity
-                    .created(URI.create(updateTenantResponseOptional.get().getUrn()))
-                    .body(updateTenantResponseOptional.get());
+                    .created(URI.create(TenantResponseOptional.get().getUrn()))
+                    .body(TenantResponseOptional.get());
                 response.setResult(responseEntity);
             } else {
                 response.setResult(ResponseEntity.status(HttpStatus.CONFLICT).build());

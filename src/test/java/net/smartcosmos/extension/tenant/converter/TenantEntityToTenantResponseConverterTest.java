@@ -5,12 +5,12 @@ import java.util.UUID;
 import org.junit.*;
 
 import net.smartcosmos.extension.tenant.domain.TenantEntity;
-import net.smartcosmos.extension.tenant.dto.tenant.UpdateTenantResponse;
+import net.smartcosmos.extension.tenant.dto.tenant.TenantResponse;
 import net.smartcosmos.extension.tenant.util.UuidUtil;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
-public class TenantEntityToUpdateTenantResponseConverterTest {
+public class TenantEntityToTenantResponseConverterTest {
 
     @Test
     public void thatConversionSucceeds() {
@@ -18,7 +18,7 @@ public class TenantEntityToUpdateTenantResponseConverterTest {
         final String name = "tenant_name";
         final UUID id = UuidUtil.getNewUuid();
         final String urn = UuidUtil.getTenantUrnFromUuid(id);
-        final TenantEntityToUpdateTenantResponseConverter converter = new TenantEntityToUpdateTenantResponseConverter();
+        final TenantEntityToTenantResponseConverter converter = new TenantEntityToTenantResponseConverter();
 
         TenantEntity entity = TenantEntity.builder()
             .active(active)
@@ -26,10 +26,10 @@ public class TenantEntityToUpdateTenantResponseConverterTest {
             .id(id)
             .build();
 
-        UpdateTenantResponse updateTenantResponse = converter.convert(entity);
+        TenantResponse TenantResponse = converter.convert(entity);
 
-        assertEquals(active, updateTenantResponse.getActive());
-        assertEquals(name, updateTenantResponse.getName());
-        assertEquals(urn, updateTenantResponse.getUrn());
+        assertEquals(active, TenantResponse.getActive());
+        assertEquals(name, TenantResponse.getName());
+        assertEquals(urn, TenantResponse.getUrn());
     }
 }

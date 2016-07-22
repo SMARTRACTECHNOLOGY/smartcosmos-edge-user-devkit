@@ -6,16 +6,16 @@ import org.springframework.format.FormatterRegistry;
 import org.springframework.stereotype.Component;
 
 import net.smartcosmos.extension.tenant.domain.TenantEntity;
-import net.smartcosmos.extension.tenant.dto.tenant.UpdateTenantResponse;
+import net.smartcosmos.extension.tenant.dto.tenant.TenantResponse;
 import net.smartcosmos.extension.tenant.util.UuidUtil;
 
 @Component
-public class TenantEntityToUpdateTenantResponseConverter
-    implements Converter<TenantEntity, UpdateTenantResponse>, FormatterRegistrar {
+public class TenantEntityToTenantResponseConverter
+    implements Converter<TenantEntity, TenantResponse>, FormatterRegistrar {
 
     @Override
-    public UpdateTenantResponse convert(TenantEntity entity) {
-        return UpdateTenantResponse.builder()
+    public TenantResponse convert(TenantEntity entity) {
+        return TenantResponse.builder()
             .active(entity.getActive())
             .name(entity.getName())
             .urn(UuidUtil.getTenantUrnFromUuid(entity.getId()))

@@ -11,7 +11,7 @@ import lombok.Data;
 @JsonIgnoreProperties({ "version" })
 @Builder
 @AllArgsConstructor
-public class UpdateTenantResponse {
+public class TenantResponse {
 
     private static final int VERSION = 1;
     private final int version = VERSION;

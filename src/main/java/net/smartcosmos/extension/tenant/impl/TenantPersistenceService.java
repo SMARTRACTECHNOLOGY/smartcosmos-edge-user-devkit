@@ -21,18 +21,17 @@ import net.smartcosmos.extension.tenant.domain.AuthorityEntity;
 import net.smartcosmos.extension.tenant.domain.RoleEntity;
 import net.smartcosmos.extension.tenant.domain.TenantEntity;
 import net.smartcosmos.extension.tenant.domain.UserEntity;
+import net.smartcosmos.extension.tenant.dto.TenantEntityAndUserEntityDto;
+import net.smartcosmos.extension.tenant.dto.authentication.GetAuthoritiesResponse;
 import net.smartcosmos.extension.tenant.dto.role.CreateOrUpdateRoleRequest;
 import net.smartcosmos.extension.tenant.dto.role.RoleResponse;
-import net.smartcosmos.extension.tenant.dto.user.CreateOrUpdateUserResponse;
 import net.smartcosmos.extension.tenant.dto.tenant.CreateTenantRequest;
 import net.smartcosmos.extension.tenant.dto.tenant.CreateTenantResponse;
-import net.smartcosmos.extension.tenant.dto.user.CreateUserRequest;
-import net.smartcosmos.extension.tenant.dto.authentication.GetAuthoritiesResponse;
-import net.smartcosmos.extension.tenant.dto.user.GetOrDeleteUserResponse;
-import net.smartcosmos.extension.tenant.dto.tenant.GetTenantResponse;
-import net.smartcosmos.extension.tenant.dto.TenantEntityAndUserEntityDto;
+import net.smartcosmos.extension.tenant.dto.tenant.TenantResponse;
 import net.smartcosmos.extension.tenant.dto.tenant.UpdateTenantRequest;
-import net.smartcosmos.extension.tenant.dto.tenant.UpdateTenantResponse;
+import net.smartcosmos.extension.tenant.dto.user.CreateOrUpdateUserResponse;
+import net.smartcosmos.extension.tenant.dto.user.CreateUserRequest;
+import net.smartcosmos.extension.tenant.dto.user.GetOrDeleteUserResponse;
 import net.smartcosmos.extension.tenant.dto.user.UpdateUserRequest;
 import net.smartcosmos.extension.tenant.repository.RoleRepository;
 import net.smartcosmos.extension.tenant.repository.TenantRepository;
@@ -140,11 +139,11 @@ public class TenantPersistenceService implements TenantDao {
 
     /**
      * @param updateTenantRequest
-     * @return Optional<UpdateTenantResponse>
+     * @return Optional<TenantResponse>
      * @throws ConstraintViolationException
      */
     @Override
-    public Optional<UpdateTenantResponse> updateTenant(String tenantUrn, UpdateTenantRequest updateTenantRequest)
+    public Optional<TenantResponse> updateTenant(String tenantUrn, UpdateTenantRequest updateTenantRequest)
         throws ConstraintViolationException {
 
         // This tenant already exists? we're not creating a new one
@@ -159,7 +158,7 @@ public class TenantPersistenceService implements TenantDao {
                     tenantEntityOptional.get().setName(updateTenantRequest.getName());
                 }
                 TenantEntity tenantEntity = tenantRepository.save(tenantEntityOptional.get());
-                return Optional.ofNullable(conversionService.convert(tenantEntity, UpdateTenantResponse.class));
+                return Optional.ofNullable(conversionService.convert(tenantEntity, TenantResponse.class));
             }
         } catch (IllegalArgumentException | ConstraintViolationException e) {
             String msg = String.format("update failed, tenant: '%s', request: '%s', cause: %s", tenantUrn, updateTenantRequest.toString(), e
@@ -176,7 +175,7 @@ public class TenantPersistenceService implements TenantDao {
      * @return Optional<GetTenantResponse>
      */
     @Override
-    public Optional<GetTenantResponse> findTenantByUrn(String tenantUrn) {
+    public Optional<TenantResponse> findTenantByUrn(String tenantUrn) {
 
         if (tenantUrn == null || tenantUrn.isEmpty()) {
             return Optional.empty();
@@ -186,7 +185,7 @@ public class TenantPersistenceService implements TenantDao {
             UUID id = UuidUtil.getUuidFromUrn(tenantUrn);
             Optional<TenantEntity> entity = tenantRepository.findById(id);
             if (entity.isPresent()) {
-                final GetTenantResponse response = conversionService.convert(entity.get(), GetTenantResponse.class);
+                final TenantResponse response = conversionService.convert(entity.get(), TenantResponse.class);
                 return Optional.ofNullable(response);
             }
             return Optional.empty();
@@ -204,11 +203,11 @@ public class TenantPersistenceService implements TenantDao {
      * @return Optional<GetTenantResponse>
      */
     @Override
-    public Optional<GetTenantResponse> findTenantByName(String name) {
+    public Optional<TenantResponse> findTenantByName(String name) {
 
         Optional<TenantEntity> entity = tenantRepository.findByNameIgnoreCase(name);
         if (entity.isPresent()) {
-            return Optional.of(conversionService.convert(entity.get(), GetTenantResponse.class));
+            return Optional.of(conversionService.convert(entity.get(), TenantResponse.class));
         }
         return Optional.empty();
     }

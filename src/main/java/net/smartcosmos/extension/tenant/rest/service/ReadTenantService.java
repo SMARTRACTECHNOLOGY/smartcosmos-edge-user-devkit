@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import net.smartcosmos.events.SmartCosmosEventTemplate;
 import net.smartcosmos.extension.tenant.dao.RoleDao;
 import net.smartcosmos.extension.tenant.dao.TenantDao;
-import net.smartcosmos.extension.tenant.dto.tenant.GetTenantResponse;
+import net.smartcosmos.extension.tenant.dto.tenant.TenantResponse;
 import net.smartcosmos.extension.tenant.rest.dto.tenant.RestTenantSingleResponse;
 
 @Slf4j
@@ -31,7 +31,7 @@ public class ReadTenantService extends AbstractTenantService {
 
     public ResponseEntity<?> findByUrn(String urn) {
 
-        Optional<GetTenantResponse> entity = tenantDao.findTenantByUrn(urn);
+        Optional<TenantResponse> entity = tenantDao.findTenantByUrn(urn);
 
         if (entity.isPresent()) {
             // TODO: send event tenant:read
@@ -46,7 +46,7 @@ public class ReadTenantService extends AbstractTenantService {
 
     public ResponseEntity<?> findByName(String name) {
 
-        Optional<GetTenantResponse> entity = tenantDao.findTenantByName(name);
+        Optional<TenantResponse> entity = tenantDao.findTenantByName(name);
 
         if (entity.isPresent()) {
             // TODO: send event tenant:read
