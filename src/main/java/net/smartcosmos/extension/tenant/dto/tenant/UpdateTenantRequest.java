@@ -1,9 +1,8 @@
 package net.smartcosmos.extension.tenant.dto.tenant;
 
-import java.beans.ConstructorProperties;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
@@ -13,6 +12,8 @@ import lombok.Data;
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties({ "version" })
+@Builder
+@AllArgsConstructor
 public class UpdateTenantRequest {
 
     private static final int VERSION = 1;
@@ -20,12 +21,4 @@ public class UpdateTenantRequest {
 
     private String name;
     private Boolean active;
-
-    @Builder
-    @ConstructorProperties({ "name", "active" })
-    public UpdateTenantRequest(String name, Boolean active) {
-        this.name = name;
-        this.active = active != null ? active : true;
-    }
-
 }

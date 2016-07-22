@@ -23,8 +23,8 @@ public class RestUpdateTenantRequest {
     Boolean active;
 
     @Builder
-    @ConstructorProperties({ "name", "username", "active" })
-    public RestUpdateTenantRequest(String name, String username, Boolean active) {
+    @ConstructorProperties({ "name", "active" })
+    public RestUpdateTenantRequest(String name, Boolean active) {
         this.name = name;
         this.active = active != null ? active : true;
     }
