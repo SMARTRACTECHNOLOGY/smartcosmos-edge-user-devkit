@@ -18,7 +18,7 @@ public class AnonymousAccessSecurityConfiguration extends WebSecurityConfigurerA
             .and()
             .authorizeRequests().antMatchers(HttpMethod.POST, "/tenants").permitAll()
             .and()
-            .authorizeRequests().antMatchers(HttpMethod.POST, "/authorize").permitAll()
+            .authorizeRequests().antMatchers(HttpMethod.POST, "/authenticate").permitAll()
             .and()
             .csrf().disable();
     }
