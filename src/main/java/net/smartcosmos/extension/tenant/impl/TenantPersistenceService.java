@@ -1,21 +1,6 @@
 package net.smartcosmos.extension.tenant.impl;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
-import javax.validation.ConstraintViolationException;
-
 import lombok.extern.slf4j.Slf4j;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.convert.ConversionException;
-import org.springframework.core.convert.ConversionService;
-import org.springframework.stereotype.Service;
-
 import net.smartcosmos.extension.tenant.dao.TenantDao;
 import net.smartcosmos.extension.tenant.domain.AuthorityEntity;
 import net.smartcosmos.extension.tenant.domain.RoleEntity;
@@ -29,15 +14,22 @@ import net.smartcosmos.extension.tenant.dto.tenant.CreateTenantRequest;
 import net.smartcosmos.extension.tenant.dto.tenant.CreateTenantResponse;
 import net.smartcosmos.extension.tenant.dto.tenant.TenantResponse;
 import net.smartcosmos.extension.tenant.dto.tenant.UpdateTenantRequest;
-import net.smartcosmos.extension.tenant.dto.user.CreateOrUpdateUserResponse;
 import net.smartcosmos.extension.tenant.dto.user.CreateUserRequest;
 import net.smartcosmos.extension.tenant.dto.user.GetOrDeleteUserResponse;
 import net.smartcosmos.extension.tenant.dto.user.UpdateUserRequest;
+import net.smartcosmos.extension.tenant.dto.user.UserPasswordResponse;
 import net.smartcosmos.extension.tenant.repository.RoleRepository;
 import net.smartcosmos.extension.tenant.repository.TenantRepository;
 import net.smartcosmos.extension.tenant.repository.UserRepository;
 import net.smartcosmos.extension.tenant.util.MergeUtil;
 import net.smartcosmos.extension.tenant.util.UuidUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.ConversionException;
+import org.springframework.core.convert.ConversionService;
+import org.springframework.stereotype.Service;
+
+import javax.validation.ConstraintViolationException;
+import java.util.*;
 
 import static java.util.stream.Collectors.toSet;
 
@@ -229,11 +221,11 @@ public class TenantPersistenceService implements TenantDao {
     /**
      *
      * @param createUserRequest
-     * @return Optional<CreateOrUpdateUserResponse>
+     * @return Optional<UserPasswordResponse>
      * @throws ConstraintViolationException
      */
     @Override
-    public Optional<CreateOrUpdateUserResponse> createUser(String tenantUrn, CreateUserRequest createUserRequest)
+    public Optional<UserPasswordResponse> createUser(String tenantUrn, CreateUserRequest createUserRequest)
         throws ConstraintViolationException {
 
         if (userAlreadyExists(createUserRequest.getUsername())) {
@@ -252,7 +244,7 @@ public class TenantPersistenceService implements TenantDao {
             userEntity = userRepository.persist(userEntity);
             userEntity = userRepository.addRolesToUser(userEntity.getTenantId(), userEntity.getId(), createUserRequest.getRoles()).get();
 
-            CreateOrUpdateUserResponse response = conversionService.convert(userEntity, CreateOrUpdateUserResponse.class);
+            UserPasswordResponse response = conversionService.convert(userEntity, UserPasswordResponse.class);
             response.setPassword(password);
 
             return Optional.of(response);
@@ -269,7 +261,7 @@ public class TenantPersistenceService implements TenantDao {
     }
 
     @Override
-    public Optional<CreateOrUpdateUserResponse> updateUser(String tenantUrn, String userUrn, UpdateUserRequest updateUserRequest)
+    public Optional<UserPasswordResponse> updateUser(String tenantUrn, String userUrn, UpdateUserRequest updateUserRequest)
         throws ConstraintViolationException {
 
         try {
@@ -279,7 +271,7 @@ public class TenantPersistenceService implements TenantDao {
             if (userEntityOptional.isPresent()) {
                 UserEntity userEntity = MergeUtil.merge(userEntityOptional.get(), updateUserRequest);
                 userEntity = userRepository.persist(userEntity);
-                return Optional.ofNullable(conversionService.convert(userEntity, CreateOrUpdateUserResponse.class));
+                return Optional.ofNullable(conversionService.convert(userEntity, UserPasswordResponse.class));
             }
 
         } catch (IllegalArgumentException | ConstraintViolationException e) {

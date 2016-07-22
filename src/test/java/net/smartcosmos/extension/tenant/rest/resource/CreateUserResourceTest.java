@@ -1,30 +1,26 @@
 package net.smartcosmos.extension.tenant.rest.resource;
 
+import net.smartcosmos.extension.tenant.TenantPersistenceTestApplication;
+import net.smartcosmos.extension.tenant.dao.TenantDao;
+import net.smartcosmos.extension.tenant.dto.user.UserPasswordResponse;
+import net.smartcosmos.extension.tenant.rest.dto.user.RestCreateOrUpdateUserRequest;
+import net.smartcosmos.extension.tenant.util.UuidUtil;
+import org.junit.After;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.web.servlet.MvcResult;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.junit.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.web.servlet.MvcResult;
-
-import net.smartcosmos.extension.tenant.TenantPersistenceTestApplication;
-import net.smartcosmos.extension.tenant.dao.TenantDao;
-import net.smartcosmos.extension.tenant.dto.user.CreateOrUpdateUserResponse;
-import net.smartcosmos.extension.tenant.rest.dto.user.RestCreateOrUpdateUserRequest;
-import net.smartcosmos.extension.tenant.util.UuidUtil;
-
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.startsWith;
 import static org.mockito.Matchers.anyObject;
-import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.asyncDispatch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
  * Unit Testing sample for creating Tenants.
@@ -67,17 +63,15 @@ public class CreateUserResourceTest extends AbstractTestResource {
         List<String> userRoles = new ArrayList<>();
         userRoles.add("User");
 
-        CreateOrUpdateUserResponse createOrUpdateUserResponse = CreateOrUpdateUserResponse
+        UserPasswordResponse userPasswordResponse = UserPasswordResponse
             .builder()
             .urn(expectedUserUrn)
             .tenantUrn(expectedTenantUrn)
             .username(username)
-            .emailAddress(emailAddress)
-            .active(true)
             .roles(userRoles)
             .build();
 
-        when(tenantDao.createUser(anyString(), anyObject())).thenReturn(Optional.ofNullable(createOrUpdateUserResponse));
+        when(tenantDao.createUser(anyString(), anyObject())).thenReturn(Optional.ofNullable(userPasswordResponse));
 
         org.springframework.test.web.servlet.MvcResult mvcResult = this.mockMvc.perform(
             post("/users").content(this.json(RestCreateOrUpdateUserRequest.builder()

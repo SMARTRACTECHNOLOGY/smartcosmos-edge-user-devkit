@@ -18,7 +18,7 @@ import net.smartcosmos.events.DefaultEventTypes;
 import net.smartcosmos.events.SmartCosmosEventTemplate;
 import net.smartcosmos.extension.tenant.dao.RoleDao;
 import net.smartcosmos.extension.tenant.dao.TenantDao;
-import net.smartcosmos.extension.tenant.dto.user.CreateOrUpdateUserResponse;
+import net.smartcosmos.extension.tenant.dto.user.UserPasswordResponse;
 import net.smartcosmos.extension.tenant.dto.user.CreateUserRequest;
 import net.smartcosmos.extension.tenant.rest.dto.user.RestCreateOrUpdateUserRequest;
 import net.smartcosmos.extension.tenant.rest.service.AbstractTenantService;
@@ -53,7 +53,7 @@ public class CreateUserService extends AbstractTenantService {
         try {
             final CreateUserRequest createUserRequest = conversionService.convert(restCreateUserRequest, CreateUserRequest.class);
 
-            Optional<CreateOrUpdateUserResponse> newUser = tenantDao.createUser(user.getAccountUrn(), createUserRequest);
+            Optional<UserPasswordResponse> newUser = tenantDao.createUser(user.getAccountUrn(), createUserRequest);
 
             if (newUser.isPresent()) {
                 ResponseEntity responseEntity = buildCreatedResponseEntity(newUser.get());
@@ -70,7 +70,7 @@ public class CreateUserService extends AbstractTenantService {
         }
     }
 
-    private ResponseEntity buildCreatedResponseEntity(CreateOrUpdateUserResponse response) {
+    private ResponseEntity buildCreatedResponseEntity(UserPasswordResponse response) {
         return ResponseEntity
             .created(URI.create(response.getUrn()))
             .body(response);

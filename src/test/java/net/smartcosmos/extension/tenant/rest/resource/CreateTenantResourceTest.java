@@ -1,34 +1,32 @@
 package net.smartcosmos.extension.tenant.rest.resource;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import org.junit.*;
-import org.junit.runner.*;
+import net.smartcosmos.extension.tenant.TenantPersistenceConfig;
+import net.smartcosmos.extension.tenant.TenantPersistenceTestApplication;
+import net.smartcosmos.extension.tenant.dao.TenantDao;
+import net.smartcosmos.extension.tenant.dto.tenant.CreateTenantResponse;
+import net.smartcosmos.extension.tenant.dto.user.UserPasswordResponse;
+import net.smartcosmos.extension.tenant.rest.dto.tenant.RestCreateTenantRequest;
+import net.smartcosmos.extension.tenant.util.UuidUtil;
+import org.junit.After;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MvcResult;
 
-import net.smartcosmos.extension.tenant.TenantPersistenceConfig;
-import net.smartcosmos.extension.tenant.TenantPersistenceTestApplication;
-import net.smartcosmos.extension.tenant.dao.TenantDao;
-import net.smartcosmos.extension.tenant.dto.tenant.CreateTenantResponse;
-import net.smartcosmos.extension.tenant.dto.user.CreateOrUpdateUserResponse;
-import net.smartcosmos.extension.tenant.rest.dto.tenant.RestCreateTenantRequest;
-import net.smartcosmos.extension.tenant.util.UuidUtil;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.startsWith;
 import static org.mockito.Matchers.anyObject;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.asyncDispatch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
  * Unit Testing sample for creating Tenants.
@@ -57,6 +55,7 @@ public class CreateTenantResourceTest extends AbstractTestResource {
 
         final String name = "example.com";
         final String username = "spam@example.com";
+        final String password = "ChangeMe";
 
         final String expectedTenantUrn = "urn:tenant:uuid:" + UuidUtil.getNewUuid()
             .toString();
@@ -67,21 +66,17 @@ public class CreateTenantResourceTest extends AbstractTestResource {
         List<String> adminRoles = new ArrayList<>();
         adminRoles.add("Admin");
 
-        CreateOrUpdateUserResponse createOrUpdateUserResponse = CreateOrUpdateUserResponse
-            .builder()
+        UserPasswordResponse userPasswordResponse = UserPasswordResponse.builder()
             .urn(expectedUserUrn)
             .username(username)
-            .emailAddress(username)
-            .active(true)
+            .password(password)
             .roles(adminRoles)
+            .tenantUrn(expectedTenantUrn)
             .build();
 
-        CreateTenantResponse createTenantResponse = CreateTenantResponse
-            .builder()
+        CreateTenantResponse createTenantResponse = CreateTenantResponse.builder()
             .urn(expectedTenantUrn)
-            .name(name)
-            .active(true)
-            .admin(createOrUpdateUserResponse)
+            .admin(userPasswordResponse)
             .build();
 
         when(tenantDao.createTenant(anyObject())).thenReturn(Optional.ofNullable(createTenantResponse));
@@ -100,9 +95,13 @@ public class CreateTenantResourceTest extends AbstractTestResource {
             .andExpect(status().isCreated())
             .andExpect(content().contentType(contentType))
             .andExpect(jsonPath("$.urn", startsWith("urn:tenant:uuid")))
-            .andExpect(jsonPath("$.name", is(name)))
-            .andExpect(jsonPath("$.admin.emailAddress", is(username)))
+            .andExpect(jsonPath("$.name").doesNotExist())
+            .andExpect(jsonPath("$.admin").isMap())
+            .andExpect(jsonPath("$.admin.emailAddress").doesNotExist())
             .andExpect(jsonPath("$.admin.username", is(username)))
+            .andExpect(jsonPath("$.admin.password", is(password)))
+            .andExpect(jsonPath("$.admin.roles").isArray())
+            .andExpect(jsonPath("$.admin.tenantUrn", startsWith("urn:tenant:uuid")))
             .andExpect(jsonPath("$.admin.urn", startsWith("urn:user:uuid")));
 
     }
