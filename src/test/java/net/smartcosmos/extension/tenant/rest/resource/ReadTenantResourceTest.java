@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MvcResult;
 
 import net.smartcosmos.extension.tenant.dao.TenantDao;
-import net.smartcosmos.extension.tenant.dto.GetTenantResponse;
+import net.smartcosmos.extension.tenant.dto.tenant.TenantResponse;
 import net.smartcosmos.extension.tenant.util.UuidUtil;
 
 import static org.hamcrest.Matchers.is;
@@ -35,12 +35,12 @@ public class ReadTenantResourceTest extends AbstractTestResource {
         String name = "getByUrn";
         String urn = "accountUrn"; // Tenant URN from AbstractTestResource
 
-        GetTenantResponse response1 = GetTenantResponse.builder()
+        TenantResponse response1 = TenantResponse.builder()
             .active(true)
             .name(name)
             .urn(urn)
             .build();
-        Optional<GetTenantResponse> response = Optional.of(response1);
+        Optional<TenantResponse> response = Optional.of(response1);
 
         when(tenantDao.findTenantByUrn(anyString())).thenReturn(response);
 
@@ -62,16 +62,16 @@ public class ReadTenantResourceTest extends AbstractTestResource {
 
         String urn = UuidUtil.getTenantUrnFromUuid(UuidUtil.getNewUuid());
 
-        Optional<GetTenantResponse> response = Optional.empty();
+        Optional<TenantResponse> response = Optional.empty();
 
         when(tenantDao.findTenantByUrn(anyString())).thenReturn(response);
 
         MvcResult mvcResult = mockMvc.perform(
             get("/tenants/{urn}", urn).contentType(APPLICATION_JSON_UTF8))
-            .andExpect(status().isBadRequest())
+            .andExpect(status().isNotFound())
             .andReturn();
 
-        verify(tenantDao, times(0)).findTenantByUrn(anyString());
+        verify(tenantDao, times(1)).findTenantByUrn(anyString());
         verifyNoMoreInteractions(tenantDao);
     }
 
@@ -81,14 +81,14 @@ public class ReadTenantResourceTest extends AbstractTestResource {
         String name = "getByName";
         String urn = UuidUtil.getTenantUrnFromUuid(UuidUtil.getNewUuid());
 
-        GetTenantResponse response1 = GetTenantResponse.builder()
+        TenantResponse response1 = TenantResponse.builder()
             .active(true)
             .name(name)
             .urn(urn)
             .build();
-        Optional<GetTenantResponse> response = Optional.of(response1);
+        Optional<TenantResponse> response = Optional.of(response1);
 
-        when(tenantDao.findTenantByName(anyString(), anyString())).thenReturn(response);
+        when(tenantDao.findTenantByName(anyString())).thenReturn(response);
 
         MvcResult mvcResult = mockMvc.perform(
             get("/tenants/?name={name}", name).contentType(APPLICATION_JSON_UTF8))
@@ -99,7 +99,7 @@ public class ReadTenantResourceTest extends AbstractTestResource {
             .andExpect(jsonPath("$.urn", is(urn)))
             .andReturn();
 
-        verify(tenantDao, times(1)).findTenantByName(anyString(), anyString());
+        verify(tenantDao, times(1)).findTenantByName(anyString());
         verifyNoMoreInteractions(tenantDao);
     }
 
@@ -108,16 +108,16 @@ public class ReadTenantResourceTest extends AbstractTestResource {
 
         String name = "noSuchTenant";
 
-        Optional<GetTenantResponse> response = Optional.empty();
+        Optional<TenantResponse> response = Optional.empty();
 
-        when(tenantDao.findTenantByName(anyString(), anyString())).thenReturn(response);
+        when(tenantDao.findTenantByName(anyString())).thenReturn(response);
 
         MvcResult mvcResult = mockMvc.perform(
             get("/tenants/?name={name}", name).contentType(APPLICATION_JSON_UTF8))
             .andExpect(status().isNotFound())
             .andReturn();
 
-        verify(tenantDao, times(1)).findTenantByName(anyString(), anyString());
+        verify(tenantDao, times(1)).findTenantByName(anyString());
         verifyNoMoreInteractions(tenantDao);
     }
 }

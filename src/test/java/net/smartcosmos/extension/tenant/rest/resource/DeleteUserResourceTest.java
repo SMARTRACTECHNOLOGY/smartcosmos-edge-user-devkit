@@ -10,8 +10,7 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import net.smartcosmos.extension.tenant.TenantPersistenceTestApplication;
 import net.smartcosmos.extension.tenant.dao.TenantDao;
-import net.smartcosmos.extension.tenant.dto.GetOrDeleteUserResponse;
-import net.smartcosmos.extension.tenant.dto.UserDto;
+import net.smartcosmos.extension.tenant.dto.user.GetOrDeleteUserResponse;
 import net.smartcosmos.extension.tenant.util.UuidUtil;
 
 import static org.mockito.Mockito.*;
@@ -60,14 +59,6 @@ public class DeleteUserResourceTest extends AbstractTestResource {
             .emailAddress(emailAddress)
             .roles(userRoles)
             .active(true)
-            .build();
-
-        UserDto userDto = UserDto.builder()
-            .tenantUrn(expectedTenantUrn)
-            .userUrn(expectedUserUrn)
-            .username(username)
-            .passwordHash("whatever")
-            .roles(userRoles)
             .build();
 
         when(tenantDao.deleteUserByUrn(anyString(), anyString())).thenReturn(Optional.ofNullable(getOrDeleteUserResponse));

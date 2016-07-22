@@ -10,14 +10,14 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import net.smartcosmos.extension.tenant.TenantPersistenceTestApplication;
 import net.smartcosmos.extension.tenant.dao.TenantDao;
-import net.smartcosmos.extension.tenant.dto.CreateOrUpdateUserResponse;
-import net.smartcosmos.extension.tenant.dto.UserDto;
-import net.smartcosmos.extension.tenant.rest.dto.RestCreateUserRequest;
+import net.smartcosmos.extension.tenant.dto.user.CreateOrUpdateUserResponse;
+import net.smartcosmos.extension.tenant.rest.dto.user.RestCreateOrUpdateUserRequest;
 import net.smartcosmos.extension.tenant.util.UuidUtil;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.startsWith;
 import static org.mockito.Matchers.anyObject;
+import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.asyncDispatch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -77,18 +77,10 @@ public class CreateUserResourceTest extends AbstractTestResource {
             .roles(userRoles)
             .build();
 
-        UserDto userDto = UserDto.builder()
-            .tenantUrn(expectedTenantUrn)
-            .userUrn(expectedUserUrn)
-            .username(username)
-            .passwordHash("whatever")
-            .roles(userRoles)
-            .build();
-
         when(tenantDao.createUser(anyString(), anyObject())).thenReturn(Optional.ofNullable(createOrUpdateUserResponse));
 
         org.springframework.test.web.servlet.MvcResult mvcResult = this.mockMvc.perform(
-            post("/users").content(this.json(RestCreateUserRequest.builder()
+            post("/users").content(this.json(RestCreateOrUpdateUserRequest.builder()
                                                  .username(username)
                                                  .emailAddress(emailAddress)
                                                  .roles(userRoleOnly)

@@ -1,9 +1,7 @@
 package net.smartcosmos.extension.tenant.util;
 
-import org.springframework.security.crypto.password.PasswordEncoder;
-
 import net.smartcosmos.extension.tenant.domain.UserEntity;
-import net.smartcosmos.extension.tenant.dto.UpdateUserRequest;
+import net.smartcosmos.extension.tenant.dto.user.UpdateUserRequest;
 
 public class MergeUtil {
 

@@ -9,13 +9,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
+import net.smartcosmos.annotation.EnableSmartCosmosEvents;
+import net.smartcosmos.annotation.EnableSmartCosmosExtension;
+import net.smartcosmos.annotation.EnableSmartCosmosSecurity;
 import net.smartcosmos.extension.tenant.config.AnonymousAccessSecurityConfiguration;
-import net.smartcosmos.spring.EnableSmartCosmos;
-import net.smartcosmos.spring.EnableSmartCosmosExtension;
-import net.smartcosmos.spring.EnableSmartCosmosSecurity;
 
 @EnableSmartCosmosExtension
-@EnableSmartCosmos
+@EnableSmartCosmosEvents
 @EnableSmartCosmosSecurity
 @EnableWebMvc
 //@Import({ AnonymousAccessSecurityConfiguration.class, ServiceUserAccessSecurityConfiguration.class})
@@ -31,5 +31,4 @@ public class TenantRdao extends WebMvcConfigurerAdapter {
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
 }
