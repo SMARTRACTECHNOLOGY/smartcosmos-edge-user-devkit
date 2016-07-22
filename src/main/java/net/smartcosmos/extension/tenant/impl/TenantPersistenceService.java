@@ -267,20 +267,13 @@ public class TenantPersistenceService implements TenantDao {
         }
     }
 
-    /**
-     *
-     * @param tenantUrn
-     * @param updateUserRequest
-     * @return Optional<CreateOrUpdateUserResponse>
-     * @throws ConstraintViolationException
-     */
     @Override
-    public Optional<CreateOrUpdateUserResponse> updateUser(String tenantUrn, UpdateUserRequest updateUserRequest)
+    public Optional<CreateOrUpdateUserResponse> updateUser(String tenantUrn, String userUrn, UpdateUserRequest updateUserRequest)
         throws ConstraintViolationException {
 
         try {
             UUID tenantId = UuidUtil.getUuidFromUrn(tenantUrn);
-            Optional<UserEntity> userEntityOptional = userRepository.findByTenantIdAndId(tenantId, UuidUtil.getUuidFromUrn(updateUserRequest.getUrn()));
+            Optional<UserEntity> userEntityOptional = userRepository.findByTenantIdAndId(tenantId, UuidUtil.getUuidFromUrn(userUrn));
 
             if (userEntityOptional.isPresent()) {
                 UserEntity userEntity = MergeUtil.merge(userEntityOptional.get(), updateUserRequest);

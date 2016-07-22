@@ -19,7 +19,6 @@ public class UpdateUserRequest {
     private static final int VERSION = 1;
     private final int version = VERSION;
 
-    private String urn;
     private String username;
     private String emailAddress;
     private String givenName;
@@ -30,11 +29,10 @@ public class UpdateUserRequest {
     private Boolean active;
 
     @Builder
-    @ConstructorProperties({ "urn", "username", "emailAddress", "givenName", "surname", "password", "roles", "active" })
+    @ConstructorProperties({ "username", "emailAddress", "givenName", "surname", "password", "roles", "active" })
     public UpdateUserRequest(
-        String urn, String username, String emailAddress, String givenName, String surname, List<String> roles, Boolean active) {
+        String username, String emailAddress, String givenName, String surname, List<String> roles, Boolean active) {
 
-        this.urn = urn;
         this.username = username;
         this.emailAddress = emailAddress;
         this.givenName = givenName;
