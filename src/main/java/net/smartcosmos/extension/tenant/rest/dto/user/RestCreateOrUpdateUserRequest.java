@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 //@ApiModel(description = "Create a \"Tenant\" in the smartcosmos-edge-tenant Server.")
-public class RestUpdateUserRequest {
+public class RestCreateOrUpdateUserRequest {
 
     private static final int VERSION = 1;
     private final int version = VERSION;
@@ -30,7 +30,7 @@ public class RestUpdateUserRequest {
 
     @Builder
     @ConstructorProperties({ "username", "emailAddress", "givenName", "surname", "roles", "active" })
-    public RestUpdateUserRequest(
+    public RestCreateOrUpdateUserRequest(
         String username, String emailAddress, String givenName, String surname, List<String> roles,
         Boolean active) {
         this.username = username;

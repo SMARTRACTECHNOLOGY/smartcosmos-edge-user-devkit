@@ -6,24 +6,24 @@ import org.springframework.format.FormatterRegistry;
 import org.springframework.stereotype.Component;
 
 import net.smartcosmos.extension.tenant.dto.user.UpdateUserRequest;
-import net.smartcosmos.extension.tenant.rest.dto.user.RestUpdateUserRequest;
+import net.smartcosmos.extension.tenant.rest.dto.user.RestCreateOrUpdateUserRequest;
 
 /**
  * Initially created by SMART COSMOS Team on July 01, 2016.
  */
 @Component
 public class RestUpdateUserRequestToUpdateUserRequestConverter
-    implements Converter<RestUpdateUserRequest, UpdateUserRequest>, FormatterRegistrar {
+    implements Converter<RestCreateOrUpdateUserRequest, UpdateUserRequest>, FormatterRegistrar {
 
     @Override
-    public UpdateUserRequest convert(RestUpdateUserRequest restUpdateUserRequest) {
+    public UpdateUserRequest convert(RestCreateOrUpdateUserRequest userRequest) {
         return UpdateUserRequest.builder()
-            .username(restUpdateUserRequest.getUsername())
-            .emailAddress(restUpdateUserRequest.getEmailAddress())
-            .givenName(restUpdateUserRequest.getGivenName())
-            .surname(restUpdateUserRequest.getSurname())
-            .roles(restUpdateUserRequest.getRoles())
-            .active(restUpdateUserRequest.getActive())
+            .username(userRequest.getUsername())
+            .emailAddress(userRequest.getEmailAddress())
+            .givenName(userRequest.getGivenName())
+            .surname(userRequest.getSurname())
+            .roles(userRequest.getRoles())
+            .active(userRequest.getActive())
             .build();
     }
 

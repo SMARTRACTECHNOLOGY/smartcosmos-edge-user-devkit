@@ -19,7 +19,7 @@ import net.smartcosmos.extension.tenant.dao.TenantDao;
 import net.smartcosmos.extension.tenant.dto.user.CreateOrUpdateUserResponse;
 import net.smartcosmos.extension.tenant.dto.user.CreateUserRequest;
 import net.smartcosmos.extension.tenant.dto.user.GetOrDeleteUserResponse;
-import net.smartcosmos.extension.tenant.rest.dto.user.RestCreateUserRequest;
+import net.smartcosmos.extension.tenant.rest.dto.user.RestCreateOrUpdateUserRequest;
 import net.smartcosmos.security.user.SmartCosmosUser;
 
 /**
@@ -36,7 +36,7 @@ public class CreateUserService extends AbstractTenantService {
         super(tenantDao, roleDao, smartCosmosEventTemplate, conversionService);
     }
 
-    public DeferredResult<ResponseEntity> create(RestCreateUserRequest restCreateUserRequest, SmartCosmosUser user) {
+    public DeferredResult<ResponseEntity> create(RestCreateOrUpdateUserRequest restCreateUserRequest, SmartCosmosUser user) {
         // Async worker thread reduces timeouts and disconnects for long queries and processing.
         DeferredResult<ResponseEntity> response = new DeferredResult<>();
         createUserWorker(response, user.getAccountUrn(), restCreateUserRequest);
@@ -45,7 +45,7 @@ public class CreateUserService extends AbstractTenantService {
     }
 
     @Async
-    private void createUserWorker(DeferredResult<ResponseEntity> response, String tenantUrn, RestCreateUserRequest restCreateUserRequest) {
+    private void createUserWorker(DeferredResult<ResponseEntity> response, String tenantUrn, RestCreateOrUpdateUserRequest restCreateUserRequest) {
 
         try {
             final CreateUserRequest createUserRequest = conversionService.convert(restCreateUserRequest, CreateUserRequest.class);

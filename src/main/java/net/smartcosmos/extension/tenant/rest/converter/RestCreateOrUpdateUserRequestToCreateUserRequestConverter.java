@@ -6,17 +6,17 @@ import org.springframework.format.FormatterRegistry;
 import org.springframework.stereotype.Component;
 
 import net.smartcosmos.extension.tenant.dto.user.CreateUserRequest;
-import net.smartcosmos.extension.tenant.rest.dto.user.RestCreateUserRequest;
+import net.smartcosmos.extension.tenant.rest.dto.user.RestCreateOrUpdateUserRequest;
 
 /**
  * Initially created by SMART COSMOS Team on July 01, 2016.
  */
 @Component
-public class RestCreateUserRequestToCreateUserRequestConverter
-    implements Converter<RestCreateUserRequest, CreateUserRequest>, FormatterRegistrar {
+public class RestCreateOrUpdateUserRequestToCreateUserRequestConverter
+    implements Converter<RestCreateOrUpdateUserRequest, CreateUserRequest>, FormatterRegistrar {
 
     @Override
-    public CreateUserRequest convert(RestCreateUserRequest restCreateUserRequest) {
+    public CreateUserRequest convert(RestCreateOrUpdateUserRequest restCreateUserRequest) {
         return CreateUserRequest.builder()
             .username(restCreateUserRequest.getUsername())
             .emailAddress(restCreateUserRequest.getEmailAddress())

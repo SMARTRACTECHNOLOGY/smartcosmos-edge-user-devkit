@@ -12,7 +12,7 @@ import net.smartcosmos.extension.tenant.TenantPersistenceTestApplication;
 import net.smartcosmos.extension.tenant.dao.TenantDao;
 import net.smartcosmos.extension.tenant.dto.user.CreateOrUpdateUserResponse;
 import net.smartcosmos.extension.tenant.dto.user.UserDto;
-import net.smartcosmos.extension.tenant.rest.dto.user.RestCreateUserRequest;
+import net.smartcosmos.extension.tenant.rest.dto.user.RestCreateOrUpdateUserRequest;
 import net.smartcosmos.extension.tenant.util.UuidUtil;
 
 import static org.hamcrest.Matchers.is;
@@ -88,7 +88,7 @@ public class CreateUserResourceTest extends AbstractTestResource {
         when(tenantDao.createUser(anyString(), anyObject())).thenReturn(Optional.ofNullable(createOrUpdateUserResponse));
 
         org.springframework.test.web.servlet.MvcResult mvcResult = this.mockMvc.perform(
-            post("/users").content(this.json(RestCreateUserRequest.builder()
+            post("/users").content(this.json(RestCreateOrUpdateUserRequest.builder()
                                                  .username(username)
                                                  .emailAddress(emailAddress)
                                                  .roles(userRoleOnly)
