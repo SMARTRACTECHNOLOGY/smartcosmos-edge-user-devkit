@@ -90,6 +90,11 @@ public class TenantPersistenceService implements TenantDao {
     public Optional<CreateTenantResponse> createTenant(CreateTenantRequest createTenantRequest)
         throws ConstraintViolationException {
 
+        // Usernames have to be unique in the system for now, so we need that:
+        if (userAlreadyExists(createTenantRequest.getUsername())) {
+            return Optional.empty();
+        }
+
         try {
             // This tenant already exists? we're not creating a new one
             if (tenantRepository.findByNameIgnoreCase(createTenantRequest.getName())
@@ -384,6 +389,7 @@ public class TenantPersistenceService implements TenantDao {
             .urn(UuidUtil.getUserUrnFromUuid(user.getId()))
             .tenantUrn(UuidUtil.getTenantUrnFromUuid(user.getTenantId()))
             .username(user.getUsername())
+            .passwordHash(user.getPassword())
             .authorities(authorities)
             .build();
 
@@ -396,15 +402,15 @@ public class TenantPersistenceService implements TenantDao {
 
     private RoleEntity createAdminRole(String tenantUrn) {
         List<String> authorities = new ArrayList<>();
-        authorities.add("smartcosmos.things.read");
-        authorities.add("smartcosmos.things.write");
+        authorities.add("https://authorities.smartcosmos.net/things/read");
+        authorities.add("https://authorities.smartcosmos.net/things/write");
 
         return createRole(tenantUrn, "Admin", authorities);
     }
 
     private RoleEntity createUserRole(String tenantUrn) {
         List<String> authorities = new ArrayList<>();
-        authorities.add("smartcosmos.things.read");
+        authorities.add("https://authorities.smartcosmos.net/things/read");
 
         return createRole(tenantUrn, "User", authorities);
     }

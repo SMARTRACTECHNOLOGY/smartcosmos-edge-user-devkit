@@ -12,15 +12,14 @@ import net.smartcosmos.events.SmartCosmosEventTemplate;
 import net.smartcosmos.extension.tenant.dao.RoleDao;
 import net.smartcosmos.extension.tenant.dao.TenantDao;
 import net.smartcosmos.extension.tenant.dto.GetAuthoritiesResponse;
-import net.smartcosmos.extension.tenant.rest.dto.RestLoginRequest;
-import net.smartcosmos.extension.tenant.rest.dto.RestLoginResponse;
-import net.smartcosmos.security.user.SmartCosmosUser;
+import net.smartcosmos.extension.tenant.rest.dto.RestAuthenticateRequest;
+import net.smartcosmos.extension.tenant.rest.dto.RestAuthenticateResponse;
 
 @Service
-public class LoginService extends AbstractTenantService {
+public class AuthenticationService extends AbstractTenantService {
 
     @Inject
-    public LoginService(
+    public AuthenticationService(
         TenantDao tenantDao,
         RoleDao roleDao,
         SmartCosmosEventTemplate smartCosmosEventTemplate,
@@ -29,12 +28,12 @@ public class LoginService extends AbstractTenantService {
         super(tenantDao, roleDao, smartCosmosEventTemplate, conversionService);
     }
 
-    public ResponseEntity<?> validateCredentials(RestLoginRequest credentials, SmartCosmosUser user) {
+    public ResponseEntity<?> authenticate(RestAuthenticateRequest authenticate) {
 
-        Optional<GetAuthoritiesResponse> entity = tenantDao.getAuthorities(credentials.getUsername(), credentials.getPassword());
+        Optional<GetAuthoritiesResponse> entity = tenantDao.getAuthorities(authenticate.getName(), authenticate.getCredentials());
         if (entity.isPresent()) {
 
-            return ResponseEntity.ok(conversionService.convert(entity.get(), RestLoginResponse.class));
+            return ResponseEntity.ok(conversionService.convert(entity.get(), RestAuthenticateResponse.class));
         }
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
