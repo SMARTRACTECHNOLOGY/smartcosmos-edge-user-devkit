@@ -206,8 +206,7 @@ public class TenantPersistenceService implements TenantDao {
     @Override
     public Optional<GetTenantResponse> findTenantByName(String tenantUrn, String name) {
 
-        UUID tenantId = UuidUtil.getUuidFromUrn(tenantUrn);
-        Optional<TenantEntity> entity = tenantRepository.findByIdAndNameIgnoreCase(tenantId, name);
+        Optional<TenantEntity> entity = tenantRepository.findByNameIgnoreCase(name);
         if (entity.isPresent()) {
             return Optional.of(conversionService.convert(entity.get(), GetTenantResponse.class));
         }

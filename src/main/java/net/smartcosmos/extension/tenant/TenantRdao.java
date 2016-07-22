@@ -31,5 +31,4 @@ public class TenantRdao extends WebMvcConfigurerAdapter {
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
 }
