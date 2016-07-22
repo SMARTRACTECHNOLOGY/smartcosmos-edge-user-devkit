@@ -1,6 +1,4 @@
-package net.smartcosmos.extension.tenant.dto;
-
-import java.util.List;
+package net.smartcosmos.extension.tenant.dto.tenant;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -13,18 +11,12 @@ import lombok.Data;
 @JsonIgnoreProperties({ "version" })
 @Builder
 @AllArgsConstructor
-public class CreateOrUpdateUserResponse {
+public class GetTenantResponse {
 
     private static final int VERSION = 1;
     private final int version = VERSION;
 
     private final String urn;
-    private final String tenantUrn;
-    private final String username;
-    private final String emailAddress;
-    private final String givenName;
-    private final String surname;
-    private String password;
-    private final List<String> roles;
+    private final String name;
     private final Boolean active;
 }

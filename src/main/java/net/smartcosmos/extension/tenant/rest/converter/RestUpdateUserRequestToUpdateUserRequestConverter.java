@@ -5,8 +5,8 @@ import org.springframework.format.FormatterRegistrar;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.stereotype.Component;
 
-import net.smartcosmos.extension.tenant.dto.UpdateUserRequest;
-import net.smartcosmos.extension.tenant.rest.dto.RestUpdateUserRequest;
+import net.smartcosmos.extension.tenant.dto.user.UpdateUserRequest;
+import net.smartcosmos.extension.tenant.rest.dto.user.RestUpdateUserRequest;
 
 /**
  * Initially created by SMART COSMOS Team on July 01, 2016.

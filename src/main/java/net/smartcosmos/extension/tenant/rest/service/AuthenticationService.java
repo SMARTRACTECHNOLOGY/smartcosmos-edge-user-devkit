@@ -11,9 +11,9 @@ import org.springframework.stereotype.Service;
 import net.smartcosmos.events.SmartCosmosEventTemplate;
 import net.smartcosmos.extension.tenant.dao.RoleDao;
 import net.smartcosmos.extension.tenant.dao.TenantDao;
-import net.smartcosmos.extension.tenant.dto.GetAuthoritiesResponse;
-import net.smartcosmos.extension.tenant.rest.dto.RestAuthenticateRequest;
-import net.smartcosmos.extension.tenant.rest.dto.RestAuthenticateResponse;
+import net.smartcosmos.extension.tenant.dto.authentication.GetAuthoritiesResponse;
+import net.smartcosmos.extension.tenant.rest.dto.authentication.RestAuthenticateRequest;
+import net.smartcosmos.extension.tenant.rest.dto.authentication.RestAuthenticateResponse;
 
 @Service
 public class AuthenticationService extends AbstractTenantService {

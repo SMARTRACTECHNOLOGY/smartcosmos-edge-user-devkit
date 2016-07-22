@@ -6,7 +6,7 @@ import org.springframework.format.FormatterRegistry;
 import org.springframework.stereotype.Component;
 
 import net.smartcosmos.extension.tenant.domain.TenantEntity;
-import net.smartcosmos.extension.tenant.dto.UpdateTenantResponse;
+import net.smartcosmos.extension.tenant.dto.tenant.UpdateTenantResponse;
 import net.smartcosmos.extension.tenant.util.UuidUtil;
 
 @Component

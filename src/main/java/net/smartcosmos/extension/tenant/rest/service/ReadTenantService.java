@@ -12,8 +12,8 @@ import org.springframework.stereotype.Service;
 import net.smartcosmos.events.SmartCosmosEventTemplate;
 import net.smartcosmos.extension.tenant.dao.RoleDao;
 import net.smartcosmos.extension.tenant.dao.TenantDao;
-import net.smartcosmos.extension.tenant.dto.GetTenantResponse;
-import net.smartcosmos.extension.tenant.rest.dto.RestTenantSingleResponse;
+import net.smartcosmos.extension.tenant.dto.tenant.GetTenantResponse;
+import net.smartcosmos.extension.tenant.rest.dto.tenant.RestTenantSingleResponse;
 
 @Slf4j
 @Service

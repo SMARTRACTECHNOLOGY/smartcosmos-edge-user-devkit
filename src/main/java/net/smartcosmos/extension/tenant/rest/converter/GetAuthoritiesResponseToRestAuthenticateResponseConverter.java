@@ -5,8 +5,8 @@ import org.springframework.format.FormatterRegistrar;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.stereotype.Component;
 
-import net.smartcosmos.extension.tenant.dto.GetAuthoritiesResponse;
-import net.smartcosmos.extension.tenant.rest.dto.RestAuthenticateResponse;
+import net.smartcosmos.extension.tenant.dto.authentication.GetAuthoritiesResponse;
+import net.smartcosmos.extension.tenant.rest.dto.authentication.RestAuthenticateResponse;
 
 @Component
 public class GetAuthoritiesResponseToRestAuthenticateResponseConverter

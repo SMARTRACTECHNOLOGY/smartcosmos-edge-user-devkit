@@ -9,8 +9,8 @@ import org.springframework.format.FormatterRegistry;
 import org.springframework.stereotype.Component;
 
 import net.smartcosmos.extension.tenant.domain.RoleEntity;
-import net.smartcosmos.extension.tenant.dto.CreateOrUpdateUserResponse;
-import net.smartcosmos.extension.tenant.dto.CreateTenantResponse;
+import net.smartcosmos.extension.tenant.dto.user.CreateOrUpdateUserResponse;
+import net.smartcosmos.extension.tenant.dto.tenant.CreateTenantResponse;
 import net.smartcosmos.extension.tenant.dto.TenantEntityAndUserEntityDto;
 import net.smartcosmos.extension.tenant.util.UuidUtil;
 

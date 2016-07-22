@@ -16,10 +16,10 @@ import org.springframework.web.context.request.async.DeferredResult;
 import net.smartcosmos.events.SmartCosmosEventTemplate;
 import net.smartcosmos.extension.tenant.dao.RoleDao;
 import net.smartcosmos.extension.tenant.dao.TenantDao;
-import net.smartcosmos.extension.tenant.dto.CreateOrUpdateUserResponse;
-import net.smartcosmos.extension.tenant.dto.CreateUserRequest;
-import net.smartcosmos.extension.tenant.dto.GetOrDeleteUserResponse;
-import net.smartcosmos.extension.tenant.rest.dto.RestCreateUserRequest;
+import net.smartcosmos.extension.tenant.dto.user.CreateOrUpdateUserResponse;
+import net.smartcosmos.extension.tenant.dto.user.CreateUserRequest;
+import net.smartcosmos.extension.tenant.dto.user.GetOrDeleteUserResponse;
+import net.smartcosmos.extension.tenant.rest.dto.user.RestCreateUserRequest;
 import net.smartcosmos.security.user.SmartCosmosUser;
 
 /**

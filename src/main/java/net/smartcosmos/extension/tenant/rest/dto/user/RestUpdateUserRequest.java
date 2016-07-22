@@ -1,4 +1,4 @@
-package net.smartcosmos.extension.tenant.rest.dto;
+package net.smartcosmos.extension.tenant.rest.dto.user;
 
 import java.beans.ConstructorProperties;
 import java.util.ArrayList;

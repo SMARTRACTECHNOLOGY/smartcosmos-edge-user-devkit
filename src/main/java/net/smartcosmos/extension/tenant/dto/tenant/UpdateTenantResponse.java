@@ -1,4 +1,4 @@
-package net.smartcosmos.extension.tenant.dto;
+package net.smartcosmos.extension.tenant.dto.tenant;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -11,7 +11,7 @@ import lombok.Data;
 @JsonIgnoreProperties({ "version" })
 @Builder
 @AllArgsConstructor
-public class GetTenantResponse {
+public class UpdateTenantResponse {
 
     private static final int VERSION = 1;
     private final int version = VERSION;

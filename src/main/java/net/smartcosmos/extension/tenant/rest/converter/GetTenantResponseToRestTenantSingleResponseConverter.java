@@ -5,8 +5,8 @@ import org.springframework.format.FormatterRegistrar;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.stereotype.Component;
 
-import net.smartcosmos.extension.tenant.dto.GetTenantResponse;
-import net.smartcosmos.extension.tenant.rest.dto.RestTenantSingleResponse;
+import net.smartcosmos.extension.tenant.dto.tenant.GetTenantResponse;
+import net.smartcosmos.extension.tenant.rest.dto.tenant.RestTenantSingleResponse;
 
 @Component
 public class GetTenantResponseToRestTenantSingleResponseConverter

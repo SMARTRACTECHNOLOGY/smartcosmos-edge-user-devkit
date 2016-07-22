@@ -16,9 +16,9 @@ import org.springframework.web.context.request.async.DeferredResult;
 import net.smartcosmos.events.SmartCosmosEventTemplate;
 import net.smartcosmos.extension.tenant.dao.RoleDao;
 import net.smartcosmos.extension.tenant.dao.TenantDao;
-import net.smartcosmos.extension.tenant.dto.UpdateTenantRequest;
-import net.smartcosmos.extension.tenant.dto.UpdateTenantResponse;
-import net.smartcosmos.extension.tenant.rest.dto.RestUpdateTenantRequest;
+import net.smartcosmos.extension.tenant.dto.tenant.UpdateTenantRequest;
+import net.smartcosmos.extension.tenant.dto.tenant.UpdateTenantResponse;
+import net.smartcosmos.extension.tenant.rest.dto.tenant.RestUpdateTenantRequest;
 import net.smartcosmos.security.user.SmartCosmosUser;
 
 /**

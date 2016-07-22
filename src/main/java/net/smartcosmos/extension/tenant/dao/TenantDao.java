@@ -4,16 +4,16 @@ import java.util.Optional;
 
 import javax.validation.ConstraintViolationException;
 
-import net.smartcosmos.extension.tenant.dto.CreateOrUpdateUserResponse;
-import net.smartcosmos.extension.tenant.dto.CreateTenantRequest;
-import net.smartcosmos.extension.tenant.dto.CreateTenantResponse;
-import net.smartcosmos.extension.tenant.dto.CreateUserRequest;
-import net.smartcosmos.extension.tenant.dto.GetAuthoritiesResponse;
-import net.smartcosmos.extension.tenant.dto.GetOrDeleteUserResponse;
-import net.smartcosmos.extension.tenant.dto.GetTenantResponse;
-import net.smartcosmos.extension.tenant.dto.UpdateTenantRequest;
-import net.smartcosmos.extension.tenant.dto.UpdateTenantResponse;
-import net.smartcosmos.extension.tenant.dto.UpdateUserRequest;
+import net.smartcosmos.extension.tenant.dto.user.CreateOrUpdateUserResponse;
+import net.smartcosmos.extension.tenant.dto.tenant.CreateTenantRequest;
+import net.smartcosmos.extension.tenant.dto.tenant.CreateTenantResponse;
+import net.smartcosmos.extension.tenant.dto.user.CreateUserRequest;
+import net.smartcosmos.extension.tenant.dto.authentication.GetAuthoritiesResponse;
+import net.smartcosmos.extension.tenant.dto.user.GetOrDeleteUserResponse;
+import net.smartcosmos.extension.tenant.dto.tenant.GetTenantResponse;
+import net.smartcosmos.extension.tenant.dto.tenant.UpdateTenantRequest;
+import net.smartcosmos.extension.tenant.dto.tenant.UpdateTenantResponse;
+import net.smartcosmos.extension.tenant.dto.user.UpdateUserRequest;
 
 /**
  * Initially created by SMART COSMOS Team on June 30, 2016.

@@ -1,4 +1,4 @@
-package net.smartcosmos.extension.tenant.dto;
+package net.smartcosmos.extension.tenant.rest.dto.role;
 
 import java.beans.ConstructorProperties;
 import java.util.ArrayList;
@@ -9,28 +9,32 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
 import lombok.Data;
 
+/**
+ * Initially created by SMART COSMOS Team on June 30, 2016.
+ */
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties({ "version" })
-public class RoleResponse {
+public class RestCreateOrUpdateRoleRequest {
 
     private static final int VERSION = 1;
     private final int version = VERSION;
 
-    private final String urn;
-    private final String name;
+    private String urn;
+    private String name;
     private List<String> authorities;
-    private final Boolean active;
+    private Boolean active;
 
     @Builder
     @ConstructorProperties({ "urn", "name", "authorities", "active" })
-    public RoleResponse(String urn, String name, List<String> authorities, Boolean active) {
+    public RestCreateOrUpdateRoleRequest(String urn, String name, List<String> authorities, Boolean active) {
         this.urn = urn;
         this.name = name;
         this.authorities = new ArrayList<>();
         if (authorities != null && !authorities.isEmpty()) {
             this.authorities.addAll(authorities);
         }
-        this.active = active;
+        this.active = active != null ? active : true;
     }
+
 }

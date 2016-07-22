@@ -1,4 +1,4 @@
-package net.smartcosmos.extension.tenant.rest.dto;
+package net.smartcosmos.extension.tenant.rest.dto.tenant;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
-import net.smartcosmos.extension.tenant.dto.CreateOrUpdateUserResponse;
+import net.smartcosmos.extension.tenant.dto.user.CreateOrUpdateUserResponse;
 
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)

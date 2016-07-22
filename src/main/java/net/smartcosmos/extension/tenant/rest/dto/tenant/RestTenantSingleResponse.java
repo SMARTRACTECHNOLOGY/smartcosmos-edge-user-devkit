@@ -1,4 +1,4 @@
-package net.smartcosmos.extension.tenant.rest.dto;
+package net.smartcosmos.extension.tenant.rest.dto.tenant;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;

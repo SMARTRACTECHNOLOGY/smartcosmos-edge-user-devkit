@@ -5,7 +5,7 @@ import java.util.UUID;
 import org.junit.*;
 
 import net.smartcosmos.extension.tenant.domain.TenantEntity;
-import net.smartcosmos.extension.tenant.dto.UpdateTenantResponse;
+import net.smartcosmos.extension.tenant.dto.tenant.UpdateTenantResponse;
 import net.smartcosmos.extension.tenant.util.UuidUtil;
 
 import static org.junit.Assert.*;

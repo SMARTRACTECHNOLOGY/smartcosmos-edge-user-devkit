@@ -1,4 +1,4 @@
-package net.smartcosmos.extension.tenant.dto;
+package net.smartcosmos.extension.tenant.dto.user;
 
 import java.beans.ConstructorProperties;
 import java.util.List;

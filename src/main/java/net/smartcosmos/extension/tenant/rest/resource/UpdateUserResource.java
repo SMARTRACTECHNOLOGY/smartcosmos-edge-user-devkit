@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.context.request.async.DeferredResult;
 
-import net.smartcosmos.extension.tenant.rest.dto.RestUpdateUserRequest;
+import net.smartcosmos.extension.tenant.rest.dto.user.RestUpdateUserRequest;
 import net.smartcosmos.extension.tenant.rest.service.UpdateUserService;
 import net.smartcosmos.security.EndpointMethodControl;
 import net.smartcosmos.security.user.SmartCosmosUser;

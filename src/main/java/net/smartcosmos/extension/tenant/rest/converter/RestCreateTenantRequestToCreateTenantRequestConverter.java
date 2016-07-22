@@ -5,8 +5,8 @@ import org.springframework.format.FormatterRegistrar;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.stereotype.Component;
 
-import net.smartcosmos.extension.tenant.dto.CreateTenantRequest;
-import net.smartcosmos.extension.tenant.rest.dto.RestCreateTenantRequest;
+import net.smartcosmos.extension.tenant.dto.tenant.CreateTenantRequest;
+import net.smartcosmos.extension.tenant.rest.dto.tenant.RestCreateTenantRequest;
 
 /**
  * Initially created by SMART COSMOS Team on July 01, 2016.

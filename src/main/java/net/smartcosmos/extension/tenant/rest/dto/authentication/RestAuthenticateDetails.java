@@ -1,4 +1,4 @@
-package net.smartcosmos.extension.tenant.rest.dto;
+package net.smartcosmos.extension.tenant.rest.dto.authentication;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;

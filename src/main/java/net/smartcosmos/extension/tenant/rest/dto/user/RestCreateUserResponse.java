@@ -1,4 +1,4 @@
-package net.smartcosmos.extension.tenant.dto;
+package net.smartcosmos.extension.tenant.rest.dto.user;
 
 import java.beans.ConstructorProperties;
 import java.util.ArrayList;
@@ -12,7 +12,7 @@ import lombok.Data;
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties({ "version" })
-public class GetOrDeleteUserResponse {
+public class RestCreateUserResponse {
 
     private static final int VERSION = 1;
     private final int version = VERSION;
@@ -27,8 +27,8 @@ public class GetOrDeleteUserResponse {
     private final Boolean active;
 
     @Builder
-    @ConstructorProperties({ "urn", "tenantUrn", "username", "emailAddress", "givenName", "surname", "roles", "active" })
-    public GetOrDeleteUserResponse(
+    @ConstructorProperties({ "urn", "tenantUrn", "username", "emailAddress", "givenName", "surname", "password", "roles", "active" })
+    public RestCreateUserResponse(
         String urn, String tenantUrn, String username, String emailAddress, String givenName, String surname, List<String> roles, Boolean active) {
         this.urn = urn;
         this.tenantUrn = tenantUrn;

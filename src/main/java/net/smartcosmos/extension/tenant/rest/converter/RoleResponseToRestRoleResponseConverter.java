@@ -5,8 +5,8 @@ import org.springframework.format.FormatterRegistrar;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.stereotype.Component;
 
-import net.smartcosmos.extension.tenant.dto.RoleResponse;
-import net.smartcosmos.extension.tenant.rest.dto.RestRoleResponse;
+import net.smartcosmos.extension.tenant.dto.role.RoleResponse;
+import net.smartcosmos.extension.tenant.rest.dto.role.RestRoleResponse;
 
 /**
  * Initially created by SMART COSMOS Team on July 01, 2016.
