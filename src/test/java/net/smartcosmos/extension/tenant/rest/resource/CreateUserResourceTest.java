@@ -11,13 +11,13 @@ import org.springframework.test.web.servlet.MvcResult;
 import net.smartcosmos.extension.tenant.TenantPersistenceTestApplication;
 import net.smartcosmos.extension.tenant.dao.TenantDao;
 import net.smartcosmos.extension.tenant.dto.user.CreateOrUpdateUserResponse;
-import net.smartcosmos.extension.tenant.dto.user.UserDto;
 import net.smartcosmos.extension.tenant.rest.dto.user.RestCreateOrUpdateUserRequest;
 import net.smartcosmos.extension.tenant.util.UuidUtil;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.startsWith;
 import static org.mockito.Matchers.anyObject;
+import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.asyncDispatch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -74,14 +74,6 @@ public class CreateUserResourceTest extends AbstractTestResource {
             .username(username)
             .emailAddress(emailAddress)
             .active(true)
-            .roles(userRoles)
-            .build();
-
-        UserDto userDto = UserDto.builder()
-            .tenantUrn(expectedTenantUrn)
-            .userUrn(expectedUserUrn)
-            .username(username)
-            .passwordHash("whatever")
             .roles(userRoles)
             .build();
 

@@ -14,9 +14,8 @@ import org.springframework.test.web.servlet.MvcResult;
 import net.smartcosmos.extension.tenant.TenantPersistenceConfig;
 import net.smartcosmos.extension.tenant.TenantPersistenceTestApplication;
 import net.smartcosmos.extension.tenant.dao.TenantDao;
-import net.smartcosmos.extension.tenant.dto.user.CreateOrUpdateUserResponse;
 import net.smartcosmos.extension.tenant.dto.tenant.CreateTenantResponse;
-import net.smartcosmos.extension.tenant.dto.user.UserDto;
+import net.smartcosmos.extension.tenant.dto.user.CreateOrUpdateUserResponse;
 import net.smartcosmos.extension.tenant.rest.dto.tenant.RestCreateTenantRequest;
 import net.smartcosmos.extension.tenant.util.UuidUtil;
 
@@ -83,14 +82,6 @@ public class CreateTenantResourceTest extends AbstractTestResource {
             .name(name)
             .active(true)
             .admin(createOrUpdateUserResponse)
-            .build();
-
-        UserDto userDto = UserDto.builder()
-            .tenantUrn(expectedTenantUrn)
-            .userUrn(expectedUserUrn)
-            .username(username)
-            .passwordHash("whatever")
-            .roles(adminRoles)
             .build();
 
         when(tenantDao.createTenant(anyObject())).thenReturn(Optional.ofNullable(createTenantResponse));
