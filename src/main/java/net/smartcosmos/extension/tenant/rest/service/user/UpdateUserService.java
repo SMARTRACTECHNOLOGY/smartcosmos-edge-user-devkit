@@ -1,18 +1,17 @@
 package net.smartcosmos.extension.tenant.rest.service.user;
 
-import java.net.URI;
 import java.util.Optional;
 import javax.inject.Inject;
 
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.core.convert.ConversionService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.async.DeferredResult;
 
+import net.smartcosmos.events.DefaultEventTypes;
 import net.smartcosmos.events.SmartCosmosEventTemplate;
 import net.smartcosmos.extension.tenant.dao.RoleDao;
 import net.smartcosmos.extension.tenant.dao.TenantDao;
@@ -52,15 +51,12 @@ public class UpdateUserService extends AbstractTenantService {
             Optional<CreateOrUpdateUserResponse> updateUserResponse = tenantDao.updateUser(user.getAccountUrn(), user.getUserUrn(), updateUserRequest);
 
             if (updateUserResponse.isPresent()) {
-                //sendEvent(null, DefaultEventTypes.ThingCreated, object.get());
-
-                ResponseEntity responseEntity = ResponseEntity
-                    .created(URI.create(updateUserResponse.get().getUrn()))
-                    .body(updateUserResponse.get());
+                ResponseEntity responseEntity = ResponseEntity.noContent().build();
                 response.setResult(responseEntity);
+                sendEvent(user, DefaultEventTypes.UserUpdated, updateUserResponse.get());
             } else {
-                response.setResult(ResponseEntity.status(HttpStatus.CONFLICT).build());
-                // sendEvent(createTenantRequest, DefaultEventTypes.ThingCreateFailedAlreadyExists, createTenantRequest);
+                response.setResult(ResponseEntity.notFound().build());
+                sendEvent(user, DefaultEventTypes.UserNotFound, userRequest);
             }
 
         } catch (Exception e) {

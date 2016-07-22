@@ -47,11 +47,11 @@ public class CreateRoleService extends AbstractTenantService {
 
     @Async
     private void createRoleWorker(DeferredResult<ResponseEntity> response, String tenantUrn, RestCreateOrUpdateRoleRequest
-        restCreateOrUpdateRoleRequest, SmartCosmosUser user) {
+        roleRequest, SmartCosmosUser user) {
 
         try {
             final CreateOrUpdateRoleRequest createRoleRequest = conversionService
-                .convert(restCreateOrUpdateRoleRequest, CreateOrUpdateRoleRequest.class);
+                .convert(roleRequest, CreateOrUpdateRoleRequest.class);
 
             Optional<RoleResponse> newRole = roleDao.createRole(tenantUrn, createRoleRequest);
 
@@ -61,13 +61,7 @@ public class CreateRoleService extends AbstractTenantService {
                 sendEvent(user, DefaultEventTypes.RoleCreated, newRole.get());
             } else {
                 response.setResult(ResponseEntity.status(HttpStatus.CONFLICT).build());
-
-                RoleResponse eventPayload = RoleResponse.builder()
-                    .name(createRoleRequest.getName())
-                    .active(createRoleRequest.getActive())
-                    .authorities(createRoleRequest.getAuthorities())
-                    .build();
-                sendEvent(user, DefaultEventTypes.RoleCreateFailedAlreadyExists, eventPayload);
+                sendEvent(user, DefaultEventTypes.RoleCreateFailedAlreadyExists, roleRequest);
             }
 
         } catch (Exception e) {
@@ -76,9 +70,9 @@ public class CreateRoleService extends AbstractTenantService {
         }
     }
 
-    private ResponseEntity buildCreatedResponseEntity(RoleResponse newRole) {
+    private ResponseEntity buildCreatedResponseEntity(RoleResponse response) {
         return ResponseEntity
-            .created(URI.create(newRole.getUrn()))
-            .body(newRole);
+            .created(URI.create(response.getUrn()))
+            .body(response);
     }
 }

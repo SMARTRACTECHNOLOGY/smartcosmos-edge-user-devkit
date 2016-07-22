@@ -1,9 +1,8 @@
 package net.smartcosmos.extension.tenant.rest.service.user;
 
 import java.util.Optional;
-import javax.inject.Inject;
 
-import lombok.extern.slf4j.Slf4j;
+import javax.inject.Inject;
 
 import org.springframework.core.convert.ConversionService;
 import org.springframework.http.HttpStatus;
@@ -12,6 +11,9 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.async.DeferredResult;
 
+import lombok.extern.slf4j.Slf4j;
+
+import net.smartcosmos.events.DefaultEventTypes;
 import net.smartcosmos.events.SmartCosmosEventTemplate;
 import net.smartcosmos.extension.tenant.dao.RoleDao;
 import net.smartcosmos.extension.tenant.dao.TenantDao;
@@ -36,24 +38,28 @@ public class DeleteUserService extends AbstractTenantService {
     public DeferredResult<ResponseEntity> delete(String userUrn, SmartCosmosUser user) {
         // Async worker thread reduces timeouts and disconnects for long queries and processing.
         DeferredResult<ResponseEntity> response = new DeferredResult<>();
-        updateUserWorker(response, user.getAccountUrn(), userUrn);
+        deleteUserWorker(response, user, userUrn);
 
         return response;
     }
 
     @Async
-    private void updateUserWorker(DeferredResult<ResponseEntity> response, String tenantUrn, String userUrn) {
+    private void deleteUserWorker(DeferredResult<ResponseEntity> response, SmartCosmosUser user, String userUrn) {
 
         try {
-            Optional<GetOrDeleteUserResponse> deleteUserResponse = tenantDao.deleteUserByUrn(tenantUrn, userUrn);
+            Optional<GetOrDeleteUserResponse> deleteUserResponse = tenantDao.deleteUserByUrn(user.getAccountUrn(), userUrn);
 
             if (deleteUserResponse.isPresent()) {
-                //sendEvent(null, DefaultEventTypes.ThingCreated, object.get());
-
                 response.setResult(ResponseEntity.noContent().build());
+                sendEvent(user, DefaultEventTypes.UserDeleted, deleteUserResponse.get());
             } else {
                 response.setResult(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
-                // sendEvent(createTenantRequest, DefaultEventTypes.ThingCreateFailedAlreadyExists, createTenantRequest);
+
+                GetOrDeleteUserResponse eventPayload = GetOrDeleteUserResponse.builder()
+                    .urn(userUrn)
+                    .tenantUrn(user.getAccountUrn())
+                    .build();
+                sendEvent(user, DefaultEventTypes.UserNotFound, eventPayload);
             }
 
         } catch (Exception e) {

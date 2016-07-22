@@ -13,6 +13,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.async.DeferredResult;
 
+import net.smartcosmos.events.DefaultEventTypes;
 import net.smartcosmos.events.SmartCosmosEventTemplate;
 import net.smartcosmos.extension.tenant.dao.RoleDao;
 import net.smartcosmos.extension.tenant.dao.TenantDao;
@@ -51,21 +52,24 @@ public class CreateTenantService extends AbstractTenantService {
             Optional<CreateTenantResponse> createTenantResponse = tenantDao.createTenant(createTenantRequest);
 
             if (createTenantResponse.isPresent()) {
-                //sendEvent(null, DefaultEventTypes.ThingCreated, object.get());
-
-                ResponseEntity responseEntity = ResponseEntity
-                    .created(URI.create(createTenantResponse.get().getUrn()))
-                    .body(createTenantResponse.get());
+                ResponseEntity responseEntity = buildCreatedResponseEntity(createTenantResponse.get());
                 response.setResult(responseEntity);
+                sendEvent(null, DefaultEventTypes.TenantCreated, createTenantResponse.get());
             } else {
                 response.setResult(ResponseEntity.status(HttpStatus.CONFLICT).build());
-                // sendEvent(createTenantRequest, DefaultEventTypes.ThingCreateFailedAlreadyExists, createTenantRequest);
+                sendEvent(null, DefaultEventTypes.TenantCreateFailedAlreadyExists, createTenantRequest);
             }
 
         } catch (Exception e) {
             log.debug(e.getMessage(), e);
             response.setErrorResult(e);
         }
+    }
+
+    private ResponseEntity buildCreatedResponseEntity(CreateTenantResponse response) {
+        return ResponseEntity
+            .created(URI.create(response.getUrn()))
+            .body(response);
     }
 
 }

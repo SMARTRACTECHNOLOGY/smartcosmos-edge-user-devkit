@@ -146,27 +146,29 @@ public class TenantPersistenceService implements TenantDao {
     public Optional<TenantResponse> updateTenant(String tenantUrn, UpdateTenantRequest updateTenantRequest)
         throws ConstraintViolationException {
 
-        // This tenant already exists? we're not creating a new one
         Optional<TenantEntity> tenantEntityOptional = tenantRepository.findById(UuidUtil.getUuidFromUrn(tenantUrn));
 
-        try {
-            if (tenantEntityOptional.isPresent()) {
+        if (tenantEntityOptional.isPresent()) {
+            try {
                 if (updateTenantRequest.getActive() != null) {
-                    tenantEntityOptional.get().setActive(updateTenantRequest.getActive());
+                    tenantEntityOptional.get()
+                        .setActive(updateTenantRequest.getActive());
                 }
                 if (updateTenantRequest.getName() != null) {
-                    tenantEntityOptional.get().setName(updateTenantRequest.getName());
+                    tenantEntityOptional.get()
+                        .setName(updateTenantRequest.getName());
                 }
                 TenantEntity tenantEntity = tenantRepository.save(tenantEntityOptional.get());
                 return Optional.ofNullable(conversionService.convert(tenantEntity, TenantResponse.class));
+            } catch(IllegalArgumentException | ConstraintViolationException e){
+                String msg = String.format("update failed, tenant: '%s', request: '%s', cause: %s", tenantUrn, updateTenantRequest.toString(), e
+                    .toString());
+                log.error(msg);
+                log.debug(msg, e);
+                throw e;
             }
-        } catch (IllegalArgumentException | ConstraintViolationException e) {
-            String msg = String.format("update failed, tenant: '%s', request: '%s', cause: %s", tenantUrn, updateTenantRequest.toString(), e
-                .toString());
-            log.error(msg);
-            log.debug(msg, e);
-            throw e;
         }
+
         return Optional.empty();
     }
 

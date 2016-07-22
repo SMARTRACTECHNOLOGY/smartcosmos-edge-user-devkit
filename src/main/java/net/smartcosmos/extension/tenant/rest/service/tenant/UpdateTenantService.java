@@ -13,6 +13,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.async.DeferredResult;
 
+import net.smartcosmos.events.DefaultEventTypes;
 import net.smartcosmos.events.SmartCosmosEventTemplate;
 import net.smartcosmos.extension.tenant.dao.RoleDao;
 import net.smartcosmos.extension.tenant.dao.TenantDao;
@@ -39,26 +40,25 @@ public class UpdateTenantService extends AbstractTenantService {
     public DeferredResult<ResponseEntity> create(RestUpdateTenantRequest restUpdateTenantRequest, SmartCosmosUser user) {
         // Async worker thread reduces timeouts and disconnects for long queries and processing.
         DeferredResult<ResponseEntity> response = new DeferredResult<>();
-        createTenantWorker(response, user.getAccountUrn(), restUpdateTenantRequest);
+        updateTenantWorker(response, user, restUpdateTenantRequest);
 
         return response;
     }
 
     @Async
-    private void createTenantWorker(DeferredResult<ResponseEntity> response, String tenantUrn, RestUpdateTenantRequest restUpdateTenantRequest) {
+    private void updateTenantWorker(DeferredResult<ResponseEntity> response, SmartCosmosUser user, RestUpdateTenantRequest restUpdateTenantRequest) {
 
         try {
             UpdateTenantRequest updateTenantRequest = conversionService.convert(restUpdateTenantRequest, UpdateTenantRequest.class);
-            Optional<TenantResponse> TenantResponseOptional = tenantDao.updateTenant(tenantUrn, updateTenantRequest);
+            Optional<TenantResponse> tenantResponseOptional = tenantDao.updateTenant(user.getAccountUrn(), updateTenantRequest);
 
-            if (TenantResponseOptional.isPresent()) {
-                ResponseEntity responseEntity = ResponseEntity
-                    .created(URI.create(TenantResponseOptional.get().getUrn()))
-                    .body(TenantResponseOptional.get());
+            if (tenantResponseOptional.isPresent()) {
+                ResponseEntity responseEntity = ResponseEntity.noContent().build();
                 response.setResult(responseEntity);
+                sendEvent(user, DefaultEventTypes.TenantUpdated, tenantResponseOptional.get());
             } else {
-                response.setResult(ResponseEntity.status(HttpStatus.CONFLICT).build());
-                // sendEvent(createTenantRequest, DefaultEventTypes.ThingCreateFailedAlreadyExists, createTenantRequest);
+                response.setResult(ResponseEntity.notFound().build());
+                sendEvent(user, DefaultEventTypes.TenantNotFound, restUpdateTenantRequest);
             }
 
         } catch (Exception e) {
@@ -66,5 +66,4 @@ public class UpdateTenantService extends AbstractTenantService {
             response.setErrorResult(e);
         }
     }
-
 }

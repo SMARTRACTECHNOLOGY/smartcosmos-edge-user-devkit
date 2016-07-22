@@ -9,6 +9,7 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import net.smartcosmos.events.DefaultEventTypes;
 import net.smartcosmos.events.SmartCosmosEventTemplate;
 import net.smartcosmos.extension.tenant.dao.RoleDao;
 import net.smartcosmos.extension.tenant.dao.TenantDao;
@@ -35,13 +36,13 @@ public class ReadTenantService extends AbstractTenantService {
         Optional<TenantResponse> entity = tenantDao.findTenantByUrn(urn);
 
         if (entity.isPresent()) {
-            // TODO: send event tenant:read
+            sendEvent(null, DefaultEventTypes.TenantRead, entity.get());
             return ResponseEntity
                 .ok()
                 .body(conversionService.convert(entity.get(), RestTenantSingleResponse.class));
         }
 
-        // TODO: send event tenant:notFound
+        sendEvent(null, DefaultEventTypes.TenantNotFound, entity.get());
         return ResponseEntity.notFound().build();
     }
 
@@ -50,13 +51,13 @@ public class ReadTenantService extends AbstractTenantService {
         Optional<TenantResponse> entity = tenantDao.findTenantByName(name);
 
         if (entity.isPresent()) {
-            // TODO: send event tenant:read
+            sendEvent(null, DefaultEventTypes.TenantRead, entity.get());
             return ResponseEntity
                 .ok()
                 .body(conversionService.convert(entity.get(), RestTenantSingleResponse.class));
         }
 
-        // TODO: send event tenant:notFound
+        sendEvent(null, DefaultEventTypes.TenantNotFound, entity.get());
         return ResponseEntity.notFound().build();
     }
 }

@@ -9,6 +9,7 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import net.smartcosmos.events.DefaultEventTypes;
 import net.smartcosmos.events.SmartCosmosEventTemplate;
 import net.smartcosmos.extension.tenant.dao.RoleDao;
 import net.smartcosmos.extension.tenant.dao.TenantDao;
@@ -35,13 +36,17 @@ public class ReadUserService extends AbstractTenantService {
         Optional<GetOrDeleteUserResponse> entity = tenantDao.findUserByUrn(user.getAccountUrn(), urn);
 
         if (entity.isPresent()) {
-            // TODO: send event user:read
+            sendEvent(user, DefaultEventTypes.UserRead, entity.get());
             return ResponseEntity
                 .ok()
                 .body(conversionService.convert(entity.get(), GetOrDeleteUserResponse.class));
         }
 
-        // TODO: send event tenant:notFound
+        GetOrDeleteUserResponse eventPayload = GetOrDeleteUserResponse.builder()
+            .urn(urn)
+            .tenantUrn(user.getAccountUrn())
+            .build();
+        sendEvent(user, DefaultEventTypes.UserNotFound, eventPayload);
         return ResponseEntity.notFound().build();
     }
 
@@ -50,13 +55,17 @@ public class ReadUserService extends AbstractTenantService {
         Optional<GetOrDeleteUserResponse> entity = tenantDao.findUserByName(user.getAccountUrn(), name);
 
         if (entity.isPresent()) {
-            // TODO: send event tenant:read
+            sendEvent(user, DefaultEventTypes.UserRead, entity.get());
             return ResponseEntity
                 .ok()
                 .body(conversionService.convert(entity.get(), GetOrDeleteUserResponse.class));
         }
 
-        // TODO: send event tenant:notFound
+        GetOrDeleteUserResponse eventPayload = GetOrDeleteUserResponse.builder()
+            .username(name)
+            .tenantUrn(user.getAccountUrn())
+            .build();
+        sendEvent(user, DefaultEventTypes.UserNotFound, eventPayload);
         return ResponseEntity.notFound().build();
     }
 }
