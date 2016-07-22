@@ -13,12 +13,12 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.async.DeferredResult;
 
+import net.smartcosmos.events.DefaultEventTypes;
 import net.smartcosmos.events.SmartCosmosEventTemplate;
 import net.smartcosmos.extension.tenant.dao.RoleDao;
 import net.smartcosmos.extension.tenant.dao.TenantDao;
 import net.smartcosmos.extension.tenant.dto.CreateOrUpdateRoleRequest;
-import net.smartcosmos.extension.tenant.dto.CreateOrUpdateRoleResponse;
-import net.smartcosmos.extension.tenant.dto.GetRoleResponse;
+import net.smartcosmos.extension.tenant.dto.RoleResponse;
 import net.smartcosmos.extension.tenant.rest.dto.RestCreateOrUpdateRoleRequest;
 import net.smartcosmos.security.user.SmartCosmosUser;
 
@@ -39,37 +39,45 @@ public class CreateRoleService extends AbstractTenantService {
     public DeferredResult<ResponseEntity> create(RestCreateOrUpdateRoleRequest restCreateOrUpdateRoleRequest, SmartCosmosUser user) {
         // Async worker thread reduces timeouts and disconnects for long queries and processing.
         DeferredResult<ResponseEntity> response = new DeferredResult<>();
-        createRoleWorker(response, user.getAccountUrn(), restCreateOrUpdateRoleRequest);
+        createRoleWorker(response, user.getAccountUrn(), restCreateOrUpdateRoleRequest, user);
 
         return response;
     }
 
     @Async
     private void createRoleWorker(DeferredResult<ResponseEntity> response, String tenantUrn, RestCreateOrUpdateRoleRequest
-        restCreateOrUpdateRoleRequest) {
+        restCreateOrUpdateRoleRequest, SmartCosmosUser user) {
 
         try {
             final CreateOrUpdateRoleRequest createRoleRequest = conversionService
                 .convert(restCreateOrUpdateRoleRequest, CreateOrUpdateRoleRequest.class);
 
-            Optional<CreateOrUpdateRoleResponse> newRole = roleDao.createRole(tenantUrn, createRoleRequest);
+            Optional<RoleResponse> newRole = roleDao.createRole(tenantUrn, createRoleRequest);
 
             if (newRole.isPresent()) {
-                //sendEvent(null, DefaultEventTypes.ThingCreated, object.get());
-
-                ResponseEntity responseEntity = ResponseEntity
-                    .created(URI.create(newRole.get().getUrn()))
-                    .body(newRole.get());
+                ResponseEntity responseEntity = buildCreatedResponseEntity(newRole.get());
                 response.setResult(responseEntity);
+                sendEvent(user, DefaultEventTypes.RoleCreated, newRole.get());
             } else {
-                Optional<GetRoleResponse> alreadyThere = roleDao.findByTenantUrnAndName(tenantUrn, restCreateOrUpdateRoleRequest.getName());
                 response.setResult(ResponseEntity.status(HttpStatus.CONFLICT).build());
-                //sendEvent(null, DefaultEventTypes.ThingCreateFailedAlreadyExists, alreadyThere.get());
+
+                RoleResponse eventPayload = RoleResponse.builder()
+                    .name(createRoleRequest.getName())
+                    .active(createRoleRequest.getActive())
+                    .authorities(createRoleRequest.getAuthorities())
+                    .build();
+                sendEvent(user, DefaultEventTypes.RoleCreateFailedAlreadyExists, eventPayload);
             }
 
         } catch (Exception e) {
             log.debug(e.getMessage(), e);
             response.setErrorResult(e);
         }
+    }
+
+    private ResponseEntity buildCreatedResponseEntity(RoleResponse newRole) {
+        return ResponseEntity
+            .created(URI.create(newRole.getUrn()))
+            .body(newRole);
     }
 }
