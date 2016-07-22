@@ -31,12 +31,7 @@ public class ReadTenantService extends AbstractTenantService {
     }
 
     public ResponseEntity<?> findByUrn(String urn, SmartCosmosUser user) {
-
-        if (!urn.equals(user.getAccountUrn())) {
-            // Reject Read requests for foreign tenants
-            return ResponseEntity.badRequest().build();
-        }
-
+        
         Optional<GetTenantResponse> entity = tenantDao.findTenantByUrn(urn);
 
         if (entity.isPresent()) {
