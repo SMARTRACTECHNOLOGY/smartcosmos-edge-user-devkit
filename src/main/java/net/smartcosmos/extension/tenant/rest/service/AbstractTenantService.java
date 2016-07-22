@@ -36,7 +36,11 @@ public class AbstractTenantService {
 
     protected void sendEvent(SmartCosmosUser user, String eventType, Object entity) {
         try {
-            smartCosmosEventTemplate.sendEvent(entity, eventType, user);
+            if (user != null) {
+                smartCosmosEventTemplate.sendEvent(entity, eventType, user);
+            } else {
+                smartCosmosEventTemplate.sendEvent(entity, eventType);
+            }
         } catch (SmartCosmosEventException e) {
             log.error(e.getMessage());
             log.debug(e.getMessage(), e);

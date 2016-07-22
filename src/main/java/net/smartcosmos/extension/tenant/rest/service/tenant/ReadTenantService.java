@@ -42,7 +42,7 @@ public class ReadTenantService extends AbstractTenantService {
                 .body(conversionService.convert(entity.get(), RestTenantSingleResponse.class));
         }
 
-        sendEvent(null, DefaultEventTypes.TenantNotFound, entity.get());
+        sendEvent(null, DefaultEventTypes.TenantNotFound, urn);
         return ResponseEntity.notFound().build();
     }
 
@@ -57,7 +57,7 @@ public class ReadTenantService extends AbstractTenantService {
                 .body(conversionService.convert(entity.get(), RestTenantSingleResponse.class));
         }
 
-        sendEvent(null, DefaultEventTypes.TenantNotFound, entity.get());
+        sendEvent(null, DefaultEventTypes.TenantNotFound, name);
         return ResponseEntity.notFound().build();
     }
 }
