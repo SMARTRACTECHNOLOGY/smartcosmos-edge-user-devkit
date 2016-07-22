@@ -204,7 +204,7 @@ public class TenantPersistenceService implements TenantDao {
      * @return Optional<GetTenantResponse>
      */
     @Override
-    public Optional<GetTenantResponse> findTenantByName(String tenantUrn, String name) {
+    public Optional<GetTenantResponse> findTenantByName(String name) {
 
         Optional<TenantEntity> entity = tenantRepository.findByNameIgnoreCase(name);
         if (entity.isPresent()) {

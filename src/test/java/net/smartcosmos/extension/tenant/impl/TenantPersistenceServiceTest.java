@@ -118,7 +118,7 @@ public class TenantPersistenceServiceTest {
         assertEquals(TENANT, updateResponse.get().getName());
         assertEquals(urn, updateResponse.get().getUrn());
 
-        Optional<GetTenantResponse> getTenantResponse = tenantPersistenceService.findTenantByName(urn, TENANT);
+        Optional<GetTenantResponse> getTenantResponse = tenantPersistenceService.findTenantByName(TENANT);
 
         assertTrue(getTenantResponse.isPresent());
         assertFalse(getTenantResponse.get().getActive());
@@ -160,7 +160,7 @@ public class TenantPersistenceServiceTest {
         assertTrue(updateResponse.get().getActive());
         assertEquals(TENANT_NEW, updateResponse.get().getName());
 
-        Optional<GetTenantResponse> getTenantResponse = tenantPersistenceService.findTenantByName(urn, TENANT_NEW);
+        Optional<GetTenantResponse> getTenantResponse = tenantPersistenceService.findTenantByName(TENANT_NEW);
 
         assertTrue(getTenantResponse.isPresent());
 
@@ -249,7 +249,7 @@ public class TenantPersistenceServiceTest {
 
         String urn = createTenantResponse.get().getUrn();
 
-        Optional<GetTenantResponse> getTenantResponse = tenantPersistenceService.findTenantByName(urn, TENANT);
+        Optional<GetTenantResponse> getTenantResponse = tenantPersistenceService.findTenantByName(urn);
 
         assertTrue(getTenantResponse.isPresent());
 
@@ -263,8 +263,8 @@ public class TenantPersistenceServiceTest {
 
         final String TENANT = "noSuchNameTenant";
 
-        Optional<GetTenantResponse> getTenantResponse = tenantPersistenceService.findTenantByName(UuidUtil.getTenantUrnFromUuid(UUID.randomUUID()),
-            TENANT);
+        Optional<GetTenantResponse> getTenantResponse = tenantPersistenceService.findTenantByName(UuidUtil.getTenantUrnFromUuid(UUID.randomUUID())
+        );
 
         assertFalse(getTenantResponse.isPresent());
     }
