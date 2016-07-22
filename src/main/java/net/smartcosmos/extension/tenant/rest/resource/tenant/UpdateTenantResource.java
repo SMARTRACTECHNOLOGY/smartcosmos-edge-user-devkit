@@ -1,4 +1,4 @@
-package net.smartcosmos.extension.tenant.rest.resource;
+package net.smartcosmos.extension.tenant.rest.resource.tenant;
 
 import javax.validation.Valid;
 
@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.context.request.async.DeferredResult;
 
-import net.smartcosmos.extension.tenant.rest.dto.tenant.RestCreateTenantRequest;
-import net.smartcosmos.extension.tenant.rest.service.CreateTenantService;
+import net.smartcosmos.extension.tenant.rest.dto.tenant.RestUpdateTenantRequest;
+import net.smartcosmos.extension.tenant.rest.service.tenant.UpdateTenantService;
 import net.smartcosmos.security.EndpointMethodControl;
 import net.smartcosmos.security.user.SmartCosmosUser;
 import net.smartcosmos.spring.SmartCosmosRdao;
@@ -27,21 +27,21 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 @Slf4j
 @ConditionalOnProperty(prefix = "smt.endpoints.tenant", name = "enabled", matchIfMissing = true)
 //@Api
-public class CreateTenantResource {
+public class UpdateTenantResource {
 
-    private CreateTenantService service;
+    private UpdateTenantService service;
 
     @Autowired
-    public CreateTenantResource(CreateTenantService service) { this.service = service; }
+    public UpdateTenantResource(UpdateTenantService service) { this.service = service; }
 
-    @RequestMapping(value = "/tenants", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8_VALUE, consumes = APPLICATION_JSON_UTF8_VALUE)
-    @EndpointMethodControl(key = "tenant.post")
-    @ConditionalOnProperty(prefix = "smt.endpoints.tenant.post", name = "enabled", matchIfMissing = true)
-    public DeferredResult<ResponseEntity> createObject(
-        @RequestBody @Valid RestCreateTenantRequest restCreateTenantRequest,
+    @RequestMapping(value = "/tenants", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8_VALUE, consumes = APPLICATION_JSON_UTF8_VALUE)
+    @EndpointMethodControl(key = "tenant.put")
+    @ConditionalOnProperty(prefix = "smt.endpoints.tenant.put", name = "enabled", matchIfMissing = true)
+    public DeferredResult<ResponseEntity> updateObject(
+        @RequestBody @Valid RestUpdateTenantRequest restUpdateTenantRequest,
         SmartCosmosUser user) {
 
-        return service.create(restCreateTenantRequest);
+        return service.create(restUpdateTenantRequest, user);
     }
 }
 

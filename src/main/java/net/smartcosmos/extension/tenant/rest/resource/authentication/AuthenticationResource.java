@@ -1,4 +1,4 @@
-package net.smartcosmos.extension.tenant.rest.resource;
+package net.smartcosmos.extension.tenant.rest.resource.authentication;
 
 import javax.validation.Valid;
 
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import net.smartcosmos.extension.tenant.rest.dto.authentication.RestAuthenticateRequest;
-import net.smartcosmos.extension.tenant.rest.service.AuthenticationService;
+import net.smartcosmos.extension.tenant.rest.service.authentication.AuthenticationService;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 

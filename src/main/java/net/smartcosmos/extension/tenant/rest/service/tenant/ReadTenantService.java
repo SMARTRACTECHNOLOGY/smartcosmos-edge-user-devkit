@@ -1,4 +1,4 @@
-package net.smartcosmos.extension.tenant.rest.service;
+package net.smartcosmos.extension.tenant.rest.service.tenant;
 
 import java.util.Optional;
 import javax.inject.Inject;
@@ -12,15 +12,16 @@ import org.springframework.stereotype.Service;
 import net.smartcosmos.events.SmartCosmosEventTemplate;
 import net.smartcosmos.extension.tenant.dao.RoleDao;
 import net.smartcosmos.extension.tenant.dao.TenantDao;
-import net.smartcosmos.extension.tenant.dto.user.GetOrDeleteUserResponse;
-import net.smartcosmos.security.user.SmartCosmosUser;
+import net.smartcosmos.extension.tenant.dto.tenant.TenantResponse;
+import net.smartcosmos.extension.tenant.rest.dto.tenant.RestTenantSingleResponse;
+import net.smartcosmos.extension.tenant.rest.service.AbstractTenantService;
 
 @Slf4j
 @Service
-public class ReadUserService extends AbstractTenantService {
+public class ReadTenantService extends AbstractTenantService {
 
     @Inject
-    public ReadUserService(
+    public ReadTenantService(
         TenantDao tenantDao,
         RoleDao roleDao,
         SmartCosmosEventTemplate smartCosmosEventTemplate,
@@ -29,30 +30,30 @@ public class ReadUserService extends AbstractTenantService {
         super(tenantDao, roleDao, smartCosmosEventTemplate, conversionService);
     }
 
-    public ResponseEntity<?> findByUrn(String urn, SmartCosmosUser user) {
+    public ResponseEntity<?> findByUrn(String urn) {
 
-        Optional<GetOrDeleteUserResponse> entity = tenantDao.findUserByUrn(user.getAccountUrn(), urn);
+        Optional<TenantResponse> entity = tenantDao.findTenantByUrn(urn);
 
         if (entity.isPresent()) {
-            // TODO: send event user:read
+            // TODO: send event tenant:read
             return ResponseEntity
                 .ok()
-                .body(conversionService.convert(entity.get(), GetOrDeleteUserResponse.class));
+                .body(conversionService.convert(entity.get(), RestTenantSingleResponse.class));
         }
 
         // TODO: send event tenant:notFound
         return ResponseEntity.notFound().build();
     }
 
-    public ResponseEntity<?> findByName(String name, SmartCosmosUser user) {
+    public ResponseEntity<?> findByName(String name) {
 
-        Optional<GetOrDeleteUserResponse> entity = tenantDao.findUserByName(user.getAccountUrn(), name);
+        Optional<TenantResponse> entity = tenantDao.findTenantByName(name);
 
         if (entity.isPresent()) {
             // TODO: send event tenant:read
             return ResponseEntity
                 .ok()
-                .body(conversionService.convert(entity.get(), GetOrDeleteUserResponse.class));
+                .body(conversionService.convert(entity.get(), RestTenantSingleResponse.class));
         }
 
         // TODO: send event tenant:notFound

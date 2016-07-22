@@ -1,4 +1,4 @@
-package net.smartcosmos.extension.tenant.rest.service;
+package net.smartcosmos.extension.tenant.rest.service.tenant;
 
 import java.net.URI;
 import java.util.Optional;
@@ -16,10 +16,10 @@ import org.springframework.web.context.request.async.DeferredResult;
 import net.smartcosmos.events.SmartCosmosEventTemplate;
 import net.smartcosmos.extension.tenant.dao.RoleDao;
 import net.smartcosmos.extension.tenant.dao.TenantDao;
-import net.smartcosmos.extension.tenant.dto.user.CreateOrUpdateUserResponse;
-import net.smartcosmos.extension.tenant.dto.user.CreateUserRequest;
-import net.smartcosmos.extension.tenant.dto.user.GetOrDeleteUserResponse;
-import net.smartcosmos.extension.tenant.rest.dto.user.RestCreateOrUpdateUserRequest;
+import net.smartcosmos.extension.tenant.dto.tenant.UpdateTenantRequest;
+import net.smartcosmos.extension.tenant.dto.tenant.TenantResponse;
+import net.smartcosmos.extension.tenant.rest.dto.tenant.RestUpdateTenantRequest;
+import net.smartcosmos.extension.tenant.rest.service.AbstractTenantService;
 import net.smartcosmos.security.user.SmartCosmosUser;
 
 /**
@@ -27,42 +27,38 @@ import net.smartcosmos.security.user.SmartCosmosUser;
  */
 @Slf4j
 @Service
-public class CreateUserService extends AbstractTenantService {
+public class UpdateTenantService extends AbstractTenantService {
 
     @Inject
-    public CreateUserService(
+    public UpdateTenantService(
         TenantDao tenantDao, RoleDao roleDao, SmartCosmosEventTemplate smartCosmosEventTemplate, ConversionService
         conversionService) {
         super(tenantDao, roleDao, smartCosmosEventTemplate, conversionService);
     }
 
-    public DeferredResult<ResponseEntity> create(RestCreateOrUpdateUserRequest restCreateUserRequest, SmartCosmosUser user) {
+    public DeferredResult<ResponseEntity> create(RestUpdateTenantRequest restUpdateTenantRequest, SmartCosmosUser user) {
         // Async worker thread reduces timeouts and disconnects for long queries and processing.
         DeferredResult<ResponseEntity> response = new DeferredResult<>();
-        createUserWorker(response, user.getAccountUrn(), restCreateUserRequest);
+        createTenantWorker(response, user.getAccountUrn(), restUpdateTenantRequest);
 
         return response;
     }
 
     @Async
-    private void createUserWorker(DeferredResult<ResponseEntity> response, String tenantUrn, RestCreateOrUpdateUserRequest restCreateUserRequest) {
+    private void createTenantWorker(DeferredResult<ResponseEntity> response, String tenantUrn, RestUpdateTenantRequest restUpdateTenantRequest) {
 
         try {
-            final CreateUserRequest createUserRequest = conversionService.convert(restCreateUserRequest, CreateUserRequest.class);
+            UpdateTenantRequest updateTenantRequest = conversionService.convert(restUpdateTenantRequest, UpdateTenantRequest.class);
+            Optional<TenantResponse> TenantResponseOptional = tenantDao.updateTenant(tenantUrn, updateTenantRequest);
 
-            Optional<CreateOrUpdateUserResponse> newUser = tenantDao.createUser(tenantUrn, createUserRequest);
-
-            if (newUser.isPresent()) {
-                //sendEvent(null, DefaultEventTypes.ThingCreated, object.get());
-
+            if (TenantResponseOptional.isPresent()) {
                 ResponseEntity responseEntity = ResponseEntity
-                    .created(URI.create(newUser.get().getUrn()))
-                    .body(newUser.get());
+                    .created(URI.create(TenantResponseOptional.get().getUrn()))
+                    .body(TenantResponseOptional.get());
                 response.setResult(responseEntity);
             } else {
-                Optional<GetOrDeleteUserResponse> alreadyThere = tenantDao.findUserByName(tenantUrn, createUserRequest.getUsername());
                 response.setResult(ResponseEntity.status(HttpStatus.CONFLICT).build());
-                //sendEvent(null, DefaultEventTypes.ThingCreateFailedAlreadyExists, alreadyThere.get());
+                // sendEvent(createTenantRequest, DefaultEventTypes.ThingCreateFailedAlreadyExists, createTenantRequest);
             }
 
         } catch (Exception e) {

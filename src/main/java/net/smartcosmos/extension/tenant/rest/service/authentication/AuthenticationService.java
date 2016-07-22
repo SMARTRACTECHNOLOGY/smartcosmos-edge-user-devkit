@@ -1,4 +1,4 @@
-package net.smartcosmos.extension.tenant.rest.service;
+package net.smartcosmos.extension.tenant.rest.service.authentication;
 
 import java.util.Optional;
 import javax.inject.Inject;
@@ -14,6 +14,7 @@ import net.smartcosmos.extension.tenant.dao.TenantDao;
 import net.smartcosmos.extension.tenant.dto.authentication.GetAuthoritiesResponse;
 import net.smartcosmos.extension.tenant.rest.dto.authentication.RestAuthenticateRequest;
 import net.smartcosmos.extension.tenant.rest.dto.authentication.RestAuthenticateResponse;
+import net.smartcosmos.extension.tenant.rest.service.AbstractTenantService;
 
 @Service
 public class AuthenticationService extends AbstractTenantService {

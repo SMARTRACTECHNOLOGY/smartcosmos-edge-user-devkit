@@ -1,4 +1,4 @@
-package net.smartcosmos.extension.tenant.rest.service;
+package net.smartcosmos.extension.tenant.rest.service.user;
 
 import java.net.URI;
 import java.util.Optional;
@@ -16,9 +16,10 @@ import org.springframework.web.context.request.async.DeferredResult;
 import net.smartcosmos.events.SmartCosmosEventTemplate;
 import net.smartcosmos.extension.tenant.dao.RoleDao;
 import net.smartcosmos.extension.tenant.dao.TenantDao;
-import net.smartcosmos.extension.tenant.dto.tenant.UpdateTenantRequest;
-import net.smartcosmos.extension.tenant.dto.tenant.TenantResponse;
-import net.smartcosmos.extension.tenant.rest.dto.tenant.RestUpdateTenantRequest;
+import net.smartcosmos.extension.tenant.dto.user.CreateOrUpdateUserResponse;
+import net.smartcosmos.extension.tenant.dto.user.UpdateUserRequest;
+import net.smartcosmos.extension.tenant.rest.dto.user.RestCreateOrUpdateUserRequest;
+import net.smartcosmos.extension.tenant.rest.service.AbstractTenantService;
 import net.smartcosmos.security.user.SmartCosmosUser;
 
 /**
@@ -26,34 +27,36 @@ import net.smartcosmos.security.user.SmartCosmosUser;
  */
 @Slf4j
 @Service
-public class UpdateTenantService extends AbstractTenantService {
+public class UpdateUserService extends AbstractTenantService {
 
     @Inject
-    public UpdateTenantService(
+    public UpdateUserService(
         TenantDao tenantDao, RoleDao roleDao, SmartCosmosEventTemplate smartCosmosEventTemplate, ConversionService
         conversionService) {
         super(tenantDao, roleDao, smartCosmosEventTemplate, conversionService);
     }
 
-    public DeferredResult<ResponseEntity> create(RestUpdateTenantRequest restUpdateTenantRequest, SmartCosmosUser user) {
+    public DeferredResult<ResponseEntity> create(RestCreateOrUpdateUserRequest userRequest, SmartCosmosUser user) {
         // Async worker thread reduces timeouts and disconnects for long queries and processing.
         DeferredResult<ResponseEntity> response = new DeferredResult<>();
-        createTenantWorker(response, user.getAccountUrn(), restUpdateTenantRequest);
+        updateUserWorker(response, user, userRequest);
 
         return response;
     }
 
     @Async
-    private void createTenantWorker(DeferredResult<ResponseEntity> response, String tenantUrn, RestUpdateTenantRequest restUpdateTenantRequest) {
+    private void updateUserWorker(DeferredResult<ResponseEntity> response, SmartCosmosUser user, RestCreateOrUpdateUserRequest userRequest) {
 
         try {
-            UpdateTenantRequest updateTenantRequest = conversionService.convert(restUpdateTenantRequest, UpdateTenantRequest.class);
-            Optional<TenantResponse> TenantResponseOptional = tenantDao.updateTenant(tenantUrn, updateTenantRequest);
+            UpdateUserRequest updateUserRequest = conversionService.convert(userRequest, UpdateUserRequest.class);
+            Optional<CreateOrUpdateUserResponse> updateUserResponse = tenantDao.updateUser(user.getAccountUrn(), user.getUserUrn(), updateUserRequest);
 
-            if (TenantResponseOptional.isPresent()) {
+            if (updateUserResponse.isPresent()) {
+                //sendEvent(null, DefaultEventTypes.ThingCreated, object.get());
+
                 ResponseEntity responseEntity = ResponseEntity
-                    .created(URI.create(TenantResponseOptional.get().getUrn()))
-                    .body(TenantResponseOptional.get());
+                    .created(URI.create(updateUserResponse.get().getUrn()))
+                    .body(updateUserResponse.get());
                 response.setResult(responseEntity);
             } else {
                 response.setResult(ResponseEntity.status(HttpStatus.CONFLICT).build());
@@ -65,5 +68,4 @@ public class UpdateTenantService extends AbstractTenantService {
             response.setErrorResult(e);
         }
     }
-
 }

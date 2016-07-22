@@ -1,4 +1,4 @@
-package net.smartcosmos.extension.tenant.rest.service;
+package net.smartcosmos.extension.tenant.rest.service.user;
 
 import java.util.Optional;
 import javax.inject.Inject;
@@ -16,6 +16,7 @@ import net.smartcosmos.events.SmartCosmosEventTemplate;
 import net.smartcosmos.extension.tenant.dao.RoleDao;
 import net.smartcosmos.extension.tenant.dao.TenantDao;
 import net.smartcosmos.extension.tenant.dto.user.GetOrDeleteUserResponse;
+import net.smartcosmos.extension.tenant.rest.service.AbstractTenantService;
 import net.smartcosmos.security.user.SmartCosmosUser;
 
 /**

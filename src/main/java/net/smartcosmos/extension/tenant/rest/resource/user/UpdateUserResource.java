@@ -1,4 +1,4 @@
-package net.smartcosmos.extension.tenant.rest.resource;
+package net.smartcosmos.extension.tenant.rest.resource.user;
 
 import javax.validation.Valid;
 
@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.context.request.async.DeferredResult;
 
-import net.smartcosmos.extension.tenant.rest.dto.tenant.RestUpdateTenantRequest;
-import net.smartcosmos.extension.tenant.rest.service.UpdateTenantService;
+import net.smartcosmos.extension.tenant.rest.dto.user.RestCreateOrUpdateUserRequest;
+import net.smartcosmos.extension.tenant.rest.service.user.UpdateUserService;
 import net.smartcosmos.security.EndpointMethodControl;
 import net.smartcosmos.security.user.SmartCosmosUser;
 import net.smartcosmos.spring.SmartCosmosRdao;
@@ -27,21 +27,21 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 @Slf4j
 @ConditionalOnProperty(prefix = "smt.endpoints.tenant", name = "enabled", matchIfMissing = true)
 //@Api
-public class UpdateTenantResource {
+public class UpdateUserResource {
 
-    private UpdateTenantService service;
+    private UpdateUserService service;
 
     @Autowired
-    public UpdateTenantResource(UpdateTenantService service) { this.service = service; }
+    public UpdateUserResource(UpdateUserService service) { this.service = service; }
 
-    @RequestMapping(value = "/tenants", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8_VALUE, consumes = APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/users", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8_VALUE, consumes = APPLICATION_JSON_UTF8_VALUE)
     @EndpointMethodControl(key = "tenant.put")
-    @ConditionalOnProperty(prefix = "smt.endpoints.tenant.put", name = "enabled", matchIfMissing = true)
+    @ConditionalOnProperty(prefix = "smt.endpoints.user.put", name = "enabled", matchIfMissing = true)
     public DeferredResult<ResponseEntity> updateObject(
-        @RequestBody @Valid RestUpdateTenantRequest restUpdateTenantRequest,
+        @RequestBody @Valid RestCreateOrUpdateUserRequest userRequest,
         SmartCosmosUser user) {
 
-        return service.create(restUpdateTenantRequest, user);
+        return service.create(userRequest, user);
     }
 }
 

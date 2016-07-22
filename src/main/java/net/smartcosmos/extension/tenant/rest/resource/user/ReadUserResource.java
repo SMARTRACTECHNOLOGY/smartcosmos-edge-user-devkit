@@ -1,4 +1,4 @@
-package net.smartcosmos.extension.tenant.rest.resource;
+package net.smartcosmos.extension.tenant.rest.resource.user;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import net.smartcosmos.extension.tenant.rest.service.ReadUserService;
+import net.smartcosmos.extension.tenant.rest.service.user.ReadUserService;
 import net.smartcosmos.security.EndpointMethodControl;
 import net.smartcosmos.security.user.SmartCosmosUser;
 import net.smartcosmos.spring.SmartCosmosRdao;

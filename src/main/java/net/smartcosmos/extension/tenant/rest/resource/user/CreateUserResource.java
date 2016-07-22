@@ -1,4 +1,4 @@
-package net.smartcosmos.extension.tenant.rest.resource;
+package net.smartcosmos.extension.tenant.rest.resource.user;
 
 import javax.validation.Valid;
 
@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.context.request.async.DeferredResult;
 
-import net.smartcosmos.extension.tenant.rest.dto.role.RestCreateOrUpdateRoleRequest;
-import net.smartcosmos.extension.tenant.rest.service.CreateRoleService;
+import net.smartcosmos.extension.tenant.rest.dto.user.RestCreateOrUpdateUserRequest;
+import net.smartcosmos.extension.tenant.rest.service.user.CreateUserService;
 import net.smartcosmos.security.EndpointMethodControl;
 import net.smartcosmos.security.user.SmartCosmosUser;
 import net.smartcosmos.spring.SmartCosmosRdao;
@@ -27,21 +27,20 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 @Slf4j
 @ConditionalOnProperty(prefix = "smt.endpoints.tenant", name = "enabled", matchIfMissing = true)
 //@Api
-public class CreateRoleResource {
+public class CreateUserResource {
 
-    private CreateRoleService service;
+    private CreateUserService service;
 
     @Autowired
-    public CreateRoleResource(CreateRoleService service) { this.service = service; }
+    public CreateUserResource(CreateUserService service) { this.service = service; }
 
-    @RequestMapping(value = "/roles", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8_VALUE, consumes = APPLICATION_JSON_UTF8_VALUE)
-    @EndpointMethodControl(key = "role.post")
+    @RequestMapping(value = "/users", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8_VALUE, consumes = APPLICATION_JSON_UTF8_VALUE)
+    @EndpointMethodControl(key = "user.post")
     @ConditionalOnProperty(prefix = "smt.endpoints.user.post", name = "enabled", matchIfMissing = true)
-    public DeferredResult<ResponseEntity> createRole(
-        @RequestBody @Valid RestCreateOrUpdateRoleRequest restCreateOrUpdateRoleRequest,
-        SmartCosmosUser user) {
+    public DeferredResult<ResponseEntity> createUser(
+        @RequestBody @Valid RestCreateOrUpdateUserRequest restCreateUserRequest, SmartCosmosUser user) {
 
-        return service.create(restCreateOrUpdateRoleRequest, user);
+        return service.create(restCreateUserRequest, user);
     }
 }
 
