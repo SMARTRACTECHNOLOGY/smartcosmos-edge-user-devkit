@@ -1,4 +1,4 @@
-package net.smartcosmos.extension.tenant.rest.converter;
+package net.smartcosmos.extension.tenant.rest.converter.user;
 
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.format.FormatterRegistrar;

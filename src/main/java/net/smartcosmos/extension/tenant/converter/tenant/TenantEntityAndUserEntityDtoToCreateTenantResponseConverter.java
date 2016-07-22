@@ -1,4 +1,4 @@
-package net.smartcosmos.extension.tenant.converter;
+package net.smartcosmos.extension.tenant.converter.tenant;
 
 import java.util.ArrayList;
 import java.util.List;

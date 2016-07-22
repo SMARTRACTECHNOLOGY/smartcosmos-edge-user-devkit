@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import org.junit.*;
 
+import net.smartcosmos.extension.tenant.converter.tenant.TenantEntityToTenantResponseConverter;
 import net.smartcosmos.extension.tenant.domain.TenantEntity;
 import net.smartcosmos.extension.tenant.dto.tenant.TenantResponse;
 import net.smartcosmos.extension.tenant.util.UuidUtil;
