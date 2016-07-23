@@ -8,6 +8,7 @@ import net.smartcosmos.extension.tenant.dao.TenantDao;
 import net.smartcosmos.extension.tenant.dto.tenant.TenantResponse;
 import net.smartcosmos.extension.tenant.rest.dto.tenant.RestTenantResponse;
 import net.smartcosmos.extension.tenant.rest.service.AbstractTenantService;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -45,6 +46,26 @@ public class ReadTenantService extends AbstractTenantService {
         return ResponseEntity.notFound().build();
     }
 
+    public ResponseEntity<?> query(String name) {
+        if (StringUtils.isBlank(name)) {
+            return findAll();
+        } else {
+            return findByName(name);
+        }
+    }
+
+    public ResponseEntity<?> findAll() {
+
+        List<TenantResponse> tenantList = tenantDao.findAllTenants();
+        for (TenantResponse tenant : tenantList) {
+            sendEvent(null, DefaultEventTypes.TenantRead, tenant);
+        }
+
+        return ResponseEntity
+                .ok()
+                .body(convertList(tenantList, TenantResponse.class, RestTenantResponse.class));
+    }
+
     public ResponseEntity<?> findByName(String name) {
 
         Optional<TenantResponse> entity = tenantDao.findTenantByName(name);
@@ -58,17 +79,5 @@ public class ReadTenantService extends AbstractTenantService {
 
         sendEvent(null, DefaultEventTypes.TenantNotFound, name);
         return ResponseEntity.notFound().build();
-    }
-
-    public ResponseEntity<?> findAll() {
-
-        List<TenantResponse> tenantList = tenantDao.findAllTenants();
-        for (TenantResponse tenant : tenantList) {
-            sendEvent(null, DefaultEventTypes.TenantRead, tenant);
-        }
-
-        return ResponseEntity
-            .ok()
-            .body(convertList(tenantList, TenantResponse.class, RestTenantResponse.class));
     }
 }

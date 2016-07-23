@@ -20,12 +20,12 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 @Slf4j
 @SmartCosmosRdao
 @ConditionalOnProperty(prefix = "smt.endpoints.tenant", name = "enabled", matchIfMissing = true)
-public class GetTenantResource {
+public class ReadTenantResource {
 
     private ReadTenantService readTenantService;
 
     @Autowired
-    public GetTenantResource(ReadTenantService readTenantService) { this.readTenantService = readTenantService; }
+    public ReadTenantResource(ReadTenantService readTenantService) { this.readTenantService = readTenantService; }
 
     @RequestMapping(value = "/tenants/{urn}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8_VALUE)
     @EndpointMethodControl(key = "tenant.urn.get")
@@ -40,10 +40,6 @@ public class GetTenantResource {
     @ConditionalOnProperty(prefix = "smt.endpoints.tenant.get", name = "enabled", matchIfMissing = true)
     public ResponseEntity<?> getByName(@RequestParam(value = "name", required = false, defaultValue = "") String name) {
 
-        if (StringUtils.isBlank(name)) {
-            return readTenantService.findAll();
-        } else {
-            return readTenantService.findByName(name);
-        }
+        return readTenantService.query(name);
     }
 }
