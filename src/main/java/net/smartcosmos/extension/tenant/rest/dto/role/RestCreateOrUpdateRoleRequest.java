@@ -1,40 +1,39 @@
 package net.smartcosmos.extension.tenant.rest.dto.role;
 
-import java.beans.ConstructorProperties;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.beans.ConstructorProperties;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Initially created by SMART COSMOS Team on June 30, 2016.
  */
 @Data
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties({ "version" })
+@NoArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class RestCreateOrUpdateRoleRequest {
 
     private static final int VERSION = 1;
     private final int version = VERSION;
 
-    private String urn;
     private String name;
-    private List<String> authorities;
+    private Set<String> authorities;
     private Boolean active;
 
     @Builder
-    @ConstructorProperties({ "urn", "name", "authorities", "active" })
-    public RestCreateOrUpdateRoleRequest(String urn, String name, List<String> authorities, Boolean active) {
-        this.urn = urn;
+    @ConstructorProperties({ "name", "authorities", "active" })
+    public RestCreateOrUpdateRoleRequest(String name, Collection<String> authorities, Boolean active) {
         this.name = name;
-        this.authorities = new ArrayList<>();
+        this.authorities = new HashSet<>();
         if (authorities != null && !authorities.isEmpty()) {
             this.authorities.addAll(authorities);
         }
-        this.active = active != null ? active : true;
+        this.active = active;
     }
 
 }

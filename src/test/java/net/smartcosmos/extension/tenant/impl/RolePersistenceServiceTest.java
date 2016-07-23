@@ -1,11 +1,14 @@
 package net.smartcosmos.extension.tenant.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import org.junit.*;
-import org.junit.runner.*;
+import net.smartcosmos.extension.tenant.TenantPersistenceConfig;
+import net.smartcosmos.extension.tenant.TenantPersistenceTestApplication;
+import net.smartcosmos.extension.tenant.dto.role.CreateOrUpdateRoleRequest;
+import net.smartcosmos.extension.tenant.dto.role.RoleResponse;
+import net.smartcosmos.extension.tenant.repository.RoleRepository;
+import net.smartcosmos.extension.tenant.util.UuidUtil;
+import org.junit.After;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
@@ -13,12 +16,9 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import net.smartcosmos.extension.tenant.TenantPersistenceConfig;
-import net.smartcosmos.extension.tenant.TenantPersistenceTestApplication;
-import net.smartcosmos.extension.tenant.dto.role.CreateOrUpdateRoleRequest;
-import net.smartcosmos.extension.tenant.dto.role.RoleResponse;
-import net.smartcosmos.extension.tenant.repository.RoleRepository;
-import net.smartcosmos.extension.tenant.util.UuidUtil;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import static org.junit.Assert.*;
 
@@ -65,7 +65,7 @@ public class RolePersistenceServiceTest {
         assertTrue(createResponse.isPresent());
         assertEquals(roleName, createResponse.get().getName());
         assertEquals(1, createResponse.get().getAuthorities().size());
-        assertEquals(authority, createResponse.get().getAuthorities().get(0));
+        assertTrue(createResponse.get().getAuthorities().contains(authority));
     }
 
     @Test
@@ -128,7 +128,7 @@ public class RolePersistenceServiceTest {
         assertTrue(createResponse.isPresent());
         assertEquals(roleName, createResponse.get().getName());
         assertEquals(1, createResponse.get().getAuthorities().size());
-        assertEquals(authority, createResponse.get().getAuthorities().get(0));
+        assertTrue(createResponse.get().getAuthorities().contains(authority));
 
         Optional<RoleResponse> lookupResponse = rolePersistenceService
             .findByTenantUrnAndName(tenantRoleTest, roleName);
@@ -136,7 +136,7 @@ public class RolePersistenceServiceTest {
         assertTrue(lookupResponse.isPresent());
         assertEquals(roleName, lookupResponse.get().getName());
         assertEquals(1, lookupResponse.get().getAuthorities().size());
-        assertEquals(authority, lookupResponse.get().getAuthorities().get(0));
+        assertTrue(lookupResponse.get().getAuthorities().contains(authority));
     }
 
     @Test
@@ -169,7 +169,7 @@ public class RolePersistenceServiceTest {
         assertTrue(createResponse.isPresent());
         assertEquals(roleName, createResponse.get().getName());
         assertEquals(1, createResponse.get().getAuthorities().size());
-        assertEquals(authority, createResponse.get().getAuthorities().get(0));
+        assertTrue(createResponse.get().getAuthorities().contains(authority));
 
         String urn = createResponse.get().getUrn();
 
