@@ -23,7 +23,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
- * Unit Testing sample for creating Tenants.
+ * Unit Testing sample for creating Users.
  */
 @SuppressWarnings("Duplicates")
 @org.springframework.boot.test.SpringApplicationConfiguration(classes = { TenantPersistenceTestApplication.class })
@@ -44,7 +44,7 @@ public class CreateUserResourceTest extends AbstractTestResource {
     }
 
     /**
-     * Test that creating a Tenant is successful.
+     * Test that creating a User is successful.
      *
      * @throws Exception
      */
@@ -63,8 +63,7 @@ public class CreateUserResourceTest extends AbstractTestResource {
         List<String> userRoles = new ArrayList<>();
         userRoles.add("User");
 
-        UserPasswordResponse userPasswordResponse = UserPasswordResponse
-            .builder()
+        UserPasswordResponse userPasswordResponse = UserPasswordResponse.builder()
             .urn(expectedUserUrn)
             .tenantUrn(expectedTenantUrn)
             .username(username)
@@ -73,12 +72,15 @@ public class CreateUserResourceTest extends AbstractTestResource {
 
         when(tenantDao.createUser(anyString(), anyObject())).thenReturn(Optional.ofNullable(userPasswordResponse));
 
+        RestCreateOrUpdateUserRequest request = RestCreateOrUpdateUserRequest.builder()
+            .username(username)
+            .emailAddress(emailAddress)
+            .roles(userRoleOnly)
+            .build();
+
         org.springframework.test.web.servlet.MvcResult mvcResult = this.mockMvc.perform(
-            post("/users").content(this.json(RestCreateOrUpdateUserRequest.builder()
-                                                 .username(username)
-                                                 .emailAddress(emailAddress)
-                                                 .roles(userRoleOnly)
-                                                 .build()))
+            post("/users")
+                .content(this.json(request))
                 .contentType(contentType))
             .andExpect(status().isOk())
             .andExpect(request().asyncStarted())
@@ -89,10 +91,9 @@ public class CreateUserResourceTest extends AbstractTestResource {
             .andExpect(content().contentType(contentType))
             .andExpect(jsonPath("$.urn", startsWith("urn:user:uuid")))
             .andExpect(jsonPath("$.username", is(username)))
-            .andExpect(jsonPath("$.emailAddress", is(emailAddress)))
+            .andExpect(jsonPath("$.emailAddress").doesNotExist())
             .andExpect(jsonPath("$.tenantUrn", startsWith("urn:tenant:uuid")))
             .andReturn();
-
     }
 
 }
