@@ -79,6 +79,5 @@ public class UpdateTenantResourceTest extends AbstractTestResource {
         this.mockMvc.perform(asyncDispatch(mvcResult))
             .andExpect(status().isNoContent())
             .andReturn();
-
     }
 }
