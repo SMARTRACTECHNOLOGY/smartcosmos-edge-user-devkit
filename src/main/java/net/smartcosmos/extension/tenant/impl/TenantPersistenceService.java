@@ -26,6 +26,7 @@ import net.smartcosmos.extension.tenant.util.UuidUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionException;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.stereotype.Service;
 
 import javax.validation.ConstraintViolationException;
@@ -204,6 +205,13 @@ public class TenantPersistenceService implements TenantDao {
             return Optional.of(conversionService.convert(entity.get(), TenantResponse.class));
         }
         return Optional.empty();
+    }
+
+    @Override
+    public List<TenantResponse> findAllTenants() {
+
+        List<TenantEntity> entityList = tenantRepository.findAll();
+        return convertList(entityList,TenantEntity.class, TenantResponse.class);
     }
 
     // endregion
@@ -414,6 +422,25 @@ public class TenantPersistenceService implements TenantDao {
             return savedEntity.get();
         }
         throw new IllegalArgumentException();
+    }
+
+    /**
+     * Uses the conversion service to convert a typed list into another typed list.
+     *
+     * @param list the list
+     * @param sourceClass the class of the source type
+     * @param targetClass the class of the target type
+     * @param <S> the generic source type
+     * @param <T> the generic target type
+     * @return the converted typed list
+     */
+    @SuppressWarnings("unchecked")
+    private <S, T> List<T> convertList(List<S> list, Class sourceClass, Class targetClass) {
+
+        TypeDescriptor sourceDescriptor = TypeDescriptor.collection(List.class, TypeDescriptor.valueOf(sourceClass));
+        TypeDescriptor targetDescriptor = TypeDescriptor.collection(List.class, TypeDescriptor.valueOf(targetClass));
+
+        return (List<T>) conversionService.convert(list, sourceDescriptor, targetDescriptor);
     }
 
     // endregion

@@ -241,7 +241,7 @@ GET /tenants/urn:tenant:uuid:346e742e-2f1e-4d91-9ffe-7b38eec6219c
 ===== Find by Name - `GET /tenants/?name={name}`
 
 ----
-GET /tenants/?name=My%20Example%20Company
+GET /tenants?name=My%20Example%20Company
 ----
 .Response
 ----
@@ -255,6 +255,30 @@ GET /tenants/?name=My%20Example%20Company
     "name": "My Example Company"
 }
 ----
+
+----
+GET /tenants
+----
+.Response
+----
+200 OK
+----
+[source,json]
+----
+[
+    {
+        "urn": "urn:tenant:uuid:346e742e-2f1e-4d91-9ffe-7b38eec6219c",
+        "active": true,
+        "name": "My Example Company"
+    },
+    {
+        "urn": "urn:tenant:uuid:f1e4ff26-2a5f-41c6-8533-4994cb2cceec",
+        "active": true,
+        "name": "Another Example Company"
+    }
+]
+----
+
 
 [[users]]
 ==== User Endpoints

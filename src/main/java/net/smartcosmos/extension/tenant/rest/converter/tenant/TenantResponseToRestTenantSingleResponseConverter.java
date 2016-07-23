@@ -1,19 +1,19 @@
 package net.smartcosmos.extension.tenant.rest.converter.tenant;
 
 import net.smartcosmos.extension.tenant.dto.tenant.TenantResponse;
-import net.smartcosmos.extension.tenant.rest.dto.tenant.RestTenantSingleResponse;
+import net.smartcosmos.extension.tenant.rest.dto.tenant.RestTenantResponse;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.format.FormatterRegistrar;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.stereotype.Component;
 
 @Component
-public class TenantResponseToRestTenantSingleResponseConverter implements Converter<TenantResponse, RestTenantSingleResponse>, FormatterRegistrar {
+public class TenantResponseToRestTenantSingleResponseConverter implements Converter<TenantResponse, RestTenantResponse>, FormatterRegistrar {
 
 
     @Override
-    public RestTenantSingleResponse convert(TenantResponse tenantResponse) {
-        return RestTenantSingleResponse.builder()
+    public RestTenantResponse convert(TenantResponse tenantResponse) {
+        return RestTenantResponse.builder()
                 .active(tenantResponse.getActive())
                 .name(tenantResponse.getName())
                 .urn(tenantResponse.getUrn())

@@ -268,6 +268,14 @@ public class TenantPersistenceServiceTest {
         assertFalse(getTenantResponse.isPresent());
     }
 
+    @Test
+    public void thatFindAllTenantsSucceeds() {
+        List<TenantResponse> tenantResponse = tenantPersistenceService.findAllTenants();
+
+        assertNotNull(tenantResponse);
+        assertFalse(tenantResponse.isEmpty());
+    }
+
     // endregion
 
     // region UserPersistenceTests
