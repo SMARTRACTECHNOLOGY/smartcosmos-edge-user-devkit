@@ -81,11 +81,13 @@ public class CreateTenantResourceTest extends AbstractTestResource {
 
         when(tenantDao.createTenant(anyObject())).thenReturn(Optional.ofNullable(createTenantResponse));
 
+        RestCreateTenantRequest request = RestCreateTenantRequest.builder()
+                .name(name)
+                .username(username)
+                .build();
+
         MvcResult mvcResult = this.mockMvc.perform(
-            post("/tenants").content(this.json(RestCreateTenantRequest.builder()
-                                                   .name(name)
-                                                   .username(username)
-                                                   .build()))
+            post("/tenants").content(this.json(request))
                 .contentType(contentType))
             .andExpect(status().isOk())
             .andExpect(request().asyncStarted())
