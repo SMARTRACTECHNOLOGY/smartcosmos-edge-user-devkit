@@ -1,13 +1,8 @@
 package net.smartcosmos.extension.tenant.repository;
 
-import java.util.Collection;
-import java.util.LinkedHashSet;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
-
-import javax.validation.ConstraintViolationException;
-
+import net.smartcosmos.extension.tenant.domain.AuthorityEntity;
+import net.smartcosmos.extension.tenant.domain.RoleEntity;
+import net.smartcosmos.extension.tenant.domain.UserEntity;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +12,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.TransactionException;
 import org.springframework.util.Assert;
 
-import net.smartcosmos.extension.tenant.domain.AuthorityEntity;
-import net.smartcosmos.extension.tenant.domain.RoleEntity;
-import net.smartcosmos.extension.tenant.domain.UserEntity;
+import javax.validation.ConstraintViolationException;
+import java.util.*;
 
 import static java.util.stream.Collectors.toSet;
 
@@ -75,7 +69,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
     @Override
     public Optional<Set<AuthorityEntity>> getAuthorities(UUID tenantId, UUID userId) {
 
-        Optional<UserEntity> userOptional = userRepository.findByIdAndTenantId(userId, tenantId);
+        Optional<UserEntity> userOptional = userRepository.findByTenantIdAndId(tenantId, userId);
         if (userOptional.isPresent()) {
             Set<AuthorityEntity> authorities = new LinkedHashSet<>();
 
@@ -91,9 +85,9 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
     }
 
     @Override
-    public Optional<UserEntity> addRolesToUser(UUID tenantId, UUID id, Collection<String> roleNames) throws IllegalArgumentException {
+    public Optional<UserEntity> addRolesToUser(UUID tenantId, UUID userId, Collection<String> roleNames) throws IllegalArgumentException {
 
-        Optional<UserEntity> userOptional = userRepository.findByIdAndTenantId(id, tenantId);
+        Optional<UserEntity> userOptional = userRepository.findByTenantIdAndId(tenantId, userId);
         if (userOptional.isPresent()) {
             UserEntity user = userOptional.get();
 

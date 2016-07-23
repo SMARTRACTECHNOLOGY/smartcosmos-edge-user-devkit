@@ -8,9 +8,12 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.*;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
@@ -137,6 +140,37 @@ public class ReadUserResourceTest extends AbstractTestResource {
             .andReturn();
 
         verify(tenantDao, times(1)).findUserByName(anyString(), anyString());
+        verifyNoMoreInteractions(tenantDao);
+    }
+
+    @Test
+    public void thatFindAllUsersInTenantSucceeds() throws Exception {
+
+        List<UserResponse> response = new ArrayList<>();
+        response.add(UserResponse.builder()
+            .active(true)
+            .username("name1")
+            .urn("urn1")
+            .build());
+        response.add(UserResponse.builder()
+            .active(true)
+            .username("name2")
+            .urn("urn2")
+            .build());
+
+        when(tenantDao.findAllUsers(anyString())).thenReturn(response);
+
+        MvcResult mvcResult = mockMvc.perform(
+            get("/users")
+                .contentType(APPLICATION_JSON_UTF8))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$").isArray())
+            .andExpect(jsonPath("$", hasSize(2)))
+            .andExpect(jsonPath("$[*].urn", contains("urn1", "urn2")))
+            .andExpect(jsonPath("$[*].username", contains("name1", "name2")))
+            .andReturn();
+
+        verify(tenantDao, times(1)).findAllUsers(anyString());
         verifyNoMoreInteractions(tenantDao);
     }
 }

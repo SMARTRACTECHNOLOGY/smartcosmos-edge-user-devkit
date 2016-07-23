@@ -338,6 +338,14 @@ public class TenantPersistenceService implements TenantDao {
         return Optional.empty();
     }
 
+    @Override
+    public List<UserResponse> findAllUsers(String tenantUrn) {
+
+        UUID tenantId = UuidUtil.getUuidFromUrn(tenantUrn);
+        List<UserEntity> entityList = userRepository.findByTenantId(tenantId);
+        return convertList(entityList,UserEntity.class, UserResponse.class);
+    }
+
     /**
      *
      * @param tenantUrn

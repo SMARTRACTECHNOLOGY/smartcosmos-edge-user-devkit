@@ -40,4 +40,6 @@ public interface TenantDao {
     Optional<GetAuthoritiesResponse> getAuthorities(String username, String password);
 
     List<TenantResponse> findAllTenants();
+
+    List<UserResponse> findAllUsers(String tenantUrn);
 }

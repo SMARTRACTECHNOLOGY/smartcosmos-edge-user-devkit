@@ -772,5 +772,14 @@ public class TenantPersistenceServiceTest {
         assertEquals(emailAddress2, findResponse.get().getEmailAddress());
     }
 
+    @Test
+    public void thatFindAllUsersSucceeds() throws Exception {
+
+        List<UserResponse> users = tenantPersistenceService.findAllUsers(testUserTenantUrn);
+
+        assertNotNull(users);
+        assertFalse(users.isEmpty());
+    }
+
     // endregion
 }

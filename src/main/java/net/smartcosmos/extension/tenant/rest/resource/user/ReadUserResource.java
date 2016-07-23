@@ -39,8 +39,8 @@ public class ReadUserResource {
     @EndpointMethodControl(key = "tenant.get")
     @ConditionalOnProperty(prefix = "smt.endpoints.user.get", name = "enabled", matchIfMissing = true)
     public ResponseEntity<?> getByName(
-        @RequestParam(value = "name") String name, SmartCosmosUser user) {
+        @RequestParam(value = "name", required = false, defaultValue = "") String name, SmartCosmosUser user) {
 
-        return readUserService.findByName(name, user);
+        return readUserService.query(name, user);
     }
 }
