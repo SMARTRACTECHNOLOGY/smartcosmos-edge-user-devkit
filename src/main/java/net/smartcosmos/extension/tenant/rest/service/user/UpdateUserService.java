@@ -33,7 +33,7 @@ public class UpdateUserService extends AbstractTenantService {
         super(tenantDao, roleDao, smartCosmosEventTemplate, conversionService);
     }
 
-    public DeferredResult<ResponseEntity> create(String userUrn, RestCreateOrUpdateUserRequest userRequest, SmartCosmosUser user) {
+    public DeferredResult<ResponseEntity> update(String userUrn, RestCreateOrUpdateUserRequest userRequest, SmartCosmosUser user) {
         // Async worker thread reduces timeouts and disconnects for long queries and processing.
         DeferredResult<ResponseEntity> response = new DeferredResult<>();
         updateUserWorker(response, user, userUrn, userRequest);

@@ -36,12 +36,12 @@ public class UpdateUserResource {
     @RequestMapping(value = "/users/{userUrn}", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8_VALUE, consumes = APPLICATION_JSON_UTF8_VALUE)
     @EndpointMethodControl(key = "tenant.put")
     @ConditionalOnProperty(prefix = "smt.endpoints.user.put", name = "enabled", matchIfMissing = true)
-    public DeferredResult<ResponseEntity> updateObject(
+    public DeferredResult<ResponseEntity> updateUser(
         @PathVariable String userUrn,
         @RequestBody @Valid RestCreateOrUpdateUserRequest requestBody,
         SmartCosmosUser user) {
 
-        return service.create(userUrn, requestBody, user);
+        return service.update(userUrn, requestBody, user);
     }
 }
 
