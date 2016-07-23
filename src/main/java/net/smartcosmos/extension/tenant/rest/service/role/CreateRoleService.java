@@ -1,6 +1,7 @@
 package net.smartcosmos.extension.tenant.rest.service.role;
 
 import lombok.extern.slf4j.Slf4j;
+import net.smartcosmos.events.DefaultEventTypes;
 import net.smartcosmos.events.SmartCosmosEventTemplate;
 import net.smartcosmos.extension.tenant.dao.RoleDao;
 import net.smartcosmos.extension.tenant.dao.TenantDao;
@@ -55,12 +56,10 @@ public class CreateRoleService extends AbstractTenantService {
             if (newRole.isPresent()) {
                 ResponseEntity responseEntity = buildCreatedResponseEntity(newRole.get());
                 response.setResult(responseEntity);
-                // TODO Enable event after merge in framework
-                // sendEvent(user, DefaultEventTypes.RoleCreated, newRole.get());
+                sendEvent(user, DefaultEventTypes.RoleCreated, newRole.get());
             } else {
                 response.setResult(ResponseEntity.status(HttpStatus.CONFLICT).build());
-                // TODO Enable event after merge in framework
-                // sendEvent(user, DefaultEventTypes.RoleCreateFailedAlreadyExists, roleRequest);
+                sendEvent(user, DefaultEventTypes.RoleCreateFailedAlreadyExists, roleRequest);
             }
 
         } catch (Exception e) {

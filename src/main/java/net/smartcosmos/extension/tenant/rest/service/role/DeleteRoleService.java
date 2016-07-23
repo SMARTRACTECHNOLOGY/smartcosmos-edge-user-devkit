@@ -1,6 +1,7 @@
 package net.smartcosmos.extension.tenant.rest.service.role;
 
 import lombok.extern.slf4j.Slf4j;
+import net.smartcosmos.events.DefaultEventTypes;
 import net.smartcosmos.events.SmartCosmosEventTemplate;
 import net.smartcosmos.extension.tenant.dao.RoleDao;
 import net.smartcosmos.extension.tenant.dao.TenantDao;
@@ -47,8 +48,7 @@ public class DeleteRoleService extends AbstractTenantService {
 
             if (!deleteRoleResponse.isEmpty()) {
                 response.setResult(ResponseEntity.noContent().build());
-                // TODO Enable event after merge in framework
-                // sendEvent(user, DefaultEventTypes.RoleDeleted, deleteRoleResponse.get(0));
+                sendEvent(user, DefaultEventTypes.RoleDeleted, deleteRoleResponse.get(0));
             } else {
                 response.setResult(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
 
@@ -56,8 +56,7 @@ public class DeleteRoleService extends AbstractTenantService {
                     .urn(roleUrn)
                     .tenantUrn(user.getAccountUrn())
                     .build();
-                // TODO Enable event after merge in framework
-                // sendEvent(user, DefaultEventTypes.RoleNotFound, eventPayload);
+                sendEvent(user, DefaultEventTypes.RoleNotFound, eventPayload);
             }
         } catch (Exception e) {
             log.debug(e.getMessage(), e);

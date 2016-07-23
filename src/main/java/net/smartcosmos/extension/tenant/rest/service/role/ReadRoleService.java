@@ -1,6 +1,7 @@
 package net.smartcosmos.extension.tenant.rest.service.role;
 
 import lombok.extern.slf4j.Slf4j;
+import net.smartcosmos.events.DefaultEventTypes;
 import net.smartcosmos.events.SmartCosmosEventTemplate;
 import net.smartcosmos.extension.tenant.dao.RoleDao;
 import net.smartcosmos.extension.tenant.dao.TenantDao;
@@ -33,8 +34,7 @@ public class ReadRoleService extends AbstractTenantService {
         Optional<RoleResponse> entity = roleDao.findRoleByUrn(user.getAccountUrn(), urn);
 
         if (entity.isPresent()) {
-            // TODO Enable event after merge in framework
-            // sendEvent(user, DefaultEventTypes.RoleRead, entity.get());
+            sendEvent(user, DefaultEventTypes.RoleRead, entity.get());
             return ResponseEntity
                     .ok()
                     .body(conversionService.convert(entity.get(), RestRoleResponse.class));
@@ -44,8 +44,7 @@ public class ReadRoleService extends AbstractTenantService {
                 .urn(urn)
                 .tenantUrn(user.getAccountUrn())
                 .build();
-        // TODO Enable event after merge in framework
-        // sendEvent(user, DefaultEventTypes.RoleNotFound, eventPayload);
+        sendEvent(user, DefaultEventTypes.RoleNotFound, eventPayload);
         return ResponseEntity.notFound().build();
     }
 
@@ -61,8 +60,7 @@ public class ReadRoleService extends AbstractTenantService {
 
         List<RoleResponse> roleList = roleDao.findAllRoles(user.getAccountUrn());
         for (RoleResponse role : roleList) {
-            // TODO Enable event after merge in framework
-            // sendEvent(user, DefaultEventTypes.RoleRead, role);
+            sendEvent(user, DefaultEventTypes.RoleRead, role);
         }
 
         return ResponseEntity
@@ -75,8 +73,7 @@ public class ReadRoleService extends AbstractTenantService {
         Optional<RoleResponse> entity = roleDao.findRoleByName(user.getAccountUrn(), name);
 
         if (entity.isPresent()) {
-            // TODO Enable event after merge in framework
-            // sendEvent(user, DefaultEventTypes.RoleRead, entity.get());
+            sendEvent(user, DefaultEventTypes.RoleRead, entity.get());
             return ResponseEntity
                 .ok()
                 .body(conversionService.convert(entity.get(), RestRoleResponse.class));
@@ -86,8 +83,7 @@ public class ReadRoleService extends AbstractTenantService {
             .name(name)
             .tenantUrn(user.getAccountUrn())
             .build();
-        // TODO Enable event after merge in framework
-        // sendEvent(user, DefaultEventTypes.RoleNotFound, eventPayload);
+        sendEvent(user, DefaultEventTypes.RoleNotFound, eventPayload);
         return ResponseEntity.notFound().build();
     }
 }
