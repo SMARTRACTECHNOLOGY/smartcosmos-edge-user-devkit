@@ -35,7 +35,7 @@ public class CreateTenantResource {
     @RequestMapping(value = "/tenants", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8_VALUE, consumes = APPLICATION_JSON_UTF8_VALUE)
     @EndpointMethodControl(key = "tenant.post")
     @ConditionalOnProperty(prefix = "smt.endpoints.tenant.post", name = "enabled", matchIfMissing = true)
-    public DeferredResult<ResponseEntity> createObject(
+    public DeferredResult<ResponseEntity> createTenant(
         @RequestBody @Valid RestCreateTenantRequest restCreateTenantRequest,
         SmartCosmosUser user) {
 

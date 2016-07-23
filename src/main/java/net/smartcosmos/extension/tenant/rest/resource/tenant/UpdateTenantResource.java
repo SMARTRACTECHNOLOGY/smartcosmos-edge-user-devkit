@@ -36,7 +36,7 @@ public class UpdateTenantResource {
     @RequestMapping(value = "/tenants/{tenantUrn}", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8_VALUE, consumes = APPLICATION_JSON_UTF8_VALUE)
     @EndpointMethodControl(key = "tenant.put")
     @ConditionalOnProperty(prefix = "smt.endpoints.tenant.put", name = "enabled", matchIfMissing = true)
-    public DeferredResult<ResponseEntity> updateObject(
+    public DeferredResult<ResponseEntity> updateTenant(
         @PathVariable String tenantUrn,
         @RequestBody @Valid RestUpdateTenantRequest restUpdateTenantRequest,
         SmartCosmosUser user) {
