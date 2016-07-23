@@ -74,9 +74,9 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
             Set<AuthorityEntity> authorities = new LinkedHashSet<>();
 
             UserEntity user = userOptional.get();
-            for (RoleEntity role : user.getRoles()) {
-                authorities.addAll(role.getAuthorities());
-            }
+            user.getRoles().stream()
+                .filter(RoleEntity::getActive)
+                .forEach(role -> authorities.addAll(role.getAuthorities()));
 
             return Optional.of(authorities);
         }
