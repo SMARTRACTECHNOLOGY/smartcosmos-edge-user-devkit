@@ -80,4 +80,37 @@ public class UpdateTenantResourceTest extends AbstractTestResource {
             .andExpect(status().isNoContent())
             .andReturn();
     }
+
+    /**
+     * Test that updating a nonexistent Tenant fails.
+     *
+     * @throws Exception
+     */
+    @Test
+    public void thatUpdateNonexistentTenantFails() throws Exception {
+
+        final String name = "example.com";
+        final Boolean active = false;
+
+        final String expectedTenantUrn = "urn:tenant:uuid:" + UuidUtil.getNewUuid()
+                .toString();
+
+        when(tenantDao.updateTenant(anyString(), anyObject())).thenReturn(Optional.empty());
+
+        RestUpdateTenantRequest request = RestUpdateTenantRequest.builder()
+                .active(active)
+                .name(name)
+                .build();
+
+        MvcResult mvcResult = this.mockMvc.perform(
+                put("/tenants/{urn}", expectedTenantUrn).content(this.json(request))
+                        .contentType(contentType))
+                .andExpect(status().isOk())
+                .andExpect(request().asyncStarted())
+                .andReturn();
+
+        this.mockMvc.perform(asyncDispatch(mvcResult))
+                .andExpect(status().isNotFound())
+                .andReturn();
+    }
 }
