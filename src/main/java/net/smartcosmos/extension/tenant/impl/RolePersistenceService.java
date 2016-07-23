@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.ConstraintViolationException;
 import java.util.*;
@@ -107,7 +106,6 @@ public class RolePersistenceService implements RoleDao {
     }
 
     @Override
-    @Transactional
     public List<RoleResponse> delete(String tenantUrn, String urn)
         throws IllegalArgumentException {
 
