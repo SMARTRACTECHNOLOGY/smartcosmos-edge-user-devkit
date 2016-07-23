@@ -473,6 +473,7 @@ POST /roles/
 {
     "urn": "urn:role:uuid:fcdf5432-49a8-45ef-96a2-94a022022860",
     "name": "User",
+    "active": true,
     "authorities": [
         "https://authorities.smartcosmos.net/things/read"
     ],
@@ -517,6 +518,7 @@ GET /roles/
         {
             "urn": "urn:role:uuid:318a9fae-0218-486c-b9f6-86f76b2ff6af",
             "name": "Admin",
+            "active": true,
             "authorities": [
                 "https://authorities.smartcosmos.net/things/read",
                 "https://authorities.smartcosmos.net/things/create"
@@ -526,6 +528,7 @@ GET /roles/
         {
             "urn": "urn:role:uuid:fcdf5432-49a8-45ef-96a2-94a022022860",
             "name": "User",
+            "active": true,
             "authorities": [
                 "https://authorities.smartcosmos.net/things/read"
             ],
