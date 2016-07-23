@@ -14,7 +14,7 @@ import lombok.Data;
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties({ "version" })
-public class UpdateUserRequest {
+public class CreateOrUpdateUserRequest {
 
     private static final int VERSION = 1;
     private final int version = VERSION;
@@ -29,7 +29,7 @@ public class UpdateUserRequest {
 
     @Builder
     @ConstructorProperties({ "username", "emailAddress", "givenName", "surname", "password", "roles", "active" })
-    public UpdateUserRequest(
+    public CreateOrUpdateUserRequest(
         String username, String emailAddress, String givenName, String surname, List<String> roles, Boolean active) {
 
         this.username = username;
