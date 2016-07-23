@@ -6,9 +6,9 @@ import net.smartcosmos.extension.tenant.dto.tenant.CreateTenantResponse;
 import net.smartcosmos.extension.tenant.dto.tenant.TenantResponse;
 import net.smartcosmos.extension.tenant.dto.tenant.UpdateTenantRequest;
 import net.smartcosmos.extension.tenant.dto.user.CreateUserRequest;
-import net.smartcosmos.extension.tenant.dto.user.GetOrDeleteUserResponse;
+import net.smartcosmos.extension.tenant.dto.user.UserResponse;
 import net.smartcosmos.extension.tenant.dto.user.UpdateUserRequest;
-import net.smartcosmos.extension.tenant.dto.user.UserPasswordResponse;
+import net.smartcosmos.extension.tenant.dto.user.CreateUserResponse;
 
 import javax.validation.ConstraintViolationException;
 import java.util.List;
@@ -27,16 +27,16 @@ public interface TenantDao {
 
     Optional<TenantResponse> findTenantByName(String name);
 
-    Optional<UserPasswordResponse> createUser(String tenantUrn, CreateUserRequest userCreate) throws ConstraintViolationException;
+    Optional<CreateUserResponse> createUser(String tenantUrn, CreateUserRequest userCreate) throws ConstraintViolationException;
 
-    Optional<UserPasswordResponse> updateUser(String tenantUrn, String userUrn, UpdateUserRequest userUpdate)
+    Optional<CreateUserResponse> updateUser(String tenantUrn, String userUrn, UpdateUserRequest userUpdate)
         throws ConstraintViolationException;
 
-    Optional<GetOrDeleteUserResponse> findUserByUrn(String tenantUrn, String userUrn);
+    Optional<UserResponse> findUserByUrn(String tenantUrn, String userUrn);
 
-    Optional<GetOrDeleteUserResponse> findUserByName(String tenantUrn, String name);
+    Optional<UserResponse> findUserByName(String tenantUrn, String name);
 
-    Optional<GetOrDeleteUserResponse> deleteUserByUrn(String tenantUrn, String urn);
+    Optional<UserResponse> deleteUserByUrn(String tenantUrn, String urn);
 
     Optional<GetAuthoritiesResponse> getAuthorities(String username, String password);
 

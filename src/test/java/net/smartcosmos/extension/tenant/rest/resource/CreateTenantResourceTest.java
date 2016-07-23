@@ -4,7 +4,7 @@ import net.smartcosmos.extension.tenant.TenantPersistenceConfig;
 import net.smartcosmos.extension.tenant.TenantPersistenceTestApplication;
 import net.smartcosmos.extension.tenant.dao.TenantDao;
 import net.smartcosmos.extension.tenant.dto.tenant.CreateTenantResponse;
-import net.smartcosmos.extension.tenant.dto.user.UserPasswordResponse;
+import net.smartcosmos.extension.tenant.dto.user.CreateUserResponse;
 import net.smartcosmos.extension.tenant.rest.dto.tenant.RestCreateTenantRequest;
 import net.smartcosmos.extension.tenant.util.UuidUtil;
 import org.junit.After;
@@ -66,7 +66,7 @@ public class CreateTenantResourceTest extends AbstractTestResource {
         List<String> adminRoles = new ArrayList<>();
         adminRoles.add("Admin");
 
-        UserPasswordResponse userPasswordResponse = UserPasswordResponse.builder()
+        CreateUserResponse createUserResponse = CreateUserResponse.builder()
             .urn(expectedUserUrn)
             .username(username)
             .password(password)
@@ -76,7 +76,7 @@ public class CreateTenantResourceTest extends AbstractTestResource {
 
         CreateTenantResponse createTenantResponse = CreateTenantResponse.builder()
             .urn(expectedTenantUrn)
-            .admin(userPasswordResponse)
+            .admin(createUserResponse)
             .build();
 
         when(tenantDao.createTenant(anyObject())).thenReturn(Optional.ofNullable(createTenantResponse));

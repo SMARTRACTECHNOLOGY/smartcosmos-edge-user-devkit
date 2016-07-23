@@ -5,6 +5,7 @@ import javax.inject.Inject;
 
 import lombok.extern.slf4j.Slf4j;
 
+import net.smartcosmos.extension.tenant.dto.user.UserResponse;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -13,7 +14,6 @@ import net.smartcosmos.events.DefaultEventTypes;
 import net.smartcosmos.events.SmartCosmosEventTemplate;
 import net.smartcosmos.extension.tenant.dao.RoleDao;
 import net.smartcosmos.extension.tenant.dao.TenantDao;
-import net.smartcosmos.extension.tenant.dto.user.GetOrDeleteUserResponse;
 import net.smartcosmos.extension.tenant.rest.service.AbstractTenantService;
 import net.smartcosmos.security.user.SmartCosmosUser;
 
@@ -33,16 +33,16 @@ public class ReadUserService extends AbstractTenantService {
 
     public ResponseEntity<?> findByUrn(String urn, SmartCosmosUser user) {
 
-        Optional<GetOrDeleteUserResponse> entity = tenantDao.findUserByUrn(user.getAccountUrn(), urn);
+        Optional<UserResponse> entity = tenantDao.findUserByUrn(user.getAccountUrn(), urn);
 
         if (entity.isPresent()) {
             sendEvent(user, DefaultEventTypes.UserRead, entity.get());
             return ResponseEntity
                 .ok()
-                .body(conversionService.convert(entity.get(), GetOrDeleteUserResponse.class));
+                .body(conversionService.convert(entity.get(), UserResponse.class));
         }
 
-        GetOrDeleteUserResponse eventPayload = GetOrDeleteUserResponse.builder()
+        UserResponse eventPayload = UserResponse.builder()
             .urn(urn)
             .tenantUrn(user.getAccountUrn())
             .build();
@@ -52,16 +52,16 @@ public class ReadUserService extends AbstractTenantService {
 
     public ResponseEntity<?> findByName(String name, SmartCosmosUser user) {
 
-        Optional<GetOrDeleteUserResponse> entity = tenantDao.findUserByName(user.getAccountUrn(), name);
+        Optional<UserResponse> entity = tenantDao.findUserByName(user.getAccountUrn(), name);
 
         if (entity.isPresent()) {
             sendEvent(user, DefaultEventTypes.UserRead, entity.get());
             return ResponseEntity
                 .ok()
-                .body(conversionService.convert(entity.get(), GetOrDeleteUserResponse.class));
+                .body(conversionService.convert(entity.get(), UserResponse.class));
         }
 
-        GetOrDeleteUserResponse eventPayload = GetOrDeleteUserResponse.builder()
+        UserResponse eventPayload = UserResponse.builder()
             .username(name)
             .tenantUrn(user.getAccountUrn())
             .build();

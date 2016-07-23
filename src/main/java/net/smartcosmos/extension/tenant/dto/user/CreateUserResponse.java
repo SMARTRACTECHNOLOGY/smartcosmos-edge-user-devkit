@@ -1,4 +1,4 @@
-package net.smartcosmos.extension.tenant.rest.dto.user;
+package net.smartcosmos.extension.tenant.dto.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -13,14 +13,14 @@ import java.util.List;
 @JsonIgnoreProperties({ "version" })
 @Builder
 @AllArgsConstructor
-public class RestUserPasswordResponse {
+public class CreateUserResponse {
 
     private static final int VERSION = 1;
     private final int version = VERSION;
 
     private final String urn;
     private final String username;
-    private final String password;
+    private String password;
     private final List<String> roles;
     private final String tenantUrn;
 }

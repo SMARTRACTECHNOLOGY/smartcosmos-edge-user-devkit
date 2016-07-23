@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import net.smartcosmos.extension.tenant.rest.dto.user.RestUserPasswordResponse;
+import net.smartcosmos.extension.tenant.rest.dto.user.RestCreateUserResponse;
 
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -18,5 +18,5 @@ public class RestCreateTenantResponse {
     private final int version = VERSION;
 
     private final String urn;
-    private final RestUserPasswordResponse admin;
+    private final RestCreateUserResponse admin;
 }

@@ -2,12 +2,12 @@ package net.smartcosmos.extension.tenant.rest.resource;
 
 import java.util.Optional;
 
+import net.smartcosmos.extension.tenant.dto.user.UserResponse;
 import org.junit.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MvcResult;
 
 import net.smartcosmos.extension.tenant.dao.TenantDao;
-import net.smartcosmos.extension.tenant.dto.user.GetOrDeleteUserResponse;
 import net.smartcosmos.extension.tenant.util.UuidUtil;
 
 import static org.hamcrest.Matchers.is;
@@ -36,14 +36,14 @@ public class ReadUserResourceTest extends AbstractTestResource {
         String urn = UuidUtil.getUserUrnFromUuid(UuidUtil.getNewUuid());
         String tenantUrn = UuidUtil.getTenantUrnFromUuid(UuidUtil.getNewUuid());
 
-        GetOrDeleteUserResponse response1 = GetOrDeleteUserResponse.builder()
+        UserResponse response1 = UserResponse.builder()
             .active(true)
             .username(name)
             .emailAddress("getByUrn@example.com")
             .urn(urn)
             .tenantUrn(tenantUrn)
             .build();
-        Optional<GetOrDeleteUserResponse> response = Optional.of(response1);
+        Optional<UserResponse> response = Optional.of(response1);
 
         when(tenantDao.findUserByUrn(anyString(), anyString())).thenReturn(response);
 
@@ -66,7 +66,7 @@ public class ReadUserResourceTest extends AbstractTestResource {
 
         String urn = UuidUtil.getUserUrnFromUuid(UuidUtil.getNewUuid());
 
-        Optional<GetOrDeleteUserResponse> response = Optional.empty();
+        Optional<UserResponse> response = Optional.empty();
 
         when(tenantDao.findUserByUrn(anyString(), anyString())).thenReturn(response);
 
@@ -86,13 +86,13 @@ public class ReadUserResourceTest extends AbstractTestResource {
         String urn = UuidUtil.getUserUrnFromUuid(UuidUtil.getNewUuid());
         String tenantUrn = UuidUtil.getTenantUrnFromUuid(UuidUtil.getNewUuid());
 
-        GetOrDeleteUserResponse response1 = GetOrDeleteUserResponse.builder()
+        UserResponse response1 = UserResponse.builder()
             .active(true)
             .username(name)
             .urn(urn)
             .tenantUrn(tenantUrn)
             .build();
-        Optional<GetOrDeleteUserResponse> response = Optional.of(response1);
+        Optional<UserResponse> response = Optional.of(response1);
 
         when(tenantDao.findUserByName(anyString(), anyString())).thenReturn(response);
 
@@ -115,7 +115,7 @@ public class ReadUserResourceTest extends AbstractTestResource {
 
         String name = "noSuchUser";
 
-        Optional<GetOrDeleteUserResponse> response = Optional.empty();
+        Optional<UserResponse> response = Optional.empty();
 
         when(tenantDao.findUserByName(anyString(), anyString())).thenReturn(response);
 

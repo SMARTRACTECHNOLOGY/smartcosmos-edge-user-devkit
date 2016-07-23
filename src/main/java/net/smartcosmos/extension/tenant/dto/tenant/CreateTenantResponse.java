@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
-import net.smartcosmos.extension.tenant.dto.user.UserPasswordResponse;
+import net.smartcosmos.extension.tenant.dto.user.CreateUserResponse;
 
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -19,5 +19,5 @@ public class CreateTenantResponse {
     private final int version = VERSION;
 
     private final String urn;
-    private final UserPasswordResponse admin;
+    private final CreateUserResponse admin;
 }

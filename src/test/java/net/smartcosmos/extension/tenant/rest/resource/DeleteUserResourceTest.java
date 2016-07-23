@@ -4,13 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import net.smartcosmos.extension.tenant.dto.user.UserResponse;
 import org.junit.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MvcResult;
 
 import net.smartcosmos.extension.tenant.TenantPersistenceTestApplication;
 import net.smartcosmos.extension.tenant.dao.TenantDao;
-import net.smartcosmos.extension.tenant.dto.user.GetOrDeleteUserResponse;
 import net.smartcosmos.extension.tenant.util.UuidUtil;
 
 import static org.mockito.Mockito.*;
@@ -51,7 +51,7 @@ public class DeleteUserResourceTest extends AbstractTestResource {
         List<String> userRoles = new ArrayList<>();
         userRoles.add("User");
 
-        GetOrDeleteUserResponse getOrDeleteUserResponse = GetOrDeleteUserResponse
+        UserResponse getOrDeleteUserResponse = UserResponse
             .builder()
             .urn(expectedUserUrn)
             .tenantUrn(expectedTenantUrn)

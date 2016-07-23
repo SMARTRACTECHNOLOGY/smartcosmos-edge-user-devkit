@@ -15,9 +15,9 @@ import net.smartcosmos.extension.tenant.dto.tenant.CreateTenantResponse;
 import net.smartcosmos.extension.tenant.dto.tenant.TenantResponse;
 import net.smartcosmos.extension.tenant.dto.tenant.UpdateTenantRequest;
 import net.smartcosmos.extension.tenant.dto.user.CreateUserRequest;
-import net.smartcosmos.extension.tenant.dto.user.GetOrDeleteUserResponse;
+import net.smartcosmos.extension.tenant.dto.user.UserResponse;
 import net.smartcosmos.extension.tenant.dto.user.UpdateUserRequest;
-import net.smartcosmos.extension.tenant.dto.user.UserPasswordResponse;
+import net.smartcosmos.extension.tenant.dto.user.CreateUserResponse;
 import net.smartcosmos.extension.tenant.repository.RoleRepository;
 import net.smartcosmos.extension.tenant.repository.TenantRepository;
 import net.smartcosmos.extension.tenant.repository.UserRepository;
@@ -229,11 +229,11 @@ public class TenantPersistenceService implements TenantDao {
     /**
      *
      * @param createUserRequest
-     * @return Optional<UserPasswordResponse>
+     * @return Optional<CreateUserResponse>
      * @throws ConstraintViolationException
      */
     @Override
-    public Optional<UserPasswordResponse> createUser(String tenantUrn, CreateUserRequest createUserRequest)
+    public Optional<CreateUserResponse> createUser(String tenantUrn, CreateUserRequest createUserRequest)
         throws ConstraintViolationException {
 
         if (userAlreadyExists(createUserRequest.getUsername())) {
@@ -252,7 +252,7 @@ public class TenantPersistenceService implements TenantDao {
             userEntity = userRepository.persist(userEntity);
             userEntity = userRepository.addRolesToUser(userEntity.getTenantId(), userEntity.getId(), createUserRequest.getRoles()).get();
 
-            UserPasswordResponse response = conversionService.convert(userEntity, UserPasswordResponse.class);
+            CreateUserResponse response = conversionService.convert(userEntity, CreateUserResponse.class);
             response.setPassword(password);
 
             return Optional.of(response);
@@ -269,7 +269,7 @@ public class TenantPersistenceService implements TenantDao {
     }
 
     @Override
-    public Optional<UserPasswordResponse> updateUser(String tenantUrn, String userUrn, UpdateUserRequest updateUserRequest)
+    public Optional<CreateUserResponse> updateUser(String tenantUrn, String userUrn, UpdateUserRequest updateUserRequest)
         throws ConstraintViolationException {
 
         try {
@@ -279,7 +279,7 @@ public class TenantPersistenceService implements TenantDao {
             if (userEntityOptional.isPresent()) {
                 UserEntity userEntity = MergeUtil.merge(userEntityOptional.get(), updateUserRequest);
                 userEntity = userRepository.persist(userEntity);
-                return Optional.ofNullable(conversionService.convert(userEntity, UserPasswordResponse.class));
+                return Optional.ofNullable(conversionService.convert(userEntity, CreateUserResponse.class));
             }
 
         } catch (IllegalArgumentException | ConstraintViolationException e) {
@@ -295,10 +295,10 @@ public class TenantPersistenceService implements TenantDao {
 
     /**
      * @param userUrn
-     * @return Optional<GetOrDeleteUserResponse>
+     * @return Optional<UserResponse>
      */
     @Override
-    public Optional<GetOrDeleteUserResponse> findUserByUrn(String tenantUrn, String userUrn) {
+    public Optional<UserResponse> findUserByUrn(String tenantUrn, String userUrn) {
 
         if (userUrn == null || userUrn.isEmpty()) {
             return Optional.empty();
@@ -309,7 +309,7 @@ public class TenantPersistenceService implements TenantDao {
             UUID id = UuidUtil.getUuidFromUrn(userUrn);
             Optional<UserEntity> entity = userRepository.findByTenantIdAndId(tenantId, id);
             if (entity.isPresent()) {
-                final GetOrDeleteUserResponse response = conversionService.convert(entity.get(), GetOrDeleteUserResponse.class);
+                final UserResponse response = conversionService.convert(entity.get(), UserResponse.class);
                 return Optional.ofNullable(response);
             }
             return Optional.empty();
@@ -326,14 +326,14 @@ public class TenantPersistenceService implements TenantDao {
      *
      * @param tenantUrn
      * @param username
-     * @return Optional<GetOrDeleteUserResponse>
+     * @return Optional<UserResponse>
      */
     @Override
-    public Optional<GetOrDeleteUserResponse> findUserByName(String tenantUrn, String username) {
+    public Optional<UserResponse> findUserByName(String tenantUrn, String username) {
 
         Optional<UserEntity> entity = userRepository.findByUsernameIgnoreCase(username);
         if (entity.isPresent()) {
-            return Optional.of(conversionService.convert(entity.get(), GetOrDeleteUserResponse.class));
+            return Optional.of(conversionService.convert(entity.get(), UserResponse.class));
         }
         return Optional.empty();
     }
@@ -342,17 +342,17 @@ public class TenantPersistenceService implements TenantDao {
      *
      * @param tenantUrn
      * @param urn
-     * @return Optional<GetOrDeleteUserResponse>
+     * @return Optional<UserResponse>
      */
     @Override
-    public Optional<GetOrDeleteUserResponse> deleteUserByUrn(String tenantUrn, String urn) {
+    public Optional<UserResponse> deleteUserByUrn(String tenantUrn, String urn) {
 
         UUID tenantId = UuidUtil.getUuidFromUrn(tenantUrn);
         UUID userId = UuidUtil.getUuidFromUrn(urn);
         Optional<UserEntity> entity = userRepository.findByTenantIdAndId(tenantId, userId);
         if (entity.isPresent()) {
             userRepository.delete(entity.get());
-            return Optional.of(conversionService.convert(entity.get(), GetOrDeleteUserResponse.class));
+            return Optional.of(conversionService.convert(entity.get(), UserResponse.class));
         }
         return Optional.empty();
     }

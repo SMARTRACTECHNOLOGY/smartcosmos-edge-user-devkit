@@ -3,7 +3,7 @@ package net.smartcosmos.extension.tenant.converter.tenant;
 import net.smartcosmos.extension.tenant.domain.RoleEntity;
 import net.smartcosmos.extension.tenant.dto.TenantEntityAndUserEntityDto;
 import net.smartcosmos.extension.tenant.dto.tenant.CreateTenantResponse;
-import net.smartcosmos.extension.tenant.dto.user.UserPasswordResponse;
+import net.smartcosmos.extension.tenant.dto.user.CreateUserResponse;
 import net.smartcosmos.extension.tenant.util.UuidUtil;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.format.FormatterRegistrar;
@@ -31,7 +31,7 @@ public class TenantEntityAndUserEntityDtoToCreateTenantResponseConverter
             .map(RoleEntity::getName)
             .collect(Collectors.toList());
 
-        UserPasswordResponse userResponse = UserPasswordResponse.builder()
+        CreateUserResponse userResponse = CreateUserResponse.builder()
             .urn(UuidUtil.getUserUrnFromUuid(entityDto.getUserEntity().getId()))
             .tenantUrn(UuidUtil.getUserUrnFromUuid(entityDto.getTenantEntity().getId()))
             .username(entityDto.getUserEntity().getUsername())
