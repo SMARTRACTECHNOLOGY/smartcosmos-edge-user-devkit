@@ -1,23 +1,21 @@
 package net.smartcosmos.extension.tenant.rest.resource;
 
-import java.util.Optional;
-
+import net.smartcosmos.extension.tenant.dao.TenantDao;
 import net.smartcosmos.extension.tenant.dto.user.UserResponse;
-import org.junit.*;
+import net.smartcosmos.extension.tenant.util.UuidUtil;
+import org.junit.After;
+import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MvcResult;
 
-import net.smartcosmos.extension.tenant.dao.TenantDao;
-import net.smartcosmos.extension.tenant.util.UuidUtil;
+import java.util.Optional;
 
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class ReadUserResourceTest extends AbstractTestResource {
 
@@ -35,13 +33,19 @@ public class ReadUserResourceTest extends AbstractTestResource {
         String name = "getByUrn";
         String urn = UuidUtil.getUserUrnFromUuid(UuidUtil.getNewUuid());
         String tenantUrn = UuidUtil.getTenantUrnFromUuid(UuidUtil.getNewUuid());
+        String emailAddress = "getByUrn@example.com";
+        Boolean active = true;
+        String givenName = "John";
+        String surname = "Doe";
 
         UserResponse response1 = UserResponse.builder()
-            .active(true)
+            .active(active)
             .username(name)
-            .emailAddress("getByUrn@example.com")
+            .emailAddress(emailAddress)
             .urn(urn)
             .tenantUrn(tenantUrn)
+            .givenName(givenName)
+            .surname(surname)
             .build();
         Optional<UserResponse> response = Optional.of(response1);
 
@@ -51,10 +55,14 @@ public class ReadUserResourceTest extends AbstractTestResource {
             get("/users/{urn}", urn).contentType(APPLICATION_JSON_UTF8))
             .andExpect(status().isOk())
             .andExpect(content().contentType(APPLICATION_JSON_UTF8))
-            .andExpect(jsonPath("$.active", is(true)))
+            .andExpect(jsonPath("$.active", is(active)))
+            .andExpect(jsonPath("$.givenName", is(givenName)))
+            .andExpect(jsonPath("$.surname", is(surname)))
+            .andExpect(jsonPath("$.emailAddress", is(emailAddress)))
             .andExpect(jsonPath("$.username", is(name)))
             .andExpect(jsonPath("$.urn", is(urn)))
             .andExpect(jsonPath("$.tenantUrn", is(tenantUrn)))
+            .andExpect(jsonPath("$.roles").isArray())
             .andReturn();
 
         verify(tenantDao, times(1)).findUserByUrn(anyString(), anyString());
@@ -97,7 +105,9 @@ public class ReadUserResourceTest extends AbstractTestResource {
         when(tenantDao.findUserByName(anyString(), anyString())).thenReturn(response);
 
         MvcResult mvcResult = mockMvc.perform(
-            get("/users/?name={name}", name).contentType(APPLICATION_JSON_UTF8))
+            get("/users")
+                .param("name", name)
+                .contentType(APPLICATION_JSON_UTF8))
             .andExpect(status().isOk())
             .andExpect(content().contentType(APPLICATION_JSON_UTF8))
             .andExpect(jsonPath("$.active", is(true)))
@@ -120,7 +130,9 @@ public class ReadUserResourceTest extends AbstractTestResource {
         when(tenantDao.findUserByName(anyString(), anyString())).thenReturn(response);
 
         MvcResult mvcResult = mockMvc.perform(
-            get("/users/?name={name}", name).contentType(APPLICATION_JSON_UTF8))
+            get("/users")
+                .param("name", name)
+                .contentType(APPLICATION_JSON_UTF8))
             .andExpect(status().isNotFound())
             .andReturn();
 
