@@ -16,12 +16,13 @@ public class RoleResponseToRestRoleResponseConverter
     implements Converter<RoleResponse, RestRoleResponse>, FormatterRegistrar {
 
     @Override
-    public RestRoleResponse convert(RoleResponse createIOrUpdateRoleResponse) {
+    public RestRoleResponse convert(RoleResponse role) {
         return RestRoleResponse.builder()
-            .urn(createIOrUpdateRoleResponse.getUrn())
-            .name(createIOrUpdateRoleResponse.getName())
-            .active(createIOrUpdateRoleResponse.getActive())
-            .authorities(createIOrUpdateRoleResponse.getAuthorities())
+            .urn(role.getUrn())
+            .name(role.getName())
+            .active(role.getActive())
+            .authorities(role.getAuthorities())
+            .tenantUrn(role.getTenantUrn())
             .build();
     }
 
