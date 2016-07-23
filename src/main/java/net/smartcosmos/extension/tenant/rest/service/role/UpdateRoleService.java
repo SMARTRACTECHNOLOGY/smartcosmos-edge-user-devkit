@@ -8,15 +8,14 @@ import net.smartcosmos.extension.tenant.dto.role.CreateOrUpdateRoleRequest;
 import net.smartcosmos.extension.tenant.dto.role.RoleResponse;
 import net.smartcosmos.extension.tenant.rest.dto.role.RestCreateOrUpdateRoleRequest;
 import net.smartcosmos.extension.tenant.rest.service.AbstractTenantService;
+import net.smartcosmos.security.user.SmartCosmosUser;
 import org.springframework.core.convert.ConversionService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.async.DeferredResult;
 
 import javax.inject.Inject;
-import java.net.URI;
 import java.util.Optional;
 
 /**
@@ -33,39 +32,39 @@ public class UpdateRoleService extends AbstractTenantService {
         super(tenantDao, roleDao, smartCosmosEventTemplate, conversionService);
     }
 
-    public DeferredResult<ResponseEntity> update(RestCreateOrUpdateRoleRequest restCreateOrUpdateRoleRequest) {
+    public DeferredResult<ResponseEntity> update(String roleUrn, RestCreateOrUpdateRoleRequest updateRequest, SmartCosmosUser user) {
         // Async worker thread reduces timeouts and disconnects for long queries and processing.
         DeferredResult<ResponseEntity> response = new DeferredResult<>();
-        updateRoleWorker(response, restCreateOrUpdateRoleRequest);
+        updateRoleWorker(response, roleUrn, updateRequest, user);
 
         return response;
     }
 
-    // TODO: create different workers for "create" and "update", and provide the URN for "update" only...
-    // FIXME: implement something for "whatever"...
-
     @Async
-    private void updateRoleWorker(DeferredResult<ResponseEntity> response, RestCreateOrUpdateRoleRequest restCreateOrUpdateRoleRequest) {
+    private void updateRoleWorker(DeferredResult<ResponseEntity> response, String roleUrn, RestCreateOrUpdateRoleRequest restRequest, SmartCosmosUser user) {
 
         try {
-            final CreateOrUpdateRoleRequest createRoleRequest = conversionService
-                .convert(restCreateOrUpdateRoleRequest, CreateOrUpdateRoleRequest.class);
+            final CreateOrUpdateRoleRequest updateRoleRequest = conversionService
+                .convert(restRequest, CreateOrUpdateRoleRequest.class);
 
-            Optional<RoleResponse> newUser = roleDao.updateRole("whatever", "urn", createRoleRequest);
+            Optional<RoleResponse> updateRoleResponse = roleDao.updateRole(user.getAccountUrn(), roleUrn, updateRoleRequest);
 
-            if (newUser.isPresent()) {
+            if (updateRoleResponse.isPresent()) {
                 // TODO Enable event after merge in framework
-                // sendEvent(null, DefaultEventTypes.ThingCreated, object.get());
+                // sendEvent(user, DefaultEventTypes.RoleUpdated, updateRoleResponse.get());
 
-                ResponseEntity responseEntity = ResponseEntity
-                    .created(URI.create(newUser.get().getUrn()))
-                    .body(newUser.get());
+                ResponseEntity responseEntity = ResponseEntity.noContent().build();
                 response.setResult(responseEntity);
             } else {
-                Optional<RoleResponse> alreadyThere = roleDao.findRoleByName("tenantUrnHere", restCreateOrUpdateRoleRequest.getName());
-                response.setResult(ResponseEntity.status(HttpStatus.CONFLICT).build());
+                RoleResponse eventPayload = RoleResponse.builder()
+                    .urn(roleUrn)
+                    .tenantUrn(user.getAccountUrn())
+                    .build();
                 // TODO Enable event after merge in framework
-                // sendEvent(null, DefaultEventTypes.ThingCreateFailedAlreadyExists, alreadyThere.get());
+                // sendEvent(user, DefaultEventTypes.RoleNotFound, eventPayload);
+
+                ResponseEntity responseEntity = ResponseEntity.notFound().build();
+                response.setResult(responseEntity);
             }
 
         } catch (Exception e) {

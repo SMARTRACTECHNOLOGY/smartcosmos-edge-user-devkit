@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SuppressWarnings("Duplicates")
 @org.springframework.boot.test.SpringApplicationConfiguration(classes = { TenantPersistenceTestApplication.class })
 public class DeleteRoleResourceTest extends AbstractTestResource {
-    
+
     @Autowired
     protected RoleDao roleDao;
 
