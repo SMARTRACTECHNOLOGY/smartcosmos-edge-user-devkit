@@ -3,7 +3,7 @@ package net.smartcosmos.extension.tenant.rest.resource;
 import net.smartcosmos.extension.tenant.TenantPersistenceTestApplication;
 import net.smartcosmos.extension.tenant.dao.TenantDao;
 import net.smartcosmos.extension.tenant.dto.user.CreateUserResponse;
-import net.smartcosmos.extension.tenant.rest.dto.user.RestCreateUserRequest;
+import net.smartcosmos.extension.tenant.rest.dto.user.RestCreateOrUpdateUserRequest;
 import net.smartcosmos.extension.tenant.util.UuidUtil;
 import org.junit.After;
 import org.junit.Test;
@@ -70,7 +70,7 @@ public class CreateUserResourceTest extends AbstractTestResource {
 
         when(tenantDao.createUser(anyString(), anyObject())).thenReturn(Optional.ofNullable(createUserResponse));
 
-        RestCreateUserRequest request = RestCreateUserRequest.builder()
+        RestCreateOrUpdateUserRequest request = RestCreateOrUpdateUserRequest.builder()
             .username(username)
             .emailAddress(emailAddress)
             .roles(userRoleOnly)

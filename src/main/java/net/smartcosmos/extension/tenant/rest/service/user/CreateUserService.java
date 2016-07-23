@@ -7,7 +7,7 @@ import net.smartcosmos.extension.tenant.dao.RoleDao;
 import net.smartcosmos.extension.tenant.dao.TenantDao;
 import net.smartcosmos.extension.tenant.dto.user.CreateOrUpdateUserRequest;
 import net.smartcosmos.extension.tenant.dto.user.CreateUserResponse;
-import net.smartcosmos.extension.tenant.rest.dto.user.RestCreateUserRequest;
+import net.smartcosmos.extension.tenant.rest.dto.user.RestCreateOrUpdateUserRequest;
 import net.smartcosmos.extension.tenant.rest.service.AbstractTenantService;
 import net.smartcosmos.security.user.SmartCosmosUser;
 import org.springframework.core.convert.ConversionService;
@@ -35,7 +35,7 @@ public class CreateUserService extends AbstractTenantService {
         super(tenantDao, roleDao, smartCosmosEventTemplate, conversionService);
     }
 
-    public DeferredResult<ResponseEntity> create(RestCreateUserRequest restCreateUserRequest, SmartCosmosUser user) {
+    public DeferredResult<ResponseEntity> create(RestCreateOrUpdateUserRequest restCreateUserRequest, SmartCosmosUser user) {
         // Async worker thread reduces timeouts and disconnects for long queries and processing.
         DeferredResult<ResponseEntity> response = new DeferredResult<>();
         createUserWorker(response, user, restCreateUserRequest);
@@ -44,7 +44,7 @@ public class CreateUserService extends AbstractTenantService {
     }
 
     @Async
-    private void createUserWorker(DeferredResult<ResponseEntity> response, SmartCosmosUser user, RestCreateUserRequest
+    private void createUserWorker(DeferredResult<ResponseEntity> response, SmartCosmosUser user, RestCreateOrUpdateUserRequest
         restCreateUserRequest) {
 
         try {

@@ -7,7 +7,7 @@ import net.smartcosmos.extension.tenant.dao.RoleDao;
 import net.smartcosmos.extension.tenant.dao.TenantDao;
 import net.smartcosmos.extension.tenant.dto.user.CreateOrUpdateUserRequest;
 import net.smartcosmos.extension.tenant.dto.user.UserResponse;
-import net.smartcosmos.extension.tenant.rest.dto.user.RestUpdateUserRequest;
+import net.smartcosmos.extension.tenant.rest.dto.user.RestCreateOrUpdateUserRequest;
 import net.smartcosmos.extension.tenant.rest.service.AbstractTenantService;
 import net.smartcosmos.security.user.SmartCosmosUser;
 import org.springframework.core.convert.ConversionService;
@@ -33,7 +33,7 @@ public class UpdateUserService extends AbstractTenantService {
         super(tenantDao, roleDao, smartCosmosEventTemplate, conversionService);
     }
 
-    public DeferredResult<ResponseEntity> create(RestUpdateUserRequest userRequest, SmartCosmosUser user) {
+    public DeferredResult<ResponseEntity> create(RestCreateOrUpdateUserRequest userRequest, SmartCosmosUser user) {
         // Async worker thread reduces timeouts and disconnects for long queries and processing.
         DeferredResult<ResponseEntity> response = new DeferredResult<>();
         updateUserWorker(response, user, userRequest);
@@ -42,7 +42,7 @@ public class UpdateUserService extends AbstractTenantService {
     }
 
     @Async
-    private void updateUserWorker(DeferredResult<ResponseEntity> response, SmartCosmosUser user, RestUpdateUserRequest userRequest) {
+    private void updateUserWorker(DeferredResult<ResponseEntity> response, SmartCosmosUser user, RestCreateOrUpdateUserRequest userRequest) {
 
         try {
             CreateOrUpdateUserRequest updateUserRequest = conversionService.convert(userRequest, CreateOrUpdateUserRequest.class);

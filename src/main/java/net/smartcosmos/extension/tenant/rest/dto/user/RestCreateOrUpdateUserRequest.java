@@ -17,7 +17,7 @@ import java.util.Set;
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 //@ApiModel(description = "Create a \"Tenant\" in the smartcosmos-edge-tenant Server.")
-public class RestCreateUserRequest {
+public class RestCreateOrUpdateUserRequest {
 
     private static final int VERSION = 1;
     private final int version = VERSION;
@@ -32,7 +32,7 @@ public class RestCreateUserRequest {
 
     @Builder
     @ConstructorProperties({ "username", "emailAddress", "givenName", "surname", "password", "roles", "active" })
-    public RestCreateUserRequest(
+    public RestCreateOrUpdateUserRequest(
         String username, String emailAddress, String givenName, String surname, String password, Collection<String> roles,
         Boolean active) {
         this.username = username;
@@ -44,6 +44,6 @@ public class RestCreateUserRequest {
         if (roles != null && !roles.isEmpty()) {
             this.roles.addAll(roles);
         }
-        this.active = active != null ? active : true;
+        this.active = active;
     }
 }

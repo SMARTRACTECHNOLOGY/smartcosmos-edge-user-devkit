@@ -1,7 +1,7 @@
 package net.smartcosmos.extension.tenant.rest.resource.user;
 
 import lombok.extern.slf4j.Slf4j;
-import net.smartcosmos.extension.tenant.rest.dto.user.RestUpdateUserRequest;
+import net.smartcosmos.extension.tenant.rest.dto.user.RestCreateOrUpdateUserRequest;
 import net.smartcosmos.extension.tenant.rest.service.user.UpdateUserService;
 import net.smartcosmos.security.EndpointMethodControl;
 import net.smartcosmos.security.user.SmartCosmosUser;
@@ -36,7 +36,7 @@ public class UpdateUserResource {
     @EndpointMethodControl(key = "tenant.put")
     @ConditionalOnProperty(prefix = "smt.endpoints.user.put", name = "enabled", matchIfMissing = true)
     public DeferredResult<ResponseEntity> updateObject(
-        @RequestBody @Valid RestUpdateUserRequest userRequest,
+        @RequestBody @Valid RestCreateOrUpdateUserRequest userRequest,
         SmartCosmosUser user) {
 
         return service.create(userRequest, user);

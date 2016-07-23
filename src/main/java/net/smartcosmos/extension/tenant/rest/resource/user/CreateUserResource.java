@@ -1,7 +1,7 @@
 package net.smartcosmos.extension.tenant.rest.resource.user;
 
 import lombok.extern.slf4j.Slf4j;
-import net.smartcosmos.extension.tenant.rest.dto.user.RestCreateUserRequest;
+import net.smartcosmos.extension.tenant.rest.dto.user.RestCreateOrUpdateUserRequest;
 import net.smartcosmos.extension.tenant.rest.service.user.CreateUserService;
 import net.smartcosmos.security.EndpointMethodControl;
 import net.smartcosmos.security.user.SmartCosmosUser;
@@ -36,7 +36,7 @@ public class CreateUserResource {
     @EndpointMethodControl(key = "user.post")
     @ConditionalOnProperty(prefix = "smt.endpoints.user.post", name = "enabled", matchIfMissing = true)
     public DeferredResult<ResponseEntity> createUser(
-            @RequestBody @Valid RestCreateUserRequest restCreateUserRequest, SmartCosmosUser user) {
+            @RequestBody @Valid RestCreateOrUpdateUserRequest restCreateUserRequest, SmartCosmosUser user) {
 
         return service.create(restCreateUserRequest, user);
     }

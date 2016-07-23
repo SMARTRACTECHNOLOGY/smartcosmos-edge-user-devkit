@@ -1,7 +1,7 @@
 package net.smartcosmos.extension.tenant.rest.converter.user;
 
 import net.smartcosmos.extension.tenant.dto.user.CreateOrUpdateUserRequest;
-import net.smartcosmos.extension.tenant.rest.dto.user.RestUpdateUserRequest;
+import net.smartcosmos.extension.tenant.rest.dto.user.RestCreateOrUpdateUserRequest;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.format.FormatterRegistrar;
 import org.springframework.format.FormatterRegistry;
@@ -11,11 +11,11 @@ import org.springframework.stereotype.Component;
  * Initially created by SMART COSMOS Team on July 01, 2016.
  */
 @Component
-public class RestUpdateUserRequestToUpdateUserRequestConverter
-    implements Converter<RestUpdateUserRequest, CreateOrUpdateUserRequest>, FormatterRegistrar {
+public class RestCreateOrUpdateUserRequestToCreateOrUpdateUserRequestConverter
+    implements Converter<RestCreateOrUpdateUserRequest, CreateOrUpdateUserRequest>, FormatterRegistrar {
 
     @Override
-    public CreateOrUpdateUserRequest convert(RestUpdateUserRequest userRequest) {
+    public CreateOrUpdateUserRequest convert(RestCreateOrUpdateUserRequest userRequest) {
         return CreateOrUpdateUserRequest.builder()
             .username(userRequest.getUsername())
             .emailAddress(userRequest.getEmailAddress())
