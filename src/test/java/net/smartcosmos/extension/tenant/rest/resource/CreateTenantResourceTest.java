@@ -15,9 +15,9 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MvcResult;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.startsWith;
@@ -63,7 +63,7 @@ public class CreateTenantResourceTest extends AbstractTestResource {
         final String expectedUserUrn = "urn:user:uuid:" + UuidUtil.getNewUuid()
             .toString();
 
-        List<String> adminRoles = new ArrayList<>();
+        Set<String> adminRoles = new HashSet<>();
         adminRoles.add("Admin");
 
         CreateUserResponse createUserResponse = CreateUserResponse.builder()

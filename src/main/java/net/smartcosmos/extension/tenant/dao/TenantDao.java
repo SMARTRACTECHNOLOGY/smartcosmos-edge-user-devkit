@@ -5,9 +5,8 @@ import net.smartcosmos.extension.tenant.dto.tenant.CreateTenantRequest;
 import net.smartcosmos.extension.tenant.dto.tenant.CreateTenantResponse;
 import net.smartcosmos.extension.tenant.dto.tenant.TenantResponse;
 import net.smartcosmos.extension.tenant.dto.tenant.UpdateTenantRequest;
-import net.smartcosmos.extension.tenant.dto.user.CreateUserRequest;
+import net.smartcosmos.extension.tenant.dto.user.CreateOrUpdateUserRequest;
 import net.smartcosmos.extension.tenant.dto.user.UserResponse;
-import net.smartcosmos.extension.tenant.dto.user.UpdateUserRequest;
 import net.smartcosmos.extension.tenant.dto.user.CreateUserResponse;
 
 import javax.validation.ConstraintViolationException;
@@ -27,9 +26,9 @@ public interface TenantDao {
 
     Optional<TenantResponse> findTenantByName(String name);
 
-    Optional<CreateUserResponse> createUser(String tenantUrn, CreateUserRequest userCreate) throws ConstraintViolationException;
+    Optional<CreateUserResponse> createUser(String tenantUrn, CreateOrUpdateUserRequest userCreate) throws ConstraintViolationException;
 
-    Optional<UserResponse> updateUser(String tenantUrn, String userUrn, UpdateUserRequest userUpdate)
+    Optional<UserResponse> updateUser(String tenantUrn, String userUrn, CreateOrUpdateUserRequest userUpdate)
         throws ConstraintViolationException;
 
     Optional<UserResponse> findUserByUrn(String tenantUrn, String userUrn);

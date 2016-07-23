@@ -3,16 +3,14 @@ package net.smartcosmos.extension.tenant.rest.resource;
 import net.smartcosmos.extension.tenant.TenantPersistenceTestApplication;
 import net.smartcosmos.extension.tenant.dao.TenantDao;
 import net.smartcosmos.extension.tenant.dto.user.CreateUserResponse;
-import net.smartcosmos.extension.tenant.rest.dto.user.RestCreateOrUpdateUserRequest;
+import net.smartcosmos.extension.tenant.rest.dto.user.RestCreateUserRequest;
 import net.smartcosmos.extension.tenant.util.UuidUtil;
 import org.junit.After;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MvcResult;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.startsWith;
@@ -60,7 +58,7 @@ public class CreateUserResourceTest extends AbstractTestResource {
         final String expectedUserUrn = "urn:user:uuid:" + UuidUtil.getNewUuid()
             .toString();
 
-        List<String> userRoles = new ArrayList<>();
+        Set<String> userRoles = new HashSet<>();
         userRoles.add("User");
 
         CreateUserResponse createUserResponse = CreateUserResponse.builder()
@@ -72,7 +70,7 @@ public class CreateUserResourceTest extends AbstractTestResource {
 
         when(tenantDao.createUser(anyString(), anyObject())).thenReturn(Optional.ofNullable(createUserResponse));
 
-        RestCreateOrUpdateUserRequest request = RestCreateOrUpdateUserRequest.builder()
+        RestCreateUserRequest request = RestCreateUserRequest.builder()
             .username(username)
             .emailAddress(emailAddress)
             .roles(userRoleOnly)

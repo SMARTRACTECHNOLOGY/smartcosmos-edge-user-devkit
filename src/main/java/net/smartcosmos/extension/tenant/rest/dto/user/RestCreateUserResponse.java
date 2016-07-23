@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
-import java.util.List;
+import java.util.Set;
 
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -21,6 +21,6 @@ public class RestCreateUserResponse {
     private final String urn;
     private final String username;
     private final String password;
-    private final List<String> roles;
+    private final Set<String> roles;
     private final String tenantUrn;
 }

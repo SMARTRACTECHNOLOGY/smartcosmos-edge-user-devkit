@@ -14,10 +14,9 @@ import net.smartcosmos.extension.tenant.dto.tenant.CreateTenantRequest;
 import net.smartcosmos.extension.tenant.dto.tenant.CreateTenantResponse;
 import net.smartcosmos.extension.tenant.dto.tenant.TenantResponse;
 import net.smartcosmos.extension.tenant.dto.tenant.UpdateTenantRequest;
-import net.smartcosmos.extension.tenant.dto.user.CreateUserRequest;
-import net.smartcosmos.extension.tenant.dto.user.UserResponse;
-import net.smartcosmos.extension.tenant.dto.user.UpdateUserRequest;
+import net.smartcosmos.extension.tenant.dto.user.CreateOrUpdateUserRequest;
 import net.smartcosmos.extension.tenant.dto.user.CreateUserResponse;
+import net.smartcosmos.extension.tenant.dto.user.UserResponse;
 import net.smartcosmos.extension.tenant.repository.RoleRepository;
 import net.smartcosmos.extension.tenant.repository.TenantRepository;
 import net.smartcosmos.extension.tenant.repository.UserRepository;
@@ -233,7 +232,7 @@ public class TenantPersistenceService implements TenantDao {
      * @throws ConstraintViolationException
      */
     @Override
-    public Optional<CreateUserResponse> createUser(String tenantUrn, CreateUserRequest createUserRequest)
+    public Optional<CreateUserResponse> createUser(String tenantUrn, CreateOrUpdateUserRequest createUserRequest)
         throws ConstraintViolationException {
 
         if (userAlreadyExists(createUserRequest.getUsername())) {
@@ -247,6 +246,7 @@ public class TenantPersistenceService implements TenantDao {
             UUID tenantId = UuidUtil.getUuidFromUrn(tenantUrn);
 
             UserEntity userEntity = conversionService.convert(createUserRequest, UserEntity.class);
+            userEntity.setId(UuidUtil.getNewUuid());
             userEntity.setTenantId(tenantId);
             userEntity.setPassword(password);
             userEntity = userRepository.persist(userEntity);
@@ -269,7 +269,7 @@ public class TenantPersistenceService implements TenantDao {
     }
 
     @Override
-    public Optional<UserResponse> updateUser(String tenantUrn, String userUrn, UpdateUserRequest updateUserRequest)
+    public Optional<UserResponse> updateUser(String tenantUrn, String userUrn, CreateOrUpdateUserRequest updateUserRequest)
         throws ConstraintViolationException {
 
         try {

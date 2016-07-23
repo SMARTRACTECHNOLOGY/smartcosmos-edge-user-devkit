@@ -9,7 +9,7 @@ import org.springframework.format.FormatterRegistrar;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -22,9 +22,9 @@ public class UserEntityToCreateUserResponseConverter
     @Override
     public CreateUserResponse convert(UserEntity userEntity) {
 
-        List<String> roles = userEntity.getRoles().stream()
+        Set<String> roles = userEntity.getRoles().stream()
                 .map(RoleEntity::getName)
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
 
         return CreateUserResponse.builder()
             .urn(UuidUtil.getUserUrnFromUuid(userEntity.getId()))

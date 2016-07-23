@@ -10,7 +10,7 @@ import org.springframework.format.FormatterRegistrar;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -27,9 +27,9 @@ public class TenantEntityAndUserEntityDtoToCreateTenantResponseConverter
             return null;
         }
 
-        List<String> rolesAsStrings = entityDto.getUserEntity().getRoles().stream()
+        Set<String> rolesAsStrings = entityDto.getUserEntity().getRoles().stream()
             .map(RoleEntity::getName)
-            .collect(Collectors.toList());
+            .collect(Collectors.toSet());
 
         CreateUserResponse userResponse = CreateUserResponse.builder()
             .urn(UuidUtil.getUserUrnFromUuid(entityDto.getUserEntity().getId()))
