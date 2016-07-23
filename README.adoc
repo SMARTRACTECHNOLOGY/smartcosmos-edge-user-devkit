@@ -295,7 +295,9 @@ POST /users
 ----
 {
     "active": true,
-    "roles": ["User"],
+    "roles": [
+        "User"
+    ],
     "username": "bob@example.com",
     "emailAddress": "bob@example.com",
     "givenName": "Bob",
@@ -313,7 +315,10 @@ POST /users
     "urn": "urn:user:uuid:68a76616-3748-4bc2-93c1-3940b47abb7f",
     "username": "bob@example.com",
     "password": "PleaseChangeMeImmediately",
-    "roles": ["User"]
+    "roles": [
+        "User"
+    ],
+    "tenantUrn": "urn:tenant:uuid:69bb7c6a-a43b-493d-8e9d-e5a3ed65728a"
 }
 ----
 
@@ -321,7 +326,9 @@ POST /users
 [source,json]
 ----
 {
-    "roles": ["User"],
+    "roles": [
+        "User"
+    ],
     "username": "bob@example.com"
 }
 ----
@@ -336,7 +343,9 @@ POST /users
     "urn": "urn:user:uuid:68a76616-3748-4bc2-93c1-3940b47abb7f",
     "username": "bob@example.com",
     "password": "PleaseChangeMeImmediately",
-    "roles": ["User"],
+    "roles": [
+        "User"
+    ],
     "tenantUrn": "urn:tenant:uuid:69bb7c6a-a43b-493d-8e9d-e5a3ed65728a"
 }
 ----
@@ -374,7 +383,9 @@ GET /users/urn:user:uuid:68a76616-3748-4bc2-93c1-3940b47abb7f
 {
     "urn": "urn:user:uuid:68a76616-3748-4bc2-93c1-3940b47abb7f",
     "active": true,
-    "roles": ["User"],
+    "roles": [
+        "User"
+    ],
     "username": "bob@example.com",
     "emailAddress": "bob@example.com",
     "givenName": "Bob",
@@ -400,7 +411,9 @@ GET /users
         {
             "urn": "urn:user:uuid:68a76616-3748-4bc2-93c1-3940b47abb7f",
             "active": true,
-            "roles": ["User"],
+            "roles": [
+                "User"
+            ],
             "username": "bob@example.com",
             "emailAddress": "bob@example.com",
             "givenName": "Bob",
@@ -410,7 +423,9 @@ GET /users
         {
             "urn": "urn:user:uuid:af37520d-86ad-49fe-be25-92ce269fbda4",
             "active": true,
-            "roles": ["Admin"],
+            "roles": [
+                "Admin"
+            ],
             "username": "jane@example.com",
             "emailAddress": "jane@example.com",
             "givenName": "Jane",
