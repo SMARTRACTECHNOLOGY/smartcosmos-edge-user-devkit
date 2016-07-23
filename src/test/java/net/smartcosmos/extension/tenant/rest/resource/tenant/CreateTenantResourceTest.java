@@ -1,4 +1,4 @@
-package net.smartcosmos.extension.tenant.rest.resource;
+package net.smartcosmos.extension.tenant.rest.resource.tenant;
 
 import net.smartcosmos.extension.tenant.TenantPersistenceConfig;
 import net.smartcosmos.extension.tenant.TenantPersistenceTestApplication;
@@ -6,6 +6,7 @@ import net.smartcosmos.extension.tenant.dao.TenantDao;
 import net.smartcosmos.extension.tenant.dto.tenant.CreateTenantResponse;
 import net.smartcosmos.extension.tenant.dto.user.CreateUserResponse;
 import net.smartcosmos.extension.tenant.rest.dto.tenant.RestCreateTenantRequest;
+import net.smartcosmos.extension.tenant.rest.resource.AbstractTestResource;
 import net.smartcosmos.extension.tenant.util.UuidUtil;
 import org.junit.After;
 import org.junit.Test;
