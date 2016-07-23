@@ -1,25 +1,23 @@
 package net.smartcosmos.extension.tenant.rest.service.user;
 
-import java.util.Optional;
-import javax.inject.Inject;
-
 import lombok.extern.slf4j.Slf4j;
-
+import net.smartcosmos.events.DefaultEventTypes;
+import net.smartcosmos.events.SmartCosmosEventTemplate;
+import net.smartcosmos.extension.tenant.dao.RoleDao;
+import net.smartcosmos.extension.tenant.dao.TenantDao;
+import net.smartcosmos.extension.tenant.dto.user.UpdateUserRequest;
+import net.smartcosmos.extension.tenant.dto.user.UserResponse;
+import net.smartcosmos.extension.tenant.rest.dto.user.RestCreateOrUpdateUserRequest;
+import net.smartcosmos.extension.tenant.rest.service.AbstractTenantService;
+import net.smartcosmos.security.user.SmartCosmosUser;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.async.DeferredResult;
 
-import net.smartcosmos.events.DefaultEventTypes;
-import net.smartcosmos.events.SmartCosmosEventTemplate;
-import net.smartcosmos.extension.tenant.dao.RoleDao;
-import net.smartcosmos.extension.tenant.dao.TenantDao;
-import net.smartcosmos.extension.tenant.dto.user.CreateUserResponse;
-import net.smartcosmos.extension.tenant.dto.user.UpdateUserRequest;
-import net.smartcosmos.extension.tenant.rest.dto.user.RestCreateOrUpdateUserRequest;
-import net.smartcosmos.extension.tenant.rest.service.AbstractTenantService;
-import net.smartcosmos.security.user.SmartCosmosUser;
+import javax.inject.Inject;
+import java.util.Optional;
 
 /**
  * Initially created by SMART COSMOS Team on July 01, 2016.
@@ -48,7 +46,7 @@ public class UpdateUserService extends AbstractTenantService {
 
         try {
             UpdateUserRequest updateUserRequest = conversionService.convert(userRequest, UpdateUserRequest.class);
-            Optional<CreateUserResponse> updateUserResponse = tenantDao.updateUser(user.getAccountUrn(), user.getUserUrn(), updateUserRequest);
+            Optional<UserResponse> updateUserResponse = tenantDao.updateUser(user.getAccountUrn(), user.getUserUrn(), updateUserRequest);
 
             if (updateUserResponse.isPresent()) {
                 ResponseEntity responseEntity = ResponseEntity.noContent().build();

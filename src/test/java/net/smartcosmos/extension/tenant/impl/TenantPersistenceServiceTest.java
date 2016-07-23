@@ -733,7 +733,7 @@ public class TenantPersistenceServiceTest {
     }
 
     @Test
-    public void thatUpdateUpserSucceeds() throws Exception {
+    public void thatUpdateUserSucceeds() throws Exception {
 
         String username = "UpdateTestUser";
         String emailAddress1 = "update.user1@example.com";
@@ -759,12 +759,12 @@ public class TenantPersistenceServiceTest {
             .emailAddress(emailAddress2)
             .build();
 
-        Optional<CreateUserResponse> updateResponse = tenantPersistenceService.updateUser(testUserTenantUrn, createResponse.getUrn(),
+        Optional<UserResponse> updateResponse = tenantPersistenceService.updateUser(testUserTenantUrn, createResponse.getUrn(),
             updateRequest);
         assertTrue(updateResponse.isPresent());
         assertEquals(createResponse.getUrn(), updateResponse.get().getUrn());
-        //assertEquals(false, updateResponse.get().getActive());
-        //assertEquals(emailAddress2, updateResponse.get().getEmailAddress());
+        assertEquals(false, updateResponse.get().getActive());
+        assertEquals(emailAddress2, updateResponse.get().getEmailAddress());
 
         Optional<UserResponse> findResponse = tenantPersistenceService.findUserByUrn(testUserTenantUrn, createResponse.getUrn());
         assertTrue(findResponse.isPresent());

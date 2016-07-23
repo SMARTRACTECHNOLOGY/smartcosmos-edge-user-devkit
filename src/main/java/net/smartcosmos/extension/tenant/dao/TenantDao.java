@@ -29,7 +29,7 @@ public interface TenantDao {
 
     Optional<CreateUserResponse> createUser(String tenantUrn, CreateUserRequest userCreate) throws ConstraintViolationException;
 
-    Optional<CreateUserResponse> updateUser(String tenantUrn, String userUrn, UpdateUserRequest userUpdate)
+    Optional<UserResponse> updateUser(String tenantUrn, String userUrn, UpdateUserRequest userUpdate)
         throws ConstraintViolationException;
 
     Optional<UserResponse> findUserByUrn(String tenantUrn, String userUrn);

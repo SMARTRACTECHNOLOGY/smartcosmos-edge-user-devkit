@@ -269,7 +269,7 @@ public class TenantPersistenceService implements TenantDao {
     }
 
     @Override
-    public Optional<CreateUserResponse> updateUser(String tenantUrn, String userUrn, UpdateUserRequest updateUserRequest)
+    public Optional<UserResponse> updateUser(String tenantUrn, String userUrn, UpdateUserRequest updateUserRequest)
         throws ConstraintViolationException {
 
         try {
@@ -279,7 +279,7 @@ public class TenantPersistenceService implements TenantDao {
             if (userEntityOptional.isPresent()) {
                 UserEntity userEntity = MergeUtil.merge(userEntityOptional.get(), updateUserRequest);
                 userEntity = userRepository.persist(userEntity);
-                return Optional.ofNullable(conversionService.convert(userEntity, CreateUserResponse.class));
+                return Optional.ofNullable(conversionService.convert(userEntity, UserResponse.class));
             }
 
         } catch (IllegalArgumentException | ConstraintViolationException e) {
