@@ -54,7 +54,7 @@ public class ReadRoleResourceTest extends AbstractTestResource {
         when(roleDao.findRoleByUrn(anyString(), anyString())).thenReturn(response);
 
         MvcResult mvcResult = mockMvc.perform(
-            get("/users/{urn}", urn).contentType(APPLICATION_JSON_UTF8))
+            get("/roles/{urn}", urn).contentType(APPLICATION_JSON_UTF8))
             .andExpect(status().isOk())
             .andExpect(content().contentType(APPLICATION_JSON_UTF8))
             .andExpect(jsonPath("$.active", is(active)))
@@ -79,7 +79,7 @@ public class ReadRoleResourceTest extends AbstractTestResource {
         when(roleDao.findRoleByUrn(anyString(), anyString())).thenReturn(response);
 
         MvcResult mvcResult = mockMvc.perform(
-            get("/users/{urn}", urn).contentType(APPLICATION_JSON_UTF8))
+            get("/roles/{urn}", urn).contentType(APPLICATION_JSON_UTF8))
             .andExpect(status().isNotFound())
             .andReturn();
 
@@ -105,7 +105,7 @@ public class ReadRoleResourceTest extends AbstractTestResource {
         when(roleDao.findRoleByName(anyString(), anyString())).thenReturn(response);
 
         MvcResult mvcResult = mockMvc.perform(
-            get("/users")
+            get("/roles")
                 .param("name", name)
                 .contentType(APPLICATION_JSON_UTF8))
             .andExpect(status().isOk())
@@ -123,14 +123,14 @@ public class ReadRoleResourceTest extends AbstractTestResource {
     @Test
     public void thatGetByNameFails() throws Exception {
 
-        String name = "noSuchUser";
+        String name = "noSuchRole";
 
         Optional<RoleResponse> response = Optional.empty();
 
         when(roleDao.findRoleByName(anyString(), anyString())).thenReturn(response);
 
         MvcResult mvcResult = mockMvc.perform(
-            get("/users")
+            get("/roles")
                 .param("name", name)
                 .contentType(APPLICATION_JSON_UTF8))
             .andExpect(status().isNotFound())
@@ -158,7 +158,7 @@ public class ReadRoleResourceTest extends AbstractTestResource {
         when(roleDao.findAllRoles(anyString())).thenReturn(response);
 
         MvcResult mvcResult = mockMvc.perform(
-            get("/users")
+            get("/roles")
                 .contentType(APPLICATION_JSON_UTF8))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$").isArray())
