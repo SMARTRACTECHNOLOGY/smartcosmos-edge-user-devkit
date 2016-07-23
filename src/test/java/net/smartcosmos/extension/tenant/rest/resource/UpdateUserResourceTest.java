@@ -97,4 +97,45 @@ public class UpdateUserResourceTest extends AbstractTestResource {
             .andReturn();
     }
 
+    /**
+     * Test that updating a nonexistent User fails.
+     *
+     * @throws Exception
+     */
+    @Test
+    public void thatUpdateNonexistentUserFails() throws Exception {
+
+        String username = "newUser";
+        String emailAddress = "newUser@example.com";
+
+        final String expectedTenantUrn = "urn:tenant:uuid:" + UuidUtil.getNewUuid()
+                .toString();
+
+        final String expectedUserUrn = "urn:user:uuid:" + UuidUtil.getNewUuid()
+                .toString();
+
+        List<String> userRoles = new ArrayList<>();
+        userRoles.add("User");
+
+
+        when(tenantDao.updateUser(anyString(), anyString(), anyObject())).thenReturn(Optional.empty());
+
+        RestCreateOrUpdateUserRequest request = RestCreateOrUpdateUserRequest.builder()
+                .username(username)
+                .emailAddress(emailAddress)
+                .roles(userRoleOnly)
+                .build();
+
+        MvcResult mvcResult = this.mockMvc.perform(
+                put("/users/{urn}", expectedUserUrn)
+                        .content(this.json(request))
+                        .contentType(contentType))
+                .andExpect(status().isOk())
+                .andExpect(request().asyncStarted())
+                .andReturn();
+
+        MvcResult result = this.mockMvc.perform(asyncDispatch(mvcResult))
+                .andExpect(status().isNotFound())
+                .andReturn();
+    }
 }
