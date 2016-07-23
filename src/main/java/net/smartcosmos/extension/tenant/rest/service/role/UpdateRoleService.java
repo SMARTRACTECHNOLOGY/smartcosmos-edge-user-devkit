@@ -1,18 +1,6 @@
 package net.smartcosmos.extension.tenant.rest.service.role;
 
-import java.net.URI;
-import java.util.Optional;
-import javax.inject.Inject;
-
 import lombok.extern.slf4j.Slf4j;
-
-import org.springframework.core.convert.ConversionService;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Service;
-import org.springframework.web.context.request.async.DeferredResult;
-
 import net.smartcosmos.events.SmartCosmosEventTemplate;
 import net.smartcosmos.extension.tenant.dao.RoleDao;
 import net.smartcosmos.extension.tenant.dao.TenantDao;
@@ -20,6 +8,16 @@ import net.smartcosmos.extension.tenant.dto.role.CreateOrUpdateRoleRequest;
 import net.smartcosmos.extension.tenant.dto.role.RoleResponse;
 import net.smartcosmos.extension.tenant.rest.dto.role.RestCreateOrUpdateRoleRequest;
 import net.smartcosmos.extension.tenant.rest.service.AbstractTenantService;
+import org.springframework.core.convert.ConversionService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.async.DeferredResult;
+
+import javax.inject.Inject;
+import java.net.URI;
+import java.util.Optional;
 
 /**
  * Initially created by SMART COSMOS Team on July 01, 2016.
@@ -56,16 +54,18 @@ public class UpdateRoleService extends AbstractTenantService {
             Optional<RoleResponse> newUser = roleDao.updateRole("whatever", "urn", createRoleRequest);
 
             if (newUser.isPresent()) {
-                //sendEvent(null, DefaultEventTypes.ThingCreated, object.get());
+                // TODO Enable event after merge in framework
+                // sendEvent(null, DefaultEventTypes.ThingCreated, object.get());
 
                 ResponseEntity responseEntity = ResponseEntity
                     .created(URI.create(newUser.get().getUrn()))
                     .body(newUser.get());
                 response.setResult(responseEntity);
             } else {
-                Optional<RoleResponse> alreadyThere = roleDao.findByTenantUrnAndName("tenantUrnHere", restCreateOrUpdateRoleRequest.getName());
+                Optional<RoleResponse> alreadyThere = roleDao.findRoleByName("tenantUrnHere", restCreateOrUpdateRoleRequest.getName());
                 response.setResult(ResponseEntity.status(HttpStatus.CONFLICT).build());
-                //sendEvent(null, DefaultEventTypes.ThingCreateFailedAlreadyExists, alreadyThere.get());
+                // TODO Enable event after merge in framework
+                // sendEvent(null, DefaultEventTypes.ThingCreateFailedAlreadyExists, alreadyThere.get());
             }
 
         } catch (Exception e) {

@@ -1,19 +1,6 @@
 package net.smartcosmos.extension.tenant.impl;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
-import javax.validation.ConstraintViolationException;
-
 import lombok.extern.slf4j.Slf4j;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.convert.ConversionService;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import net.smartcosmos.extension.tenant.dao.RoleDao;
 import net.smartcosmos.extension.tenant.domain.AuthorityEntity;
 import net.smartcosmos.extension.tenant.domain.RoleEntity;
@@ -22,8 +9,14 @@ import net.smartcosmos.extension.tenant.dto.role.RoleResponse;
 import net.smartcosmos.extension.tenant.repository.AuthorityRepository;
 import net.smartcosmos.extension.tenant.repository.RoleRepository;
 import net.smartcosmos.extension.tenant.util.UuidUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.ConversionService;
+import org.springframework.core.convert.TypeDescriptor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import static java.util.stream.Collectors.toList;
+import javax.validation.ConstraintViolationException;
+import java.util.*;
 
 /**
  * Initially created by SMART COSMOS Team on June 30, 2016.
@@ -52,7 +45,7 @@ public class RolePersistenceService implements RoleDao {
         throws ConstraintViolationException {
 
         // This role already exists? we're not creating a new one
-        if (roleRepository.findByNameAndTenantId(createRoleRequest.getName(), UuidUtil.getUuidFromUrn(tenantUrn))
+        if (roleRepository.findByTenantIdAndNameIgnoreCase(UuidUtil.getUuidFromUrn(tenantUrn), createRoleRequest.getName())
             .isPresent()) {
             return Optional.empty();
         }
@@ -81,7 +74,7 @@ public class RolePersistenceService implements RoleDao {
         UUID id = UuidUtil.getUuidFromUrn(urn);
 
         // Cancel update if role doesn't exist
-        if (roleRepository.findByIdAndTenantId(id, tenantId).isPresent()) {
+        if (roleRepository.findByTenantIdAndId(tenantId, id).isPresent()) {
 
             Set<AuthorityEntity> authorityEntities = new HashSet<>();
             for (String authority : updateRoleRequest.getAuthorities()) {
@@ -101,16 +94,16 @@ public class RolePersistenceService implements RoleDao {
         return Optional.empty();
     }
 
-    public Optional<RoleResponse> findByTenantUrnAndName(String tenantUrn, String name) {
-        Optional<RoleEntity> roleEntity = roleRepository.findByNameAndTenantId(name, UuidUtil.getUuidFromUrn(tenantUrn));
+    public Optional<RoleResponse> findRoleByName(String tenantUrn, String name) {
+        Optional<RoleEntity> roleEntity = roleRepository.findByTenantIdAndNameIgnoreCase(UuidUtil.getUuidFromUrn(tenantUrn), name);
         if (roleEntity.isPresent()) {
             return Optional.ofNullable(conversionService.convert(roleEntity.get(), RoleResponse.class));
         }
         return Optional.empty();
     }
 
-    public Optional<RoleEntity> findByUrnAsEntity(String urn) {
-        return roleRepository.findById(UuidUtil.getUuidFromUrn(urn));
+    public Optional<RoleEntity> findByUrnAsEntity(String tenantUrn, String urn) {
+        return roleRepository.findByTenantIdAndId(UuidUtil.getUuidFromUrn(tenantUrn), UuidUtil.getUuidFromUrn(urn));
     }
 
     @Override
@@ -119,11 +112,48 @@ public class RolePersistenceService implements RoleDao {
         throws IllegalArgumentException {
 
         List<RoleEntity> roleEntities = roleRepository
-            .deleteByIdAndTenantId(UuidUtil.getUuidFromUrn(urn), UuidUtil.getUuidFromUrn(tenantUrn));
-        return roleEntities
-            .stream()
-            .map(item -> conversionService.convert(item, RoleResponse.class))
-            .collect(toList());
+            .deleteByTenantIdAndId(UuidUtil.getUuidFromUrn(tenantUrn), UuidUtil.getUuidFromUrn(urn));
+        return convertList(roleEntities, RoleEntity.class, RoleResponse.class);
+    }
+
+    @Override
+    public List<RoleResponse> findAllRoles(String tenantUrn) {
+
+        UUID tenantId = UuidUtil.getUuidFromUrn(tenantUrn);
+        List<RoleEntity> roleEntities = roleRepository.findByTenantId(tenantId);
+        return convertList(roleEntities, RoleEntity.class, RoleResponse.class);
+    }
+
+    @Override
+    public Optional<RoleResponse> findRoleByUrn(String tenantUrn, String urn) {
+
+        UUID tenantId = UuidUtil.getUuidFromUrn(tenantUrn);
+        UUID roleId = UuidUtil.getUuidFromUrn(urn);
+
+        Optional<RoleEntity> roleEntity = roleRepository.findByTenantIdAndId(tenantId, roleId);
+        if (roleEntity.isPresent()) {
+            return Optional.ofNullable(conversionService.convert(roleEntity.get(), RoleResponse.class));
+        }
+        return Optional.empty();
+    }
+
+    /**
+     * Uses the conversion service to convert a typed list into another typed list.
+     *
+     * @param list the list
+     * @param sourceClass the class of the source type
+     * @param targetClass the class of the target type
+     * @param <S> the generic source type
+     * @param <T> the generic target type
+     * @return the converted typed list
+     */
+    @SuppressWarnings("unchecked")
+    private <S, T> List<T> convertList(List<S> list, Class sourceClass, Class targetClass) {
+
+        TypeDescriptor sourceDescriptor = TypeDescriptor.collection(List.class, TypeDescriptor.valueOf(sourceClass));
+        TypeDescriptor targetDescriptor = TypeDescriptor.collection(List.class, TypeDescriptor.valueOf(targetClass));
+
+        return (List<T>) conversionService.convert(list, sourceDescriptor, targetDescriptor);
     }
 }
 

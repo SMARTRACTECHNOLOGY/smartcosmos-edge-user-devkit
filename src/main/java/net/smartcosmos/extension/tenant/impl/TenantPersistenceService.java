@@ -425,7 +425,7 @@ public class TenantPersistenceService implements TenantDao {
             .build();
 
         Optional<RoleResponse> optionalRole = rolePersistenceService.createRole(tenantUrn, createRoleRequest);
-        Optional<RoleEntity> savedEntity = rolePersistenceService.findByUrnAsEntity(optionalRole.get().getUrn());
+        Optional<RoleEntity> savedEntity = rolePersistenceService.findByUrnAsEntity(tenantUrn, optionalRole.get().getUrn());
         if (savedEntity.isPresent()) {
             return savedEntity.get();
         }

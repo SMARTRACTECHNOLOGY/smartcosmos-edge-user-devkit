@@ -106,7 +106,7 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
         return roleNames
             .stream()
             .map(roleName -> {
-                Optional<RoleEntity> role = roleRepository.findByNameAndTenantId(roleName, tenantId);
+                Optional<RoleEntity> role = roleRepository.findByTenantIdAndNameIgnoreCase(tenantId, roleName);
                 if (role.isPresent()) {
                     return role.get();
                 } else {

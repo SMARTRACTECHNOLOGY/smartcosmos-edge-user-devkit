@@ -501,11 +501,11 @@ PUT /roles/urn:role:uuid:fcdf5432-49a8-45ef-96a2-94a022022860
 204 NO CONTENT
 ----
 
-[[readrole1]]
-===== Find by Name - `GET /roles/?name={name}`
+[[roleread1]]
+===== Find by URN - `GET /roles/{urn}`
 
 ----
-GET /roles/
+GET /roles/urn:role:uuid:318a9fae-0218-486c-b9f6-86f76b2ff6af
 ----
 .Response
 ----
@@ -514,28 +514,50 @@ GET /roles/
 [source,json]
 ----
 {
-    "data": [
-        {
-            "urn": "urn:role:uuid:318a9fae-0218-486c-b9f6-86f76b2ff6af",
-            "name": "Admin",
-            "active": true,
-            "authorities": [
-                "https://authorities.smartcosmos.net/things/read",
-                "https://authorities.smartcosmos.net/things/create"
-            ],
-            "tenantUrn": "urn:tenant:uuid:69bb7c6a-a43b-493d-8e9d-e5a3ed65728a"
-        },
-        {
-            "urn": "urn:role:uuid:fcdf5432-49a8-45ef-96a2-94a022022860",
-            "name": "User",
-            "active": true,
-            "authorities": [
-                "https://authorities.smartcosmos.net/things/read"
-            ],
-            "tenantUrn": "urn:tenant:uuid:69bb7c6a-a43b-493d-8e9d-e5a3ed65728a"
-        }
-    ]
+    "urn": "urn:role:uuid:318a9fae-0218-486c-b9f6-86f76b2ff6af",
+    "name": "Admin",
+    "active": true,
+    "authorities": [
+        "https://authorities.smartcosmos.net/things/read",
+        "https://authorities.smartcosmos.net/things/create"
+    ],
+    "tenantUrn": "urn:tenant:uuid:69bb7c6a-a43b-493d-8e9d-e5a3ed65728a"
 }
+----
+
+[[roleread2]]
+===== Find by Name - `GET /roles?name={name}`
+
+----
+GET /roles
+----
+.Response
+----
+200 OK
+----
+[source,json]
+----
+[
+    {
+        "urn": "urn:role:uuid:318a9fae-0218-486c-b9f6-86f76b2ff6af",
+        "name": "Admin",
+        "active": true,
+        "authorities": [
+            "https://authorities.smartcosmos.net/things/read",
+            "https://authorities.smartcosmos.net/things/create"
+        ],
+        "tenantUrn": "urn:tenant:uuid:69bb7c6a-a43b-493d-8e9d-e5a3ed65728a"
+    },
+    {
+        "urn": "urn:role:uuid:fcdf5432-49a8-45ef-96a2-94a022022860",
+        "name": "User",
+        "active": true,
+        "authorities": [
+            "https://authorities.smartcosmos.net/things/read"
+        ],
+        "tenantUrn": "urn:tenant:uuid:69bb7c6a-a43b-493d-8e9d-e5a3ed65728a"
+    }
+]
 ----
 
 [[roledelete1]]

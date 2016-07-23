@@ -131,7 +131,7 @@ public class RolePersistenceServiceTest {
         assertTrue(createResponse.get().getAuthorities().contains(authority));
 
         Optional<RoleResponse> lookupResponse = rolePersistenceService
-            .findByTenantUrnAndName(tenantRoleTest, roleName);
+            .findRoleByName(tenantRoleTest, roleName);
 
         assertTrue(lookupResponse.isPresent());
         assertEquals(roleName, lookupResponse.get().getName());
@@ -144,7 +144,7 @@ public class RolePersistenceServiceTest {
         final String roleName = "noSuchRole";
 
         Optional<RoleResponse> lookupResponse = rolePersistenceService
-            .findByTenantUrnAndName(tenantRoleTest, roleName);
+            .findRoleByName(tenantRoleTest, roleName);
 
         assertFalse(lookupResponse.isPresent());
     }
@@ -178,5 +178,66 @@ public class RolePersistenceServiceTest {
 
         assertFalse(deleteResponse.isEmpty());
         assertEquals(1, deleteResponse.size());
+    }
+
+    @Test
+    public void thatFindRoleByUrnSucceeds() throws Exception {
+
+        final String roleName = "findByUrnTestRole";
+        final String authority = "testAuth";
+
+        List<String> authorities = new ArrayList<>();
+        authorities.add(authority);
+
+        CreateOrUpdateRoleRequest createRole = CreateOrUpdateRoleRequest.builder()
+                .active(true)
+                .authorities(authorities)
+                .name(roleName)
+                .build();
+
+        Optional<RoleResponse> createResponse = rolePersistenceService
+                .createRole(tenantRoleTest, createRole);
+
+        assertTrue(createResponse.isPresent());
+        assertEquals(roleName, createResponse.get().getName());
+        assertEquals(1, createResponse.get().getAuthorities().size());
+        assertTrue(createResponse.get().getAuthorities().contains(authority));
+
+        String urn = createResponse.get().getUrn();
+
+        Optional<RoleResponse> findResponse = rolePersistenceService
+                .findRoleByUrn(tenantRoleTest, urn);
+
+        assertTrue(findResponse.isPresent());
+        assertEquals(roleName, findResponse.get().getName());
+    }
+
+    @Test
+    public void thatFindAllRolesSucceeds() throws Exception {
+
+        final String roleName = "findAllTestRole";
+        final String authority = "testAuth";
+
+        List<String> authorities = new ArrayList<>();
+        authorities.add(authority);
+
+        CreateOrUpdateRoleRequest createRole = CreateOrUpdateRoleRequest.builder()
+                .active(true)
+                .authorities(authorities)
+                .name(roleName)
+                .build();
+
+        Optional<RoleResponse> createResponse = rolePersistenceService
+                .createRole(tenantRoleTest, createRole);
+
+        assertTrue(createResponse.isPresent());
+        assertEquals(roleName, createResponse.get().getName());
+        assertEquals(1, createResponse.get().getAuthorities().size());
+        assertTrue(createResponse.get().getAuthorities().contains(authority));
+
+        List<RoleResponse> findResponse = rolePersistenceService
+                .findAllRoles(tenantRoleTest);
+
+        assertFalse(findResponse.isEmpty());
     }
 }
