@@ -13,7 +13,7 @@ import org.springframework.web.context.request.async.DeferredResult;
 import net.smartcosmos.extension.tenant.rest.service.user.DeleteUserService;
 import net.smartcosmos.security.EndpointMethodControl;
 import net.smartcosmos.security.user.SmartCosmosUser;
-import net.smartcosmos.spring.SmartCosmosRdao;
+import net.smartcosmos.annotation.SmartCosmosRdao;
 
 /**
  * Initially created by SMART COSMOS Team on July 01, 2016.

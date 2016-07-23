@@ -5,7 +5,7 @@ import net.smartcosmos.extension.tenant.rest.dto.role.RestCreateOrUpdateRoleRequ
 import net.smartcosmos.extension.tenant.rest.service.role.CreateRoleService;
 import net.smartcosmos.security.EndpointMethodControl;
 import net.smartcosmos.security.user.SmartCosmosUser;
-import net.smartcosmos.spring.SmartCosmosRdao;
+import net.smartcosmos.annotation.SmartCosmosRdao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +23,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
  */
 @SmartCosmosRdao
 @Slf4j
-@ConditionalOnProperty(prefix = "smt.endpoints.tenant", name = "enabled", matchIfMissing = true)
+@ConditionalOnProperty(prefix = "smt.endpoints.role", name = "enabled", matchIfMissing = true)
 //@Api
 public class CreateRoleResource {
 

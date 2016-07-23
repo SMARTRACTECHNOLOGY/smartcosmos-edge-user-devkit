@@ -1,9 +1,9 @@
 package net.smartcosmos.extension.tenant.rest.resource.authentication;
 
-import javax.validation.Valid;
-
 import lombok.extern.slf4j.Slf4j;
-
+import net.smartcosmos.annotation.SmartCosmosRdao;
+import net.smartcosmos.extension.tenant.rest.dto.authentication.RestAuthenticateRequest;
+import net.smartcosmos.extension.tenant.rest.service.authentication.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,11 +11,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import net.smartcosmos.extension.tenant.rest.dto.authentication.RestAuthenticateRequest;
-import net.smartcosmos.extension.tenant.rest.service.authentication.AuthenticationService;
+import javax.validation.Valid;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 
+@SmartCosmosRdao
 @RestController
 @Slf4j
 public class AuthenticationResource {

@@ -5,7 +5,7 @@ import net.smartcosmos.extension.tenant.rest.dto.user.RestCreateOrUpdateUserRequ
 import net.smartcosmos.extension.tenant.rest.service.user.UpdateUserService;
 import net.smartcosmos.security.EndpointMethodControl;
 import net.smartcosmos.security.user.SmartCosmosUser;
-import net.smartcosmos.spring.SmartCosmosRdao;
+import net.smartcosmos.annotation.SmartCosmosRdao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.ResponseEntity;
