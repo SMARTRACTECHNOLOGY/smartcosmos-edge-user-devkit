@@ -16,11 +16,11 @@ public class RestCreateOrUpdateRoleRequestToCreateOrUpdateRoleRequestConverter
     implements Converter<RestCreateOrUpdateRoleRequest, CreateOrUpdateRoleRequest>, FormatterRegistrar {
 
     @Override
-    public CreateOrUpdateRoleRequest convert(RestCreateOrUpdateRoleRequest restCreateOrUpdateRoleRequest) {
+    public CreateOrUpdateRoleRequest convert(RestCreateOrUpdateRoleRequest request) {
         return CreateOrUpdateRoleRequest.builder()
-            .name(restCreateOrUpdateRoleRequest.getName())
-            .active(restCreateOrUpdateRoleRequest.getActive())
-            .authorities(restCreateOrUpdateRoleRequest.getAuthorities())
+            .name(request.getName())
+            .active(request.getActive())
+            .authorities(request.getAuthorities())
             .build();
     }
 

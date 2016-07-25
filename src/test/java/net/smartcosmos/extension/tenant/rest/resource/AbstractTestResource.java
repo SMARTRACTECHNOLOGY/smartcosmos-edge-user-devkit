@@ -1,11 +1,14 @@
 package net.smartcosmos.extension.tenant.rest.resource;
 
-import java.io.IOException;
-import java.util.Arrays;
-
-import org.junit.*;
-import org.junit.runner.*;
-import org.mockito.*;
+import net.smartcosmos.extension.tenant.TenantRdao;
+import net.smartcosmos.extension.tenant.dao.RoleDao;
+import net.smartcosmos.extension.tenant.dao.TenantDao;
+import net.smartcosmos.security.user.SmartCosmosUser;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.runner.RunWith;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.context.annotation.Bean;
@@ -24,9 +27,8 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 
-import net.smartcosmos.extension.tenant.TenantRdao;
-import net.smartcosmos.extension.tenant.dao.TenantDao;
-import net.smartcosmos.security.user.SmartCosmosUser;
+import java.io.IOException;
+import java.util.Arrays;
 
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
@@ -89,5 +91,10 @@ public abstract class AbstractTestResource {
             return (Mockito.mock(TenantDao.class));
         }
 
+        @Bean
+        public RoleDao roleDao() {
+
+            return (Mockito.mock(RoleDao.class));
+        }
     }
 }

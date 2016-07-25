@@ -1,18 +1,6 @@
 package net.smartcosmos.extension.tenant.rest.service.role;
 
-import java.net.URI;
-import java.util.Optional;
-import javax.inject.Inject;
-
 import lombok.extern.slf4j.Slf4j;
-
-import org.springframework.core.convert.ConversionService;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Service;
-import org.springframework.web.context.request.async.DeferredResult;
-
 import net.smartcosmos.events.DefaultEventTypes;
 import net.smartcosmos.events.SmartCosmosEventTemplate;
 import net.smartcosmos.extension.tenant.dao.RoleDao;
@@ -22,6 +10,16 @@ import net.smartcosmos.extension.tenant.dto.role.RoleResponse;
 import net.smartcosmos.extension.tenant.rest.dto.role.RestCreateOrUpdateRoleRequest;
 import net.smartcosmos.extension.tenant.rest.service.AbstractTenantService;
 import net.smartcosmos.security.user.SmartCosmosUser;
+import org.springframework.core.convert.ConversionService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.async.DeferredResult;
+
+import javax.inject.Inject;
+import java.net.URI;
+import java.util.Optional;
 
 /**
  * Initially created by SMART COSMOS Team on July 01, 2016.

@@ -5,71 +5,62 @@ import net.smartcosmos.events.DefaultEventTypes;
 import net.smartcosmos.events.SmartCosmosEventTemplate;
 import net.smartcosmos.extension.tenant.dao.RoleDao;
 import net.smartcosmos.extension.tenant.dao.TenantDao;
-import net.smartcosmos.extension.tenant.dto.role.CreateOrUpdateRoleRequest;
 import net.smartcosmos.extension.tenant.dto.role.RoleResponse;
-import net.smartcosmos.extension.tenant.rest.dto.role.RestCreateOrUpdateRoleRequest;
 import net.smartcosmos.extension.tenant.rest.service.AbstractTenantService;
 import net.smartcosmos.security.user.SmartCosmosUser;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.async.DeferredResult;
 
 import javax.inject.Inject;
-import java.util.Optional;
+import java.util.List;
 
 /**
  * Initially created by SMART COSMOS Team on July 01, 2016.
  */
 @Slf4j
 @Service
-public class UpdateRoleService extends AbstractTenantService {
+public class DeleteRoleService extends AbstractTenantService {
 
     @Inject
-    public UpdateRoleService(
+    public DeleteRoleService(
         TenantDao tenantDao, RoleDao roleDao, SmartCosmosEventTemplate smartCosmosEventTemplate, ConversionService
         conversionService) {
         super(tenantDao, roleDao, smartCosmosEventTemplate, conversionService);
     }
 
-    public DeferredResult<ResponseEntity> update(String roleUrn, RestCreateOrUpdateRoleRequest updateRequest, SmartCosmosUser user) {
+    public DeferredResult<ResponseEntity> delete(String roleUrn, SmartCosmosUser user) {
         // Async worker thread reduces timeouts and disconnects for long queries and processing.
         DeferredResult<ResponseEntity> response = new DeferredResult<>();
-        updateRoleWorker(response, roleUrn, updateRequest, user);
+        deleteRoleWorker(response, user, roleUrn);
 
         return response;
     }
 
     @Async
-    private void updateRoleWorker(DeferredResult<ResponseEntity> response, String roleUrn, RestCreateOrUpdateRoleRequest restRequest, SmartCosmosUser user) {
+    private void deleteRoleWorker(DeferredResult<ResponseEntity> response, SmartCosmosUser user, String roleUrn) {
 
         try {
-            final CreateOrUpdateRoleRequest updateRoleRequest = conversionService
-                .convert(restRequest, CreateOrUpdateRoleRequest.class);
+            List<RoleResponse> deleteRoleResponse = roleDao.delete(user.getAccountUrn(), roleUrn);
 
-            Optional<RoleResponse> updateRoleResponse = roleDao.updateRole(user.getAccountUrn(), roleUrn, updateRoleRequest);
-
-            if (updateRoleResponse.isPresent()) {
-                sendEvent(user, DefaultEventTypes.RoleUpdated, updateRoleResponse.get());
-
-                ResponseEntity responseEntity = ResponseEntity.noContent().build();
-                response.setResult(responseEntity);
+            if (!deleteRoleResponse.isEmpty()) {
+                response.setResult(ResponseEntity.noContent().build());
+                sendEvent(user, DefaultEventTypes.RoleDeleted, deleteRoleResponse.get(0));
             } else {
+                response.setResult(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+
                 RoleResponse eventPayload = RoleResponse.builder()
                     .urn(roleUrn)
                     .tenantUrn(user.getAccountUrn())
                     .build();
                 sendEvent(user, DefaultEventTypes.RoleNotFound, eventPayload);
-
-                ResponseEntity responseEntity = ResponseEntity.notFound().build();
-                response.setResult(responseEntity);
             }
-
         } catch (Exception e) {
             log.debug(e.getMessage(), e);
             response.setErrorResult(e);
         }
     }
-
 }

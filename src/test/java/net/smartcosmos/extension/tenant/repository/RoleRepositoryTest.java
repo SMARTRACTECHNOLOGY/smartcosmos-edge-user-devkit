@@ -1,10 +1,12 @@
 package net.smartcosmos.extension.tenant.repository;
 
-import java.util.Optional;
-import java.util.UUID;
-
-import org.junit.*;
-import org.junit.runner.*;
+import net.smartcosmos.extension.tenant.TenantPersistenceConfig;
+import net.smartcosmos.extension.tenant.TenantPersistenceTestApplication;
+import net.smartcosmos.extension.tenant.domain.RoleEntity;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
@@ -12,9 +14,9 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import net.smartcosmos.extension.tenant.TenantPersistenceConfig;
-import net.smartcosmos.extension.tenant.TenantPersistenceTestApplication;
-import net.smartcosmos.extension.tenant.domain.RoleEntity;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 import static org.junit.Assert.*;
 
@@ -36,12 +38,14 @@ public class RoleRepositoryTest {
     private String name = "roleName";
     private Boolean active = true;
 
+    private RoleEntity role;
+
     @Before
     public void setUp() throws Exception {
 
         tenantId = UUID.randomUUID();
 
-        RoleEntity role = RoleEntity.builder()
+        role = RoleEntity.builder()
             .tenantId(tenantId)
             .name(name)
             .active(active)
@@ -80,9 +84,9 @@ public class RoleRepositoryTest {
     }
 
     @Test
-    public void findById() throws Exception {
+    public void findByTenantIdAndId() throws Exception {
 
-        Optional<RoleEntity> optional = repository.findById(id);
+        Optional<RoleEntity> optional = repository.findByTenantIdAndId(tenantId, id);
         assertTrue(optional.isPresent());
 
         RoleEntity role = optional.get();
@@ -95,7 +99,7 @@ public class RoleRepositoryTest {
     @Test
     public void findByName() throws Exception {
 
-        Optional<RoleEntity> optional = repository.findByNameAndTenantId(name, tenantId);
+        Optional<RoleEntity> optional = repository.findByTenantIdAndNameIgnoreCase(tenantId, name);
         assertTrue(optional.isPresent());
 
         RoleEntity role = optional.get();
@@ -103,5 +107,23 @@ public class RoleRepositoryTest {
         assertEquals(tenantId, role.getTenantId());
         assertEquals(active, role.getActive());
         assertEquals(name, role.getName());
+    }
+
+    @Test
+    public void findByTenantId() throws Exception {
+
+        List<RoleEntity> roleList = repository.findByTenantId(tenantId);
+        assertFalse(roleList.isEmpty());
+        assertTrue(roleList.contains(role));
+    }
+
+    @Test
+    public void deleteByTenantIdAndId() throws Exception {
+        List<RoleEntity> deleteList = repository.deleteByTenantIdAndId(tenantId, id);
+        assertFalse(deleteList.isEmpty());
+        assertTrue(deleteList.contains(role));
+
+        Optional<RoleEntity> roleOptional = repository.findByTenantIdAndId(tenantId, id);
+        assertFalse(roleOptional.isPresent());
     }
 }

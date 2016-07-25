@@ -1,11 +1,11 @@
-package net.smartcosmos.extension.tenant.rest.resource.user;
+package net.smartcosmos.extension.tenant.rest.resource.role;
 
 import lombok.extern.slf4j.Slf4j;
-import net.smartcosmos.extension.tenant.rest.dto.user.RestCreateOrUpdateUserRequest;
-import net.smartcosmos.extension.tenant.rest.service.user.UpdateUserService;
+import net.smartcosmos.annotation.SmartCosmosRdao;
+import net.smartcosmos.extension.tenant.rest.dto.role.RestCreateOrUpdateRoleRequest;
+import net.smartcosmos.extension.tenant.rest.service.role.UpdateRoleService;
 import net.smartcosmos.security.EndpointMethodControl;
 import net.smartcosmos.security.user.SmartCosmosUser;
-import net.smartcosmos.annotation.SmartCosmosRdao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.ResponseEntity;
@@ -26,22 +26,22 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 @Slf4j
 @ConditionalOnProperty(prefix = "smt.endpoints.tenant", name = "enabled", matchIfMissing = true)
 //@Api
-public class UpdateUserResource {
+public class UpdateRoleResource {
 
-    private UpdateUserService service;
+    private UpdateRoleService service;
 
     @Autowired
-    public UpdateUserResource(UpdateUserService service) { this.service = service; }
+    public UpdateRoleResource(UpdateRoleService service) { this.service = service; }
 
-    @RequestMapping(value = "/users/{userUrn}", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8_VALUE, consumes = APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/roles/{roleUrn}", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8_VALUE, consumes = APPLICATION_JSON_UTF8_VALUE)
     @EndpointMethodControl(key = "tenant.put")
-    @ConditionalOnProperty(prefix = "smt.endpoints.user.put", name = "enabled", matchIfMissing = true)
-    public DeferredResult<ResponseEntity> updateUser(
-        @PathVariable String userUrn,
-        @RequestBody @Valid RestCreateOrUpdateUserRequest requestBody,
+    @ConditionalOnProperty(prefix = "smt.endpoints.role.put", name = "enabled", matchIfMissing = true)
+    public DeferredResult<ResponseEntity> updateRole(
+        @PathVariable String roleUrn,
+        @RequestBody @Valid RestCreateOrUpdateRoleRequest requestBody,
         SmartCosmosUser user) {
 
-        return service.update(userUrn, requestBody, user);
+        return service.update(roleUrn, requestBody, user);
     }
 }
 

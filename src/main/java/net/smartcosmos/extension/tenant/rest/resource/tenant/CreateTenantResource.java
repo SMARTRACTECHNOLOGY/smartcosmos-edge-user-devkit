@@ -1,11 +1,10 @@
 package net.smartcosmos.extension.tenant.rest.resource.tenant;
 
 import lombok.extern.slf4j.Slf4j;
+import net.smartcosmos.annotation.SmartCosmosRdao;
 import net.smartcosmos.extension.tenant.rest.dto.tenant.RestCreateTenantRequest;
 import net.smartcosmos.extension.tenant.rest.service.tenant.CreateTenantService;
 import net.smartcosmos.security.EndpointMethodControl;
-import net.smartcosmos.security.user.SmartCosmosUser;
-import net.smartcosmos.spring.SmartCosmosRdao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.ResponseEntity;
@@ -36,8 +35,7 @@ public class CreateTenantResource {
     @EndpointMethodControl(key = "tenant.post")
     @ConditionalOnProperty(prefix = "smt.endpoints.tenant.post", name = "enabled", matchIfMissing = true)
     public DeferredResult<ResponseEntity> createTenant(
-        @RequestBody @Valid RestCreateTenantRequest restCreateTenantRequest,
-        SmartCosmosUser user) {
+        @RequestBody @Valid RestCreateTenantRequest restCreateTenantRequest) {
 
         return service.create(restCreateTenantRequest);
     }

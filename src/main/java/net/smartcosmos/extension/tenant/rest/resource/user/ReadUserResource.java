@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import net.smartcosmos.extension.tenant.rest.service.user.ReadUserService;
 import net.smartcosmos.security.EndpointMethodControl;
 import net.smartcosmos.security.user.SmartCosmosUser;
-import net.smartcosmos.spring.SmartCosmosRdao;
+import net.smartcosmos.annotation.SmartCosmosRdao;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 

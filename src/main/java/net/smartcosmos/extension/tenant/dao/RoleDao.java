@@ -1,11 +1,11 @@
 package net.smartcosmos.extension.tenant.dao;
 
-import java.util.List;
-import java.util.Optional;
-import javax.validation.ConstraintViolationException;
-
 import net.smartcosmos.extension.tenant.dto.role.CreateOrUpdateRoleRequest;
 import net.smartcosmos.extension.tenant.dto.role.RoleResponse;
+
+import javax.validation.ConstraintViolationException;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Initially created by SMART COSMOS Team on June 30, 2016.
@@ -48,7 +48,7 @@ public interface RoleDao {
      * @return the role or Optional.empty() in case empty search result
      * @throws ConstraintViolationException
      */
-    Optional<RoleResponse> findByTenantUrnAndName(String tenantUrn, String name)
+    Optional<RoleResponse> findRoleByName(String tenantUrn, String name)
         throws ConstraintViolationException;
 
     /**
@@ -61,4 +61,21 @@ public interface RoleDao {
      */
     List<RoleResponse> delete(String tenantUrn, String urn)
         throws IllegalArgumentException;
+
+    /**
+     * Finds all roles in the given tenant.
+     *
+     * @param tenantUrn tenant
+     * @return list of roles
+     */
+    List<RoleResponse> findAllRoles(String tenantUrn);
+
+    /**
+     * Finds a role identified by its URN in the given tenant.
+     *
+     * @param tenantUrn tenant
+     * @param urn URN of role
+     * @return the role or Optional.empty() in case empty search result
+     */
+    Optional<RoleResponse> findRoleByUrn(String tenantUrn, String urn);
 }

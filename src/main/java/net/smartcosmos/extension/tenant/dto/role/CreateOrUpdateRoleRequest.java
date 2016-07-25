@@ -1,13 +1,14 @@
 package net.smartcosmos.extension.tenant.dto.role;
 
-import java.beans.ConstructorProperties;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
 import lombok.Data;
+
+import java.beans.ConstructorProperties;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Initially created by SMART COSMOS Team on June 30, 2016.
@@ -21,18 +22,20 @@ public class CreateOrUpdateRoleRequest {
     private final int version = VERSION;
 
     private String name;
-    private List<String> authorities;
+    private Set<String> authorities;
     private Boolean active;
+    private String tenantUrn;
 
     @Builder
-    @ConstructorProperties({ "name", "authorities", "active" })
-    public CreateOrUpdateRoleRequest(String name, List<String> authorities, Boolean active) {
+    @ConstructorProperties({ "name", "authorities", "active", "tenantUrn" })
+    public CreateOrUpdateRoleRequest(String name, Collection<String> authorities, Boolean active, String tenantUrn) {
         this.name = name;
-        this.authorities = new ArrayList<>();
+        this.authorities = new HashSet<>();
         if (authorities != null && !authorities.isEmpty()) {
             this.authorities.addAll(authorities);
         }
-        this.active = active != null ? active : true;
+        this.active = active;
+        this.tenantUrn = tenantUrn;
     }
 
 }
