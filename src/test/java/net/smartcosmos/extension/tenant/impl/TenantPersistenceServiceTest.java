@@ -1,12 +1,22 @@
 package net.smartcosmos.extension.tenant.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-
-import org.junit.*;
-import org.junit.runner.*;
+import net.smartcosmos.extension.tenant.TenantPersistenceConfig;
+import net.smartcosmos.extension.tenant.TenantPersistenceTestApplication;
+import net.smartcosmos.extension.tenant.dto.authentication.GetAuthoritiesResponse;
+import net.smartcosmos.extension.tenant.dto.tenant.CreateTenantRequest;
+import net.smartcosmos.extension.tenant.dto.tenant.CreateTenantResponse;
+import net.smartcosmos.extension.tenant.dto.tenant.TenantResponse;
+import net.smartcosmos.extension.tenant.dto.tenant.UpdateTenantRequest;
+import net.smartcosmos.extension.tenant.dto.user.CreateOrUpdateUserRequest;
+import net.smartcosmos.extension.tenant.dto.user.CreateUserResponse;
+import net.smartcosmos.extension.tenant.dto.user.UserResponse;
+import net.smartcosmos.extension.tenant.repository.TenantRepository;
+import net.smartcosmos.extension.tenant.repository.UserRepository;
+import net.smartcosmos.extension.tenant.util.UuidUtil;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
@@ -14,20 +24,10 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import net.smartcosmos.extension.tenant.TenantPersistenceConfig;
-import net.smartcosmos.extension.tenant.TenantPersistenceTestApplication;
-import net.smartcosmos.extension.tenant.dto.user.CreateOrUpdateUserResponse;
-import net.smartcosmos.extension.tenant.dto.tenant.CreateTenantRequest;
-import net.smartcosmos.extension.tenant.dto.tenant.CreateTenantResponse;
-import net.smartcosmos.extension.tenant.dto.user.CreateUserRequest;
-import net.smartcosmos.extension.tenant.dto.authentication.GetAuthoritiesResponse;
-import net.smartcosmos.extension.tenant.dto.user.GetOrDeleteUserResponse;
-import net.smartcosmos.extension.tenant.dto.tenant.UpdateTenantRequest;
-import net.smartcosmos.extension.tenant.dto.tenant.TenantResponse;
-import net.smartcosmos.extension.tenant.dto.user.UpdateUserRequest;
-import net.smartcosmos.extension.tenant.repository.TenantRepository;
-import net.smartcosmos.extension.tenant.repository.UserRepository;
-import net.smartcosmos.extension.tenant.util.UuidUtil;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 import static org.junit.Assert.*;
 
@@ -79,8 +79,6 @@ public class TenantPersistenceServiceTest {
 
         assertTrue(createTenantResponse.isPresent());
 
-        assertTrue(createTenantResponse.get().getActive());
-        assertEquals(TENANT, createTenantResponse.get().getName());
         assertEquals(USER, createTenantResponse.get().getAdmin().getUsername());
         assertFalse(createTenantResponse.get().getUrn().isEmpty());
     }
@@ -100,8 +98,8 @@ public class TenantPersistenceServiceTest {
 
         assertTrue(createTenantResponse.isPresent());
 
-        assertTrue(createTenantResponse.get().getActive());
-        assertEquals(TENANT, createTenantResponse.get().getName());
+        //assertTrue(createTenantResponse.get().getActive());
+        //assertEquals(TENANT, createTenantResponse.get().getName());
         assertEquals(USER, createTenantResponse.get().getAdmin().getUsername());
         assertFalse(createTenantResponse.get().getUrn().isEmpty());
 
@@ -142,8 +140,8 @@ public class TenantPersistenceServiceTest {
 
         assertTrue(createTenantResponse.isPresent());
 
-        assertTrue(createTenantResponse.get().getActive());
-        assertEquals(TENANT, createTenantResponse.get().getName());
+        //assertTrue(createTenantResponse.get().getActive());
+        //assertEquals(TENANT, createTenantResponse.get().getName());
         assertEquals(USER, createTenantResponse.get().getAdmin().getUsername());
         assertFalse(createTenantResponse.get().getUrn().isEmpty());
 
@@ -201,8 +199,8 @@ public class TenantPersistenceServiceTest {
 
         assertTrue(createTenantResponse.isPresent());
 
-        assertTrue(createTenantResponse.get().getActive());
-        assertEquals(TENANT, createTenantResponse.get().getName());
+        //assertTrue(createTenantResponse.get().getActive());
+        //assertEquals(TENANT, createTenantResponse.get().getName());
         assertEquals(USER, createTenantResponse.get().getAdmin().getUsername());
         assertFalse(createTenantResponse.get().getUrn().isEmpty());
 
@@ -242,8 +240,8 @@ public class TenantPersistenceServiceTest {
 
         assertTrue(createTenantResponse.isPresent());
 
-        assertTrue(createTenantResponse.get().getActive());
-        assertEquals(TENANT, createTenantResponse.get().getName());
+        //assertTrue(createTenantResponse.get().getActive());
+        //assertEquals(TENANT, createTenantResponse.get().getName());
         assertEquals(USER, createTenantResponse.get().getAdmin().getUsername());
         assertFalse(createTenantResponse.get().getUrn().isEmpty());
 
@@ -267,6 +265,14 @@ public class TenantPersistenceServiceTest {
         );
 
         assertFalse(getTenantResponse.isPresent());
+    }
+
+    @Test
+    public void thatFindAllTenantsSucceeds() {
+        List<TenantResponse> tenantResponse = tenantPersistenceService.findAllTenants();
+
+        assertNotNull(tenantResponse);
+        assertFalse(tenantResponse.isEmpty());
     }
 
     // endregion
@@ -307,7 +313,7 @@ public class TenantPersistenceServiceTest {
         List<String> roles = new ArrayList<>();
         roles.add(role);
 
-        CreateUserRequest createUserRequest = CreateUserRequest.builder()
+        CreateOrUpdateUserRequest createUserRequest = CreateOrUpdateUserRequest.builder()
             .active(true)
             .emailAddress(emailAddress)
             .givenName(givenName)
@@ -316,14 +322,11 @@ public class TenantPersistenceServiceTest {
             .username(username)
             .build();
 
-        Optional<CreateOrUpdateUserResponse> userResponse = tenantPersistenceService.createUser(testUserTenantUrn, createUserRequest);
+        Optional<CreateUserResponse> userResponse = tenantPersistenceService.createUser(testUserTenantUrn, createUserRequest);
 
         assertTrue(userResponse.isPresent());
-        assertEquals(emailAddress, userResponse.get().getEmailAddress());
-        assertEquals(givenName, userResponse.get().getGivenName());
-        assertEquals(roles.size(), userResponse.get().getRoles().size());
-        assertEquals(role, userResponse.get().getRoles().get(0));
-        assertEquals(surname, userResponse.get().getSurname());
+        assertEquals(1, userResponse.get().getRoles().size());
+        assertTrue(userResponse.get().getRoles().contains(role));
         assertEquals(username, userResponse.get().getUsername());
     }
 
@@ -341,7 +344,7 @@ public class TenantPersistenceServiceTest {
         roles.add(role1);
         roles.add(role2);
 
-        CreateUserRequest createUserRequest = CreateUserRequest.builder()
+        CreateOrUpdateUserRequest createUserRequest = CreateOrUpdateUserRequest.builder()
             .active(true)
             .emailAddress(emailAddress)
             .givenName(givenName)
@@ -350,15 +353,12 @@ public class TenantPersistenceServiceTest {
             .username(username)
             .build();
 
-        Optional<CreateOrUpdateUserResponse> userResponse = tenantPersistenceService.createUser(testUserTenantUrn, createUserRequest);
+        Optional<CreateUserResponse> userResponse = tenantPersistenceService.createUser(testUserTenantUrn, createUserRequest);
 
         assertTrue(userResponse.isPresent());
-        assertEquals(emailAddress, userResponse.get().getEmailAddress());
-        assertEquals(givenName, userResponse.get().getGivenName());
         assertEquals(roles.size(), userResponse.get().getRoles().size());
         assertTrue(userResponse.get().getRoles().contains(role1));
         assertTrue(userResponse.get().getRoles().contains(role2));
-        assertEquals(surname, userResponse.get().getSurname());
         assertEquals(username, userResponse.get().getUsername());
     }
 
@@ -375,7 +375,7 @@ public class TenantPersistenceServiceTest {
         List<String> roles = new ArrayList<>();
         roles.add(role);
 
-        CreateUserRequest createUserRequest = CreateUserRequest.builder()
+        CreateOrUpdateUserRequest createUserRequest = CreateOrUpdateUserRequest.builder()
             .active(true)
             .emailAddress(emailAddress)
             .givenName(givenName)
@@ -384,27 +384,24 @@ public class TenantPersistenceServiceTest {
             .username(username)
             .build();
 
-        Optional<CreateOrUpdateUserResponse> userResponse = tenantPersistenceService.createUser(testUserTenantUrn, createUserRequest);
+        Optional<CreateUserResponse> userResponse = tenantPersistenceService.createUser(testUserTenantUrn, createUserRequest);
 
         assertTrue(userResponse.isPresent());
-        assertEquals(emailAddress, userResponse.get().getEmailAddress());
-        assertEquals(givenName, userResponse.get().getGivenName());
         assertEquals(roles.size(), userResponse.get().getRoles().size());
-        assertEquals(role, userResponse.get().getRoles().get(0));
-        assertEquals(surname, userResponse.get().getSurname());
+        assertTrue(userResponse.get().getRoles().contains(role));
         assertEquals(username, userResponse.get().getUsername());
 
         // *** no longer identical to thatCreateUserSucceeds
 
-        Optional<GetOrDeleteUserResponse> getResponse = tenantPersistenceService.findUserByUrn(testUserTenantUrn, userResponse.get().getUrn());
-        Optional<GetOrDeleteUserResponse> deleteResponse = tenantPersistenceService.deleteUserByUrn(testUserTenantUrn,
+        Optional<UserResponse> getResponse = tenantPersistenceService.findUserByUrn(testUserTenantUrn, userResponse.get().getUrn());
+        Optional<UserResponse> deleteResponse = tenantPersistenceService.deleteUserByUrn(testUserTenantUrn,
             getResponse.get().getUrn());
 
         assertTrue(getResponse.isPresent());
         assertEquals(emailAddress, getResponse.get().getEmailAddress());
         assertEquals(givenName, getResponse.get().getGivenName());
         assertEquals(roles.size(), getResponse.get().getRoles().size());
-        assertEquals(role, getResponse.get().getRoles().get(0));
+        assertTrue(userResponse.get().getRoles().contains(role));
         assertEquals(surname, getResponse.get().getSurname());
         assertEquals(username, getResponse.get().getUsername());
 
@@ -412,7 +409,7 @@ public class TenantPersistenceServiceTest {
         assertEquals(emailAddress, deleteResponse.get().getEmailAddress());
         assertEquals(givenName, deleteResponse.get().getGivenName());
         assertEquals(roles.size(), deleteResponse.get().getRoles().size());
-        assertEquals(role, deleteResponse.get().getRoles().get(0));
+        assertTrue(userResponse.get().getRoles().contains(role));
         assertEquals(surname, deleteResponse.get().getSurname());
         assertEquals(username, deleteResponse.get().getUsername());
 
@@ -430,7 +427,7 @@ public class TenantPersistenceServiceTest {
         List<String> roles = new ArrayList<>();
         roles.add(role);
 
-        CreateUserRequest createUserRequest = CreateUserRequest.builder()
+        CreateOrUpdateUserRequest createUserRequest = CreateOrUpdateUserRequest.builder()
             .active(true)
             .emailAddress(emailAddress)
             .givenName(givenName)
@@ -439,7 +436,7 @@ public class TenantPersistenceServiceTest {
             .username(username)
             .build();
 
-        Optional<CreateOrUpdateUserResponse> userResponse = tenantPersistenceService.createUser(testUserTenantUrn, createUserRequest);
+        Optional<CreateUserResponse> userResponse = tenantPersistenceService.createUser(testUserTenantUrn, createUserRequest);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -455,7 +452,7 @@ public class TenantPersistenceServiceTest {
         List<String> roles = new ArrayList<>();
         roles.add(role);
 
-        CreateUserRequest createUserRequest = CreateUserRequest.builder()
+        CreateOrUpdateUserRequest createUserRequest = CreateOrUpdateUserRequest.builder()
             .active(true)
             .emailAddress(emailAddress)
             .givenName(givenName)
@@ -464,7 +461,7 @@ public class TenantPersistenceServiceTest {
             .username(username)
             .build();
 
-        Optional<CreateOrUpdateUserResponse> userResponse = tenantPersistenceService.createUser(noSuchTenant, createUserRequest);
+        Optional<CreateUserResponse> userResponse = tenantPersistenceService.createUser(noSuchTenant, createUserRequest);
     }
 
     @Test
@@ -476,7 +473,7 @@ public class TenantPersistenceServiceTest {
         List<String> roles = new ArrayList<>();
         roles.add("Admin");
 
-        CreateUserRequest userRequest = CreateUserRequest.builder()
+        CreateOrUpdateUserRequest userRequest = CreateOrUpdateUserRequest.builder()
             .username(username)
             .active(true)
             .emailAddress(emailAddress)
@@ -504,7 +501,7 @@ public class TenantPersistenceServiceTest {
 
         List<String> roles = new ArrayList<>();
 
-        CreateUserRequest userRequest = CreateUserRequest.builder()
+        CreateOrUpdateUserRequest userRequest = CreateOrUpdateUserRequest.builder()
             .username(username)
             .active(true)
             .emailAddress(emailAddress)
@@ -531,7 +528,7 @@ public class TenantPersistenceServiceTest {
         roles.add("Admin");
         roles.add("User");
 
-        CreateUserRequest userRequest = CreateUserRequest.builder()
+        CreateOrUpdateUserRequest userRequest = CreateOrUpdateUserRequest.builder()
             .username(username)
             .active(true)
             .emailAddress(emailAddress)
@@ -560,7 +557,7 @@ public class TenantPersistenceServiceTest {
         List<String> roles = new ArrayList<>();
         roles.add("Admin");
 
-        CreateUserRequest userRequest = CreateUserRequest.builder()
+        CreateOrUpdateUserRequest userRequest = CreateOrUpdateUserRequest.builder()
             .username(username)
             .active(true)
             .emailAddress(emailAddress)
@@ -588,7 +585,7 @@ public class TenantPersistenceServiceTest {
         List<String> roles = new ArrayList<>();
         roles.add(role);
 
-        CreateUserRequest createUserRequest1 = CreateUserRequest.builder()
+        CreateOrUpdateUserRequest createUserRequest1 = CreateOrUpdateUserRequest.builder()
             .active(true)
             .emailAddress(emailAddress1)
             .givenName(givenName)
@@ -597,17 +594,14 @@ public class TenantPersistenceServiceTest {
             .username(username)
             .build();
 
-        Optional<CreateOrUpdateUserResponse> userResponse1 = tenantPersistenceService.createUser(testUserTenantUrn, createUserRequest1);
+        Optional<CreateUserResponse> userResponse1 = tenantPersistenceService.createUser(testUserTenantUrn, createUserRequest1);
 
         assertTrue(userResponse1.isPresent());
-        assertEquals(emailAddress1, userResponse1.get().getEmailAddress());
-        assertEquals(givenName, userResponse1.get().getGivenName());
         assertEquals(roles.size(), userResponse1.get().getRoles().size());
-        assertEquals(role, userResponse1.get().getRoles().get(0));
-        assertEquals(surname, userResponse1.get().getSurname());
+        assertTrue(userResponse1.get().getRoles().contains(role));
         assertEquals(username, userResponse1.get().getUsername());
 
-        CreateUserRequest createUserRequest2 = CreateUserRequest.builder()
+        CreateOrUpdateUserRequest createUserRequest2 = CreateOrUpdateUserRequest.builder()
             .active(true)
             .emailAddress(emailAddress2)
             .givenName(givenName)
@@ -616,7 +610,7 @@ public class TenantPersistenceServiceTest {
             .username(username)
             .build();
 
-        Optional<CreateOrUpdateUserResponse> userResponse2 = tenantPersistenceService.createUser(testUserTenantUrn, createUserRequest2);
+        Optional<CreateUserResponse> userResponse2 = tenantPersistenceService.createUser(testUserTenantUrn, createUserRequest2);
         assertFalse(userResponse2.isPresent());
     }
 
@@ -634,7 +628,7 @@ public class TenantPersistenceServiceTest {
 
         List<String> roles = new ArrayList<>();
 
-        CreateUserRequest createUserRequest1 = CreateUserRequest.builder()
+        CreateOrUpdateUserRequest createUserRequest1 = CreateOrUpdateUserRequest.builder()
             .active(true)
             .emailAddress(emailAddress1)
             .givenName(givenName)
@@ -643,16 +637,13 @@ public class TenantPersistenceServiceTest {
             .username(username)
             .build();
 
-        Optional<CreateOrUpdateUserResponse> userResponse1 = tenantPersistenceService.createUser(tenantUrn1, createUserRequest1);
+        Optional<CreateUserResponse> userResponse1 = tenantPersistenceService.createUser(tenantUrn1, createUserRequest1);
 
         assertTrue(userResponse1.isPresent());
-        assertEquals(emailAddress1, userResponse1.get().getEmailAddress());
-        assertEquals(givenName, userResponse1.get().getGivenName());
         assertEquals(roles.size(),userResponse1.get().getRoles().size());
-        assertEquals(surname, userResponse1.get().getSurname());
         assertEquals(username, userResponse1.get().getUsername());
 
-        CreateUserRequest createUserRequest2 = CreateUserRequest.builder()
+        CreateOrUpdateUserRequest createUserRequest2 = CreateOrUpdateUserRequest.builder()
             .active(true)
             .emailAddress(emailAddress2)
             .givenName(givenName)
@@ -661,7 +652,7 @@ public class TenantPersistenceServiceTest {
             .username(username)
             .build();
 
-        Optional<CreateOrUpdateUserResponse> userResponse2 = tenantPersistenceService.createUser(tenantUrn2, createUserRequest2);
+        Optional<CreateUserResponse> userResponse2 = tenantPersistenceService.createUser(tenantUrn2, createUserRequest2);
         assertFalse(userResponse2.isPresent());
 //        assertEquals(emailAddress2, userResponse2.get().getEmailAddress());
 //        assertEquals(givenName, userResponse2.get().getGivenName());
@@ -681,7 +672,7 @@ public class TenantPersistenceServiceTest {
         List<String> roles = new ArrayList<>();
         roles.add("Admin");
 
-        CreateUserRequest userRequest = CreateUserRequest.builder()
+        CreateOrUpdateUserRequest userRequest = CreateOrUpdateUserRequest.builder()
             .username(username)
             .active(true)
             .emailAddress(emailAddress)
@@ -689,13 +680,13 @@ public class TenantPersistenceServiceTest {
             .givenName(givenName)
             .surname(surname)
             .build();
-        CreateOrUpdateUserResponse createResponse = tenantPersistenceService.createUser(testUserTenantUrn, userRequest).get();
+        CreateUserResponse createResponse = tenantPersistenceService.createUser(testUserTenantUrn, userRequest).get();
 
-        Optional<GetOrDeleteUserResponse> getResponse = tenantPersistenceService.findUserByName(testUserTenantUrn, username);
+        Optional<UserResponse> getResponse = tenantPersistenceService.findUserByName(testUserTenantUrn, username);
 
         assertTrue(getResponse.isPresent());
         assertEquals(createResponse.getUrn(), getResponse.get().getUrn());
-        assertEquals(createResponse.getActive(), getResponse.get().getActive());
+        assertEquals(true, getResponse.get().getActive());
         assertNotNull(getResponse.get().getActive());
         assertEquals(createResponse.getRoles(), getResponse.get().getRoles());
         assertEquals(username, getResponse.get().getUsername());
@@ -716,7 +707,7 @@ public class TenantPersistenceServiceTest {
         List<String> roles = new ArrayList<>();
         roles.add("Admin");
 
-        CreateUserRequest userRequest = CreateUserRequest.builder()
+        CreateOrUpdateUserRequest userRequest = CreateOrUpdateUserRequest.builder()
             .username(username)
             .active(true)
             .emailAddress(emailAddress)
@@ -724,13 +715,13 @@ public class TenantPersistenceServiceTest {
             .givenName(givenName)
             .surname(surname)
             .build();
-        CreateOrUpdateUserResponse createResponse = tenantPersistenceService.createUser(testUserTenantUrn, userRequest).get();
+        CreateUserResponse createResponse = tenantPersistenceService.createUser(testUserTenantUrn, userRequest).get();
 
-        Optional<GetOrDeleteUserResponse> getResponse = tenantPersistenceService.findUserByName(testUserTenantUrn, username);
+        Optional<UserResponse> getResponse = tenantPersistenceService.findUserByName(testUserTenantUrn, username);
 
         assertTrue(getResponse.isPresent());
         assertEquals(createResponse.getUrn(), getResponse.get().getUrn());
-        assertEquals(createResponse.getActive(), getResponse.get().getActive());
+        assertEquals(true, getResponse.get().getActive());
         assertNotNull(getResponse.get().getActive());
         assertEquals(createResponse.getRoles(), getResponse.get().getRoles());
         assertEquals(username, getResponse.get().getUsername());
@@ -741,7 +732,7 @@ public class TenantPersistenceServiceTest {
     }
 
     @Test
-    public void thatUpdateUpserSucceeds() throws Exception {
+    public void thatUpdateUserSucceeds() throws Exception {
 
         String username = "UpdateTestUser";
         String emailAddress1 = "update.user1@example.com";
@@ -752,7 +743,7 @@ public class TenantPersistenceServiceTest {
         List<String> roles = new ArrayList<>();
         roles.add("Admin");
 
-        CreateUserRequest createRequest = CreateUserRequest.builder()
+        CreateOrUpdateUserRequest createRequest = CreateOrUpdateUserRequest.builder()
             .username(username)
             .active(true)
             .emailAddress(emailAddress1)
@@ -760,25 +751,34 @@ public class TenantPersistenceServiceTest {
             .givenName(givenName)
             .surname(surname)
             .build();
-        CreateOrUpdateUserResponse createResponse = tenantPersistenceService.createUser(testUserTenantUrn, createRequest).get();
+        CreateUserResponse createResponse = tenantPersistenceService.createUser(testUserTenantUrn, createRequest).get();
 
-        UpdateUserRequest updateRequest = UpdateUserRequest.builder()
+        CreateOrUpdateUserRequest updateRequest = CreateOrUpdateUserRequest.builder()
             .active(false)
             .emailAddress(emailAddress2)
             .build();
 
-        Optional<CreateOrUpdateUserResponse> updateResponse = tenantPersistenceService.updateUser(testUserTenantUrn, createResponse.getUrn(),
+        Optional<UserResponse> updateResponse = tenantPersistenceService.updateUser(testUserTenantUrn, createResponse.getUrn(),
             updateRequest);
         assertTrue(updateResponse.isPresent());
         assertEquals(createResponse.getUrn(), updateResponse.get().getUrn());
         assertEquals(false, updateResponse.get().getActive());
         assertEquals(emailAddress2, updateResponse.get().getEmailAddress());
 
-        Optional<GetOrDeleteUserResponse> findResponse = tenantPersistenceService.findUserByUrn(testUserTenantUrn, createResponse.getUrn());
+        Optional<UserResponse> findResponse = tenantPersistenceService.findUserByUrn(testUserTenantUrn, createResponse.getUrn());
         assertTrue(findResponse.isPresent());
         assertEquals(createResponse.getUrn(), findResponse.get().getUrn());
         assertEquals(false, findResponse.get().getActive());
         assertEquals(emailAddress2, findResponse.get().getEmailAddress());
+    }
+
+    @Test
+    public void thatFindAllUsersSucceeds() throws Exception {
+
+        List<UserResponse> users = tenantPersistenceService.findAllUsers(testUserTenantUrn);
+
+        assertNotNull(users);
+        assertFalse(users.isEmpty());
     }
 
     // endregion

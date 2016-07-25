@@ -1,8 +1,9 @@
-package net.smartcosmos.extension.tenant.rest.resource;
+package net.smartcosmos.extension.tenant.rest.resource.auth;
 
 import java.util.Arrays;
 import java.util.Optional;
 
+import net.smartcosmos.extension.tenant.rest.resource.AbstractTestResource;
 import org.junit.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MvcResult;

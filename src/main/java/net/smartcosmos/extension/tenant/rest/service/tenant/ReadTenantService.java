@@ -1,21 +1,21 @@
 package net.smartcosmos.extension.tenant.rest.service.tenant;
 
-import java.util.Optional;
-import javax.inject.Inject;
-
 import lombok.extern.slf4j.Slf4j;
-
-import org.springframework.core.convert.ConversionService;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
-
 import net.smartcosmos.events.DefaultEventTypes;
 import net.smartcosmos.events.SmartCosmosEventTemplate;
 import net.smartcosmos.extension.tenant.dao.RoleDao;
 import net.smartcosmos.extension.tenant.dao.TenantDao;
 import net.smartcosmos.extension.tenant.dto.tenant.TenantResponse;
-import net.smartcosmos.extension.tenant.rest.dto.tenant.RestTenantSingleResponse;
+import net.smartcosmos.extension.tenant.rest.dto.tenant.RestTenantResponse;
 import net.smartcosmos.extension.tenant.rest.service.AbstractTenantService;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.core.convert.ConversionService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+
+import javax.inject.Inject;
+import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -39,11 +39,31 @@ public class ReadTenantService extends AbstractTenantService {
             sendEvent(null, DefaultEventTypes.TenantRead, entity.get());
             return ResponseEntity
                 .ok()
-                .body(conversionService.convert(entity.get(), RestTenantSingleResponse.class));
+                .body(conversionService.convert(entity.get(), RestTenantResponse.class));
         }
 
         sendEvent(null, DefaultEventTypes.TenantNotFound, urn);
         return ResponseEntity.notFound().build();
+    }
+
+    public ResponseEntity<?> query(String name) {
+        if (StringUtils.isBlank(name)) {
+            return findAll();
+        } else {
+            return findByName(name);
+        }
+    }
+
+    public ResponseEntity<?> findAll() {
+
+        List<TenantResponse> tenantList = tenantDao.findAllTenants();
+        for (TenantResponse tenant : tenantList) {
+            sendEvent(null, DefaultEventTypes.TenantRead, tenant);
+        }
+
+        return ResponseEntity
+                .ok()
+                .body(convertList(tenantList, TenantResponse.class, RestTenantResponse.class));
     }
 
     public ResponseEntity<?> findByName(String name) {
@@ -54,7 +74,7 @@ public class ReadTenantService extends AbstractTenantService {
             sendEvent(null, DefaultEventTypes.TenantRead, entity.get());
             return ResponseEntity
                 .ok()
-                .body(conversionService.convert(entity.get(), RestTenantSingleResponse.class));
+                .body(conversionService.convert(entity.get(), RestTenantResponse.class));
         }
 
         sendEvent(null, DefaultEventTypes.TenantNotFound, name);

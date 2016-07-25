@@ -1,10 +1,15 @@
 package net.smartcosmos.extension.tenant.rest.service.user;
 
-import java.net.URI;
-import java.util.Optional;
-
-import javax.inject.Inject;
-
+import lombok.extern.slf4j.Slf4j;
+import net.smartcosmos.events.DefaultEventTypes;
+import net.smartcosmos.events.SmartCosmosEventTemplate;
+import net.smartcosmos.extension.tenant.dao.RoleDao;
+import net.smartcosmos.extension.tenant.dao.TenantDao;
+import net.smartcosmos.extension.tenant.dto.user.CreateOrUpdateUserRequest;
+import net.smartcosmos.extension.tenant.dto.user.CreateUserResponse;
+import net.smartcosmos.extension.tenant.rest.dto.user.RestCreateOrUpdateUserRequest;
+import net.smartcosmos.extension.tenant.rest.service.AbstractTenantService;
+import net.smartcosmos.security.user.SmartCosmosUser;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,17 +17,9 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.async.DeferredResult;
 
-import lombok.extern.slf4j.Slf4j;
-
-import net.smartcosmos.events.DefaultEventTypes;
-import net.smartcosmos.events.SmartCosmosEventTemplate;
-import net.smartcosmos.extension.tenant.dao.RoleDao;
-import net.smartcosmos.extension.tenant.dao.TenantDao;
-import net.smartcosmos.extension.tenant.dto.user.CreateOrUpdateUserResponse;
-import net.smartcosmos.extension.tenant.dto.user.CreateUserRequest;
-import net.smartcosmos.extension.tenant.rest.dto.user.RestCreateOrUpdateUserRequest;
-import net.smartcosmos.extension.tenant.rest.service.AbstractTenantService;
-import net.smartcosmos.security.user.SmartCosmosUser;
+import javax.inject.Inject;
+import java.net.URI;
+import java.util.Optional;
 
 /**
  * Initially created by SMART COSMOS Team on July 01, 2016.
@@ -51,9 +48,9 @@ public class CreateUserService extends AbstractTenantService {
         restCreateUserRequest) {
 
         try {
-            final CreateUserRequest createUserRequest = conversionService.convert(restCreateUserRequest, CreateUserRequest.class);
+            final CreateOrUpdateUserRequest createUserRequest = conversionService.convert(restCreateUserRequest, CreateOrUpdateUserRequest.class);
 
-            Optional<CreateOrUpdateUserResponse> newUser = tenantDao.createUser(user.getAccountUrn(), createUserRequest);
+            Optional<CreateUserResponse> newUser = tenantDao.createUser(user.getAccountUrn(), createUserRequest);
 
             if (newUser.isPresent()) {
                 ResponseEntity responseEntity = buildCreatedResponseEntity(newUser.get());
@@ -70,7 +67,7 @@ public class CreateUserService extends AbstractTenantService {
         }
     }
 
-    private ResponseEntity buildCreatedResponseEntity(CreateOrUpdateUserResponse response) {
+    private ResponseEntity buildCreatedResponseEntity(CreateUserResponse response) {
         return ResponseEntity
             .created(URI.create(response.getUrn()))
             .body(response);

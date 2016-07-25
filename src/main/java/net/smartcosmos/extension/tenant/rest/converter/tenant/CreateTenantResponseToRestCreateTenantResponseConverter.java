@@ -1,34 +1,36 @@
 package net.smartcosmos.extension.tenant.rest.converter.tenant;
 
-import org.springframework.core.convert.converter.Converter;
-import org.springframework.format.FormatterRegistrar;
-import org.springframework.format.FormatterRegistry;
+import net.smartcosmos.extension.tenant.dto.tenant.CreateTenantResponse;
+import net.smartcosmos.extension.tenant.rest.converter.ConversionServiceAwareConverter;
+import net.smartcosmos.extension.tenant.rest.dto.tenant.RestCreateTenantResponse;
+import net.smartcosmos.extension.tenant.rest.dto.user.RestCreateUserResponse;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Component;
 
-import net.smartcosmos.extension.tenant.dto.tenant.CreateTenantResponse;
-import net.smartcosmos.extension.tenant.rest.dto.tenant.RestCreateTenantResponse;
+import javax.inject.Inject;
 
 /**
  * Initially created by SMART COSMOS Team on July 01, 2016.
  */
 @Component
 public class CreateTenantResponseToRestCreateTenantResponseConverter
-    implements Converter<CreateTenantResponse, RestCreateTenantResponse>, FormatterRegistrar {
+    extends ConversionServiceAwareConverter<CreateTenantResponse, RestCreateTenantResponse> {
+
+    @Inject
+    private ConversionService conversionService;
+
+    protected ConversionService conversionService() {
+        return conversionService;
+    }
 
     @Override
     public RestCreateTenantResponse convert(CreateTenantResponse createTenantResponse) {
+
+        RestCreateUserResponse admin = conversionService.convert(createTenantResponse.getAdmin(), RestCreateUserResponse.class);
+
         return RestCreateTenantResponse.builder()
             .urn(createTenantResponse.getUrn())
-            .name(createTenantResponse.getName())
-            .active(createTenantResponse.getActive())
-            .admin(createTenantResponse.getAdmin())
+            .admin(admin)
             .build();
     }
-
-    @Override
-    public void registerFormatters(FormatterRegistry registry) {
-
-        registry.addConverter(this);
-    }
-
 }

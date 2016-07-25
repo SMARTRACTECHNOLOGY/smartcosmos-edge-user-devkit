@@ -1,13 +1,14 @@
 package net.smartcosmos.extension.tenant.rest.dto.user;
 
-import java.beans.ConstructorProperties;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.beans.ConstructorProperties;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Initially created by SMART COSMOS Team on July 01, 2016.
@@ -25,22 +26,24 @@ public class RestCreateOrUpdateUserRequest {
     String emailAddress;
     String givenName;
     String surname;
-    List<String> roles;
+    String password;
+    Set<String> roles;
     Boolean active;
 
     @Builder
-    @ConstructorProperties({ "username", "emailAddress", "givenName", "surname", "roles", "active" })
+    @ConstructorProperties({ "username", "emailAddress", "givenName", "surname", "password", "roles", "active" })
     public RestCreateOrUpdateUserRequest(
-        String username, String emailAddress, String givenName, String surname, List<String> roles,
+        String username, String emailAddress, String givenName, String surname, String password, Collection<String> roles,
         Boolean active) {
         this.username = username;
         this.emailAddress = emailAddress;
         this.givenName = givenName;
         this.surname = surname;
-        this.roles = new ArrayList<>();
+        this.password = password;
+        this.roles = new HashSet<>();
         if (roles != null && !roles.isEmpty()) {
             this.roles.addAll(roles);
         }
-        this.active = active != null ? active : true;
+        this.active = active;
     }
 }

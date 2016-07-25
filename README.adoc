@@ -12,28 +12,32 @@ This is a private licensed repository, and as such, should not be shared publicl
 
 == REST API
 
-*Available methods for tenants*
+<<auth, *Authorization method*>>
 
-* <<create1, Create - `POST /tenants`>>
-* <<update1, Update - `PUT /tenants/{urn}`>>
-* <<read1, Read - `GET /tenants/{urn}`>>
-* <<read2, Read - `GET /tenants/?name={name}`>>
+* <<auth1, Authenticate - `POST /authenticate`>>
 
-*Available methods for users*
+<<tenants, *Available methods for tenants*>>
 
-* <<createuser1, Create - `POST /users`>>
-* <<updateuser1, Update - `PUT /users/{urn}`>>
-* <<readuser1, Read - `GET /users/{urn}`>>
-* <<readuser2, Read - `GET /users/?name={name}`>>
-* <<readuser3, Authenticate - `POST /authenticate`>>
+* <<tenantcreate1, Create - `POST /tenants`>>
+* <<tenantupdate1, Update - `PUT /tenants/{urn}`>>
+* <<tenantread1, Find by URN - `GET /tenants/{urn}`>>
+* <<tenantread2, Find by Name - `GET /tenants/?name={name}`>>
 
-*Available methods for roles*
+<<users, *Available methods for users*>>
 
-* <<createrole1, Create - `POST /roles`>>
-* <<updaterole1, Update - `PUT /roles/{urn}`>>
-* <<readrole1, Read - `GET /roles/{urn}`>>
-* <<readrole2, Read - `GET /roles/?name={name}`>>
-* <<deleterole1, Delete - `DELETE /roles/{urn}`>>
+* <<usercreate1, Create - `POST /users`>>
+* <<userupdate1, Update - `PUT /users/{urn}`>>
+* <<userread1, Find by URN - `GET /users/{urn}`>>
+* <<userread2, Find by Name - `GET /users/?name={name}`>>
+* <<userdelete1, Delete - `DELETE /users/{urn}`>>
+
+<<roles, *Available methods for roles*>>
+
+* <<rolecreate1, Create - `POST /roles`>>
+* <<roleupdate1, Update - `PUT /roles/{urn}`>>
+* <<roleread1, Find by URN - `GET /roles/{urn}`>>
+* <<roleread2, Find by Name - `GET /roles/?name={name}`>>
+* <<roledelete1, Delete - `DELETE /roles/{urn}`>>
 
 === JSON Fields for Tenants
 [width="100%",options="header"]
@@ -84,270 +88,11 @@ Note that the illustrated scheme for URNs is only for documentation purposes. Th
 
 === API Endpoints
 
-[[create1]]
-==== Create - `POST /tenants`
+[[auth]]
+==== Auth Endpoint
 
-----
-POST /tenants
-----
-
-*Example 1*
-[source,json]
-----
-{
-    "active": true,
-    "name": "Example Company",
-    "username": "waldo@example.com"
-}
-----
-
-.Response
-----
-201 CREATED
-----
-[source,json]
-----
-{
-    "urn": "urn:tenant:uuid:346e742e-2f1e-4d91-9ffe-7b38eec6219c",
-    "admin": {
-        "urn": "urn:user:uuid:34068f4d-12a5-4546-80f8-9f84b762db20",
-        "username": "waldo@example.com",
-        "password": "PleaseChangeMeImmediately",
-        "roles": [
-          "Admin"
-        ]
-    }
-}
-----
-
-*Example 2*
-[source,json]
-----
-{
-    "name": "Example Company",
-    "username": "waldo@example.com"
-}
-----
-
-.Response
-----
-201 CREATED
-----
-[source,json]
-----
-{
-    "urn": "urn:tenant:uuid:346e742e-2f1e-4d91-9ffe-7b38eec6219c",
-    "admin": {
-        "urn": "urn:user:uuid:34068f4d-12a5-4546-80f8-9f84b762db20",
-        "username": "waldo@example.com",
-        "password": "PleaseChangeMeImmediately",
-        "roles": [
-          "Admin"
-        ]
-    }
-}
-----
-
-[[update1]]
-==== Update - `PUT /tenants/{urn}`
-
-----
-PUT /tenants/urn:tenant:uuid:346e742e-2f1e-4d91-9ffe-7b38eec6219c
-----
-[source,json]
-----
-{
-    "active": false,
-    "name": "My Example Company"
-}
-----
-.Response
-----
-204 NO CONTENT
-----
-
-[[read1]]
-==== Read - `GET /tenants/{urn}`
-
-----
-GET /tenants/urn:tenant:uuid:346e742e-2f1e-4d91-9ffe-7b38eec6219c
-----
-.Response
-----
-200 OK
-----
-[source,json]
-----
-{
-    "urn": "urn:tenant:uuid:346e742e-2f1e-4d91-9ffe-7b38eec6219c",
-    "active": true,
-    "name": "My Example Company"
-}
-----
-
-[[read2]]
-==== Read - `GET /tenants/?name={name}`
-
-----
-GET /tenants/?name=My%20Example%20Company
-----
-.Response
-----
-200 OK
-----
-[source,json]
-----
-{
-    "data": [
-        {
-            "urn": "urn:tenant:uuid:346e742e-2f1e-4d91-9ffe-7b38eec6219c",
-            "active": true,
-            "name": "My Example Company"
-        }
-    ]
-}
-----
-
-[[createuser1]]
-==== Create - `POST /users`
-
-----
-POST /users
-----
-
-*Example 1*
-[source,json]
-----
-{
-    "active": true,
-    "roles": ["User"],
-    "username": "bob@example.com",
-    "emailAddress": "bob@example.com",
-    "givenName": "Bob",
-    "surname": "Smith"
-}
-----
-
-.Response
-----
-201 CREATED
-----
-[source,json]
-----
-{
-    "urn": "urn:user:uuid:68a76616-3748-4bc2-93c1-3940b47abb7f",
-    "username": "bob@example.com",
-    "password": "PleaseChangeMeImmediately",
-    "roles": ["User"]
-}
-----
-
-*Example 2*
-[source,json]
-----
-{
-    "roles": ["User"],
-    "username": "bob@example.com"
-}
-----
-
-.Response
-----
-201 CREATED
-----
-[source,json]
-----
-{
-    "urn": "urn:user:uuid:68a76616-3748-4bc2-93c1-3940b47abb7f",
-    "username": "bob@example.com",
-    "password": "PleaseChangeMeImmediately",
-    "roles": ["User"],
-    "tenantUrn": "urn:tenant:uuid:69bb7c6a-a43b-493d-8e9d-e5a3ed65728a"
-}
-----
-
-[[updateuser1]]
-==== Update - `PUT /users/{urn}`
-
-----
-PUT /users/urn:user:uuid:68a76616-3748-4bc2-93c1-3940b47abb7f
-----
-[source,json]
-----
-{
-    "active": false,
-    "password": "xyz1234567"
-}
-----
-.Response
-----
-204 NO CONTENT
-----
-
-[[readuser1]]
-==== Read - `GET /users/{urn}`
-
-----
-GET /users/urn:user:uuid:68a76616-3748-4bc2-93c1-3940b47abb7f
-----
-.Response
-----
-200 OK
-----
-[source,json]
-----
-{
-    "urn": "urn:user:uuid:68a76616-3748-4bc2-93c1-3940b47abb7f",
-    "active": true,
-    "roles": ["User"],
-    "username": "bob@example.com",
-    "emailAddress": "bob@example.com",
-    "givenName": "Bob",
-    "surname": "Smith",
-    "tenantUrn": "urn:tenant:uuid:69bb7c6a-a43b-493d-8e9d-e5a3ed65728a"
-}
-----
-
-[[readuser2]]
-==== Read - `GET /users?name={name}`
-
-----
-GET /users
-----
-.Response
-----
-200 OK
-----
-[source,json]
-----
-{
-    "data": [
-        {
-            "urn": "urn:user:uuid:68a76616-3748-4bc2-93c1-3940b47abb7f",
-            "active": true,
-            "roles": ["User"],
-            "username": "bob@example.com",
-            "emailAddress": "bob@example.com",
-            "givenName": "Bob",
-            "surname": "Smith",
-            "tenantUrn": "urn:tenant:uuid:69bb7c6a-a43b-493d-8e9d-e5a3ed65728a"
-        },
-        {
-            "urn": "urn:user:uuid:af37520d-86ad-49fe-be25-92ce269fbda4",
-            "active": true,
-            "roles": ["Admin"],
-            "username": "jane@example.com",
-            "emailAddress": "jane@example.com",
-            "givenName": "Jane",
-            "surname": "Smith",
-            "tenantUrn": "urn:tenant:uuid:69bb7c6a-a43b-493d-8e9d-e5a3ed65728a"
-        }
-    ]
-}
-----
-
-[[readuser3]]
-==== Login - `POST /authenticate`
+[[auth1]]
+===== Authenticate - `POST /authenticate`
 
 ----
 POST /authenticate
@@ -386,8 +131,325 @@ POST /authenticate
 }
 ----
 
-[[createrole1]]
-==== Create - `POST /roles/`
+[[tenants]]
+==== Tenant Endpoints
+
+[[tenantcreate1]]
+===== Create - `POST /tenants`
+
+----
+POST /tenants
+----
+
+*Example 1*
+[source,json]
+----
+{
+    "active": true,
+    "name": "Example Company",
+    "username": "waldo@example.com"
+}
+----
+
+.Response
+----
+201 CREATED
+----
+[source,json]
+----
+{
+    "urn": "urn:tenant:uuid:346e742e-2f1e-4d91-9ffe-7b38eec6219c",
+    "admin": {
+        "urn": "urn:user:uuid:34068f4d-12a5-4546-80f8-9f84b762db20",
+        "username": "waldo@example.com",
+        "password": "PleaseChangeMeImmediately",
+        "roles": [
+          "Admin"
+        ],
+        "tenantUrn": "urn:tenant:uuid:346e742e-2f1e-4d91-9ffe-7b38eec6219c"
+    }
+}
+----
+
+*Example 2*
+[source,json]
+----
+{
+    "name": "Example Company",
+    "username": "waldo@example.com"
+}
+----
+
+.Response
+----
+201 CREATED
+----
+[source,json]
+----
+{
+    "urn": "urn:tenant:uuid:346e742e-2f1e-4d91-9ffe-7b38eec6219c",
+    "admin": {
+        "urn": "urn:user:uuid:34068f4d-12a5-4546-80f8-9f84b762db20",
+        "username": "waldo@example.com",
+        "password": "PleaseChangeMeImmediately",
+        "roles": [
+          "Admin"
+        ],
+        "tenantUrn": "urn:tenant:uuid:346e742e-2f1e-4d91-9ffe-7b38eec6219c"
+    }
+}
+----
+
+[[tenantupdate1]]
+===== Update - `PUT /tenants/{urn}`
+
+----
+PUT /tenants/urn:tenant:uuid:346e742e-2f1e-4d91-9ffe-7b38eec6219c
+----
+[source,json]
+----
+{
+    "active": false,
+    "name": "My Example Company"
+}
+----
+.Response
+----
+204 NO CONTENT
+----
+
+[[tenantread1]]
+===== Find by URN - `GET /tenants/{urn}`
+
+----
+GET /tenants/urn:tenant:uuid:346e742e-2f1e-4d91-9ffe-7b38eec6219c
+----
+.Response
+----
+200 OK
+----
+[source,json]
+----
+{
+    "urn": "urn:tenant:uuid:346e742e-2f1e-4d91-9ffe-7b38eec6219c",
+    "active": true,
+    "name": "My Example Company"
+}
+----
+
+[[tenantread2]]
+===== Find by Name - `GET /tenants/?name={name}`
+
+----
+GET /tenants?name=My%20Example%20Company
+----
+.Response
+----
+200 OK
+----
+[source,json]
+----
+{
+    "urn": "urn:tenant:uuid:346e742e-2f1e-4d91-9ffe-7b38eec6219c",
+    "active": true,
+    "name": "My Example Company"
+}
+----
+
+----
+GET /tenants
+----
+.Response
+----
+200 OK
+----
+[source,json]
+----
+[
+    {
+        "urn": "urn:tenant:uuid:346e742e-2f1e-4d91-9ffe-7b38eec6219c",
+        "active": true,
+        "name": "My Example Company"
+    },
+    {
+        "urn": "urn:tenant:uuid:f1e4ff26-2a5f-41c6-8533-4994cb2cceec",
+        "active": true,
+        "name": "Another Example Company"
+    }
+]
+----
+
+
+[[users]]
+==== User Endpoints
+
+[[usercreate1]]
+===== Create - `POST /users`
+
+----
+POST /users
+----
+
+*Example 1*
+[source,json]
+----
+{
+    "active": true,
+    "roles": [
+        "User"
+    ],
+    "username": "bob@example.com",
+    "emailAddress": "bob@example.com",
+    "givenName": "Bob",
+    "surname": "Smith"
+}
+----
+
+.Response
+----
+201 CREATED
+----
+[source,json]
+----
+{
+    "urn": "urn:user:uuid:68a76616-3748-4bc2-93c1-3940b47abb7f",
+    "username": "bob@example.com",
+    "password": "PleaseChangeMeImmediately",
+    "roles": [
+        "User"
+    ],
+    "tenantUrn": "urn:tenant:uuid:69bb7c6a-a43b-493d-8e9d-e5a3ed65728a"
+}
+----
+
+*Example 2*
+[source,json]
+----
+{
+    "roles": [
+        "User"
+    ],
+    "username": "bob@example.com"
+}
+----
+
+.Response
+----
+201 CREATED
+----
+[source,json]
+----
+{
+    "urn": "urn:user:uuid:68a76616-3748-4bc2-93c1-3940b47abb7f",
+    "username": "bob@example.com",
+    "password": "PleaseChangeMeImmediately",
+    "roles": [
+        "User"
+    ],
+    "tenantUrn": "urn:tenant:uuid:69bb7c6a-a43b-493d-8e9d-e5a3ed65728a"
+}
+----
+
+[[userupdate1]]
+===== Update - `PUT /users/{urn}`
+
+----
+PUT /users/urn:user:uuid:68a76616-3748-4bc2-93c1-3940b47abb7f
+----
+[source,json]
+----
+{
+    "active": false,
+    "password": "xyz1234567"
+}
+----
+.Response
+----
+204 NO CONTENT
+----
+
+[[userread1]]
+===== Find by URN - `GET /users/{urn}`
+
+----
+GET /users/urn:user:uuid:68a76616-3748-4bc2-93c1-3940b47abb7f
+----
+.Response
+----
+200 OK
+----
+[source,json]
+----
+{
+    "urn": "urn:user:uuid:68a76616-3748-4bc2-93c1-3940b47abb7f",
+    "active": true,
+    "roles": [
+        "User"
+    ],
+    "username": "bob@example.com",
+    "emailAddress": "bob@example.com",
+    "givenName": "Bob",
+    "surname": "Smith",
+    "tenantUrn": "urn:tenant:uuid:69bb7c6a-a43b-493d-8e9d-e5a3ed65728a"
+}
+----
+
+[[userread2]]
+==== Find by Name - `GET /users?name={name}`
+
+----
+GET /users
+----
+.Response
+----
+200 OK
+----
+[source,json]
+----
+[
+    {
+        "urn": "urn:user:uuid:68a76616-3748-4bc2-93c1-3940b47abb7f",
+        "active": true,
+        "roles": [
+            "User"
+        ],
+        "username": "bob@example.com",
+        "emailAddress": "bob@example.com",
+        "givenName": "Bob",
+        "surname": "Smith",
+        "tenantUrn": "urn:tenant:uuid:69bb7c6a-a43b-493d-8e9d-e5a3ed65728a"
+    },
+    {
+        "urn": "urn:user:uuid:af37520d-86ad-49fe-be25-92ce269fbda4",
+        "active": true,
+        "roles": [
+            "Admin"
+        ],
+        "username": "jane@example.com",
+        "emailAddress": "jane@example.com",
+        "givenName": "Jane",
+        "surname": "Smith",
+        "tenantUrn": "urn:tenant:uuid:69bb7c6a-a43b-493d-8e9d-e5a3ed65728a"
+    }
+]
+----
+
+[[userdelete1]]
+===== Delete - `DELETE /users/{urn}`
+
+----
+DELETE /users/urn:role:uuid:fcdf5432-49a8-45ef-96a2-94a022022860
+----
+.Response
+----
+204 NO CONTENT
+----
+
+[[roles]]
+==== Roles Endpoints
+
+[[rolecreate1]]
+===== Create - `POST /roles/`
 
 ----
 POST /roles/
@@ -418,8 +480,8 @@ POST /roles/
 }
 ----
 
-[[updaterole1]]
-==== Update - `PUT /roles/{urn}`
+[[roleupdate1]]
+===== Update - `PUT /roles/{urn}`
 
 ----
 PUT /roles/urn:role:uuid:fcdf5432-49a8-45ef-96a2-94a022022860
@@ -439,7 +501,7 @@ PUT /roles/urn:role:uuid:fcdf5432-49a8-45ef-96a2-94a022022860
 ----
 
 [[readrole1]]
-==== Read - `GET /roles/?name={name}`
+===== Find by Name - `GET /roles/?name={name}`
 
 ----
 GET /roles/
@@ -473,11 +535,11 @@ GET /roles/
 }
 ----
 
-[[deleterole1]]
-==== Delete - `DELETE /{urn}`
+[[roledelete1]]
+===== Delete - `DELETE /roles/{urn}`
 
 ----
-DELETE /urn/urn:role:uuid:fcdf5432-49a8-45ef-96a2-94a022022860
+DELETE /roles/urn:role:uuid:fcdf5432-49a8-45ef-96a2-94a022022860
 ----
 .Response
 ----

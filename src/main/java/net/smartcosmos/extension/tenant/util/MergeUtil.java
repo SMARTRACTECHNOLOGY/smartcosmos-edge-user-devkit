@@ -1,11 +1,11 @@
 package net.smartcosmos.extension.tenant.util;
 
 import net.smartcosmos.extension.tenant.domain.UserEntity;
-import net.smartcosmos.extension.tenant.dto.user.UpdateUserRequest;
+import net.smartcosmos.extension.tenant.dto.user.CreateOrUpdateUserRequest;
 
 public class MergeUtil {
 
-    public static UserEntity merge(UserEntity user, UpdateUserRequest request) {
+    public static UserEntity merge(UserEntity user, CreateOrUpdateUserRequest request) {
         
         if (request.getActive() != null) {
             user.setActive(request.getActive());

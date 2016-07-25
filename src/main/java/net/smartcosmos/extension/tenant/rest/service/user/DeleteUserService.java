@@ -17,7 +17,7 @@ import net.smartcosmos.events.DefaultEventTypes;
 import net.smartcosmos.events.SmartCosmosEventTemplate;
 import net.smartcosmos.extension.tenant.dao.RoleDao;
 import net.smartcosmos.extension.tenant.dao.TenantDao;
-import net.smartcosmos.extension.tenant.dto.user.GetOrDeleteUserResponse;
+import net.smartcosmos.extension.tenant.dto.user.UserResponse;
 import net.smartcosmos.extension.tenant.rest.service.AbstractTenantService;
 import net.smartcosmos.security.user.SmartCosmosUser;
 
@@ -47,7 +47,7 @@ public class DeleteUserService extends AbstractTenantService {
     private void deleteUserWorker(DeferredResult<ResponseEntity> response, SmartCosmosUser user, String userUrn) {
 
         try {
-            Optional<GetOrDeleteUserResponse> deleteUserResponse = tenantDao.deleteUserByUrn(user.getAccountUrn(), userUrn);
+            Optional<UserResponse> deleteUserResponse = tenantDao.deleteUserByUrn(user.getAccountUrn(), userUrn);
 
             if (deleteUserResponse.isPresent()) {
                 response.setResult(ResponseEntity.noContent().build());
@@ -55,7 +55,7 @@ public class DeleteUserService extends AbstractTenantService {
             } else {
                 response.setResult(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
 
-                GetOrDeleteUserResponse eventPayload = GetOrDeleteUserResponse.builder()
+                UserResponse eventPayload = UserResponse.builder()
                     .urn(userUrn)
                     .tenantUrn(user.getAccountUrn())
                     .build();
