@@ -136,7 +136,7 @@ public class UpdateTenantResourceTest extends AbstractTestResource {
                 put("/tenants/{urn}", expectedTenantUrn).content(this.json(request))
                         .contentType(contentType))
                 .andExpect(status().isForbidden())
-                .andExpect(request().asyncStarted())
+                .andExpect(request().asyncNotStarted())
                 .andReturn();
     }
 
