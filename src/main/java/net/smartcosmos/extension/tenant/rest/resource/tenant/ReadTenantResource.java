@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.smartcosmos.annotation.SmartCosmosRdao;
 import net.smartcosmos.extension.tenant.rest.service.tenant.ReadTenantService;
 import net.smartcosmos.security.EndpointMethodControl;
+import net.smartcosmos.security.user.SmartCosmosUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.ResponseEntity;
@@ -27,16 +28,18 @@ public class ReadTenantResource {
     @RequestMapping(value = "/tenants/{urn}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8_VALUE)
     @EndpointMethodControl(key = "tenant.urn.get")
     @ConditionalOnProperty(prefix = "smt.endpoints.tenant.urn.get", name = "enabled", matchIfMissing = true)
-    public ResponseEntity<?> getByUrn(@PathVariable String urn) {
+    public ResponseEntity<?> getByUrn(@PathVariable String urn,
+                                      SmartCosmosUser user) {
 
-        return readTenantService.findByUrn(urn);
+        return readTenantService.findByUrn(urn, user);
     }
 
     @RequestMapping(value = "/tenants", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8_VALUE)
     @EndpointMethodControl(key = "tenant.get")
     @ConditionalOnProperty(prefix = "smt.endpoints.tenant.get", name = "enabled", matchIfMissing = true)
-    public ResponseEntity<?> getByName(@RequestParam(value = "name", required = false, defaultValue = "") String name) {
+    public ResponseEntity<?> getByName(@RequestParam(value = "name", required = false, defaultValue = "") String name,
+                                       SmartCosmosUser user) {
 
-        return readTenantService.query(name);
+        return readTenantService.query(name, user);
     }
 }
