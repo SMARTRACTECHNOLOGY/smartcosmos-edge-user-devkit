@@ -44,6 +44,7 @@
         <dependency>
             <groupId>net.smartcosmos</groupId>
             <artifactId>smartcosmos-framework-test</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
