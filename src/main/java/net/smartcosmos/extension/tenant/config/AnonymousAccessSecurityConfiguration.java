@@ -1,5 +1,6 @@
 package net.smartcosmos.extension.tenant.config;
 
+import net.smartcosmos.extension.tenant.auth.SmartCosmosAnonymousUser;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -14,11 +15,19 @@ public class AnonymousAccessSecurityConfiguration extends WebSecurityConfigurerA
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.requestMatchers()
-            .antMatchers("/tenants/**", "/authenticate/**")
+            .antMatchers("/tenants/**")
             .and()
-            .authorizeRequests().antMatchers(HttpMethod.POST, "/tenants").permitAll()
+            .authorizeRequests()
+                .antMatchers(HttpMethod.POST, "/tenants")
+                .permitAll()
             .and()
-            .authorizeRequests().antMatchers(HttpMethod.POST, "/authenticate").permitAll()
+            .authorizeRequests()
+                .anyRequest()
+                .authenticated()
+            .and()
+            .anonymous()
+                .key(SmartCosmosAnonymousUser.ANONYMOUS_AUTHENTICATION_KEY)
+                .principal(SmartCosmosAnonymousUser.ANONYMOUS_USER)
             .and()
             .csrf().disable();
     }
