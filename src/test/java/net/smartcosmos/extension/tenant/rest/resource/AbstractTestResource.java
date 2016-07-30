@@ -3,6 +3,7 @@ package net.smartcosmos.extension.tenant.rest.resource;
 import net.smartcosmos.extension.tenant.TenantRdao;
 import net.smartcosmos.extension.tenant.dao.RoleDao;
 import net.smartcosmos.extension.tenant.dao.TenantDao;
+import org.apache.commons.codec.binary.Base64;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.runner.RunWith;
@@ -69,6 +70,13 @@ public abstract class AbstractTestResource {
         this.mappingJackson2HttpMessageConverter.write(o, MediaType.APPLICATION_JSON,
                                                        mockHttpOutputMessage);
         return mockHttpOutputMessage.getBodyAsString();
+    }
+
+    protected String basicAuth(String username, String password) {
+
+        byte[] bytes = (username + ":" + password).getBytes();
+
+        return "Basic " + Base64.encodeBase64String(bytes);
     }
 
     @Configuration
