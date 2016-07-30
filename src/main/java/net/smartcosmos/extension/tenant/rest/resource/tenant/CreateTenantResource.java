@@ -5,9 +5,11 @@ import net.smartcosmos.annotation.SmartCosmosRdao;
 import net.smartcosmos.extension.tenant.rest.dto.tenant.RestCreateTenantRequest;
 import net.smartcosmos.extension.tenant.rest.service.tenant.CreateTenantService;
 import net.smartcosmos.security.EndpointMethodControl;
+import net.smartcosmos.security.user.SmartCosmosUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -35,9 +37,10 @@ public class CreateTenantResource {
     @EndpointMethodControl(key = "tenant.post")
     @ConditionalOnProperty(prefix = "smt.endpoints.tenant.post", name = "enabled", matchIfMissing = true)
     public DeferredResult<ResponseEntity> createTenant(
-        @RequestBody @Valid RestCreateTenantRequest restCreateTenantRequest) {
+            @RequestBody @Valid RestCreateTenantRequest restCreateTenantRequest,
+            @AuthenticationPrincipal SmartCosmosUser user) {
 
-        return service.create(restCreateTenantRequest);
+        return service.create(restCreateTenantRequest, user);
     }
 }
 

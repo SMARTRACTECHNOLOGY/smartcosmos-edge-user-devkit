@@ -10,6 +10,7 @@ import net.smartcosmos.extension.tenant.dto.tenant.CreateTenantResponse;
 import net.smartcosmos.extension.tenant.rest.dto.tenant.RestCreateTenantRequest;
 import net.smartcosmos.extension.tenant.rest.dto.tenant.RestCreateTenantResponse;
 import net.smartcosmos.extension.tenant.rest.service.AbstractTenantService;
+import net.smartcosmos.security.user.SmartCosmosUser;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,16 +36,16 @@ public class CreateTenantService extends AbstractTenantService {
         super(tenantDao, roleDao, smartCosmosEventTemplate, conversionService);
     }
 
-    public DeferredResult<ResponseEntity> create(RestCreateTenantRequest restCreateTenantRequest) {
+    public DeferredResult<ResponseEntity> create(RestCreateTenantRequest restCreateTenantRequest, SmartCosmosUser user) {
         // Async worker thread reduces timeouts and disconnects for long queries and processing.
         DeferredResult<ResponseEntity> response = new DeferredResult<>();
-        createTenantWorker(response, restCreateTenantRequest);
+        createTenantWorker(response, restCreateTenantRequest, user);
 
         return response;
     }
 
     @Async
-    private void createTenantWorker(DeferredResult<ResponseEntity> response, RestCreateTenantRequest restCreateTenantRequest) {
+    private void createTenantWorker(DeferredResult<ResponseEntity> response, RestCreateTenantRequest restCreateTenantRequest, SmartCosmosUser user) {
 
         try {
             CreateTenantRequest createTenantRequest = conversionService.convert(restCreateTenantRequest, CreateTenantRequest.class);
@@ -54,10 +55,10 @@ public class CreateTenantService extends AbstractTenantService {
                 RestCreateTenantResponse restResponse = conversionService.convert(createTenantResponse.get(), RestCreateTenantResponse.class);
                 ResponseEntity responseEntity = buildCreatedResponseEntity(restResponse);
                 response.setResult(responseEntity);
-                sendEvent(null, DefaultEventTypes.TenantCreated, createTenantResponse.get());
+                sendEvent(user, DefaultEventTypes.TenantCreated, createTenantResponse.get());
             } else {
                 response.setResult(ResponseEntity.status(HttpStatus.CONFLICT).build());
-                sendEvent(null, DefaultEventTypes.TenantCreateFailedAlreadyExists, createTenantRequest);
+                sendEvent(user, DefaultEventTypes.TenantCreateFailedAlreadyExists, createTenantRequest);
             }
 
         } catch (Exception e) {
