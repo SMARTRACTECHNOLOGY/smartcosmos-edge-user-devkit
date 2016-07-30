@@ -62,6 +62,20 @@ public class ReadTenantResourceTest extends AbstractTestResource {
     }
 
     @Test
+    public void thatGetByUrnAnonymousFails() throws Exception {
+
+        String urn = "accountUrn"; // Tenant URN from AbstractTestResource
+
+        MvcResult mvcResult = mockMvc.perform(
+                get("/tenants/{urn}", urn).contentType(APPLICATION_JSON_UTF8))
+                .andExpect(status().isForbidden())
+                .andReturn();
+
+        verify(tenantDao, times(0)).findTenantByUrn(anyString());
+        verifyNoMoreInteractions(tenantDao);
+    }
+
+    @Test
     @WithMockSmartCosmosUser
     public void thatGetByUnknownUrnFails() throws Exception {
 
@@ -77,6 +91,20 @@ public class ReadTenantResourceTest extends AbstractTestResource {
             .andReturn();
 
         verify(tenantDao, times(1)).findTenantByUrn(anyString());
+        verifyNoMoreInteractions(tenantDao);
+    }
+
+    @Test
+    public void thatGetByUnknownUrnAnonymousFails() throws Exception {
+
+        String urn = UuidUtil.getTenantUrnFromUuid(UuidUtil.getNewUuid());
+
+        MvcResult mvcResult = mockMvc.perform(
+                get("/tenants/{urn}", urn).contentType(APPLICATION_JSON_UTF8))
+                .andExpect(status().isForbidden())
+                .andReturn();
+
+        verify(tenantDao, times(0)).findTenantByUrn(anyString());
         verifyNoMoreInteractions(tenantDao);
     }
 
@@ -112,6 +140,22 @@ public class ReadTenantResourceTest extends AbstractTestResource {
     }
 
     @Test
+    public void thatGetByNameAnonymousFails() throws Exception {
+
+        String name = "getByName";
+
+        MvcResult mvcResult = mockMvc.perform(
+                get("/tenants")
+                        .param("name", name)
+                        .contentType(APPLICATION_JSON_UTF8))
+                .andExpect(status().isForbidden())
+                .andReturn();
+
+        verify(tenantDao, times(0)).findTenantByName(anyString());
+        verifyNoMoreInteractions(tenantDao);
+    }
+
+    @Test
     @WithMockSmartCosmosUser
     public void thatGetByUnknownNameFails() throws Exception {
 
@@ -133,6 +177,22 @@ public class ReadTenantResourceTest extends AbstractTestResource {
     }
 
     @Test
+    public void thatGetByUnknownNameAnonymousFails() throws Exception {
+
+        String name = "noSuchTenant";
+
+        MvcResult mvcResult = mockMvc.perform(
+                get("/tenants")
+                        .param("name", name)
+                        .contentType(APPLICATION_JSON_UTF8))
+                .andExpect(status().isForbidden())
+                .andReturn();
+
+        verify(tenantDao, times(0)).findTenantByName(anyString());
+        verifyNoMoreInteractions(tenantDao);
+    }
+
+    @Test
     @WithMockSmartCosmosUser
     public void thatGetAllNoTenantSucceeds() throws Exception {
 
@@ -149,6 +209,19 @@ public class ReadTenantResourceTest extends AbstractTestResource {
                 .andReturn();
 
         verify(tenantDao, times(1)).findAllTenants();
+        verifyNoMoreInteractions(tenantDao);
+    }
+
+    @Test
+    public void thatGetAllNoTenantAnonymousFails() throws Exception {
+
+        MvcResult mvcResult = mockMvc.perform(
+                get("/tenants")
+                        .contentType(APPLICATION_JSON_UTF8))
+                .andExpect(status().isForbidden())
+                .andReturn();
+
+        verify(tenantDao, times(0)).findAllTenants();
         verifyNoMoreInteractions(tenantDao);
     }
 
@@ -181,6 +254,19 @@ public class ReadTenantResourceTest extends AbstractTestResource {
                 .andReturn();
 
         verify(tenantDao, times(1)).findAllTenants();
+        verifyNoMoreInteractions(tenantDao);
+    }
+
+    @Test
+    public void thatGetAllTenantAnonymousFails() throws Exception {
+
+        MvcResult mvcResult = mockMvc.perform(
+                get("/tenants")
+                        .contentType(APPLICATION_JSON_UTF8))
+                .andExpect(status().isForbidden())
+                .andReturn();
+
+        verify(tenantDao, times(0)).findAllTenants();
         verifyNoMoreInteractions(tenantDao);
     }
 }

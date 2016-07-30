@@ -117,4 +117,53 @@ public class UpdateTenantResourceTest extends AbstractTestResource {
                 .andExpect(status().isNotFound())
                 .andReturn();
     }
+
+    @Test
+    public void thatUpdateTenantAnonymousFails() throws Exception {
+
+        final String name = "example.com";
+        final Boolean active = false;
+
+        final String expectedTenantUrn = "urn:tenant:uuid:" + UuidUtil.getNewUuid()
+                .toString();
+
+        RestUpdateTenantRequest request = RestUpdateTenantRequest.builder()
+                .active(active)
+                .name(name)
+                .build();
+
+        MvcResult mvcResult = this.mockMvc.perform(
+                put("/tenants/{urn}", expectedTenantUrn).content(this.json(request))
+                        .contentType(contentType))
+                .andExpect(status().isForbidden())
+                .andExpect(request().asyncStarted())
+                .andReturn();
+    }
+
+    /**
+     * Test that updating a nonexistent Tenant fails.
+     *
+     * @throws Exception
+     */
+    @Test
+    public void thatUpdateNonexistentTenantAnonymousFails() throws Exception {
+
+        final String name = "example.com";
+        final Boolean active = false;
+
+        final String expectedTenantUrn = "urn:tenant:uuid:" + UuidUtil.getNewUuid()
+                .toString();
+
+        RestUpdateTenantRequest request = RestUpdateTenantRequest.builder()
+                .active(active)
+                .name(name)
+                .build();
+
+        MvcResult mvcResult = this.mockMvc.perform(
+                put("/tenants/{urn}", expectedTenantUrn).content(this.json(request))
+                        .contentType(contentType))
+                .andExpect(status().isForbidden())
+                .andExpect(request().asyncNotStarted())
+                .andReturn();
+    }
 }
