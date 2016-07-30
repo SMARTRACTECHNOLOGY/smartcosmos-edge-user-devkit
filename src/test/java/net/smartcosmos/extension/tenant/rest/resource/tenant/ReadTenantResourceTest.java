@@ -4,6 +4,7 @@ import net.smartcosmos.extension.tenant.dao.TenantDao;
 import net.smartcosmos.extension.tenant.dto.tenant.TenantResponse;
 import net.smartcosmos.extension.tenant.rest.resource.AbstractTestResource;
 import net.smartcosmos.extension.tenant.util.UuidUtil;
+import net.smartcosmos.test.security.WithMockSmartCosmosUser;
 import org.junit.After;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
@@ -33,6 +33,7 @@ public class ReadTenantResourceTest extends AbstractTestResource {
     }
 
     @Test
+    @WithMockSmartCosmosUser
     public void thatGetByUrnSucceeds() throws Exception {
 
         String name = "getByUrn";
@@ -61,6 +62,7 @@ public class ReadTenantResourceTest extends AbstractTestResource {
     }
 
     @Test
+    @WithMockSmartCosmosUser
     public void thatGetByUnknownUrnFails() throws Exception {
 
         String urn = UuidUtil.getTenantUrnFromUuid(UuidUtil.getNewUuid());
@@ -79,6 +81,7 @@ public class ReadTenantResourceTest extends AbstractTestResource {
     }
 
     @Test
+    @WithMockSmartCosmosUser
     public void thatGetByNameSucceeds() throws Exception {
 
         String name = "getByName";
@@ -109,6 +112,7 @@ public class ReadTenantResourceTest extends AbstractTestResource {
     }
 
     @Test
+    @WithMockSmartCosmosUser
     public void thatGetByUnknownNameFails() throws Exception {
 
         String name = "noSuchTenant";
@@ -129,6 +133,7 @@ public class ReadTenantResourceTest extends AbstractTestResource {
     }
 
     @Test
+    @WithMockSmartCosmosUser
     public void thatGetAllNoTenantSucceeds() throws Exception {
 
         List<TenantResponse> response = new ArrayList<>();
@@ -148,6 +153,7 @@ public class ReadTenantResourceTest extends AbstractTestResource {
     }
 
     @Test
+    @WithMockSmartCosmosUser
     public void thatGetAllTenantSucceeds() throws Exception {
 
         List<TenantResponse> response = new ArrayList<>();

@@ -34,7 +34,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = { TenantPersistenceTestApplication.class,
                                             TenantPersistenceConfig.class })
-@WithMockSmartCosmosUser
 public class UpdateTenantResourceTest extends AbstractTestResource {
 
     @Autowired
@@ -51,6 +50,7 @@ public class UpdateTenantResourceTest extends AbstractTestResource {
      * @throws Exception
      */
     @Test
+    @WithMockSmartCosmosUser
     public void thatUpdateTenantSucceeds() throws Exception {
 
         final String name = "example.com";
@@ -90,6 +90,7 @@ public class UpdateTenantResourceTest extends AbstractTestResource {
      * @throws Exception
      */
     @Test
+    @WithMockSmartCosmosUser
     public void thatUpdateNonexistentTenantFails() throws Exception {
 
         final String name = "example.com";
