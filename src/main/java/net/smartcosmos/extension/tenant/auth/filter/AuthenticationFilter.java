@@ -21,6 +21,9 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Optional;
 
+/**
+ * Custom authentication filter to invoke additional authentication providers in the security filter chain.
+ */
 @Slf4j
 public class AuthenticationFilter extends GenericFilterBean {
 

@@ -3,7 +3,6 @@ package net.smartcosmos.extension.tenant.auth.provider;
 import net.smartcosmos.extension.tenant.config.ServiceUserProperties;
 import net.smartcosmos.security.user.SmartCosmosUser;
 import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
@@ -11,18 +10,37 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 
-@Component
+/**
+ * Implementation of {@link AuthenticationProvider} supporting {@link UsernamePasswordAuthenticationToken} authentication.
+ * <p></p>
+ * This authentication provider is used to verify the {@link UsernamePasswordAuthenticationToken} authentication,
+ * that is based on the HTTP Basic Authorization header of requests sent by Service Users.
+ */
 public class ServiceUserAccessAuthenticationProvider implements AuthenticationProvider {
 
     private static final Class SUPPORTED_AUTHENTICATION = UsernamePasswordAuthenticationToken.class;
 
-    @Autowired
     private ServiceUserProperties serviceUser;
 
+    /**
+     * Creates a new {@link ServiceUserAccessAuthenticationProvider} instance to verify Service User calls based on the provided properties.
+     *
+     * @param serviceUser the Service User properties
+     */
+    public ServiceUserAccessAuthenticationProvider(ServiceUserProperties serviceUser) {
+        this.serviceUser = serviceUser;
+    }
+
+    /**
+     * Verifies a authentication against the stored service user properties.
+     *
+     * @param authentication the requested authentication
+     * @return the successful authentication, or {@code null} if the provider could not verify the authentication
+     * @throws AuthenticationException if the authentication does not match the service user properties
+     */
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 
@@ -54,6 +72,12 @@ public class ServiceUserAccessAuthenticationProvider implements AuthenticationPr
         return null;
     }
 
+    /**
+     * Indicates if the authentication provider supports a given authentication type.
+     *
+     * @param authenticationClass the {@link Authentication} type
+     * @return {@link true} if the authentication provider can verify the type
+     */
     @Override
     public boolean supports(Class<?> authenticationClass) {
         return SUPPORTED_AUTHENTICATION.equals(authenticationClass);
