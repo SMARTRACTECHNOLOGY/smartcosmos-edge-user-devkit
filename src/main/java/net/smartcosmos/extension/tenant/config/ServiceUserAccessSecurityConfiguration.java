@@ -1,7 +1,7 @@
 package net.smartcosmos.extension.tenant.config;
 
-import net.smartcosmos.extension.tenant.auth.provider.ServiceUserAccessAuthenticationProvider;
 import net.smartcosmos.extension.tenant.auth.filter.AuthenticationFilter;
+import net.smartcosmos.extension.tenant.auth.provider.ServiceUserAccessAuthenticationProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.ComponentScan;
@@ -31,7 +31,9 @@ public class ServiceUserAccessSecurityConfiguration extends WebSecurityConfigure
         http.requestMatchers()
             .antMatchers("/authenticate/**")
             .and()
-            .authorizeRequests().anyRequest().authenticated();
+            .authorizeRequests().anyRequest().authenticated()
+            .and()
+            .csrf().disable();
 
         http.addFilterBefore(new AuthenticationFilter(authenticationManager()), BasicAuthenticationFilter.class);
     }
