@@ -4,6 +4,7 @@ import net.smartcosmos.extension.tenant.dao.TenantDao;
 import net.smartcosmos.extension.tenant.dto.user.UserResponse;
 import net.smartcosmos.extension.tenant.rest.resource.AbstractTestResource;
 import net.smartcosmos.extension.tenant.util.UuidUtil;
+import net.smartcosmos.test.security.WithMockSmartCosmosUser;
 import org.junit.After;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@WithMockSmartCosmosUser
 public class ReadUserResourceTest extends AbstractTestResource {
 
     @Autowired

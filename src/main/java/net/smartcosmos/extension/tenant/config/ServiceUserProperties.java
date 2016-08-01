@@ -1,12 +1,18 @@
 package net.smartcosmos.extension.tenant.config;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 
+import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @Data
+@NoArgsConstructor
+@Builder
+@AllArgsConstructor
 @ConfigurationProperties("smartcosmos.security.resource.user-details")
 public class ServiceUserProperties {
-    private String username;
-    private String password;
+    private String username = "smartcosmosclient";
+    private String password = "LkRv4Z-=caBcx.zX";
 }

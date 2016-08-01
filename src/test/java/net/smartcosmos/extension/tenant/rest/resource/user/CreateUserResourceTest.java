@@ -6,6 +6,7 @@ import net.smartcosmos.extension.tenant.dto.user.CreateUserResponse;
 import net.smartcosmos.extension.tenant.rest.dto.user.RestCreateOrUpdateUserRequest;
 import net.smartcosmos.extension.tenant.rest.resource.AbstractTestResource;
 import net.smartcosmos.extension.tenant.util.UuidUtil;
+import net.smartcosmos.test.security.WithMockSmartCosmosUser;
 import org.junit.After;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @SuppressWarnings("Duplicates")
 @org.springframework.boot.test.SpringApplicationConfiguration(classes = { TenantPersistenceTestApplication.class })
+@WithMockSmartCosmosUser
 public class CreateUserResourceTest extends AbstractTestResource {
 
     @Autowired

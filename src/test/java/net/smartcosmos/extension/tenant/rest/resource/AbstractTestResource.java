@@ -3,7 +3,7 @@ package net.smartcosmos.extension.tenant.rest.resource;
 import net.smartcosmos.extension.tenant.TenantRdao;
 import net.smartcosmos.extension.tenant.dao.RoleDao;
 import net.smartcosmos.extension.tenant.dao.TenantDao;
-import net.smartcosmos.security.user.SmartCosmosUser;
+import org.apache.commons.codec.binary.Base64;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.runner.RunWith;
@@ -17,20 +17,17 @@ import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.mock.http.MockHttpOutputMessage;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.io.IOException;
 import java.util.Arrays;
 
-import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 
 /**
  * Unit Testing sample for creating Tenants and Users.
@@ -62,17 +59,10 @@ public abstract class AbstractTestResource {
     public void setup() throws Exception {
         MockitoAnnotations.initMocks(getClass());
 
-        // Need to mock out user for conversion service.
-        // Might be a good candidate for a test package util.
-        Authentication authentication = Mockito.mock(Authentication.class);
-        Mockito.when(authentication.getPrincipal())
-            .thenReturn(new SmartCosmosUser("accountUrn", "urn:userUrn", "username",
-                                            "password", Arrays.asList(new SimpleGrantedAuthority("USER"))));
-        SecurityContext securityContext = Mockito.mock(SecurityContext.class);
-        Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
-        SecurityContextHolder.setContext(securityContext);
-
-        this.mockMvc = webAppContextSetup(webApplicationContext).build();
+        this.mockMvc = MockMvcBuilders
+                .webAppContextSetup(webApplicationContext)
+                .apply(springSecurity())
+                .build();
     }
 
     protected String json(Object o) throws IOException {
@@ -80,6 +70,13 @@ public abstract class AbstractTestResource {
         this.mappingJackson2HttpMessageConverter.write(o, MediaType.APPLICATION_JSON,
                                                        mockHttpOutputMessage);
         return mockHttpOutputMessage.getBodyAsString();
+    }
+
+    protected String basicAuth(String username, String password) {
+
+        byte[] bytes = (username + ":" + password).getBytes();
+
+        return "Basic " + Base64.encodeBase64String(bytes);
     }
 
     @Configuration

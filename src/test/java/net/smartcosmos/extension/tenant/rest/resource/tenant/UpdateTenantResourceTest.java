@@ -7,6 +7,7 @@ import net.smartcosmos.extension.tenant.dto.tenant.TenantResponse;
 import net.smartcosmos.extension.tenant.rest.dto.tenant.RestUpdateTenantRequest;
 import net.smartcosmos.extension.tenant.rest.resource.AbstractTestResource;
 import net.smartcosmos.extension.tenant.util.UuidUtil;
+import net.smartcosmos.test.security.WithMockSmartCosmosUser;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -49,6 +50,7 @@ public class UpdateTenantResourceTest extends AbstractTestResource {
      * @throws Exception
      */
     @Test
+    @WithMockSmartCosmosUser
     public void thatUpdateTenantSucceeds() throws Exception {
 
         final String name = "example.com";
@@ -88,6 +90,7 @@ public class UpdateTenantResourceTest extends AbstractTestResource {
      * @throws Exception
      */
     @Test
+    @WithMockSmartCosmosUser
     public void thatUpdateNonexistentTenantFails() throws Exception {
 
         final String name = "example.com";
@@ -112,6 +115,55 @@ public class UpdateTenantResourceTest extends AbstractTestResource {
 
         this.mockMvc.perform(asyncDispatch(mvcResult))
                 .andExpect(status().isNotFound())
+                .andReturn();
+    }
+
+    @Test
+    public void thatUpdateTenantAnonymousFails() throws Exception {
+
+        final String name = "example.com";
+        final Boolean active = false;
+
+        final String expectedTenantUrn = "urn:tenant:uuid:" + UuidUtil.getNewUuid()
+                .toString();
+
+        RestUpdateTenantRequest request = RestUpdateTenantRequest.builder()
+                .active(active)
+                .name(name)
+                .build();
+
+        MvcResult mvcResult = this.mockMvc.perform(
+                put("/tenants/{urn}", expectedTenantUrn).content(this.json(request))
+                        .contentType(contentType))
+                .andExpect(status().isForbidden())
+                .andExpect(request().asyncNotStarted())
+                .andReturn();
+    }
+
+    /**
+     * Test that updating a nonexistent Tenant fails.
+     *
+     * @throws Exception
+     */
+    @Test
+    public void thatUpdateNonexistentTenantAnonymousFails() throws Exception {
+
+        final String name = "example.com";
+        final Boolean active = false;
+
+        final String expectedTenantUrn = "urn:tenant:uuid:" + UuidUtil.getNewUuid()
+                .toString();
+
+        RestUpdateTenantRequest request = RestUpdateTenantRequest.builder()
+                .active(active)
+                .name(name)
+                .build();
+
+        MvcResult mvcResult = this.mockMvc.perform(
+                put("/tenants/{urn}", expectedTenantUrn).content(this.json(request))
+                        .contentType(contentType))
+                .andExpect(status().isForbidden())
+                .andExpect(request().asyncNotStarted())
                 .andReturn();
     }
 }
