@@ -1,7 +1,7 @@
 package net.smartcosmos.extension.tenant.auth.provider;
 
-import net.smartcosmos.extension.tenant.config.ServiceUserProperties;
-import net.smartcosmos.security.user.SmartCosmosUser;
+import java.util.Collection;
+
 import org.apache.commons.lang.StringUtils;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -11,7 +11,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 
-import java.util.Collection;
+import net.smartcosmos.extension.tenant.config.ServiceUserProperties;
+import net.smartcosmos.security.user.SmartCosmosUser;
 
 /**
  * Implementation of {@link AuthenticationProvider} supporting {@link UsernamePasswordAuthenticationToken} authentication.
@@ -54,7 +55,7 @@ public class ServiceUserAccessAuthenticationProvider implements AuthenticationPr
 
         if (credentials instanceof String && principal instanceof SmartCosmosUser) {
             String password = (String) credentials;
-            if (StringUtils.equals(username, serviceUser.getUsername())
+            if (StringUtils.equals(username, serviceUser.getName())
                 && StringUtils.equals(password, serviceUser.getPassword())) {
 
                 SmartCosmosUser user = (SmartCosmosUser) principal;

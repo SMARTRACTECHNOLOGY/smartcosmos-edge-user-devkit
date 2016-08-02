@@ -1,7 +1,5 @@
 package net.smartcosmos.extension.tenant.config;
 
-import net.smartcosmos.extension.tenant.auth.filter.AuthenticationFilter;
-import net.smartcosmos.extension.tenant.auth.provider.ServiceUserAccessAuthenticationProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -13,6 +11,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
+import net.smartcosmos.extension.tenant.auth.filter.AuthenticationFilter;
+import net.smartcosmos.extension.tenant.auth.provider.ServiceUserAccessAuthenticationProvider;
+
 @Configuration
 @EnableWebSecurity
 @EnableConfigurationProperties(ServiceUserProperties.class)
@@ -23,7 +24,6 @@ public class ServiceUserAccessSecurityConfiguration extends WebSecurityConfigure
     private ServiceUserProperties serviceUserProperties;
 
     @Bean
-    @Autowired
     public ServiceUserAccessAuthenticationProvider serviceUserAuthProvider() {
         return new ServiceUserAccessAuthenticationProvider(serviceUserProperties);
     }

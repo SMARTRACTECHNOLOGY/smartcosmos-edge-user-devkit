@@ -13,6 +13,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @AllArgsConstructor
 @ConfigurationProperties("smartcosmos.security.resource.user-details")
 public class ServiceUserProperties {
-    private String username = "smartcosmosclient";
+    private String name = "smartcosmosclient";
     private String password = "LkRv4Z-=caBcx.zX";
 }
