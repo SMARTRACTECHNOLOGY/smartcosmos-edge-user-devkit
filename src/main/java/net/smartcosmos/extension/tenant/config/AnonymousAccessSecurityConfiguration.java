@@ -16,8 +16,13 @@ public class AnonymousAccessSecurityConfiguration extends WebSecurityConfigurerA
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http // @formatter:off
+            .requestMatchers()
+            .antMatchers("/tenants/**")
+            .and()
             .authorizeRequests()
                 .antMatchers(HttpMethod.POST, "/tenants").permitAll()
+            .and()
+            .authorizeRequests()
                 .anyRequest().authenticated()
             .and()
             .anonymous()
