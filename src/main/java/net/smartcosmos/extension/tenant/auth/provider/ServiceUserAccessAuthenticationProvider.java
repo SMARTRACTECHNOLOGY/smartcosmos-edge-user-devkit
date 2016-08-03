@@ -2,6 +2,8 @@ package net.smartcosmos.extension.tenant.auth.provider;
 
 import java.util.Collection;
 
+import javax.inject.Inject;
+
 import org.apache.commons.lang.StringUtils;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -10,7 +12,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.stereotype.Component;
 
+import net.smartcosmos.extension.tenant.auth.SmartCosmosServiceUser;
 import net.smartcosmos.extension.tenant.config.ServiceUserProperties;
 import net.smartcosmos.security.user.SmartCosmosUser;
 
@@ -20,6 +24,7 @@ import net.smartcosmos.security.user.SmartCosmosUser;
  * This authentication provider is used to verify the {@link UsernamePasswordAuthenticationToken} authentication,
  * that is based on the HTTP Basic Authorization header of requests sent by Service Users.
  */
+@Component
 public class ServiceUserAccessAuthenticationProvider implements AuthenticationProvider {
 
     private static final Class SUPPORTED_AUTHENTICATION = UsernamePasswordAuthenticationToken.class;
@@ -31,6 +36,7 @@ public class ServiceUserAccessAuthenticationProvider implements AuthenticationPr
      *
      * @param serviceUser the Service User properties
      */
+    @Inject
     public ServiceUserAccessAuthenticationProvider(ServiceUserProperties serviceUser) {
         this.serviceUser = serviceUser;
     }
@@ -53,12 +59,17 @@ public class ServiceUserAccessAuthenticationProvider implements AuthenticationPr
         Object credentials = authentication.getCredentials();
         Object principal = authentication.getPrincipal();
 
-        if (credentials instanceof String && principal instanceof SmartCosmosUser) {
+        if (credentials instanceof String) {
             String password = (String) credentials;
             if (StringUtils.equals(username, serviceUser.getName())
                 && StringUtils.equals(password, serviceUser.getPassword())) {
 
-                SmartCosmosUser user = (SmartCosmosUser) principal;
+                SmartCosmosUser user;
+                if (principal instanceof SmartCosmosUser) {
+                    user = (SmartCosmosUser) principal;
+                } else {
+                    user = SmartCosmosServiceUser.getServiceUser(username, password, null);
+                }
                 Collection<GrantedAuthority> authorities = user.getAuthorities();
 
                 return new UsernamePasswordAuthenticationToken(user, credentials, authorities);
