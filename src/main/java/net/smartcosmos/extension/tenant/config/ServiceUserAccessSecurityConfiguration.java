@@ -1,47 +1,40 @@
 package net.smartcosmos.extension.tenant.config;
 
-import net.smartcosmos.extension.tenant.auth.filter.AuthenticationFilter;
-import net.smartcosmos.extension.tenant.auth.provider.ServiceUserAccessAuthenticationProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+
+import net.smartcosmos.extension.tenant.auth.provider.ServiceUserAccessAuthenticationProvider;
 
 @Configuration
-@EnableWebSecurity
+@Order(2)
 @EnableConfigurationProperties(ServiceUserProperties.class)
 @ComponentScan("net.smartcosmos.extension.tenant.auth")
 public class ServiceUserAccessSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    private ServiceUserProperties serviceUserProperties;
-
-    @Bean
-    @Autowired
-    public ServiceUserAccessAuthenticationProvider serviceUserAuthProvider() {
-        return new ServiceUserAccessAuthenticationProvider(serviceUserProperties);
-    }
+    private ServiceUserAccessAuthenticationProvider serviceUserAccessAuthenticationProvider;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.authenticationProvider(serviceUserAuthProvider());
+        auth.authenticationProvider(serviceUserAccessAuthenticationProvider);
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.requestMatchers()
-            .antMatchers("/authenticate/**")
+        http // @formatter:off
+            .csrf()
+                .disable()
+            .authorizeRequests()
+                .antMatchers("/authenticate/**").authenticated()
+                .anyRequest().authenticated()
             .and()
-            .authorizeRequests().anyRequest().authenticated()
-            .and()
-            .csrf().disable();
-
-        http.addFilterBefore(new AuthenticationFilter(authenticationManager()), BasicAuthenticationFilter.class);
+            .httpBasic();
+        // @formatter:on
     }
 }

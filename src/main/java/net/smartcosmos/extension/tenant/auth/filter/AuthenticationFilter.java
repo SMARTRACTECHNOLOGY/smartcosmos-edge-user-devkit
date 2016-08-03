@@ -1,8 +1,16 @@
 package net.smartcosmos.extension.tenant.auth.filter;
 
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.util.Optional;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+
 import lombok.extern.slf4j.Slf4j;
-import net.smartcosmos.extension.tenant.auth.SmartCosmosServiceUser;
-import net.smartcosmos.security.user.SmartCosmosUser;
+
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -12,19 +20,14 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.GenericFilterBean;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.util.Optional;
+import net.smartcosmos.extension.tenant.auth.SmartCosmosServiceUser;
+import net.smartcosmos.security.user.SmartCosmosUser;
 
 /**
  * Custom authentication filter to invoke additional authentication providers in the security filter chain.
  */
 @Slf4j
+@Deprecated
 public class AuthenticationFilter extends GenericFilterBean {
 
     private AuthenticationManager authenticationManager;
