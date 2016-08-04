@@ -1,12 +1,13 @@
 package net.smartcosmos.extension.tenant.repository;
 
-import net.smartcosmos.extension.tenant.TenantPersistenceConfig;
-import net.smartcosmos.extension.tenant.TenantPersistenceTestApplication;
-import net.smartcosmos.extension.tenant.domain.RoleEntity;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import static org.junit.Assert.*;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+import org.junit.*;
+import org.junit.runner.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
@@ -14,17 +15,12 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import net.smartcosmos.cluster.userdetails.domain.RoleEntity;
+import net.smartcosmos.extension.tenant.TenantPersistenceConfig;
+import net.smartcosmos.extension.tenant.TenantPersistenceTestApplication;
 
-import static org.junit.Assert.*;
-
-@SuppressWarnings("Duplicates")
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = {
-    TenantPersistenceTestApplication.class,
-    TenantPersistenceConfig.class })
+@SpringApplicationConfiguration(classes = { TenantPersistenceTestApplication.class, TenantPersistenceConfig.class })
 @ActiveProfiles("test")
 @WebAppConfiguration
 @IntegrationTest({ "spring.cloud.config.enabled=false", "eureka.client.enabled:false" })
@@ -45,11 +41,7 @@ public class RoleRepositoryTest {
 
         tenantId = UUID.randomUUID();
 
-        role = RoleEntity.builder()
-            .tenantId(tenantId)
-            .name(name)
-            .active(active)
-            .build();
+        role = RoleEntity.builder().tenantId(tenantId).name(name).active(active).build();
 
         role = repository.save(role);
 
@@ -58,7 +50,7 @@ public class RoleRepositoryTest {
 
     @After
     public void tearDown() throws Exception {
-//        repository.deleteAll();
+        // repository.deleteAll();
     }
 
     @Test
@@ -68,11 +60,7 @@ public class RoleRepositoryTest {
         final String name = "authName";
         final Boolean active = true;
 
-        RoleEntity createRole = RoleEntity.builder()
-            .tenantId(tenantId)
-            .name(name)
-            .active(active)
-            .build();
+        RoleEntity createRole = RoleEntity.builder().tenantId(tenantId).name(name).active(active).build();
 
         RoleEntity persistRole = repository.save(createRole);
 

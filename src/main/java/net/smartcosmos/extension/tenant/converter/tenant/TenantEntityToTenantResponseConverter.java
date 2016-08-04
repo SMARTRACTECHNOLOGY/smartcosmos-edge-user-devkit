@@ -5,9 +5,9 @@ import org.springframework.format.FormatterRegistrar;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.stereotype.Component;
 
+import net.smartcosmos.cluster.userdetails.util.UuidUtil;
 import net.smartcosmos.extension.tenant.domain.TenantEntity;
 import net.smartcosmos.extension.tenant.dto.tenant.TenantResponse;
-import net.smartcosmos.extension.tenant.util.UuidUtil;
 
 @Component
 public class TenantEntityToTenantResponseConverter

@@ -1,32 +1,32 @@
 package net.smartcosmos.extension.tenant.rest.resource.role;
 
-import net.smartcosmos.extension.tenant.TenantPersistenceTestApplication;
-import net.smartcosmos.extension.tenant.dao.RoleDao;
-import net.smartcosmos.extension.tenant.dto.role.RoleResponse;
-import net.smartcosmos.extension.tenant.rest.dto.role.RestCreateOrUpdateRoleRequest;
-import net.smartcosmos.extension.tenant.rest.resource.AbstractTestResource;
-import net.smartcosmos.extension.tenant.util.UuidUtil;
-import net.smartcosmos.test.security.WithMockSmartCosmosUser;
-import org.junit.After;
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.web.servlet.MvcResult;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.anyString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.asyncDispatch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import org.junit.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.web.servlet.MvcResult;
+
+import net.smartcosmos.cluster.userdetails.util.UuidUtil;
+import net.smartcosmos.extension.tenant.TenantPersistenceTestApplication;
+import net.smartcosmos.extension.tenant.dao.RoleDao;
+import net.smartcosmos.extension.tenant.dto.role.RoleResponse;
+import net.smartcosmos.extension.tenant.rest.dto.role.RestCreateOrUpdateRoleRequest;
+import net.smartcosmos.extension.tenant.rest.resource.AbstractTestResource;
+import net.smartcosmos.test.security.WithMockSmartCosmosUser;
+
 /**
  * Unit Testing sample for updating Roles.
  */
-@SuppressWarnings("Duplicates")
 @org.springframework.boot.test.SpringApplicationConfiguration(classes = { TenantPersistenceTestApplication.class })
 @WithMockSmartCosmosUser
 public class UpdateRoleResourceTest extends AbstractTestResource {
@@ -57,7 +57,7 @@ public class UpdateRoleResourceTest extends AbstractTestResource {
         Boolean active = false;
 
         final String expectedTenantUrn = "urn:tenant:uuid:" + UuidUtil.getNewUuid()
-            .toString();
+                .toString();
 
         final String expectedRoleUrn = "urn:role:uuid:" + UuidUtil.getNewUuid()
             .toString();

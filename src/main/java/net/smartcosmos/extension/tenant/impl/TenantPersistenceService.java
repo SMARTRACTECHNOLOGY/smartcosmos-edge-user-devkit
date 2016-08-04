@@ -1,13 +1,30 @@
 package net.smartcosmos.extension.tenant.impl;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
+
+import javax.validation.ConstraintViolationException;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.ConversionException;
+import org.springframework.core.convert.ConversionService;
+import org.springframework.core.convert.TypeDescriptor;
+import org.springframework.stereotype.Service;
+
 import lombok.extern.slf4j.Slf4j;
+
+import net.smartcosmos.cluster.userdetails.domain.RoleEntity;
+import net.smartcosmos.cluster.userdetails.domain.UserEntity;
+import net.smartcosmos.cluster.userdetails.repository.RoleRepository;
+import net.smartcosmos.cluster.userdetails.repository.UserRepository;
+import net.smartcosmos.cluster.userdetails.util.UuidUtil;
 import net.smartcosmos.extension.tenant.dao.TenantDao;
-import net.smartcosmos.extension.tenant.domain.AuthorityEntity;
-import net.smartcosmos.extension.tenant.domain.RoleEntity;
 import net.smartcosmos.extension.tenant.domain.TenantEntity;
-import net.smartcosmos.extension.tenant.domain.UserEntity;
 import net.smartcosmos.extension.tenant.dto.TenantEntityAndUserEntityDto;
-import net.smartcosmos.extension.tenant.dto.authentication.GetAuthoritiesResponse;
 import net.smartcosmos.extension.tenant.dto.role.CreateOrUpdateRoleRequest;
 import net.smartcosmos.extension.tenant.dto.role.RoleResponse;
 import net.smartcosmos.extension.tenant.dto.tenant.CreateTenantRequest;
@@ -17,21 +34,8 @@ import net.smartcosmos.extension.tenant.dto.tenant.UpdateTenantRequest;
 import net.smartcosmos.extension.tenant.dto.user.CreateOrUpdateUserRequest;
 import net.smartcosmos.extension.tenant.dto.user.CreateUserResponse;
 import net.smartcosmos.extension.tenant.dto.user.UserResponse;
-import net.smartcosmos.extension.tenant.repository.RoleRepository;
 import net.smartcosmos.extension.tenant.repository.TenantRepository;
-import net.smartcosmos.extension.tenant.repository.UserRepository;
 import net.smartcosmos.extension.tenant.util.MergeUtil;
-import net.smartcosmos.extension.tenant.util.UuidUtil;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.convert.ConversionException;
-import org.springframework.core.convert.ConversionService;
-import org.springframework.core.convert.TypeDescriptor;
-import org.springframework.stereotype.Service;
-
-import javax.validation.ConstraintViolationException;
-import java.util.*;
-
-import static java.util.stream.Collectors.toSet;
 
 /**
  * Initially created by SMART COSMOS Team on June 30, 2016.
@@ -103,14 +107,9 @@ public class TenantPersistenceService implements TenantDao {
             roles.add(adminRole);
 
             UserEntity userEntity = UserEntity.builder()
-                .id(UuidUtil.getNewUuid())
-                .tenantId(tenantEntity.getId())
-                .username(createTenantRequest.getUsername())
-                .emailAddress(createTenantRequest.getUsername())
-                .password(INITIAL_PASSWORD)
-                .roles(roles)
-                .active(createTenantRequest.getActive() == null ? true : createTenantRequest.getActive())
-                .build();
+                    .id(UuidUtil.getNewUuid()).tenantId(tenantEntity.getId()).username(createTenantRequest.getUsername())
+                    .emailAddress(createTenantRequest.getUsername()).password(INITIAL_PASSWORD).roles(roles)
+                    .active(createTenantRequest.getActive() == null ? true : createTenantRequest.getActive()).build();
 
             userEntity = userRepository.save(userEntity);
 
@@ -410,7 +409,6 @@ public class TenantPersistenceService implements TenantDao {
      * @param <T> the generic target type
      * @return the converted typed list
      */
-    @SuppressWarnings("unchecked")
     private <S, T> List<T> convertList(List<S> list, Class sourceClass, Class targetClass) {
 
         TypeDescriptor sourceDescriptor = TypeDescriptor.collection(List.class, TypeDescriptor.valueOf(sourceClass));

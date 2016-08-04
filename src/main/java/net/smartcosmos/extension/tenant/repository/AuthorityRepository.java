@@ -4,7 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
-import net.smartcosmos.extension.tenant.domain.AuthorityEntity;
+import net.smartcosmos.cluster.userdetails.domain.AuthorityEntity;
 
 /**
  * Initially created by SMART COSMOS Team on June 30, 2016.

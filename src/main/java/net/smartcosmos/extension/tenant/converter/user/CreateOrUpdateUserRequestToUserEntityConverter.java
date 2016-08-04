@@ -1,13 +1,14 @@
 package net.smartcosmos.extension.tenant.converter.user;
 
-import net.smartcosmos.extension.tenant.domain.UserEntity;
-import net.smartcosmos.extension.tenant.dto.user.CreateOrUpdateUserRequest;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.format.FormatterRegistrar;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+
+import net.smartcosmos.cluster.userdetails.domain.UserEntity;
+import net.smartcosmos.extension.tenant.dto.user.CreateOrUpdateUserRequest;
 
 /**
  * Initially created by SMART COSMOS Team on June 30, 2016.

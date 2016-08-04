@@ -1,6 +1,6 @@
 package net.smartcosmos.extension.tenant.util;
 
-import net.smartcosmos.extension.tenant.domain.UserEntity;
+import net.smartcosmos.cluster.userdetails.domain.UserEntity;
 import net.smartcosmos.extension.tenant.dto.user.CreateOrUpdateUserRequest;
 
 public class MergeUtil {

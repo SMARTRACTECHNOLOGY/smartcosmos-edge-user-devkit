@@ -1,21 +1,28 @@
 package net.smartcosmos.extension.tenant.impl;
 
-import lombok.extern.slf4j.Slf4j;
-import net.smartcosmos.extension.tenant.dao.RoleDao;
-import net.smartcosmos.extension.tenant.domain.AuthorityEntity;
-import net.smartcosmos.extension.tenant.domain.RoleEntity;
-import net.smartcosmos.extension.tenant.dto.role.CreateOrUpdateRoleRequest;
-import net.smartcosmos.extension.tenant.dto.role.RoleResponse;
-import net.smartcosmos.extension.tenant.repository.AuthorityRepository;
-import net.smartcosmos.extension.tenant.repository.RoleRepository;
-import net.smartcosmos.extension.tenant.util.UuidUtil;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
+
+import javax.validation.ConstraintViolationException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.stereotype.Service;
 
-import javax.validation.ConstraintViolationException;
-import java.util.*;
+import lombok.extern.slf4j.Slf4j;
+
+import net.smartcosmos.cluster.userdetails.domain.AuthorityEntity;
+import net.smartcosmos.cluster.userdetails.domain.RoleEntity;
+import net.smartcosmos.cluster.userdetails.repository.RoleRepository;
+import net.smartcosmos.cluster.userdetails.util.UuidUtil;
+import net.smartcosmos.extension.tenant.dao.RoleDao;
+import net.smartcosmos.extension.tenant.dto.role.CreateOrUpdateRoleRequest;
+import net.smartcosmos.extension.tenant.dto.role.RoleResponse;
+import net.smartcosmos.extension.tenant.repository.AuthorityRepository;
 
 /**
  * Initially created by SMART COSMOS Team on June 30, 2016.
@@ -56,12 +63,8 @@ public class RolePersistenceService implements RoleDao {
         }
 
         RoleEntity role = roleRepository.save(RoleEntity.builder()
-                                                  .id(UuidUtil.getNewUuid())
-                                                  .tenantId(UuidUtil.getUuidFromUrn(tenantUrn))
-                                                  .name(createRoleRequest.getName())
-                                                  .authorities(authorityEntities)
-                                                  .active(createRoleRequest.getActive())
-                                                  .build());
+                .id(UuidUtil.getNewUuid()).tenantId(UuidUtil.getUuidFromUrn(tenantUrn)).name(createRoleRequest.getName())
+                .authorities(authorityEntities).active(createRoleRequest.getActive()).build());
         return Optional.ofNullable(conversionService.convert(role, RoleResponse.class));
     }
 
@@ -145,7 +148,6 @@ public class RolePersistenceService implements RoleDao {
      * @param <T> the generic target type
      * @return the converted typed list
      */
-    @SuppressWarnings("unchecked")
     private <S, T> List<T> convertList(List<S> list, Class sourceClass, Class targetClass) {
 
         TypeDescriptor sourceDescriptor = TypeDescriptor.collection(List.class, TypeDescriptor.valueOf(sourceClass));

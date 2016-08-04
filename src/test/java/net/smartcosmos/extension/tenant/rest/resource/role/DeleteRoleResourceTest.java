@@ -1,29 +1,28 @@
 package net.smartcosmos.extension.tenant.rest.resource.role;
 
-import net.smartcosmos.extension.tenant.TenantPersistenceTestApplication;
-import net.smartcosmos.extension.tenant.dao.RoleDao;
-import net.smartcosmos.extension.tenant.dto.role.RoleResponse;
-import net.smartcosmos.extension.tenant.rest.resource.AbstractTestResource;
-import net.smartcosmos.extension.tenant.util.UuidUtil;
-import net.smartcosmos.test.security.WithMockSmartCosmosUser;
-import org.junit.After;
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.web.servlet.MvcResult;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.asyncDispatch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.junit.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.web.servlet.MvcResult;
+
+import net.smartcosmos.cluster.userdetails.util.UuidUtil;
+import net.smartcosmos.extension.tenant.TenantPersistenceTestApplication;
+import net.smartcosmos.extension.tenant.dao.RoleDao;
+import net.smartcosmos.extension.tenant.dto.role.RoleResponse;
+import net.smartcosmos.extension.tenant.rest.resource.AbstractTestResource;
+import net.smartcosmos.test.security.WithMockSmartCosmosUser;
+
 /**
  * Unit Testing sample for deleting Roles.
  */
-@SuppressWarnings("Duplicates")
 @org.springframework.boot.test.SpringApplicationConfiguration(classes = { TenantPersistenceTestApplication.class })
 @WithMockSmartCosmosUser
 public class DeleteRoleResourceTest extends AbstractTestResource {
