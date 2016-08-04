@@ -16,6 +16,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import net.smartcosmos.cluster.userdetails.domain.RoleEntity;
+import net.smartcosmos.cluster.userdetails.repository.RoleRepository;
 import net.smartcosmos.extension.tenant.TenantPersistenceConfig;
 import net.smartcosmos.extension.tenant.TenantPersistenceTestApplication;
 
