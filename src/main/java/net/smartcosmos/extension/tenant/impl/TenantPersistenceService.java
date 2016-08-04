@@ -365,38 +365,6 @@ public class TenantPersistenceService implements TenantDao {
         return Optional.empty();
     }
 
-    /**
-     *
-     * @param username
-     * @param password
-     * @return Optional<GetAuthoritiesResponse>
-     */
-    @Override
-    public Optional<GetAuthoritiesResponse> getAuthorities(String username, String password) {
-
-        Optional<UserEntity> userOptional = userRepository.getUserByCredentials(username, password);
-        if (!userOptional.isPresent()) {
-            return Optional.empty();
-        }
-
-        UserEntity user = userOptional.get();
-        Optional<Set<AuthorityEntity>> authorityOptional = userRepository.getAuthorities(user.getTenantId(), user.getId());
-        Set<AuthorityEntity> authorityEntities = authorityOptional.isPresent() ? authorityOptional.get() : new LinkedHashSet<>();
-        Set<String> authorities = authorityEntities.parallelStream()
-            .map(AuthorityEntity::getAuthority)
-            .collect(toSet());
-
-        GetAuthoritiesResponse response = GetAuthoritiesResponse.builder()
-            .urn(UuidUtil.getUserUrnFromUuid(user.getId()))
-            .tenantUrn(UuidUtil.getTenantUrnFromUuid(user.getTenantId()))
-            .username(user.getUsername())
-            .passwordHash(user.getPassword())
-            .authorities(authorities)
-            .build();
-
-        return Optional.of(response);
-    }
-
     // endregion
 
     // region UTILITY METHODS
