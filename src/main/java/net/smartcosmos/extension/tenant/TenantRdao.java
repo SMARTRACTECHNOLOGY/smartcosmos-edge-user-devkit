@@ -1,5 +1,9 @@
 package net.smartcosmos.extension.tenant;
 
+import net.smartcosmos.annotation.EnableSmartCosmosEvents;
+import net.smartcosmos.annotation.EnableSmartCosmosExtension;
+import net.smartcosmos.annotation.EnableSmartCosmosSecurity;
+import net.smartcosmos.extension.tenant.config.AnonymousAccessSecurityConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -8,11 +12,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
-
-import net.smartcosmos.annotation.EnableSmartCosmosEvents;
-import net.smartcosmos.annotation.EnableSmartCosmosExtension;
-import net.smartcosmos.annotation.EnableSmartCosmosSecurity;
-import net.smartcosmos.extension.tenant.config.AnonymousAccessSecurityConfiguration;
 
 @EnableSmartCosmosExtension
 @EnableSmartCosmosEvents
