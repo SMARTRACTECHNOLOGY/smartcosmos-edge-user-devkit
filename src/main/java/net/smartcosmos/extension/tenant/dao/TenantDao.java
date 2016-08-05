@@ -1,22 +1,42 @@
 package net.smartcosmos.extension.tenant.dao;
 
+import java.util.List;
+import java.util.Optional;
+import javax.validation.ConstraintViolationException;
+
 import net.smartcosmos.extension.tenant.dto.authentication.GetAuthoritiesResponse;
 import net.smartcosmos.extension.tenant.dto.tenant.CreateTenantRequest;
 import net.smartcosmos.extension.tenant.dto.tenant.CreateTenantResponse;
 import net.smartcosmos.extension.tenant.dto.tenant.TenantResponse;
 import net.smartcosmos.extension.tenant.dto.tenant.UpdateTenantRequest;
 import net.smartcosmos.extension.tenant.dto.user.CreateOrUpdateUserRequest;
-import net.smartcosmos.extension.tenant.dto.user.UserResponse;
 import net.smartcosmos.extension.tenant.dto.user.CreateUserResponse;
-
-import javax.validation.ConstraintViolationException;
-import java.util.List;
-import java.util.Optional;
+import net.smartcosmos.extension.tenant.dto.user.UserResponse;
 
 /**
  * Initially created by SMART COSMOS Team on June 30, 2016.
  */
 public interface TenantDao {
+
+    String[] DEFAULT_ADMIN_AUTHORITIES = {
+        "https://authorities.smartcosmos.net/things/create",
+        "https://authorities.smartcosmos.net/things/read",
+        "https://authorities.smartcosmos.net/things/update",
+        "https://authorities.smartcosmos.net/things/delete",
+        "https://authorities.smartcosmos.net/metadata/create",
+        "https://authorities.smartcosmos.net/metadata/read",
+        "https://authorities.smartcosmos.net/metadata/update",
+        "https://authorities.smartcosmos.net/metadata/delete",
+        "https://authorities.smartcosmos.net/relationships/create",
+        "https://authorities.smartcosmos.net/relationships/read",
+        "https://authorities.smartcosmos.net/relationships/delete"
+    };
+
+    String[] DEFAULT_USER_AUTHORITIES = {
+        "https://authorities.smartcosmos.net/things/read",
+        "https://authorities.smartcosmos.net/metadata/read",
+        "https://authorities.smartcosmos.net/relationships/read",
+    };
 
     Optional<CreateTenantResponse> createTenant(CreateTenantRequest tenantCreate) throws ConstraintViolationException;
 

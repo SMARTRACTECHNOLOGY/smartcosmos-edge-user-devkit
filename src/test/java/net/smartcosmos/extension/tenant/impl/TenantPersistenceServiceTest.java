@@ -1,7 +1,22 @@
 package net.smartcosmos.extension.tenant.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+import org.junit.*;
+import org.junit.runner.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.IntegrationTest;
+import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+
 import net.smartcosmos.extension.tenant.TenantPersistenceConfig;
 import net.smartcosmos.extension.tenant.TenantPersistenceTestApplication;
+import net.smartcosmos.extension.tenant.dao.TenantDao;
 import net.smartcosmos.extension.tenant.dto.authentication.GetAuthoritiesResponse;
 import net.smartcosmos.extension.tenant.dto.tenant.CreateTenantRequest;
 import net.smartcosmos.extension.tenant.dto.tenant.CreateTenantResponse;
@@ -13,21 +28,6 @@ import net.smartcosmos.extension.tenant.dto.user.UserResponse;
 import net.smartcosmos.extension.tenant.repository.TenantRepository;
 import net.smartcosmos.extension.tenant.repository.UserRepository;
 import net.smartcosmos.extension.tenant.util.UuidUtil;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.IntegrationTest;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 
 import static org.junit.Assert.*;
 
@@ -488,7 +488,7 @@ public class TenantPersistenceServiceTest {
         assertTrue(authorities.isPresent());
         assertNotNull(authorities.get().getPasswordHash());
         assertFalse(authorities.get().getAuthorities().isEmpty());
-        assertEquals(2, authorities.get().getAuthorities().size());
+        assertEquals(TenantDao.DEFAULT_ADMIN_AUTHORITIES.length, authorities.get().getAuthorities().size());
         assertTrue(authorities.get().getAuthorities().contains("https://authorities.smartcosmos.net/things/read"));
         assertTrue(authorities.get().getAuthorities().contains("https://authorities.smartcosmos.net/things/read"));
     }
@@ -543,9 +543,9 @@ public class TenantPersistenceServiceTest {
         assertTrue(authorities.isPresent());
         assertNotNull(authorities.get().getPasswordHash());
         assertFalse(authorities.get().getAuthorities().isEmpty());
-        assertEquals(2, authorities.get().getAuthorities().size());
+        assertEquals(TenantDao.DEFAULT_ADMIN_AUTHORITIES.length, authorities.get().getAuthorities().size());
         assertTrue(authorities.get().getAuthorities().contains("https://authorities.smartcosmos.net/things/read"));
-        assertTrue(authorities.get().getAuthorities().contains("https://authorities.smartcosmos.net/things/write"));
+        assertTrue(authorities.get().getAuthorities().contains("https://authorities.smartcosmos.net/things/create"));
     }
 
     @Test
