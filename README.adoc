@@ -14,26 +14,35 @@ This is a private licensed repository, and as such, should not be shared publicl
 
 <<tenants, *Available methods for tenants*>>
 
-* <<tenantcreate1, Create - `POST /tenants`>>
-* <<tenantupdate1, Update - `PUT /tenants/{urn}`>>
-* <<tenantread1, Find by URN - `GET /tenants/{urn}`>>
-* <<tenantread2, Find by Name - `GET /tenants/?name={name}`>>
+|====================
+|Endpoint|REST API|Required Authority
+|<<tenantcreate1, Create>>|`POST /tenants`|https://authorities.smartcosmos.net/tenants/create
+|<<tenantupdate1, Update, Validate OTP Authentication>>|`PUT /tenants/{urn}`|https://authorities.smartcosmos.net/tenants/update
+|<<tenantread1, Find by URN>>|`GET /tenants/{urn}`|https://authorities.smartcosmos.net/tenants/read
+|<<tenantread2, Find by Name>>|`GET /tenants/?name={name}`|https://authorities.smartcosmos.net/tenants/read
+|====================
 
 <<users, *Available methods for users*>>
 
-* <<usercreate1, Create - `POST /users`>>
-* <<userupdate1, Update - `PUT /users/{urn}`>>
-* <<userread1, Find by URN - `GET /users/{urn}`>>
-* <<userread2, Find by Name - `GET /users/?name={name}`>>
-* <<userdelete1, Delete - `DELETE /users/{urn}`>>
+|====================
+|Endpoint|REST API|Required Authority
+|<<usercreate1, Create>>|`POST /users`|https://authorities.smartcosmos.net/tenants/create
+|<<userupdate1, Update>>|`PUT /users/{urn}`|https://authorities.smartcosmos.net/users/update
+|<<userread1, Find by URN>>|`GET /users/{urn}`|https://authorities.smartcosmos.net/users/read
+|<<userread2, Find by Name>>|`GET /users/?name={name}`|https://authorities.smartcosmos.net/users/read
+|<<userdelete1, Delete>>|`DELETE /users/{urn}`|https://authorities.smartcosmos.net/users/delete
+|====================
 
 <<roles, *Available methods for roles*>>
 
-* <<rolecreate1, Create - `POST /roles`>>
-* <<roleupdate1, Update - `PUT /roles/{urn}`>>
-* <<roleread1, Find by URN - `GET /roles/{urn}`>>
-* <<roleread2, Find by Name - `GET /roles/?name={name}`>>
-* <<roledelete1, Delete - `DELETE /roles/{urn}`>>
+|====================
+|Endpoint|REST API|Required Authority
+|<<rolecreate1, Create>>|`POST /roles`|https://authorities.smartcosmos.net/roles/create
+|<<roleupdate1, Update>>|`PUT /roles/{urn}`|https://authorities.smartcosmos.net/roles/update
+|<<roleread1, Find by URN>>|`GET /roles/{urn}`|https://authorities.smartcosmos.net/roles/read
+|<<roleread2, Find by Name>>|`GET /roles/?name={name}`|https://authorities.smartcosmos.net/roles/read
+|<<roledelete1, Delete>>|`DELETE /roles/{urn}`|https://authorities.smartcosmos.net/roles/delete
+|====================
 
 === JSON Fields for Tenants
 [width="100%",options="header"]
