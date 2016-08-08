@@ -15,6 +15,15 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
+import javax.validation.ConstraintViolationException;
+
 import lombok.extern.slf4j.Slf4j;
 
 import net.smartcosmos.cluster.userdetails.domain.RoleEntity;
@@ -22,6 +31,13 @@ import net.smartcosmos.cluster.userdetails.domain.UserEntity;
 import net.smartcosmos.cluster.userdetails.repository.RoleRepository;
 import net.smartcosmos.cluster.userdetails.repository.UserRepository;
 import net.smartcosmos.cluster.userdetails.util.UuidUtil;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.ConversionException;
+import org.springframework.core.convert.ConversionService;
+import org.springframework.core.convert.TypeDescriptor;
+import org.springframework.stereotype.Service;
+
 import net.smartcosmos.extension.tenant.dao.TenantDao;
 import net.smartcosmos.extension.tenant.domain.TenantEntity;
 import net.smartcosmos.extension.tenant.dto.TenantEntityAndUserEntityDto;
@@ -369,18 +385,13 @@ public class TenantPersistenceService implements TenantDao {
     // region UTILITY METHODS
 
     private RoleEntity createAdminRole(String tenantUrn) {
-        List<String> authorities = new ArrayList<>();
-        authorities.add("https://authorities.smartcosmos.net/things/read");
-        authorities.add("https://authorities.smartcosmos.net/things/write");
 
-        return createRole(tenantUrn, "Admin", authorities);
+        return createRole(tenantUrn, "Admin", Arrays.asList(DEFAULT_ADMIN_AUTHORITIES));
     }
 
     private RoleEntity createUserRole(String tenantUrn) {
-        List<String> authorities = new ArrayList<>();
-        authorities.add("https://authorities.smartcosmos.net/things/read");
 
-        return createRole(tenantUrn, "User", authorities);
+        return createRole(tenantUrn, "User", Arrays.asList(DEFAULT_USER_AUTHORITIES));
     }
 
     private RoleEntity createRole(String tenantUrn, String name, List<String> authorities) {
