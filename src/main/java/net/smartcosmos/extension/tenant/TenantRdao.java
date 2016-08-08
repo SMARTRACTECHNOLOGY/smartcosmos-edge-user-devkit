@@ -4,7 +4,6 @@ import net.smartcosmos.annotation.EnableSmartCosmosEvents;
 import net.smartcosmos.annotation.EnableSmartCosmosExtension;
 import net.smartcosmos.annotation.EnableSmartCosmosSecurity;
 import net.smartcosmos.extension.tenant.config.AnonymousAccessSecurityConfiguration;
-import net.smartcosmos.extension.tenant.config.ServiceUserAccessSecurityConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -18,7 +17,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 @EnableSmartCosmosEvents
 @EnableSmartCosmosSecurity
 @EnableWebMvc
-@Import({ AnonymousAccessSecurityConfiguration.class, ServiceUserAccessSecurityConfiguration.class})
+@Import({AnonymousAccessSecurityConfiguration.class})
 @ComponentScan
 public class TenantRdao extends WebMvcConfigurerAdapter {
 

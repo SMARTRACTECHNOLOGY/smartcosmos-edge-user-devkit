@@ -2,7 +2,6 @@ package net.smartcosmos.extension.tenant.impl;
 
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -17,13 +16,14 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.stereotype.Service;
 
+import net.smartcosmos.cluster.userdetails.domain.RoleEntity;
+import net.smartcosmos.cluster.userdetails.domain.UserEntity;
+import net.smartcosmos.cluster.userdetails.repository.RoleRepository;
+import net.smartcosmos.cluster.userdetails.repository.UserRepository;
+import net.smartcosmos.cluster.userdetails.util.UuidUtil;
 import net.smartcosmos.extension.tenant.dao.TenantDao;
-import net.smartcosmos.extension.tenant.domain.AuthorityEntity;
-import net.smartcosmos.extension.tenant.domain.RoleEntity;
 import net.smartcosmos.extension.tenant.domain.TenantEntity;
-import net.smartcosmos.extension.tenant.domain.UserEntity;
 import net.smartcosmos.extension.tenant.dto.TenantEntityAndUserEntityDto;
-import net.smartcosmos.extension.tenant.dto.authentication.GetAuthoritiesResponse;
 import net.smartcosmos.extension.tenant.dto.role.CreateOrUpdateRoleRequest;
 import net.smartcosmos.extension.tenant.dto.role.RoleResponse;
 import net.smartcosmos.extension.tenant.dto.tenant.CreateTenantRequest;
@@ -33,13 +33,8 @@ import net.smartcosmos.extension.tenant.dto.tenant.UpdateTenantRequest;
 import net.smartcosmos.extension.tenant.dto.user.CreateOrUpdateUserRequest;
 import net.smartcosmos.extension.tenant.dto.user.CreateUserResponse;
 import net.smartcosmos.extension.tenant.dto.user.UserResponse;
-import net.smartcosmos.extension.tenant.repository.RoleRepository;
 import net.smartcosmos.extension.tenant.repository.TenantRepository;
-import net.smartcosmos.extension.tenant.repository.UserRepository;
 import net.smartcosmos.extension.tenant.util.MergeUtil;
-import net.smartcosmos.extension.tenant.util.UuidUtil;
-
-import static java.util.stream.Collectors.toSet;
 
 /**
  * Initially created by SMART COSMOS Team on June 30, 2016.
@@ -111,14 +106,9 @@ public class TenantPersistenceService implements TenantDao {
             roles.add(adminRole);
 
             UserEntity userEntity = UserEntity.builder()
-                .id(UuidUtil.getNewUuid())
-                .tenantId(tenantEntity.getId())
-                .username(createTenantRequest.getUsername())
-                .emailAddress(createTenantRequest.getUsername())
-                .password(INITIAL_PASSWORD)
-                .roles(roles)
-                .active(createTenantRequest.getActive() == null ? true : createTenantRequest.getActive())
-                .build();
+                    .id(UuidUtil.getNewUuid()).tenantId(tenantEntity.getId()).username(createTenantRequest.getUsername())
+                    .emailAddress(createTenantRequest.getUsername()).password(INITIAL_PASSWORD).roles(roles)
+                    .active(createTenantRequest.getActive() == null ? true : createTenantRequest.getActive()).build();
 
             userEntity = userRepository.save(userEntity);
 
@@ -373,38 +363,6 @@ public class TenantPersistenceService implements TenantDao {
         return Optional.empty();
     }
 
-    /**
-     *
-     * @param username
-     * @param password
-     * @return Optional<GetAuthoritiesResponse>
-     */
-    @Override
-    public Optional<GetAuthoritiesResponse> getAuthorities(String username, String password) {
-
-        Optional<UserEntity> userOptional = userRepository.getUserByCredentials(username, password);
-        if (!userOptional.isPresent()) {
-            return Optional.empty();
-        }
-
-        UserEntity user = userOptional.get();
-        Optional<Set<AuthorityEntity>> authorityOptional = userRepository.getAuthorities(user.getTenantId(), user.getId());
-        Set<AuthorityEntity> authorityEntities = authorityOptional.isPresent() ? authorityOptional.get() : new LinkedHashSet<>();
-        Set<String> authorities = authorityEntities.parallelStream()
-            .map(AuthorityEntity::getAuthority)
-            .collect(toSet());
-
-        GetAuthoritiesResponse response = GetAuthoritiesResponse.builder()
-            .urn(UuidUtil.getUserUrnFromUuid(user.getId()))
-            .tenantUrn(UuidUtil.getTenantUrnFromUuid(user.getTenantId()))
-            .username(user.getUsername())
-            .passwordHash(user.getPassword())
-            .authorities(authorities)
-            .build();
-
-        return Optional.of(response);
-    }
-
     // endregion
 
     // region UTILITY METHODS
@@ -445,7 +403,6 @@ public class TenantPersistenceService implements TenantDao {
      * @param <T> the generic target type
      * @return the converted typed list
      */
-    @SuppressWarnings("unchecked")
     private <S, T> List<T> convertList(List<S> list, Class sourceClass, Class targetClass) {
 
         TypeDescriptor sourceDescriptor = TypeDescriptor.collection(List.class, TypeDescriptor.valueOf(sourceClass));

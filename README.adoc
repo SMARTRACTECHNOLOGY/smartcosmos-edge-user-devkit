@@ -12,10 +12,6 @@ This is a private licensed repository, and as such, should not be shared publicl
 
 == REST API
 
-<<auth, *Authorization method*>>
-
-* <<auth1, Authenticate - `POST /authenticate`>>
-
 <<tenants, *Available methods for tenants*>>
 
 * <<tenantcreate1, Create - `POST /tenants`>>
@@ -87,49 +83,6 @@ Note that the illustrated scheme for URNs is only for documentation purposes. Th
 
 
 === API Endpoints
-
-[[auth]]
-==== Auth Endpoint
-
-[[auth1]]
-===== Authenticate - `POST /authenticate`
-
-----
-POST /authenticate
-----
-[source,json]
-----
-{
-    "details": {
-        "grant_type": "password",
-        "scope": "read",
-        "username": "bob"
-    },
-    "authorities": [],
-    "authenticated": false,
-    "principal": "bob",
-    "credentials": "xyz1234567",
-    "name": "bob"
-}
-----
-
-.Response
-----
-200 OK
-----
-[source,json]
-----
-{
-    "urn": "urn:user:uuid:68a76616-3748-4bc2-93c1-3940b47abb7f",
-    "username": "bob",
-    "passwordHash": "",
-    "authorities": [
-        "https://authorities.smartcosmos.net/things/read",
-        "https://authorities.smartcosmos.net/things/create"
-    ],
-    "tenantUrn": "urn:tenant:uuid:69bb7c6a-a43b-493d-8e9d-e5a3ed65728a"
-}
-----
 
 [[tenants]]
 ==== Tenant Endpoints
@@ -571,3 +524,30 @@ DELETE /roles/urn:role:uuid:fcdf5432-49a8-45ef-96a2-94a022022860
 204 NO CONTENT
 ----
 
+== Configuration
+
+The user details service needs to be properly configured for the following purposes:
+
+- accessing the user database
+
+[source,yaml]
+----
+server:
+  port: 45371
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost/{dbName}?autoReconnect=true
+    username: {dbUser}
+    password: {dbPassword}
+    driver-class-name: org.mariadb.jdbc.Driver
+  jpa:
+    hibernate:
+      # Edge User DevKit and User Details DevKit share the database scheme
+      ddl-auto: update
+      naming_strategy: org.hibernate.cfg.EJB3NamingStrategy
+
+smartcosmos:
+  security:
+    enabled: true
+----

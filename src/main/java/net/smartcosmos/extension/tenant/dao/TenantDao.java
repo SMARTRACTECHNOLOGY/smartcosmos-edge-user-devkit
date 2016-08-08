@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Optional;
 import javax.validation.ConstraintViolationException;
 
-import net.smartcosmos.extension.tenant.dto.authentication.GetAuthoritiesResponse;
 import net.smartcosmos.extension.tenant.dto.tenant.CreateTenantRequest;
 import net.smartcosmos.extension.tenant.dto.tenant.CreateTenantResponse;
 import net.smartcosmos.extension.tenant.dto.tenant.TenantResponse;
@@ -56,8 +55,6 @@ public interface TenantDao {
     Optional<UserResponse> findUserByName(String tenantUrn, String name);
 
     Optional<UserResponse> deleteUserByUrn(String tenantUrn, String urn);
-
-    Optional<GetAuthoritiesResponse> getAuthorities(String username, String password);
 
     List<TenantResponse> findAllTenants();
 

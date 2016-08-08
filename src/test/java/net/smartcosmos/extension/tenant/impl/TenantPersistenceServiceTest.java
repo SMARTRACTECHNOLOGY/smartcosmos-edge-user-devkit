@@ -14,10 +14,26 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
+import static org.junit.Assert.*;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+import org.junit.*;
+import org.junit.runner.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.IntegrationTest;
+import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+
+import net.smartcosmos.cluster.userdetails.repository.UserRepository;
+import net.smartcosmos.cluster.userdetails.util.UuidUtil;
 import net.smartcosmos.extension.tenant.TenantPersistenceConfig;
 import net.smartcosmos.extension.tenant.TenantPersistenceTestApplication;
-import net.smartcosmos.extension.tenant.dao.TenantDao;
-import net.smartcosmos.extension.tenant.dto.authentication.GetAuthoritiesResponse;
 import net.smartcosmos.extension.tenant.dto.tenant.CreateTenantRequest;
 import net.smartcosmos.extension.tenant.dto.tenant.CreateTenantResponse;
 import net.smartcosmos.extension.tenant.dto.tenant.TenantResponse;
@@ -26,12 +42,7 @@ import net.smartcosmos.extension.tenant.dto.user.CreateOrUpdateUserRequest;
 import net.smartcosmos.extension.tenant.dto.user.CreateUserResponse;
 import net.smartcosmos.extension.tenant.dto.user.UserResponse;
 import net.smartcosmos.extension.tenant.repository.TenantRepository;
-import net.smartcosmos.extension.tenant.repository.UserRepository;
-import net.smartcosmos.extension.tenant.util.UuidUtil;
 
-import static org.junit.Assert.*;
-
-@SuppressWarnings("Duplicates")
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = {
     TenantPersistenceTestApplication.class,
@@ -462,114 +473,6 @@ public class TenantPersistenceServiceTest {
             .build();
 
         Optional<CreateUserResponse> userResponse = tenantPersistenceService.createUser(noSuchTenant, createUserRequest);
-    }
-
-    @Test
-    public void thatGetAuthoritiesSucceeds() throws Exception {
-
-        String username = "authorityTestUser";
-        String emailAddress = "authority.user@example.com";
-
-        List<String> roles = new ArrayList<>();
-        roles.add("Admin");
-
-        CreateOrUpdateUserRequest userRequest = CreateOrUpdateUserRequest.builder()
-            .username(username)
-            .active(true)
-            .emailAddress(emailAddress)
-            .roles(roles)
-            .givenName("John")
-            .surname("Doe")
-            .build();
-        String password = tenantPersistenceService.createUser(testUserTenantUrn, userRequest).get().getPassword();
-
-        Optional<GetAuthoritiesResponse> authorities = tenantPersistenceService.getAuthorities(username, password);
-
-        assertTrue(authorities.isPresent());
-        assertNotNull(authorities.get().getPasswordHash());
-        assertFalse(authorities.get().getAuthorities().isEmpty());
-        assertEquals(TenantDao.DEFAULT_ADMIN_AUTHORITIES.length, authorities.get().getAuthorities().size());
-        assertTrue(authorities.get().getAuthorities().contains("https://authorities.smartcosmos.net/things/read"));
-        assertTrue(authorities.get().getAuthorities().contains("https://authorities.smartcosmos.net/things/read"));
-    }
-
-    @Test
-    public void thatGetAuthoritiesReturnsEmptySetForMissingRole() throws Exception {
-
-        String username = "NoAuthorityTestUser";
-        String emailAddress = "authority.user@example.com";
-
-        List<String> roles = new ArrayList<>();
-
-        CreateOrUpdateUserRequest userRequest = CreateOrUpdateUserRequest.builder()
-            .username(username)
-            .active(true)
-            .emailAddress(emailAddress)
-            .roles(roles)
-            .givenName("John")
-            .surname("Doe")
-            .build();
-        String password = tenantPersistenceService.createUser(testUserTenantUrn, userRequest).get().getPassword();
-
-        Optional<GetAuthoritiesResponse> authorities = tenantPersistenceService.getAuthorities(username, password);
-
-        assertTrue(authorities.isPresent());
-        assertTrue(authorities.get().getAuthorities().isEmpty());
-        assertNotNull(authorities.get().getPasswordHash());
-    }
-
-    @Test
-    public void thatGetAuthoritiesReturnsNoDuplicates() throws Exception {
-
-        String username = "multipleRoleAuthorityTestUser";
-        String emailAddress = "authority.user@example.com";
-
-        List<String> roles = new ArrayList<>();
-        roles.add("Admin");
-        roles.add("User");
-
-        CreateOrUpdateUserRequest userRequest = CreateOrUpdateUserRequest.builder()
-            .username(username)
-            .active(true)
-            .emailAddress(emailAddress)
-            .roles(roles)
-            .givenName("John")
-            .surname("Doe")
-            .build();
-        String password = tenantPersistenceService.createUser(testUserTenantUrn, userRequest).get().getPassword();
-
-        Optional<GetAuthoritiesResponse> authorities = tenantPersistenceService.getAuthorities(username, password);
-
-        assertTrue(authorities.isPresent());
-        assertNotNull(authorities.get().getPasswordHash());
-        assertFalse(authorities.get().getAuthorities().isEmpty());
-        assertEquals(TenantDao.DEFAULT_ADMIN_AUTHORITIES.length, authorities.get().getAuthorities().size());
-        assertTrue(authorities.get().getAuthorities().contains("https://authorities.smartcosmos.net/things/read"));
-        assertTrue(authorities.get().getAuthorities().contains("https://authorities.smartcosmos.net/things/create"));
-    }
-
-    @Test
-    public void thatGetAuthoritiesInvalidPasswordFails() throws Exception {
-
-        String username = "invalidAuthorityTestUser";
-        String emailAddress = "invalid.user@example.com";
-
-        List<String> roles = new ArrayList<>();
-        roles.add("Admin");
-
-        CreateOrUpdateUserRequest userRequest = CreateOrUpdateUserRequest.builder()
-            .username(username)
-            .active(true)
-            .emailAddress(emailAddress)
-            .roles(roles)
-            .givenName("John")
-            .surname("Doe")
-            .build();
-        tenantPersistenceService.createUser(testUserTenantUrn, userRequest);
-
-        Optional<GetAuthoritiesResponse> authorities = tenantPersistenceService.getAuthorities(username, "invalid");
-
-        assertFalse(authorities.isPresent());
     }
 
     @Test

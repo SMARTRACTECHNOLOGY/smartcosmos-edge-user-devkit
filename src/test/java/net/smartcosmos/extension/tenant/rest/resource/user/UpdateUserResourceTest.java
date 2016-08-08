@@ -1,32 +1,32 @@
 package net.smartcosmos.extension.tenant.rest.resource.user;
 
-import net.smartcosmos.extension.tenant.TenantPersistenceTestApplication;
-import net.smartcosmos.extension.tenant.dao.TenantDao;
-import net.smartcosmos.extension.tenant.dto.user.UserResponse;
-import net.smartcosmos.extension.tenant.rest.dto.user.RestCreateOrUpdateUserRequest;
-import net.smartcosmos.extension.tenant.rest.resource.AbstractTestResource;
-import net.smartcosmos.extension.tenant.util.UuidUtil;
-import net.smartcosmos.test.security.WithMockSmartCosmosUser;
-import org.junit.After;
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.web.servlet.MvcResult;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.anyString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.asyncDispatch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import org.junit.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.web.servlet.MvcResult;
+
+import net.smartcosmos.cluster.userdetails.util.UuidUtil;
+import net.smartcosmos.extension.tenant.TenantPersistenceTestApplication;
+import net.smartcosmos.extension.tenant.dao.TenantDao;
+import net.smartcosmos.extension.tenant.dto.user.UserResponse;
+import net.smartcosmos.extension.tenant.rest.dto.user.RestCreateOrUpdateUserRequest;
+import net.smartcosmos.extension.tenant.rest.resource.AbstractTestResource;
+import net.smartcosmos.test.security.WithMockSmartCosmosUser;
+
 /**
  * Unit Testing sample for updating Users.
  */
-@SuppressWarnings("Duplicates")
 @org.springframework.boot.test.SpringApplicationConfiguration(classes = { TenantPersistenceTestApplication.class })
 @WithMockSmartCosmosUser
 public class UpdateUserResourceTest extends AbstractTestResource {
@@ -60,7 +60,7 @@ public class UpdateUserResourceTest extends AbstractTestResource {
         String surname = "Doe";
 
         final String expectedTenantUrn = "urn:tenant:uuid:" + UuidUtil.getNewUuid()
-            .toString();
+                .toString();
 
         final String expectedUserUrn = "urn:user:uuid:" + UuidUtil.getNewUuid()
             .toString();

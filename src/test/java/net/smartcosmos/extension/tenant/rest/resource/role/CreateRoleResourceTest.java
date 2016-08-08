@@ -1,11 +1,13 @@
 package net.smartcosmos.extension.tenant.rest.resource.role;
 
-import net.smartcosmos.extension.tenant.TenantPersistenceTestApplication;
+import net.smartcosmos.cluster.userdetails.UserDetailsPersistenceConfig;
+import net.smartcosmos.cluster.userdetails.util.UuidUtil;
+import net.smartcosmos.extension.tenant.TenantPersistenceConfig;
+import net.smartcosmos.extension.tenant.TenantRdao;
 import net.smartcosmos.extension.tenant.dao.RoleDao;
 import net.smartcosmos.extension.tenant.dto.role.RoleResponse;
 import net.smartcosmos.extension.tenant.rest.dto.role.RestCreateOrUpdateRoleRequest;
 import net.smartcosmos.extension.tenant.rest.resource.AbstractTestResource;
-import net.smartcosmos.extension.tenant.util.UuidUtil;
 import net.smartcosmos.test.security.WithMockSmartCosmosUser;
 import org.junit.After;
 import org.junit.Test;
@@ -25,8 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * Unit Testing sample for creating Roles.
  */
-@SuppressWarnings("Duplicates")
-@org.springframework.boot.test.SpringApplicationConfiguration(classes = { TenantPersistenceTestApplication.class })
+@org.springframework.boot.test.SpringApplicationConfiguration(classes = { TenantRdao.class, TenantPersistenceConfig.class, UserDetailsPersistenceConfig.class })
 @WithMockSmartCosmosUser
 public class CreateRoleResourceTest extends AbstractTestResource {
 
@@ -56,7 +57,7 @@ public class CreateRoleResourceTest extends AbstractTestResource {
         Boolean active = true;
 
         final String expectedTenantUrn = "urn:tenant:uuid:" + UuidUtil.getNewUuid()
-            .toString();
+                .toString();
 
         final String expectedRoleUrn = "urn:role:uuid:" + UuidUtil.getNewUuid()
             .toString();
