@@ -524,3 +524,30 @@ DELETE /roles/urn:role:uuid:fcdf5432-49a8-45ef-96a2-94a022022860
 204 NO CONTENT
 ----
 
+== Configuration
+
+The user details service needs to be properly configured for the following purposes:
+
+- accessing the user database
+
+[source,yaml]
+----
+server:
+  port: 45371
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost/{dbName}?autoReconnect=true
+    username: {dbUser}
+    password: {dbPassword}
+    driver-class-name: org.mariadb.jdbc.Driver
+  jpa:
+    hibernate:
+      # Edge User DevKit and User Details DevKit share the database scheme
+      ddl-auto: update
+      naming_strategy: org.hibernate.cfg.EJB3NamingStrategy
+
+smartcosmos:
+  security:
+    enabled: true
+----
