@@ -4,11 +4,6 @@ import java.util.List;
 import java.util.Optional;
 import javax.validation.ConstraintViolationException;
 
-import net.smartcosmos.extension.tenant.dto.authentication.GetAuthoritiesResponse;
-import java.util.List;
-import java.util.Optional;
-import javax.validation.ConstraintViolationException;
-
 import net.smartcosmos.extension.tenant.dto.tenant.CreateTenantRequest;
 import net.smartcosmos.extension.tenant.dto.tenant.CreateTenantResponse;
 import net.smartcosmos.extension.tenant.dto.tenant.TenantResponse;

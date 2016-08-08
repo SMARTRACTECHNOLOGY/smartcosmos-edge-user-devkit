@@ -1,23 +1,7 @@
 package net.smartcosmos.extension.tenant.impl;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
-
-import javax.validation.ConstraintViolationException;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.convert.ConversionException;
-import org.springframework.core.convert.ConversionService;
-import org.springframework.core.convert.TypeDescriptor;
-import org.springframework.stereotype.Service;
-
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -26,18 +10,17 @@ import javax.validation.ConstraintViolationException;
 
 import lombok.extern.slf4j.Slf4j;
 
-import net.smartcosmos.cluster.userdetails.domain.RoleEntity;
-import net.smartcosmos.cluster.userdetails.domain.UserEntity;
-import net.smartcosmos.cluster.userdetails.repository.RoleRepository;
-import net.smartcosmos.cluster.userdetails.repository.UserRepository;
-import net.smartcosmos.cluster.userdetails.util.UuidUtil;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionException;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.stereotype.Service;
 
+import net.smartcosmos.cluster.userdetails.domain.RoleEntity;
+import net.smartcosmos.cluster.userdetails.domain.UserEntity;
+import net.smartcosmos.cluster.userdetails.repository.RoleRepository;
+import net.smartcosmos.cluster.userdetails.repository.UserRepository;
+import net.smartcosmos.cluster.userdetails.util.UuidUtil;
 import net.smartcosmos.extension.tenant.dao.TenantDao;
 import net.smartcosmos.extension.tenant.domain.TenantEntity;
 import net.smartcosmos.extension.tenant.dto.TenantEntityAndUserEntityDto;
