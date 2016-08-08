@@ -16,7 +16,7 @@ This is a private licensed repository, and as such, should not be shared publicl
 
 |====================
 |Endpoint|REST API|Required Authority
-|<<tenantcreate1, Create>>|`POST /tenants`|https://authorities.smartcosmos.net/tenants/create
+|<<tenantcreate1, Create>>|`POST /tenants`|none
 |<<tenantupdate1, Update, Validate OTP Authentication>>|`PUT /tenants/{urn}`|https://authorities.smartcosmos.net/tenants/update
 |<<tenantread1, Find by URN>>|`GET /tenants/{urn}`|https://authorities.smartcosmos.net/tenants/read
 |<<tenantread2, Find by Name>>|`GET /tenants/?name={name}`|https://authorities.smartcosmos.net/tenants/read
@@ -26,7 +26,7 @@ This is a private licensed repository, and as such, should not be shared publicl
 
 |====================
 |Endpoint|REST API|Required Authority
-|<<usercreate1, Create>>|`POST /users`|https://authorities.smartcosmos.net/tenants/create
+|<<usercreate1, Create>>|`POST /users`|https://authorities.smartcosmos.net/users/create
 |<<userupdate1, Update>>|`PUT /users/{urn}`|https://authorities.smartcosmos.net/users/update
 |<<userread1, Find by URN>>|`GET /users/{urn}`|https://authorities.smartcosmos.net/users/read
 |<<userread2, Find by Name>>|`GET /users/?name={name}`|https://authorities.smartcosmos.net/users/read
