@@ -14,6 +14,7 @@
         <relativePath></relativePath>
     </parent>
     <artifactId>smartcosmos-edge-user-devkit</artifactId>
+    <version>3.0.0-SNAPSHOT</version>
     <name>SMART COSMOS DAO for Tenant Entities</name>
     <description>Devkit implementation of tenant management for SMART COSMOS Tenants</description>
 
