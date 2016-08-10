@@ -1,6 +1,16 @@
 package net.smartcosmos.extension.tenant.rest.service.role;
 
+import java.util.Optional;
+
 import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.ConversionService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.async.DeferredResult;
+
 import net.smartcosmos.events.DefaultEventTypes;
 import net.smartcosmos.events.SmartCosmosEventTemplate;
 import net.smartcosmos.extension.tenant.dao.RoleDao;
@@ -10,14 +20,6 @@ import net.smartcosmos.extension.tenant.dto.role.RoleResponse;
 import net.smartcosmos.extension.tenant.rest.dto.role.RestCreateOrUpdateRoleRequest;
 import net.smartcosmos.extension.tenant.rest.service.AbstractTenantService;
 import net.smartcosmos.security.user.SmartCosmosUser;
-import org.springframework.core.convert.ConversionService;
-import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Service;
-import org.springframework.web.context.request.async.DeferredResult;
-
-import javax.inject.Inject;
-import java.util.Optional;
 
 /**
  * Initially created by SMART COSMOS Team on July 01, 2016.
@@ -26,10 +28,11 @@ import java.util.Optional;
 @Service
 public class UpdateRoleService extends AbstractTenantService {
 
-    @Inject
+    @Autowired
     public UpdateRoleService(
         TenantDao tenantDao, RoleDao roleDao, SmartCosmosEventTemplate smartCosmosEventTemplate, ConversionService
         conversionService) {
+
         super(tenantDao, roleDao, smartCosmosEventTemplate, conversionService);
     }
 
@@ -42,7 +45,11 @@ public class UpdateRoleService extends AbstractTenantService {
     }
 
     @Async
-    private void updateRoleWorker(DeferredResult<ResponseEntity> response, String roleUrn, RestCreateOrUpdateRoleRequest restRequest, SmartCosmosUser user) {
+    private void updateRoleWorker(
+        DeferredResult<ResponseEntity> response,
+        String roleUrn,
+        RestCreateOrUpdateRoleRequest restRequest,
+        SmartCosmosUser user) {
 
         try {
             final CreateOrUpdateRoleRequest updateRoleRequest = conversionService
@@ -53,7 +60,8 @@ public class UpdateRoleService extends AbstractTenantService {
             if (updateRoleResponse.isPresent()) {
                 sendEvent(user, DefaultEventTypes.RoleUpdated, updateRoleResponse.get());
 
-                ResponseEntity responseEntity = ResponseEntity.noContent().build();
+                ResponseEntity responseEntity = ResponseEntity.noContent()
+                    .build();
                 response.setResult(responseEntity);
             } else {
                 RoleResponse eventPayload = RoleResponse.builder()
@@ -62,7 +70,8 @@ public class UpdateRoleService extends AbstractTenantService {
                     .build();
                 sendEvent(user, DefaultEventTypes.RoleNotFound, eventPayload);
 
-                ResponseEntity responseEntity = ResponseEntity.notFound().build();
+                ResponseEntity responseEntity = ResponseEntity.notFound()
+                    .build();
                 response.setResult(responseEntity);
             }
 

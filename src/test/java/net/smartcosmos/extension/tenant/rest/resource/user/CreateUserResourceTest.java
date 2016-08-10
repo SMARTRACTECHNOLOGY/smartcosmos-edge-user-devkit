@@ -1,17 +1,5 @@
 package net.smartcosmos.extension.tenant.rest.resource.user;
 
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.startsWith;
-import static org.mockito.Matchers.anyObject;
-import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.anyString;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.asyncDispatch;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -29,6 +17,18 @@ import net.smartcosmos.extension.tenant.dto.user.CreateUserResponse;
 import net.smartcosmos.extension.tenant.rest.dto.user.RestCreateOrUpdateUserRequest;
 import net.smartcosmos.extension.tenant.rest.resource.AbstractTestResource;
 import net.smartcosmos.test.security.WithMockSmartCosmosUser;
+
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.startsWith;
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.asyncDispatch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * Unit Testing sample for creating Users.
@@ -48,6 +48,7 @@ public class CreateUserResourceTest extends AbstractTestResource {
 
     @After
     public void tearDown() throws Exception {
+
         reset(tenantDao);
     }
 
@@ -63,7 +64,7 @@ public class CreateUserResourceTest extends AbstractTestResource {
         String emailAddress = "newUser@example.com";
 
         final String expectedTenantUrn = "urn:tenant:uuid:" + UuidUtil.getNewUuid()
-                .toString();
+            .toString();
 
         final String expectedUserUrn = "urn:user:uuid:" + UuidUtil.getNewUuid()
             .toString();

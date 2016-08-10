@@ -2,16 +2,15 @@ package net.smartcosmos.extension.tenant.rest.service.user;
 
 import java.util.Optional;
 
-import javax.inject.Inject;
+import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.async.DeferredResult;
-
-import lombok.extern.slf4j.Slf4j;
 
 import net.smartcosmos.events.DefaultEventTypes;
 import net.smartcosmos.events.SmartCosmosEventTemplate;
@@ -28,10 +27,11 @@ import net.smartcosmos.security.user.SmartCosmosUser;
 @Service
 public class DeleteUserService extends AbstractTenantService {
 
-    @Inject
+    @Autowired
     public DeleteUserService(
         TenantDao tenantDao, RoleDao roleDao, SmartCosmosEventTemplate smartCosmosEventTemplate, ConversionService
         conversionService) {
+
         super(tenantDao, roleDao, smartCosmosEventTemplate, conversionService);
     }
 
@@ -50,10 +50,12 @@ public class DeleteUserService extends AbstractTenantService {
             Optional<UserResponse> deleteUserResponse = tenantDao.deleteUserByUrn(user.getAccountUrn(), userUrn);
 
             if (deleteUserResponse.isPresent()) {
-                response.setResult(ResponseEntity.noContent().build());
+                response.setResult(ResponseEntity.noContent()
+                                       .build());
                 sendEvent(user, DefaultEventTypes.UserDeleted, deleteUserResponse.get());
             } else {
-                response.setResult(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+                response.setResult(ResponseEntity.status(HttpStatus.NOT_FOUND)
+                                       .build());
 
                 UserResponse eventPayload = UserResponse.builder()
                     .urn(userUrn)

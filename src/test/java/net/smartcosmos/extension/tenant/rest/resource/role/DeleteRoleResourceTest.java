@@ -1,11 +1,5 @@
 package net.smartcosmos.extension.tenant.rest.resource.role;
 
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.asyncDispatch;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +14,12 @@ import net.smartcosmos.extension.tenant.dto.role.RoleResponse;
 import net.smartcosmos.extension.tenant.rest.resource.AbstractTestResource;
 import net.smartcosmos.test.security.WithMockSmartCosmosUser;
 
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.asyncDispatch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 /**
  * Unit Testing sample for deleting Roles.
  */
@@ -32,6 +32,7 @@ public class DeleteRoleResourceTest extends AbstractTestResource {
 
     @After
     public void tearDown() throws Exception {
+
         reset(roleDao);
     }
 
@@ -43,8 +44,10 @@ public class DeleteRoleResourceTest extends AbstractTestResource {
     @Test
     public void thatDeleteRoleSucceeds() throws Exception {
 
-        final String expectedTenantUrn = "urn:tenant:uuid:" + UuidUtil.getNewUuid().toString();
-        final String expectedRoleUrn = "urn:role:uuid:" + UuidUtil.getNewUuid().toString();
+        final String expectedTenantUrn = "urn:tenant:uuid:" + UuidUtil.getNewUuid()
+            .toString();
+        final String expectedRoleUrn = "urn:role:uuid:" + UuidUtil.getNewUuid()
+            .toString();
 
         RoleResponse deleteResponse = RoleResponse.builder()
             .urn(expectedRoleUrn)
@@ -74,17 +77,18 @@ public class DeleteRoleResourceTest extends AbstractTestResource {
     @Test
     public void thatDeleteNonexistentRoleFails() throws Exception {
 
-        final String expectedRoleUrn = "urn:role:uuid:" + UuidUtil.getNewUuid().toString();
+        final String expectedRoleUrn = "urn:role:uuid:" + UuidUtil.getNewUuid()
+            .toString();
 
         when(roleDao.delete(anyString(), anyString())).thenReturn(new ArrayList<>());
 
         MvcResult mvcResult = this.mockMvc.perform(
-                delete("/roles/{urn}", expectedRoleUrn).contentType(contentType))
-                .andExpect(status().isOk())
-                .andExpect(request().asyncStarted())
-                .andReturn();
+            delete("/roles/{urn}", expectedRoleUrn).contentType(contentType))
+            .andExpect(status().isOk())
+            .andExpect(request().asyncStarted())
+            .andReturn();
 
         this.mockMvc.perform(asyncDispatch(mvcResult))
-                .andExpect(status().isNotFound());
+            .andExpect(status().isNotFound());
     }
 }

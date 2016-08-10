@@ -1,6 +1,16 @@
 package net.smartcosmos.extension.tenant.rest.service.role;
 
+import java.util.List;
+import java.util.Optional;
+
 import lombok.extern.slf4j.Slf4j;
+
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.ConversionService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+
 import net.smartcosmos.events.DefaultEventTypes;
 import net.smartcosmos.events.SmartCosmosEventTemplate;
 import net.smartcosmos.extension.tenant.dao.RoleDao;
@@ -9,23 +19,16 @@ import net.smartcosmos.extension.tenant.dto.role.RoleResponse;
 import net.smartcosmos.extension.tenant.rest.dto.role.RestRoleResponse;
 import net.smartcosmos.extension.tenant.rest.service.AbstractTenantService;
 import net.smartcosmos.security.user.SmartCosmosUser;
-import org.apache.commons.lang.StringUtils;
-import org.springframework.core.convert.ConversionService;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
-
-import javax.inject.Inject;
-import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @Service
 public class ReadRoleService extends AbstractTenantService {
 
-    @Inject
+    @Autowired
     public ReadRoleService(
-            TenantDao tenantDao, RoleDao roleDao, SmartCosmosEventTemplate smartCosmosEventTemplate, ConversionService
-            conversionService) {
+        TenantDao tenantDao, RoleDao roleDao, SmartCosmosEventTemplate smartCosmosEventTemplate, ConversionService
+        conversionService) {
+
         super(tenantDao, roleDao, smartCosmosEventTemplate, conversionService);
     }
 
@@ -36,19 +39,21 @@ public class ReadRoleService extends AbstractTenantService {
         if (entity.isPresent()) {
             sendEvent(user, DefaultEventTypes.RoleRead, entity.get());
             return ResponseEntity
-                    .ok()
-                    .body(conversionService.convert(entity.get(), RestRoleResponse.class));
+                .ok()
+                .body(conversionService.convert(entity.get(), RestRoleResponse.class));
         }
 
         RoleResponse eventPayload = RoleResponse.builder()
-                .urn(urn)
-                .tenantUrn(user.getAccountUrn())
-                .build();
+            .urn(urn)
+            .tenantUrn(user.getAccountUrn())
+            .build();
         sendEvent(user, DefaultEventTypes.RoleNotFound, eventPayload);
-        return ResponseEntity.notFound().build();
+        return ResponseEntity.notFound()
+            .build();
     }
 
     public ResponseEntity<?> query(String name, SmartCosmosUser user) {
+
         if (StringUtils.isBlank(name)) {
             return findAll(user);
         } else {
@@ -84,6 +89,7 @@ public class ReadRoleService extends AbstractTenantService {
             .tenantUrn(user.getAccountUrn())
             .build();
         sendEvent(user, DefaultEventTypes.RoleNotFound, eventPayload);
-        return ResponseEntity.notFound().build();
+        return ResponseEntity.notFound()
+            .build();
     }
 }

@@ -1,6 +1,7 @@
 package net.smartcosmos.extension.tenant;
 
-import net.smartcosmos.cluster.userdetails.UserDetailsPersistenceConfig;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.orm.jpa.EntityScan;
 import org.springframework.context.annotation.ComponentScan;
@@ -12,14 +13,14 @@ import org.springframework.format.FormatterRegistrar;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
-import java.util.Map;
+import net.smartcosmos.cluster.userdetails.UserDetailsPersistenceConfig;
 
 @EnableJpaRepositories
 @EnableJpaAuditing
 @EntityScan
 @ComponentScan
 @Configuration
-@Import({UserDetailsPersistenceConfig.class})
+@Import({ UserDetailsPersistenceConfig.class })
 
 public class TenantPersistenceConfig extends WebMvcConfigurerAdapter {
 
@@ -28,6 +29,7 @@ public class TenantPersistenceConfig extends WebMvcConfigurerAdapter {
 
     @Override
     public void addFormatters(FormatterRegistry registry) {
+
         for (FormatterRegistrar registrar : formatterRegistrarMap.values()) {
             registrar.registerFormatters(registry);
         }

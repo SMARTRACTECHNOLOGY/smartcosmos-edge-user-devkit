@@ -1,11 +1,11 @@
 package net.smartcosmos.extension.tenant.dao;
 
-import net.smartcosmos.extension.tenant.dto.role.CreateOrUpdateRoleRequest;
-import net.smartcosmos.extension.tenant.dto.role.RoleResponse;
-
-import javax.validation.ConstraintViolationException;
 import java.util.List;
 import java.util.Optional;
+import javax.validation.ConstraintViolationException;
+
+import net.smartcosmos.extension.tenant.dto.role.CreateOrUpdateRoleRequest;
+import net.smartcosmos.extension.tenant.dto.role.RoleResponse;
 
 /**
  * Initially created by SMART COSMOS Team on June 30, 2016.

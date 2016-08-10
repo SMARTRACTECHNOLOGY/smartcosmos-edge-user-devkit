@@ -28,20 +28,27 @@ public class TenantEntityAndUserEntityDtoToCreateTenantResponseConverter
             return null;
         }
 
-        Set<String> rolesAsStrings = entityDto.getUserEntity().getRoles().stream()
+        Set<String> rolesAsStrings = entityDto.getUserEntity()
+            .getRoles()
+            .stream()
             .map(RoleEntity::getName)
             .collect(Collectors.toSet());
 
         CreateUserResponse userResponse = CreateUserResponse.builder()
-            .urn(UuidUtil.getUserUrnFromUuid(entityDto.getUserEntity().getId()))
-            .tenantUrn(UuidUtil.getUserUrnFromUuid(entityDto.getTenantEntity().getId()))
-            .username(entityDto.getUserEntity().getUsername())
-            .password(entityDto.getUserEntity().getPassword())
+            .urn(UuidUtil.getUserUrnFromUuid(entityDto.getUserEntity()
+                                                 .getId()))
+            .tenantUrn(UuidUtil.getUserUrnFromUuid(entityDto.getTenantEntity()
+                                                       .getId()))
+            .username(entityDto.getUserEntity()
+                          .getUsername())
+            .password(entityDto.getUserEntity()
+                          .getPassword())
             .roles(rolesAsStrings)
             .build();
 
         return CreateTenantResponse.builder()
-            .urn(UuidUtil.getTenantUrnFromUuid(entityDto.getTenantEntity().getId()))
+            .urn(UuidUtil.getTenantUrnFromUuid(entityDto.getTenantEntity()
+                                                   .getId()))
             .admin(userResponse)
             .build();
     }

@@ -26,6 +26,7 @@ public class RestCreateTenantRequest {
     @Builder
     @ConstructorProperties({ "name", "username", "active" })
     public RestCreateTenantRequest(String name, String username, Boolean active) {
+
         this.name = name;
         this.username = username;
         this.active = active != null ? active : true;

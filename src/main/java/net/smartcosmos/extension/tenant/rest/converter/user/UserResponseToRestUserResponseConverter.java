@@ -1,11 +1,12 @@
 package net.smartcosmos.extension.tenant.rest.converter.user;
 
-import net.smartcosmos.extension.tenant.dto.user.UserResponse;
-import net.smartcosmos.extension.tenant.rest.dto.user.RestUserResponse;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.format.FormatterRegistrar;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.stereotype.Component;
+
+import net.smartcosmos.extension.tenant.dto.user.UserResponse;
+import net.smartcosmos.extension.tenant.rest.dto.user.RestUserResponse;
 
 /**
  * Initially created by SMART COSMOS Team on July 01, 2016.
@@ -16,16 +17,17 @@ public class UserResponseToRestUserResponseConverter
 
     @Override
     public RestUserResponse convert(UserResponse user) {
+
         return RestUserResponse.builder()
-                .urn(user.getUrn())
-                .username(user.getUsername())
-                .emailAddress(user.getEmailAddress())
-                .givenName(user.getGivenName())
-                .surname(user.getSurname())
-                .roles(user.getRoles())
-                .active(user.getActive())
-                .tenantUrn(user.getTenantUrn())
-                .build();
+            .urn(user.getUrn())
+            .username(user.getUsername())
+            .emailAddress(user.getEmailAddress())
+            .givenName(user.getGivenName())
+            .surname(user.getSurname())
+            .roles(user.getRoles())
+            .active(user.getActive())
+            .tenantUrn(user.getTenantUrn())
+            .build();
     }
 
     @Override

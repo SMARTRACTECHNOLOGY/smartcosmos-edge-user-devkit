@@ -28,6 +28,7 @@ public class GetAuthoritiesResponse {
 
     @ConstructorProperties({ "urn", "username", "passwordHash", "authorities", "tenantUrn" })
     public GetAuthoritiesResponse(String urn, String username, String passwordHash, Collection<String> authorities, String tenantUrn) {
+
         this.urn = urn;
         this.username = username;
         this.passwordHash = passwordHash;

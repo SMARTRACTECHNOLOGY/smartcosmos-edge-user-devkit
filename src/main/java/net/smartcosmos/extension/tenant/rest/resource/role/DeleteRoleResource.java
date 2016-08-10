@@ -1,10 +1,7 @@
 package net.smartcosmos.extension.tenant.rest.resource.role;
 
 import lombok.extern.slf4j.Slf4j;
-import net.smartcosmos.annotation.SmartCosmosRdao;
-import net.smartcosmos.extension.tenant.rest.service.role.DeleteRoleService;
-import net.smartcosmos.security.EndpointMethodControl;
-import net.smartcosmos.security.user.SmartCosmosUser;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +9,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.context.request.async.DeferredResult;
+
+import net.smartcosmos.annotation.SmartCosmosRdao;
+import net.smartcosmos.extension.tenant.rest.service.role.DeleteRoleService;
+import net.smartcosmos.security.EndpointMethodControl;
+import net.smartcosmos.security.user.SmartCosmosUser;
 
 /**
  * Initially created by SMART COSMOS Team on July 01, 2016.

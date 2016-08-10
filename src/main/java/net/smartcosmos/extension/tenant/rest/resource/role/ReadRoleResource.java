@@ -1,10 +1,7 @@
 package net.smartcosmos.extension.tenant.rest.resource.role;
 
 import lombok.extern.slf4j.Slf4j;
-import net.smartcosmos.annotation.SmartCosmosRdao;
-import net.smartcosmos.extension.tenant.rest.service.role.ReadRoleService;
-import net.smartcosmos.security.EndpointMethodControl;
-import net.smartcosmos.security.user.SmartCosmosUser;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +9,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import net.smartcosmos.annotation.SmartCosmosRdao;
+import net.smartcosmos.extension.tenant.rest.service.role.ReadRoleService;
+import net.smartcosmos.security.EndpointMethodControl;
+import net.smartcosmos.security.user.SmartCosmosUser;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 
@@ -37,7 +39,7 @@ public class ReadRoleResource {
     @EndpointMethodControl(key = "role.get")
     @ConditionalOnProperty(prefix = "smt.endpoints.role.get", name = "enabled", matchIfMissing = true)
     public ResponseEntity<?> getByName(
-            @RequestParam(value = "name", required = false, defaultValue = "") String name, SmartCosmosUser user) {
+        @RequestParam(value = "name", required = false, defaultValue = "") String name, SmartCosmosUser user) {
 
         return service.query(name, user);
     }

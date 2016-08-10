@@ -17,6 +17,7 @@ public class RestCreateTenantRequestToCreateTenantRequestConverter
 
     @Override
     public CreateTenantRequest convert(RestCreateTenantRequest restCreateTenantRequest) {
+
         return CreateTenantRequest.builder()
             .name(restCreateTenantRequest.getName())
             .active(restCreateTenantRequest.getActive())

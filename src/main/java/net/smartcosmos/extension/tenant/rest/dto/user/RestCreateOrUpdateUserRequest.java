@@ -1,14 +1,14 @@
 package net.smartcosmos.extension.tenant.rest.dto.user;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import java.beans.ConstructorProperties;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * Initially created by SMART COSMOS Team on July 01, 2016.
@@ -35,6 +35,7 @@ public class RestCreateOrUpdateUserRequest {
     public RestCreateOrUpdateUserRequest(
         String username, String emailAddress, String givenName, String surname, String password, Collection<String> roles,
         Boolean active) {
+
         this.username = username;
         this.emailAddress = emailAddress;
         this.givenName = givenName;

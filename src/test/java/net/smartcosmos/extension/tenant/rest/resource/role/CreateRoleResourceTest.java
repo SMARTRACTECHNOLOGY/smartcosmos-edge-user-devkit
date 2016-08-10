@@ -1,5 +1,15 @@
 package net.smartcosmos.extension.tenant.rest.resource.role;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+
+import org.junit.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.web.servlet.MvcResult;
+
 import net.smartcosmos.cluster.userdetails.UserDetailsPersistenceConfig;
 import net.smartcosmos.cluster.userdetails.util.UuidUtil;
 import net.smartcosmos.extension.tenant.TenantPersistenceConfig;
@@ -9,25 +19,24 @@ import net.smartcosmos.extension.tenant.dto.role.RoleResponse;
 import net.smartcosmos.extension.tenant.rest.dto.role.RestCreateOrUpdateRoleRequest;
 import net.smartcosmos.extension.tenant.rest.resource.AbstractTestResource;
 import net.smartcosmos.test.security.WithMockSmartCosmosUser;
-import org.junit.After;
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.web.servlet.MvcResult;
-
-import java.util.*;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Matchers.anyObject;
+import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.asyncDispatch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * Unit Testing sample for creating Roles.
  */
-@org.springframework.boot.test.SpringApplicationConfiguration(classes = { TenantRdao.class, TenantPersistenceConfig.class, UserDetailsPersistenceConfig.class })
+@org.springframework.boot.test.SpringApplicationConfiguration(classes = { TenantRdao.class, TenantPersistenceConfig.class,
+                                                                          UserDetailsPersistenceConfig.class })
 @WithMockSmartCosmosUser
 public class CreateRoleResourceTest extends AbstractTestResource {
 
@@ -42,6 +51,7 @@ public class CreateRoleResourceTest extends AbstractTestResource {
 
     @After
     public void tearDown() throws Exception {
+
         reset(roleDao);
     }
 
@@ -57,7 +67,7 @@ public class CreateRoleResourceTest extends AbstractTestResource {
         Boolean active = true;
 
         final String expectedTenantUrn = "urn:tenant:uuid:" + UuidUtil.getNewUuid()
-                .toString();
+            .toString();
 
         final String expectedRoleUrn = "urn:role:uuid:" + UuidUtil.getNewUuid()
             .toString();

@@ -25,6 +25,7 @@ public class CreateTenantRequest {
     @Builder
     @ConstructorProperties({ "name", "username", "active" })
     public CreateTenantRequest(String name, String username, Boolean active) {
+
         this.name = name;
         this.username = username;
         this.active = active != null ? active : true;

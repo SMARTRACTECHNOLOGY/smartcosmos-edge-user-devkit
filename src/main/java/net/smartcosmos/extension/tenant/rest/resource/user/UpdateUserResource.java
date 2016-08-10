@@ -1,11 +1,9 @@
 package net.smartcosmos.extension.tenant.rest.resource.user;
 
+import javax.validation.Valid;
+
 import lombok.extern.slf4j.Slf4j;
-import net.smartcosmos.extension.tenant.rest.dto.user.RestCreateOrUpdateUserRequest;
-import net.smartcosmos.extension.tenant.rest.service.user.UpdateUserService;
-import net.smartcosmos.security.EndpointMethodControl;
-import net.smartcosmos.security.user.SmartCosmosUser;
-import net.smartcosmos.annotation.SmartCosmosRdao;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +13,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.context.request.async.DeferredResult;
 
-import javax.validation.Valid;
+import net.smartcosmos.annotation.SmartCosmosRdao;
+import net.smartcosmos.extension.tenant.rest.dto.user.RestCreateOrUpdateUserRequest;
+import net.smartcosmos.extension.tenant.rest.service.user.UpdateUserService;
+import net.smartcosmos.security.EndpointMethodControl;
+import net.smartcosmos.security.user.SmartCosmosUser;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 
@@ -33,7 +35,10 @@ public class UpdateUserResource {
     @Autowired
     public UpdateUserResource(UpdateUserService service) { this.service = service; }
 
-    @RequestMapping(value = "/users/{userUrn}", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8_VALUE, consumes = APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/users/{userUrn}",
+                    method = RequestMethod.PUT,
+                    produces = APPLICATION_JSON_UTF8_VALUE,
+                    consumes = APPLICATION_JSON_UTF8_VALUE)
     @EndpointMethodControl(key = "tenant.put")
     @ConditionalOnProperty(prefix = "smt.endpoints.user.put", name = "enabled", matchIfMissing = true)
     public DeferredResult<ResponseEntity> updateUser(

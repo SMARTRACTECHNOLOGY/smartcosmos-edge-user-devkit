@@ -23,9 +23,10 @@ public class UserEntityToCreateUserResponseConverter
     @Override
     public CreateUserResponse convert(UserEntity userEntity) {
 
-        Set<String> roles = userEntity.getRoles().stream()
-                .map(RoleEntity::getName)
-                .collect(Collectors.toSet());
+        Set<String> roles = userEntity.getRoles()
+            .stream()
+            .map(RoleEntity::getName)
+            .collect(Collectors.toSet());
 
         return CreateUserResponse.builder()
             .urn(UuidUtil.getUserUrnFromUuid(userEntity.getId()))
