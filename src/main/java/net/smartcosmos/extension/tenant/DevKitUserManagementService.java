@@ -20,11 +20,11 @@ import net.smartcosmos.extension.tenant.config.AnonymousAccessSecurityConfigurat
 @EnableWebMvc
 @Import({ AnonymousAccessSecurityConfiguration.class })
 @ComponentScan
-public class TenantRdao extends WebMvcConfigurerAdapter {
+public class DevKitUserManagementService extends WebMvcConfigurerAdapter {
 
     public static void main(String[] args) {
 
-        new SpringApplicationBuilder(TenantRdao.class).web(true)
+        new SpringApplicationBuilder(DevKitUserManagementService.class).web(true)
             .run(args);
     }
 

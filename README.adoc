@@ -546,10 +546,12 @@ server:
 
 spring:
   datasource:
-    url: jdbc:mysql://localhost/{dbName}?autoReconnect=true
+    url: jdbc:mysql://{dbServer}/{dbName}
     username: {dbUser}
     password: {dbPassword}
     driver-class-name: org.mariadb.jdbc.Driver
+    test-on-borrow: true
+    validation-query: SELECT 1
   jpa:
     hibernate:
       # Edge User DevKit and User Details DevKit share the database scheme
@@ -559,4 +561,29 @@ spring:
 smartcosmos:
   security:
     enabled: true
+
+  endpoints:
+    tenants:
+      enabled: true
+      create.enabled: true
+      read:
+        urn.enabled: true
+        all.enabled: true
+      update.enabled: true
+    users:
+      enabled: true
+      create.enabled: true
+      read:
+        urn.enabled: true
+        all.enabled: true
+      update.enabled: true
+      delete.enabled: true
+    roles:
+      enabled: true
+      create.enabled: true
+      read:
+        urn.enabled: true
+        all.enabled: true
+      update.enabled: true
+      delete.enabled: true
 ----

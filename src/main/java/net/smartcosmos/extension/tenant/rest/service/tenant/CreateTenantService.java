@@ -13,30 +13,34 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.async.DeferredResult;
 
-import net.smartcosmos.events.DefaultEventTypes;
-import net.smartcosmos.events.SmartCosmosEventTemplate;
-import net.smartcosmos.extension.tenant.dao.RoleDao;
 import net.smartcosmos.extension.tenant.dao.TenantDao;
 import net.smartcosmos.extension.tenant.dto.tenant.CreateTenantRequest;
 import net.smartcosmos.extension.tenant.dto.tenant.CreateTenantResponse;
 import net.smartcosmos.extension.tenant.rest.dto.tenant.RestCreateTenantRequest;
 import net.smartcosmos.extension.tenant.rest.dto.tenant.RestCreateTenantResponse;
-import net.smartcosmos.extension.tenant.rest.service.AbstractTenantService;
+import net.smartcosmos.extension.tenant.rest.service.EventSendingService;
 import net.smartcosmos.security.user.SmartCosmosUser;
+
+import static net.smartcosmos.extension.tenant.rest.utility.TenantEventType.TENANT_CREATED;
+import static net.smartcosmos.extension.tenant.rest.utility.TenantEventType.TENANT_CREATE_FAILED_ALREADY_EXISTS;
 
 /**
  * Initially created by SMART COSMOS Team on July 01, 2016.
  */
 @Slf4j
 @Service
-public class CreateTenantService extends AbstractTenantService {
+public class CreateTenantService {
+
+    private final TenantDao tenantDao;
+    private final EventSendingService eventSendingService;
+    private final ConversionService conversionService;
 
     @Autowired
-    public CreateTenantService(
-        TenantDao tenantDao, RoleDao roleDao, SmartCosmosEventTemplate smartCosmosEventTemplate, ConversionService
-        conversionService) {
+    public CreateTenantService(TenantDao tenantDao, EventSendingService tenantEventSendingService, ConversionService conversionService) {
 
-        super(tenantDao, roleDao, smartCosmosEventTemplate, conversionService);
+        this.tenantDao = tenantDao;
+        this.eventSendingService = tenantEventSendingService;
+        this.conversionService = conversionService;
     }
 
     public DeferredResult<ResponseEntity> create(RestCreateTenantRequest restCreateTenantRequest, SmartCosmosUser user) {
@@ -58,11 +62,11 @@ public class CreateTenantService extends AbstractTenantService {
                 RestCreateTenantResponse restResponse = conversionService.convert(createTenantResponse.get(), RestCreateTenantResponse.class);
                 ResponseEntity responseEntity = buildCreatedResponseEntity(restResponse);
                 response.setResult(responseEntity);
-                sendEvent(user, DefaultEventTypes.TenantCreated, createTenantResponse.get());
+                eventSendingService.sendEvent(user, TENANT_CREATED, createTenantResponse.get());
             } else {
                 response.setResult(ResponseEntity.status(HttpStatus.CONFLICT)
                                        .build());
-                sendEvent(user, DefaultEventTypes.TenantCreateFailedAlreadyExists, createTenantRequest);
+                eventSendingService.sendEvent(user, TENANT_CREATE_FAILED_ALREADY_EXISTS, createTenantRequest);
             }
 
         } catch (Exception e) {

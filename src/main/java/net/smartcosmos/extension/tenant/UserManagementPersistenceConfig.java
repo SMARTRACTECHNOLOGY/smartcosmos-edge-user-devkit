@@ -22,7 +22,7 @@ import net.smartcosmos.cluster.userdetails.UserDetailsPersistenceConfig;
 @Configuration
 @Import({ UserDetailsPersistenceConfig.class })
 
-public class TenantPersistenceConfig extends WebMvcConfigurerAdapter {
+public class UserManagementPersistenceConfig extends WebMvcConfigurerAdapter {
 
     @Autowired
     Map<String, FormatterRegistrar> formatterRegistrarMap;

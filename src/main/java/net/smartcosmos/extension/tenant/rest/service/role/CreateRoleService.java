@@ -13,29 +13,33 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.async.DeferredResult;
 
-import net.smartcosmos.events.DefaultEventTypes;
-import net.smartcosmos.events.SmartCosmosEventTemplate;
 import net.smartcosmos.extension.tenant.dao.RoleDao;
-import net.smartcosmos.extension.tenant.dao.TenantDao;
 import net.smartcosmos.extension.tenant.dto.role.CreateOrUpdateRoleRequest;
 import net.smartcosmos.extension.tenant.dto.role.RoleResponse;
 import net.smartcosmos.extension.tenant.rest.dto.role.RestCreateOrUpdateRoleRequest;
-import net.smartcosmos.extension.tenant.rest.service.AbstractTenantService;
+import net.smartcosmos.extension.tenant.rest.service.EventSendingService;
 import net.smartcosmos.security.user.SmartCosmosUser;
+
+import static net.smartcosmos.extension.tenant.rest.utility.RoleEventType.ROLE_CREATED;
+import static net.smartcosmos.extension.tenant.rest.utility.RoleEventType.ROLE_CREATE_FAILED_ALREADY_EXISTS;
 
 /**
  * Initially created by SMART COSMOS Team on July 01, 2016.
  */
 @Slf4j
 @Service
-public class CreateRoleService extends AbstractTenantService {
+public class CreateRoleService {
+
+    private final RoleDao roleDao;
+    private final EventSendingService eventSendingService;
+    private final ConversionService conversionService;
 
     @Autowired
-    public CreateRoleService(
-        TenantDao tenantDao, RoleDao roleDao, SmartCosmosEventTemplate smartCosmosEventTemplate, ConversionService
-        conversionService) {
+    public CreateRoleService(RoleDao roleDao, EventSendingService roleEventSendingService, ConversionService conversionService) {
 
-        super(tenantDao, roleDao, smartCosmosEventTemplate, conversionService);
+        this.roleDao = roleDao;
+        this.eventSendingService = roleEventSendingService;
+        this.conversionService = conversionService;
     }
 
     public DeferredResult<ResponseEntity> create(RestCreateOrUpdateRoleRequest restCreateOrUpdateRoleRequest, SmartCosmosUser user) {
@@ -60,11 +64,11 @@ public class CreateRoleService extends AbstractTenantService {
             if (newRole.isPresent()) {
                 ResponseEntity responseEntity = buildCreatedResponseEntity(newRole.get());
                 response.setResult(responseEntity);
-                sendEvent(user, DefaultEventTypes.RoleCreated, newRole.get());
+                eventSendingService.sendEvent(user, ROLE_CREATED, newRole.get());
             } else {
                 response.setResult(ResponseEntity.status(HttpStatus.CONFLICT)
                                        .build());
-                sendEvent(user, DefaultEventTypes.RoleCreateFailedAlreadyExists, roleRequest);
+                eventSendingService.sendEvent(user, ROLE_CREATE_FAILED_ALREADY_EXISTS, roleRequest);
             }
 
         } catch (Exception e) {

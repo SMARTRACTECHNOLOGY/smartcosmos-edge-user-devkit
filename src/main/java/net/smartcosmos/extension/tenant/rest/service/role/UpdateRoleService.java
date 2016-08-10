@@ -11,29 +11,33 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.async.DeferredResult;
 
-import net.smartcosmos.events.DefaultEventTypes;
-import net.smartcosmos.events.SmartCosmosEventTemplate;
 import net.smartcosmos.extension.tenant.dao.RoleDao;
-import net.smartcosmos.extension.tenant.dao.TenantDao;
 import net.smartcosmos.extension.tenant.dto.role.CreateOrUpdateRoleRequest;
 import net.smartcosmos.extension.tenant.dto.role.RoleResponse;
 import net.smartcosmos.extension.tenant.rest.dto.role.RestCreateOrUpdateRoleRequest;
-import net.smartcosmos.extension.tenant.rest.service.AbstractTenantService;
+import net.smartcosmos.extension.tenant.rest.service.EventSendingService;
 import net.smartcosmos.security.user.SmartCosmosUser;
+
+import static net.smartcosmos.extension.tenant.rest.utility.RoleEventType.ROLE_NOT_FOUND;
+import static net.smartcosmos.extension.tenant.rest.utility.RoleEventType.ROLE_UPDATED;
 
 /**
  * Initially created by SMART COSMOS Team on July 01, 2016.
  */
 @Slf4j
 @Service
-public class UpdateRoleService extends AbstractTenantService {
+public class UpdateRoleService {
+
+    private final RoleDao roleDao;
+    private final EventSendingService eventSendingService;
+    private final ConversionService conversionService;
 
     @Autowired
-    public UpdateRoleService(
-        TenantDao tenantDao, RoleDao roleDao, SmartCosmosEventTemplate smartCosmosEventTemplate, ConversionService
-        conversionService) {
+    public UpdateRoleService(RoleDao roleDao, EventSendingService roleEventSendingService, ConversionService conversionService) {
 
-        super(tenantDao, roleDao, smartCosmosEventTemplate, conversionService);
+        this.roleDao = roleDao;
+        this.eventSendingService = roleEventSendingService;
+        this.conversionService = conversionService;
     }
 
     public DeferredResult<ResponseEntity> update(String roleUrn, RestCreateOrUpdateRoleRequest updateRequest, SmartCosmosUser user) {
@@ -58,7 +62,7 @@ public class UpdateRoleService extends AbstractTenantService {
             Optional<RoleResponse> updateRoleResponse = roleDao.updateRole(user.getAccountUrn(), roleUrn, updateRoleRequest);
 
             if (updateRoleResponse.isPresent()) {
-                sendEvent(user, DefaultEventTypes.RoleUpdated, updateRoleResponse.get());
+                eventSendingService.sendEvent(user, ROLE_UPDATED, updateRoleResponse.get());
 
                 ResponseEntity responseEntity = ResponseEntity.noContent()
                     .build();
@@ -68,7 +72,7 @@ public class UpdateRoleService extends AbstractTenantService {
                     .urn(roleUrn)
                     .tenantUrn(user.getAccountUrn())
                     .build();
-                sendEvent(user, DefaultEventTypes.RoleNotFound, eventPayload);
+                eventSendingService.sendEvent(user, ROLE_NOT_FOUND, eventPayload);
 
                 ResponseEntity responseEntity = ResponseEntity.notFound()
                     .build();

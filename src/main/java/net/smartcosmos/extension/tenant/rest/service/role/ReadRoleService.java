@@ -8,28 +8,33 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import net.smartcosmos.events.DefaultEventTypes;
-import net.smartcosmos.events.SmartCosmosEventTemplate;
 import net.smartcosmos.extension.tenant.dao.RoleDao;
-import net.smartcosmos.extension.tenant.dao.TenantDao;
 import net.smartcosmos.extension.tenant.dto.role.RoleResponse;
 import net.smartcosmos.extension.tenant.rest.dto.role.RestRoleResponse;
-import net.smartcosmos.extension.tenant.rest.service.AbstractTenantService;
+import net.smartcosmos.extension.tenant.rest.service.EventSendingService;
 import net.smartcosmos.security.user.SmartCosmosUser;
+
+import static net.smartcosmos.extension.tenant.rest.utility.RoleEventType.ROLE_NOT_FOUND;
+import static net.smartcosmos.extension.tenant.rest.utility.RoleEventType.ROLE_READ;
 
 @Slf4j
 @Service
-public class ReadRoleService extends AbstractTenantService {
+public class ReadRoleService {
+
+    private final RoleDao roleDao;
+    private final EventSendingService eventSendingService;
+    private final ConversionService conversionService;
 
     @Autowired
-    public ReadRoleService(
-        TenantDao tenantDao, RoleDao roleDao, SmartCosmosEventTemplate smartCosmosEventTemplate, ConversionService
-        conversionService) {
+    public ReadRoleService(RoleDao roleDao, EventSendingService roleEventSendingService, ConversionService conversionService) {
 
-        super(tenantDao, roleDao, smartCosmosEventTemplate, conversionService);
+        this.roleDao = roleDao;
+        this.eventSendingService = roleEventSendingService;
+        this.conversionService = conversionService;
     }
 
     public ResponseEntity<?> findByUrn(String urn, SmartCosmosUser user) {
@@ -37,7 +42,7 @@ public class ReadRoleService extends AbstractTenantService {
         Optional<RoleResponse> entity = roleDao.findRoleByUrn(user.getAccountUrn(), urn);
 
         if (entity.isPresent()) {
-            sendEvent(user, DefaultEventTypes.RoleRead, entity.get());
+            eventSendingService.sendEvent(user, ROLE_READ, entity.get());
             return ResponseEntity
                 .ok()
                 .body(conversionService.convert(entity.get(), RestRoleResponse.class));
@@ -47,7 +52,7 @@ public class ReadRoleService extends AbstractTenantService {
             .urn(urn)
             .tenantUrn(user.getAccountUrn())
             .build();
-        sendEvent(user, DefaultEventTypes.RoleNotFound, eventPayload);
+        eventSendingService.sendEvent(user, ROLE_NOT_FOUND, eventPayload);
         return ResponseEntity.notFound()
             .build();
     }
@@ -65,7 +70,7 @@ public class ReadRoleService extends AbstractTenantService {
 
         List<RoleResponse> roleList = roleDao.findAllRoles(user.getAccountUrn());
         for (RoleResponse role : roleList) {
-            sendEvent(user, DefaultEventTypes.RoleRead, role);
+            eventSendingService.sendEvent(user, ROLE_READ, role);
         }
 
         return ResponseEntity
@@ -78,7 +83,7 @@ public class ReadRoleService extends AbstractTenantService {
         Optional<RoleResponse> entity = roleDao.findRoleByName(user.getAccountUrn(), name);
 
         if (entity.isPresent()) {
-            sendEvent(user, DefaultEventTypes.RoleRead, entity.get());
+            eventSendingService.sendEvent(user, ROLE_READ, entity.get());
             return ResponseEntity
                 .ok()
                 .body(conversionService.convert(entity.get(), RestRoleResponse.class));
@@ -88,8 +93,16 @@ public class ReadRoleService extends AbstractTenantService {
             .name(name)
             .tenantUrn(user.getAccountUrn())
             .build();
-        sendEvent(user, DefaultEventTypes.RoleNotFound, eventPayload);
+        eventSendingService.sendEvent(user, ROLE_NOT_FOUND, eventPayload);
         return ResponseEntity.notFound()
             .build();
+    }
+
+    private <S, T> List<T> convertList(List<S> list, Class sourceClass, Class targetClass) {
+
+        TypeDescriptor sourceDescriptor = TypeDescriptor.collection(List.class, TypeDescriptor.valueOf(sourceClass));
+        TypeDescriptor targetDescriptor = TypeDescriptor.collection(List.class, TypeDescriptor.valueOf(targetClass));
+
+        return (List<T>) conversionService.convert(list, sourceDescriptor, targetDescriptor);
     }
 }

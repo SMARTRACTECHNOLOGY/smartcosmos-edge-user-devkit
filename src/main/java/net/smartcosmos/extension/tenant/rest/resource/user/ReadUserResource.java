@@ -12,14 +12,22 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import net.smartcosmos.annotation.SmartCosmosRdao;
 import net.smartcosmos.extension.tenant.rest.service.user.ReadUserService;
-import net.smartcosmos.security.EndpointMethodControl;
 import net.smartcosmos.security.user.SmartCosmosUser;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 
+import static net.smartcosmos.extension.tenant.rest.resource.BasicEndpointConstants.ENDPOINT_ENABLEMENT_PROPERTY_ENABLED;
+import static net.smartcosmos.extension.tenant.rest.resource.user.UserEndpointConstants.ENDPOINT_ENABLEMENT_USERS;
+import static net.smartcosmos.extension.tenant.rest.resource.user.UserEndpointConstants.ENDPOINT_ENABLEMENT_USERS_READ_ALL;
+import static net.smartcosmos.extension.tenant.rest.resource.user.UserEndpointConstants.ENDPOINT_ENABLEMENT_USERS_READ_URN;
+import static net.smartcosmos.extension.tenant.rest.resource.user.UserEndpointConstants.ENDPOINT_USERS;
+import static net.smartcosmos.extension.tenant.rest.resource.user.UserEndpointConstants.ENDPOINT_USERS_URN;
+import static net.smartcosmos.extension.tenant.rest.resource.user.UserEndpointConstants.NAME;
+import static net.smartcosmos.extension.tenant.rest.resource.user.UserEndpointConstants.USER_URN;
+
 @Slf4j
 @SmartCosmosRdao
-@ConditionalOnProperty(prefix = "smt.endpoints.tenant", name = "enabled", matchIfMissing = true)
+@ConditionalOnProperty(prefix = ENDPOINT_ENABLEMENT_USERS, name = ENDPOINT_ENABLEMENT_PROPERTY_ENABLED, matchIfMissing = true)
 public class ReadUserResource {
 
     private ReadUserService readUserService;
@@ -27,19 +35,20 @@ public class ReadUserResource {
     @Autowired
     public ReadUserResource(ReadUserService readUserService) { this.readUserService = readUserService; }
 
-    @RequestMapping(value = "/users/{urn}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8_VALUE)
-    @EndpointMethodControl(key = "tenant.urn.get")
-    @ConditionalOnProperty(prefix = "smt.endpoints.user.urn.get", name = "enabled", matchIfMissing = true)
-    public ResponseEntity<?> getByUrn(@PathVariable String urn, SmartCosmosUser user) {
+    @RequestMapping(value = ENDPOINT_USERS_URN, method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8_VALUE)
+    @ConditionalOnProperty(prefix = ENDPOINT_ENABLEMENT_USERS_READ_URN, name = ENDPOINT_ENABLEMENT_PROPERTY_ENABLED, matchIfMissing = true)
+    public ResponseEntity<?> getByUrn(
+        @PathVariable(USER_URN) String urn,
+        SmartCosmosUser user) {
 
         return readUserService.findByUrn(urn, user);
     }
 
-    @RequestMapping(value = "/users", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8_VALUE)
-    @EndpointMethodControl(key = "tenant.get")
-    @ConditionalOnProperty(prefix = "smt.endpoints.user.get", name = "enabled", matchIfMissing = true)
+    @RequestMapping(value = ENDPOINT_USERS, method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8_VALUE)
+    @ConditionalOnProperty(prefix = ENDPOINT_ENABLEMENT_USERS_READ_ALL, name = ENDPOINT_ENABLEMENT_PROPERTY_ENABLED, matchIfMissing = true)
     public ResponseEntity<?> getByName(
-        @RequestParam(value = "name", required = false, defaultValue = "") String name, SmartCosmosUser user) {
+        @RequestParam(value = NAME, required = false, defaultValue = "") String name,
+        SmartCosmosUser user) {
 
         return readUserService.query(name, user);
     }

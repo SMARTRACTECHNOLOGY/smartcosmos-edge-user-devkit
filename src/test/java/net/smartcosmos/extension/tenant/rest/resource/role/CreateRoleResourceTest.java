@@ -12,8 +12,8 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import net.smartcosmos.cluster.userdetails.UserDetailsPersistenceConfig;
 import net.smartcosmos.cluster.userdetails.util.UuidUtil;
-import net.smartcosmos.extension.tenant.TenantPersistenceConfig;
-import net.smartcosmos.extension.tenant.TenantRdao;
+import net.smartcosmos.extension.tenant.DevKitUserManagementService;
+import net.smartcosmos.extension.tenant.UserManagementPersistenceConfig;
 import net.smartcosmos.extension.tenant.dao.RoleDao;
 import net.smartcosmos.extension.tenant.dto.role.RoleResponse;
 import net.smartcosmos.extension.tenant.rest.dto.role.RestCreateOrUpdateRoleRequest;
@@ -35,7 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * Unit Testing sample for creating Roles.
  */
-@org.springframework.boot.test.SpringApplicationConfiguration(classes = { TenantRdao.class, TenantPersistenceConfig.class,
+@org.springframework.boot.test.SpringApplicationConfiguration(classes = { DevKitUserManagementService.class, UserManagementPersistenceConfig.class,
                                                                           UserDetailsPersistenceConfig.class })
 @WithMockSmartCosmosUser
 public class CreateRoleResourceTest extends AbstractTestResource {

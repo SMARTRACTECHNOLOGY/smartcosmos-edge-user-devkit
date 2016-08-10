@@ -12,27 +12,31 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.async.DeferredResult;
 
-import net.smartcosmos.events.DefaultEventTypes;
-import net.smartcosmos.events.SmartCosmosEventTemplate;
-import net.smartcosmos.extension.tenant.dao.RoleDao;
 import net.smartcosmos.extension.tenant.dao.TenantDao;
 import net.smartcosmos.extension.tenant.dto.user.UserResponse;
-import net.smartcosmos.extension.tenant.rest.service.AbstractTenantService;
+import net.smartcosmos.extension.tenant.rest.service.EventSendingService;
 import net.smartcosmos.security.user.SmartCosmosUser;
+
+import static net.smartcosmos.extension.tenant.rest.utility.UserEventType.USER_DELETED;
+import static net.smartcosmos.extension.tenant.rest.utility.UserEventType.USER_NOT_FOUND;
 
 /**
  * Initially created by SMART COSMOS Team on July 01, 2016.
  */
 @Slf4j
 @Service
-public class DeleteUserService extends AbstractTenantService {
+public class DeleteUserService {
+
+    private final TenantDao tenantDao;
+    private final EventSendingService eventSendingService;
+    private final ConversionService conversionService;
 
     @Autowired
-    public DeleteUserService(
-        TenantDao tenantDao, RoleDao roleDao, SmartCosmosEventTemplate smartCosmosEventTemplate, ConversionService
-        conversionService) {
+    public DeleteUserService(TenantDao tenantDao, EventSendingService userEventSendingService, ConversionService conversionService) {
 
-        super(tenantDao, roleDao, smartCosmosEventTemplate, conversionService);
+        this.tenantDao = tenantDao;
+        this.eventSendingService = userEventSendingService;
+        this.conversionService = conversionService;
     }
 
     public DeferredResult<ResponseEntity> delete(String userUrn, SmartCosmosUser user) {
@@ -52,7 +56,7 @@ public class DeleteUserService extends AbstractTenantService {
             if (deleteUserResponse.isPresent()) {
                 response.setResult(ResponseEntity.noContent()
                                        .build());
-                sendEvent(user, DefaultEventTypes.UserDeleted, deleteUserResponse.get());
+                eventSendingService.sendEvent(user, USER_DELETED, deleteUserResponse.get());
             } else {
                 response.setResult(ResponseEntity.status(HttpStatus.NOT_FOUND)
                                        .build());
@@ -61,7 +65,7 @@ public class DeleteUserService extends AbstractTenantService {
                     .urn(userUrn)
                     .tenantUrn(user.getAccountUrn())
                     .build();
-                sendEvent(user, DefaultEventTypes.UserNotFound, eventPayload);
+                eventSendingService.sendEvent(user, USER_NOT_FOUND, eventPayload);
             }
 
         } catch (Exception e) {

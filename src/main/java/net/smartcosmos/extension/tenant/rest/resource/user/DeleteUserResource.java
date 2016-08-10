@@ -12,15 +12,20 @@ import org.springframework.web.context.request.async.DeferredResult;
 
 import net.smartcosmos.annotation.SmartCosmosRdao;
 import net.smartcosmos.extension.tenant.rest.service.user.DeleteUserService;
-import net.smartcosmos.security.EndpointMethodControl;
 import net.smartcosmos.security.user.SmartCosmosUser;
+
+import static net.smartcosmos.extension.tenant.rest.resource.BasicEndpointConstants.ENDPOINT_ENABLEMENT_PROPERTY_ENABLED;
+import static net.smartcosmos.extension.tenant.rest.resource.user.UserEndpointConstants.ENDPOINT_ENABLEMENT_USERS;
+import static net.smartcosmos.extension.tenant.rest.resource.user.UserEndpointConstants.ENDPOINT_ENABLEMENT_USERS_DELETE;
+import static net.smartcosmos.extension.tenant.rest.resource.user.UserEndpointConstants.ENDPOINT_USERS_URN;
+import static net.smartcosmos.extension.tenant.rest.resource.user.UserEndpointConstants.USER_URN;
 
 /**
  * Initially created by SMART COSMOS Team on July 01, 2016.
  */
 @SmartCosmosRdao
 @Slf4j
-@ConditionalOnProperty(prefix = "smt.endpoints.tenant", name = "enabled", matchIfMissing = true)
+@ConditionalOnProperty(prefix = ENDPOINT_ENABLEMENT_USERS, name = ENDPOINT_ENABLEMENT_PROPERTY_ENABLED, matchIfMissing = true)
 //@Api
 public class DeleteUserResource {
 
@@ -29,11 +34,10 @@ public class DeleteUserResource {
     @Autowired
     public DeleteUserResource(DeleteUserService service) { this.service = service; }
 
-    @RequestMapping(value = "/users/{userUrn}", method = RequestMethod.DELETE)
-    @EndpointMethodControl(key = "user.delete")
-    @ConditionalOnProperty(prefix = "smt.endpoints.user.delete", name = "enabled", matchIfMissing = true)
+    @RequestMapping(value = ENDPOINT_USERS_URN, method = RequestMethod.DELETE)
+    @ConditionalOnProperty(prefix = ENDPOINT_ENABLEMENT_USERS_DELETE, name = ENDPOINT_ENABLEMENT_PROPERTY_ENABLED, matchIfMissing = true)
     public DeferredResult<ResponseEntity> deleteUser(
-        @PathVariable String userUrn,
+        @PathVariable(USER_URN) String userUrn,
         SmartCosmosUser user) {
 
         return service.delete(userUrn, user);

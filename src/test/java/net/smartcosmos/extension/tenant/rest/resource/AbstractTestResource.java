@@ -22,7 +22,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import net.smartcosmos.extension.tenant.TenantRdao;
+import net.smartcosmos.extension.tenant.DevKitUserManagementService;
 import net.smartcosmos.extension.tenant.dao.RoleDao;
 import net.smartcosmos.extension.tenant.dao.TenantDao;
 
@@ -34,7 +34,7 @@ import static org.springframework.security.test.web.servlet.setup.SecurityMockMv
 @WebAppConfiguration
 @ActiveProfiles("test")
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = { TenantRdao.class })
+@SpringApplicationConfiguration(classes = { DevKitUserManagementService.class })
 public abstract class AbstractTestResource {
 
     protected MediaType contentType = MediaType.APPLICATION_JSON_UTF8;
