@@ -35,7 +35,7 @@ public interface TenantDao {
         "https://authorities.smartcosmos.net/things/read",
         "https://authorities.smartcosmos.net/metadata/read",
         "https://authorities.smartcosmos.net/relationships/read",
-    };
+        };
 
     Optional<CreateTenantResponse> createTenant(CreateTenantRequest tenantCreate) throws ConstraintViolationException;
 

@@ -17,6 +17,7 @@ public class RestCreateOrUpdateRoleRequestToCreateOrUpdateRoleRequestConverter
 
     @Override
     public CreateOrUpdateRoleRequest convert(RestCreateOrUpdateRoleRequest request) {
+
         return CreateOrUpdateRoleRequest.builder()
             .name(request.getName())
             .active(request.getActive())

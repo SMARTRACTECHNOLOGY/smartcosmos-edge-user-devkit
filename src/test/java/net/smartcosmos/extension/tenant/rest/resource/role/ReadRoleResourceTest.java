@@ -1,16 +1,5 @@
 package net.smartcosmos.extension.tenant.rest.resource.role;
 
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.*;
-import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -26,6 +15,17 @@ import net.smartcosmos.extension.tenant.dto.role.RoleResponse;
 import net.smartcosmos.extension.tenant.rest.resource.AbstractTestResource;
 import net.smartcosmos.test.security.WithMockSmartCosmosUser;
 
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.*;
+import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 @WithMockSmartCosmosUser
 public class ReadRoleResourceTest extends AbstractTestResource {
 
@@ -34,6 +34,7 @@ public class ReadRoleResourceTest extends AbstractTestResource {
 
     @After
     public void tearDown() throws Exception {
+
         reset(roleDao);
     }
 
@@ -45,7 +46,7 @@ public class ReadRoleResourceTest extends AbstractTestResource {
         String tenantUrn = UuidUtil.getTenantUrnFromUuid(UuidUtil.getNewUuid());
         Boolean active = true;
 
-        String[] authorities = {"auth1", "auth2"};
+        String[] authorities = { "auth1", "auth2" };
 
         RoleResponse response1 = RoleResponse.builder()
             .active(active)
@@ -150,15 +151,15 @@ public class ReadRoleResourceTest extends AbstractTestResource {
 
         List<RoleResponse> response = new ArrayList<>();
         response.add(RoleResponse.builder()
-            .active(true)
-            .name("name1")
-            .urn("urn1")
-            .build());
+                         .active(true)
+                         .name("name1")
+                         .urn("urn1")
+                         .build());
         response.add(RoleResponse.builder()
-            .active(true)
-            .name("name2")
-            .urn("urn2")
-            .build());
+                         .active(true)
+                         .name("name2")
+                         .urn("urn2")
+                         .build());
 
         when(roleDao.findAllRoles(anyString())).thenReturn(response);
 

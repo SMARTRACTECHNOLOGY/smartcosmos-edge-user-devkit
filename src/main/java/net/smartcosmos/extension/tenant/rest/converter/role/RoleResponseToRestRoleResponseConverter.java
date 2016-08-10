@@ -17,6 +17,7 @@ public class RoleResponseToRestRoleResponseConverter
 
     @Override
     public RestRoleResponse convert(RoleResponse role) {
+
         return RestRoleResponse.builder()
             .urn(role.getUrn())
             .name(role.getName())

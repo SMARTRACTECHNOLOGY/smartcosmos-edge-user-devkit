@@ -1,11 +1,5 @@
 package net.smartcosmos.extension.tenant.rest.resource.user;
 
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.asyncDispatch;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -21,6 +15,12 @@ import net.smartcosmos.extension.tenant.dto.user.UserResponse;
 import net.smartcosmos.extension.tenant.rest.resource.AbstractTestResource;
 import net.smartcosmos.test.security.WithMockSmartCosmosUser;
 
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.asyncDispatch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 /**
  * Unit Testing sample for deleting Users.
  */
@@ -35,6 +35,7 @@ public class DeleteUserResourceTest extends AbstractTestResource {
 
     @After
     public void tearDown() throws Exception {
+
         reset(tenantDao);
     }
 
@@ -48,8 +49,10 @@ public class DeleteUserResourceTest extends AbstractTestResource {
 
         String username = "newUser";
         String emailAddress = "newUser@example2.com";
-        final String expectedTenantUrn = "urn:tenant:uuid:" + UuidUtil.getNewUuid().toString();
-        final String expectedUserUrn = "urn:user:uuid:" + UuidUtil.getNewUuid().toString();
+        final String expectedTenantUrn = "urn:tenant:uuid:" + UuidUtil.getNewUuid()
+            .toString();
+        final String expectedUserUrn = "urn:user:uuid:" + UuidUtil.getNewUuid()
+            .toString();
         List<String> userRoles = new ArrayList<>();
         userRoles.add("User");
 
@@ -84,18 +87,19 @@ public class DeleteUserResourceTest extends AbstractTestResource {
     @Test
     public void thatDeleteNonexistentUserFails() throws Exception {
 
-        final String expectedUserUrn = "urn:user:uuid:" + UuidUtil.getNewUuid().toString();
+        final String expectedUserUrn = "urn:user:uuid:" + UuidUtil.getNewUuid()
+            .toString();
 
         when(tenantDao.deleteUserByUrn(anyString(), anyString())).thenReturn(Optional.empty());
 
         MvcResult mvcResult = this.mockMvc.perform(
-                delete("/users/" + expectedUserUrn).contentType(contentType))
-                .andExpect(status().isOk())
-                .andExpect(request().asyncStarted())
-                .andReturn();
+            delete("/users/" + expectedUserUrn).contentType(contentType))
+            .andExpect(status().isOk())
+            .andExpect(request().asyncStarted())
+            .andReturn();
 
         this.mockMvc.perform(asyncDispatch(mvcResult))
-                .andExpect(status().isNotFound());
+            .andExpect(status().isNotFound());
 
     }
 }

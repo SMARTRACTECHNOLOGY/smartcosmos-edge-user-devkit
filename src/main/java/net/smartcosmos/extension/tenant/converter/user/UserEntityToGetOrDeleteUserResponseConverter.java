@@ -33,9 +33,9 @@ public class UserEntityToGetOrDeleteUserResponseConverter
         for (RoleEntity role : userEntity.getRoles()) {
             roles.add(role.getName());
             authoritiesSet.addAll(role.getAuthorities()
-                .stream()
-                .map(AuthorityEntity::getAuthority)
-                .collect(Collectors.toList()));
+                                      .stream()
+                                      .map(AuthorityEntity::getAuthority)
+                                      .collect(Collectors.toList()));
         }
 
         return UserResponse.builder()

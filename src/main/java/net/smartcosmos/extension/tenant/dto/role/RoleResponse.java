@@ -1,12 +1,14 @@
 package net.smartcosmos.extension.tenant.dto.role;
 
+import java.beans.ConstructorProperties;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
 import lombok.Data;
-
-import java.beans.ConstructorProperties;
-import java.util.*;
 
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -25,6 +27,7 @@ public class RoleResponse {
     @Builder
     @ConstructorProperties({ "urn", "name", "authorities", "active", "tenantUrn" })
     public RoleResponse(String urn, String name, Collection<String> authorities, Boolean active, String tenantUrn) {
+
         this.urn = urn;
         this.name = name;
         this.authorities = new HashSet<>();

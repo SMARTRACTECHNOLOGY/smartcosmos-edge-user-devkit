@@ -5,15 +5,14 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
-
 import javax.validation.ConstraintViolationException;
+
+import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.stereotype.Service;
-
-import lombok.extern.slf4j.Slf4j;
 
 import net.smartcosmos.cluster.userdetails.domain.AuthorityEntity;
 import net.smartcosmos.cluster.userdetails.domain.RoleEntity;
@@ -59,12 +58,18 @@ public class RolePersistenceService implements RoleDao {
         Set<AuthorityEntity> authorityEntities = new HashSet<>();
 
         for (String authority : createRoleRequest.getAuthorities()) {
-            authorityEntities.add(authorityRepository.save(AuthorityEntity.builder().authority(authority).build()));
+            authorityEntities.add(authorityRepository.save(AuthorityEntity.builder()
+                                                               .authority(authority)
+                                                               .build()));
         }
 
         RoleEntity role = roleRepository.save(RoleEntity.builder()
-                .id(UuidUtil.getNewUuid()).tenantId(UuidUtil.getUuidFromUrn(tenantUrn)).name(createRoleRequest.getName())
-                .authorities(authorityEntities).active(createRoleRequest.getActive()).build());
+                                                  .id(UuidUtil.getNewUuid())
+                                                  .tenantId(UuidUtil.getUuidFromUrn(tenantUrn))
+                                                  .name(createRoleRequest.getName())
+                                                  .authorities(authorityEntities)
+                                                  .active(createRoleRequest.getActive())
+                                                  .build());
         return Optional.ofNullable(conversionService.convert(role, RoleResponse.class));
     }
 
@@ -76,11 +81,14 @@ public class RolePersistenceService implements RoleDao {
         UUID id = UuidUtil.getUuidFromUrn(urn);
 
         // Cancel update if role doesn't exist
-        if (roleRepository.findByTenantIdAndId(tenantId, id).isPresent()) {
+        if (roleRepository.findByTenantIdAndId(tenantId, id)
+            .isPresent()) {
 
             Set<AuthorityEntity> authorityEntities = new HashSet<>();
             for (String authority : updateRoleRequest.getAuthorities()) {
-                authorityEntities.add(authorityRepository.save(AuthorityEntity.builder().authority(authority).build()));
+                authorityEntities.add(authorityRepository.save(AuthorityEntity.builder()
+                                                                   .authority(authority)
+                                                                   .build()));
             }
 
             RoleEntity role = roleRepository.save(RoleEntity.builder()
@@ -97,6 +105,7 @@ public class RolePersistenceService implements RoleDao {
     }
 
     public Optional<RoleResponse> findRoleByName(String tenantUrn, String name) {
+
         Optional<RoleEntity> roleEntity = roleRepository.findByTenantIdAndNameIgnoreCase(UuidUtil.getUuidFromUrn(tenantUrn), name);
         if (roleEntity.isPresent()) {
             return Optional.ofNullable(conversionService.convert(roleEntity.get(), RoleResponse.class));
@@ -105,6 +114,7 @@ public class RolePersistenceService implements RoleDao {
     }
 
     public Optional<RoleEntity> findByUrnAsEntity(String tenantUrn, String urn) {
+
         return roleRepository.findByTenantIdAndId(UuidUtil.getUuidFromUrn(tenantUrn), UuidUtil.getUuidFromUrn(urn));
     }
 

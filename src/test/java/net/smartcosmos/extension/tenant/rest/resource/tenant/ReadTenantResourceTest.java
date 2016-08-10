@@ -1,16 +1,5 @@
 package net.smartcosmos.extension.tenant.rest.resource.tenant;
 
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.*;
-import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -25,6 +14,17 @@ import net.smartcosmos.extension.tenant.dto.tenant.TenantResponse;
 import net.smartcosmos.extension.tenant.rest.resource.AbstractTestResource;
 import net.smartcosmos.test.security.WithMockSmartCosmosUser;
 
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.*;
+import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 public class ReadTenantResourceTest extends AbstractTestResource {
 
     @Autowired
@@ -32,6 +32,7 @@ public class ReadTenantResourceTest extends AbstractTestResource {
 
     @After
     public void tearDown() throws Exception {
+
         reset(tenantDao);
     }
 
@@ -70,9 +71,9 @@ public class ReadTenantResourceTest extends AbstractTestResource {
         String urn = "accountUrn"; // Tenant URN from AbstractTestResource
 
         MvcResult mvcResult = mockMvc.perform(
-                get("/tenants/{urn}", urn).contentType(APPLICATION_JSON_UTF8))
-                .andExpect(status().isForbidden())
-                .andReturn();
+            get("/tenants/{urn}", urn).contentType(APPLICATION_JSON_UTF8))
+            .andExpect(status().isForbidden())
+            .andReturn();
 
         verify(tenantDao, times(0)).findTenantByUrn(anyString());
         verifyNoMoreInteractions(tenantDao);
@@ -103,9 +104,9 @@ public class ReadTenantResourceTest extends AbstractTestResource {
         String urn = UuidUtil.getTenantUrnFromUuid(UuidUtil.getNewUuid());
 
         MvcResult mvcResult = mockMvc.perform(
-                get("/tenants/{urn}", urn).contentType(APPLICATION_JSON_UTF8))
-                .andExpect(status().isForbidden())
-                .andReturn();
+            get("/tenants/{urn}", urn).contentType(APPLICATION_JSON_UTF8))
+            .andExpect(status().isForbidden())
+            .andReturn();
 
         verify(tenantDao, times(0)).findTenantByUrn(anyString());
         verifyNoMoreInteractions(tenantDao);
@@ -148,11 +149,11 @@ public class ReadTenantResourceTest extends AbstractTestResource {
         String name = "getByName";
 
         MvcResult mvcResult = mockMvc.perform(
-                get("/tenants")
-                        .param("name", name)
-                        .contentType(APPLICATION_JSON_UTF8))
-                .andExpect(status().isForbidden())
-                .andReturn();
+            get("/tenants")
+                .param("name", name)
+                .contentType(APPLICATION_JSON_UTF8))
+            .andExpect(status().isForbidden())
+            .andReturn();
 
         verify(tenantDao, times(0)).findTenantByName(anyString());
         verifyNoMoreInteractions(tenantDao);
@@ -185,11 +186,11 @@ public class ReadTenantResourceTest extends AbstractTestResource {
         String name = "noSuchTenant";
 
         MvcResult mvcResult = mockMvc.perform(
-                get("/tenants")
-                        .param("name", name)
-                        .contentType(APPLICATION_JSON_UTF8))
-                .andExpect(status().isForbidden())
-                .andReturn();
+            get("/tenants")
+                .param("name", name)
+                .contentType(APPLICATION_JSON_UTF8))
+            .andExpect(status().isForbidden())
+            .andReturn();
 
         verify(tenantDao, times(0)).findTenantByName(anyString());
         verifyNoMoreInteractions(tenantDao);
@@ -204,12 +205,12 @@ public class ReadTenantResourceTest extends AbstractTestResource {
         when(tenantDao.findAllTenants()).thenReturn(response);
 
         MvcResult mvcResult = mockMvc.perform(
-                get("/tenants")
-                    .contentType(APPLICATION_JSON_UTF8))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$").isArray())
-                .andExpect(jsonPath("$").isEmpty())
-                .andReturn();
+            get("/tenants")
+                .contentType(APPLICATION_JSON_UTF8))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$").isArray())
+            .andExpect(jsonPath("$").isEmpty())
+            .andReturn();
 
         verify(tenantDao, times(1)).findAllTenants();
         verifyNoMoreInteractions(tenantDao);
@@ -219,10 +220,10 @@ public class ReadTenantResourceTest extends AbstractTestResource {
     public void thatGetAllNoTenantAnonymousFails() throws Exception {
 
         MvcResult mvcResult = mockMvc.perform(
-                get("/tenants")
-                        .contentType(APPLICATION_JSON_UTF8))
-                .andExpect(status().isForbidden())
-                .andReturn();
+            get("/tenants")
+                .contentType(APPLICATION_JSON_UTF8))
+            .andExpect(status().isForbidden())
+            .andReturn();
 
         verify(tenantDao, times(0)).findAllTenants();
         verifyNoMoreInteractions(tenantDao);
@@ -234,27 +235,27 @@ public class ReadTenantResourceTest extends AbstractTestResource {
 
         List<TenantResponse> response = new ArrayList<>();
         response.add(TenantResponse.builder()
-            .active(true)
-            .name("name1")
-            .urn("urn1")
-            .build());
+                         .active(true)
+                         .name("name1")
+                         .urn("urn1")
+                         .build());
         response.add(TenantResponse.builder()
-            .active(true)
-            .name("name2")
-            .urn("urn2")
-            .build());
+                         .active(true)
+                         .name("name2")
+                         .urn("urn2")
+                         .build());
 
         when(tenantDao.findAllTenants()).thenReturn(response);
 
         MvcResult mvcResult = mockMvc.perform(
-                get("/tenants")
-                        .contentType(APPLICATION_JSON_UTF8))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$").isArray())
-                .andExpect(jsonPath("$", hasSize(2)))
-                .andExpect(jsonPath("$[*].urn", contains("urn1", "urn2")))
-                .andExpect(jsonPath("$[*].name", contains("name1", "name2")))
-                .andReturn();
+            get("/tenants")
+                .contentType(APPLICATION_JSON_UTF8))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$").isArray())
+            .andExpect(jsonPath("$", hasSize(2)))
+            .andExpect(jsonPath("$[*].urn", contains("urn1", "urn2")))
+            .andExpect(jsonPath("$[*].name", contains("name1", "name2")))
+            .andReturn();
 
         verify(tenantDao, times(1)).findAllTenants();
         verifyNoMoreInteractions(tenantDao);
@@ -264,10 +265,10 @@ public class ReadTenantResourceTest extends AbstractTestResource {
     public void thatGetAllTenantAnonymousFails() throws Exception {
 
         MvcResult mvcResult = mockMvc.perform(
-                get("/tenants")
-                        .contentType(APPLICATION_JSON_UTF8))
-                .andExpect(status().isForbidden())
-                .andReturn();
+            get("/tenants")
+                .contentType(APPLICATION_JSON_UTF8))
+            .andExpect(status().isForbidden())
+            .andReturn();
 
         verify(tenantDao, times(0)).findAllTenants();
         verifyNoMoreInteractions(tenantDao);

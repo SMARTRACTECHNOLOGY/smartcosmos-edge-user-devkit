@@ -1,11 +1,12 @@
 package net.smartcosmos.extension.tenant.auth;
 
-import net.smartcosmos.security.user.SmartCosmosUser;
+import java.util.ArrayList;
+import java.util.Collection;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import net.smartcosmos.security.user.SmartCosmosUser;
 
 /**
  * Constant interface for default Service User configuration.

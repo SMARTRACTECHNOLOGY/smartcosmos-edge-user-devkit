@@ -88,6 +88,7 @@ public class TenantEntity implements Serializable {
         Date created,
         Date lastModified,
         Boolean active) {
+
         this.id = id;
         this.name = name;
         this.created = created;

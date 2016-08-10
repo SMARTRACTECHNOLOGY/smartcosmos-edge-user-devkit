@@ -1,13 +1,5 @@
 package net.smartcosmos.extension.tenant.rest.resource.role;
 
-import static org.mockito.Matchers.anyObject;
-import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.anyString;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.asyncDispatch;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -23,6 +15,14 @@ import net.smartcosmos.extension.tenant.dto.role.RoleResponse;
 import net.smartcosmos.extension.tenant.rest.dto.role.RestCreateOrUpdateRoleRequest;
 import net.smartcosmos.extension.tenant.rest.resource.AbstractTestResource;
 import net.smartcosmos.test.security.WithMockSmartCosmosUser;
+
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.asyncDispatch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * Unit Testing sample for updating Roles.
@@ -42,6 +42,7 @@ public class UpdateRoleResourceTest extends AbstractTestResource {
 
     @After
     public void tearDown() throws Exception {
+
         reset(roleDao);
     }
 
@@ -57,7 +58,7 @@ public class UpdateRoleResourceTest extends AbstractTestResource {
         Boolean active = false;
 
         final String expectedTenantUrn = "urn:tenant:uuid:" + UuidUtil.getNewUuid()
-                .toString();
+            .toString();
 
         final String expectedRoleUrn = "urn:role:uuid:" + UuidUtil.getNewUuid()
             .toString();
@@ -102,26 +103,26 @@ public class UpdateRoleResourceTest extends AbstractTestResource {
 
         String roleName = "newRoleName";
         Boolean active = false;
-        final String expectedRoleUrn = "urn:role:uuid:" + UuidUtil.getNewUuid().toString();
-
+        final String expectedRoleUrn = "urn:role:uuid:" + UuidUtil.getNewUuid()
+            .toString();
 
         when(roleDao.updateRole(anyString(), anyString(), anyObject())).thenReturn(Optional.empty());
 
         RestCreateOrUpdateRoleRequest request = RestCreateOrUpdateRoleRequest.builder()
-                .name(roleName)
-                .active(active)
-                .build();
+            .name(roleName)
+            .active(active)
+            .build();
 
         MvcResult mvcResult = this.mockMvc.perform(
-                put("/roles/{urn}", expectedRoleUrn)
-                    .content(this.json(request))
-                    .contentType(contentType))
-                .andExpect(status().isOk())
-                .andExpect(request().asyncStarted())
-                .andReturn();
+            put("/roles/{urn}", expectedRoleUrn)
+                .content(this.json(request))
+                .contentType(contentType))
+            .andExpect(status().isOk())
+            .andExpect(request().asyncStarted())
+            .andReturn();
 
         MvcResult result = this.mockMvc.perform(asyncDispatch(mvcResult))
-                .andExpect(status().isNotFound())
-                .andReturn();
+            .andExpect(status().isNotFound())
+            .andReturn();
     }
 }

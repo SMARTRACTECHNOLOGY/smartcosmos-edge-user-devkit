@@ -1,16 +1,5 @@
 package net.smartcosmos.extension.tenant.rest.resource.user;
 
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.*;
-import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -25,6 +14,17 @@ import net.smartcosmos.extension.tenant.dto.user.UserResponse;
 import net.smartcosmos.extension.tenant.rest.resource.AbstractTestResource;
 import net.smartcosmos.test.security.WithMockSmartCosmosUser;
 
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.*;
+import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 @WithMockSmartCosmosUser
 public class ReadUserResourceTest extends AbstractTestResource {
 
@@ -33,6 +33,7 @@ public class ReadUserResourceTest extends AbstractTestResource {
 
     @After
     public void tearDown() throws Exception {
+
         reset(tenantDao);
     }
 
@@ -154,15 +155,15 @@ public class ReadUserResourceTest extends AbstractTestResource {
 
         List<UserResponse> response = new ArrayList<>();
         response.add(UserResponse.builder()
-            .active(true)
-            .username("name1")
-            .urn("urn1")
-            .build());
+                         .active(true)
+                         .username("name1")
+                         .urn("urn1")
+                         .build());
         response.add(UserResponse.builder()
-            .active(true)
-            .username("name2")
-            .urn("urn2")
-            .build());
+                         .active(true)
+                         .username("name2")
+                         .urn("urn2")
+                         .build());
 
         when(tenantDao.findAllUsers(anyString())).thenReturn(response);
 

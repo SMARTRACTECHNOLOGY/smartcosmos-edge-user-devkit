@@ -1,13 +1,5 @@
 package net.smartcosmos.extension.tenant.rest.resource.user;
 
-import static org.mockito.Matchers.anyObject;
-import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.anyString;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.asyncDispatch;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -23,6 +15,14 @@ import net.smartcosmos.extension.tenant.dto.user.UserResponse;
 import net.smartcosmos.extension.tenant.rest.dto.user.RestCreateOrUpdateUserRequest;
 import net.smartcosmos.extension.tenant.rest.resource.AbstractTestResource;
 import net.smartcosmos.test.security.WithMockSmartCosmosUser;
+
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.asyncDispatch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * Unit Testing sample for updating Users.
@@ -42,6 +42,7 @@ public class UpdateUserResourceTest extends AbstractTestResource {
 
     @After
     public void tearDown() throws Exception {
+
         reset(tenantDao);
     }
 
@@ -60,7 +61,7 @@ public class UpdateUserResourceTest extends AbstractTestResource {
         String surname = "Doe";
 
         final String expectedTenantUrn = "urn:tenant:uuid:" + UuidUtil.getNewUuid()
-                .toString();
+            .toString();
 
         final String expectedUserUrn = "urn:user:uuid:" + UuidUtil.getNewUuid()
             .toString();
@@ -112,33 +113,32 @@ public class UpdateUserResourceTest extends AbstractTestResource {
         String emailAddress = "newUser@example.com";
 
         final String expectedTenantUrn = "urn:tenant:uuid:" + UuidUtil.getNewUuid()
-                .toString();
+            .toString();
 
         final String expectedUserUrn = "urn:user:uuid:" + UuidUtil.getNewUuid()
-                .toString();
+            .toString();
 
         List<String> userRoles = new ArrayList<>();
         userRoles.add("User");
 
-
         when(tenantDao.updateUser(anyString(), anyString(), anyObject())).thenReturn(Optional.empty());
 
         RestCreateOrUpdateUserRequest request = RestCreateOrUpdateUserRequest.builder()
-                .username(username)
-                .emailAddress(emailAddress)
-                .roles(userRoleOnly)
-                .build();
+            .username(username)
+            .emailAddress(emailAddress)
+            .roles(userRoleOnly)
+            .build();
 
         MvcResult mvcResult = this.mockMvc.perform(
-                put("/users/{urn}", expectedUserUrn)
-                        .content(this.json(request))
-                        .contentType(contentType))
-                .andExpect(status().isOk())
-                .andExpect(request().asyncStarted())
-                .andReturn();
+            put("/users/{urn}", expectedUserUrn)
+                .content(this.json(request))
+                .contentType(contentType))
+            .andExpect(status().isOk())
+            .andExpect(request().asyncStarted())
+            .andReturn();
 
         MvcResult result = this.mockMvc.perform(asyncDispatch(mvcResult))
-                .andExpect(status().isNotFound())
-                .andReturn();
+            .andExpect(status().isNotFound())
+            .andReturn();
     }
 }

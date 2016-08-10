@@ -13,13 +13,13 @@ import net.smartcosmos.extension.tenant.TenantPersistenceTestApplication;
 import static org.junit.Assert.*;
 
 @org.springframework.boot.test.SpringApplicationConfiguration(classes = { TenantPersistenceTestApplication.class })
-@SuppressWarnings("Duplicates")
 public class TenantEntityTest {
 
     private static Validator validator;
 
     @BeforeClass
     public static void setUp() {
+
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         validator = factory.getValidator();
     }

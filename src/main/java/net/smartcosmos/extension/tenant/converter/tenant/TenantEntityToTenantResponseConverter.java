@@ -15,6 +15,7 @@ public class TenantEntityToTenantResponseConverter
 
     @Override
     public TenantResponse convert(TenantEntity entity) {
+
         return TenantResponse.builder()
             .active(entity.getActive())
             .name(entity.getName())
@@ -24,6 +25,7 @@ public class TenantEntityToTenantResponseConverter
 
     @Override
     public void registerFormatters(FormatterRegistry registry) {
+
         registry.addConverter(this);
     }
 }

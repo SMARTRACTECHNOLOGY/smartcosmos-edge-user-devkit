@@ -6,7 +6,7 @@ import net.smartcosmos.extension.tenant.dto.user.CreateOrUpdateUserRequest;
 public class MergeUtil {
 
     public static UserEntity merge(UserEntity user, CreateOrUpdateUserRequest request) {
-        
+
         if (request.getActive() != null) {
             user.setActive(request.getActive());
         }

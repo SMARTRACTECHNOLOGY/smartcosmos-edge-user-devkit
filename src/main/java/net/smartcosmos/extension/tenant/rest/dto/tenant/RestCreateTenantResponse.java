@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+
 import net.smartcosmos.extension.tenant.rest.dto.user.RestCreateUserResponse;
 
 @Data

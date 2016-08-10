@@ -1,11 +1,9 @@
 package net.smartcosmos.extension.tenant.rest.resource.user;
 
+import javax.validation.Valid;
+
 import lombok.extern.slf4j.Slf4j;
-import net.smartcosmos.extension.tenant.rest.dto.user.RestCreateOrUpdateUserRequest;
-import net.smartcosmos.extension.tenant.rest.service.user.UpdateUserService;
-import net.smartcosmos.security.EndpointMethodControl;
-import net.smartcosmos.security.user.SmartCosmosUser;
-import net.smartcosmos.annotation.SmartCosmosRdao;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.ResponseEntity;
@@ -15,16 +13,25 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.context.request.async.DeferredResult;
 
-import javax.validation.Valid;
+import net.smartcosmos.annotation.SmartCosmosRdao;
+import net.smartcosmos.extension.tenant.rest.dto.user.RestCreateOrUpdateUserRequest;
+import net.smartcosmos.extension.tenant.rest.service.user.UpdateUserService;
+import net.smartcosmos.security.user.SmartCosmosUser;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
+
+import static net.smartcosmos.extension.tenant.rest.resource.BasicEndpointConstants.ENDPOINT_ENABLEMENT_PROPERTY_ENABLED;
+import static net.smartcosmos.extension.tenant.rest.resource.user.UserEndpointConstants.ENDPOINT_ENABLEMENT_USERS;
+import static net.smartcosmos.extension.tenant.rest.resource.user.UserEndpointConstants.ENDPOINT_ENABLEMENT_USERS_UPDATE;
+import static net.smartcosmos.extension.tenant.rest.resource.user.UserEndpointConstants.ENDPOINT_USERS_URN;
+import static net.smartcosmos.extension.tenant.rest.resource.user.UserEndpointConstants.USER_URN;
 
 /**
  * Initially created by SMART COSMOS Team on July 01, 2016.
  */
 @SmartCosmosRdao
 @Slf4j
-@ConditionalOnProperty(prefix = "smt.endpoints.tenant", name = "enabled", matchIfMissing = true)
+@ConditionalOnProperty(prefix = ENDPOINT_ENABLEMENT_USERS, name = ENDPOINT_ENABLEMENT_PROPERTY_ENABLED, matchIfMissing = true)
 //@Api
 public class UpdateUserResource {
 
@@ -33,11 +40,13 @@ public class UpdateUserResource {
     @Autowired
     public UpdateUserResource(UpdateUserService service) { this.service = service; }
 
-    @RequestMapping(value = "/users/{userUrn}", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8_VALUE, consumes = APPLICATION_JSON_UTF8_VALUE)
-    @EndpointMethodControl(key = "tenant.put")
-    @ConditionalOnProperty(prefix = "smt.endpoints.user.put", name = "enabled", matchIfMissing = true)
+    @RequestMapping(value = ENDPOINT_USERS_URN,
+                    method = RequestMethod.PUT,
+                    produces = APPLICATION_JSON_UTF8_VALUE,
+                    consumes = APPLICATION_JSON_UTF8_VALUE)
+    @ConditionalOnProperty(prefix = ENDPOINT_ENABLEMENT_USERS_UPDATE, name = ENDPOINT_ENABLEMENT_PROPERTY_ENABLED, matchIfMissing = true)
     public DeferredResult<ResponseEntity> updateUser(
-        @PathVariable String userUrn,
+        @PathVariable(USER_URN) String userUrn,
         @RequestBody @Valid RestCreateOrUpdateUserRequest requestBody,
         SmartCosmosUser user) {
 

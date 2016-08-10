@@ -17,6 +17,7 @@ public class RestUpdateTenantRequestToUpdateTenantRequestConverter
 
     @Override
     public UpdateTenantRequest convert(RestUpdateTenantRequest restUpdateTenantRequest) {
+
         return UpdateTenantRequest.builder()
             .name(restUpdateTenantRequest.getName())
             .active(restUpdateTenantRequest.getActive())

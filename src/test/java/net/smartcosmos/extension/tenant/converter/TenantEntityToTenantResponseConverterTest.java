@@ -1,7 +1,5 @@
 package net.smartcosmos.extension.tenant.converter;
 
-import static org.junit.Assert.*;
-
 import java.util.UUID;
 
 import org.junit.*;
@@ -11,10 +9,13 @@ import net.smartcosmos.extension.tenant.converter.tenant.TenantEntityToTenantRes
 import net.smartcosmos.extension.tenant.domain.TenantEntity;
 import net.smartcosmos.extension.tenant.dto.tenant.TenantResponse;
 
+import static org.junit.Assert.*;
+
 public class TenantEntityToTenantResponseConverterTest {
 
     @Test
     public void thatConversionSucceeds() {
+
         final boolean active = true;
         final String name = "tenant_name";
         final UUID id = UuidUtil.getNewUuid();

@@ -18,6 +18,7 @@ public class CreateTenantRequestToTenantEntityConverter
 
     @Override
     public TenantEntity convert(CreateTenantRequest createTenantRequest) {
+
         return TenantEntity.builder()
             .id(UuidUtil.getNewUuid())
             .name(createTenantRequest.getName())
