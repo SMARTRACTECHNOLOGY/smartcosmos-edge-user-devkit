@@ -16,8 +16,8 @@ import org.springframework.test.context.web.WebAppConfiguration;
 
 import net.smartcosmos.cluster.userdetails.repository.UserRepository;
 import net.smartcosmos.cluster.userdetails.util.UuidUtil;
-import net.smartcosmos.extension.tenant.TenantPersistenceConfig;
 import net.smartcosmos.extension.tenant.TenantPersistenceTestApplication;
+import net.smartcosmos.extension.tenant.UserManagementPersistenceConfig;
 import net.smartcosmos.extension.tenant.dto.tenant.CreateTenantRequest;
 import net.smartcosmos.extension.tenant.dto.tenant.CreateTenantResponse;
 import net.smartcosmos.extension.tenant.dto.tenant.TenantResponse;
@@ -32,7 +32,7 @@ import static org.junit.Assert.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = {
     TenantPersistenceTestApplication.class,
-    TenantPersistenceConfig.class })
+    UserManagementPersistenceConfig.class })
 @ActiveProfiles("test")
 @WebAppConfiguration
 @IntegrationTest({ "spring.cloud.config.enabled=false", "eureka.client.enabled:false" })
