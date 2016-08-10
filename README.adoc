@@ -563,11 +563,17 @@ smartcosmos:
     enabled: true
 
   endpoints:
+    tenants:
+      create.enabled: true
+      read:
+        urn.enabled: true
+        all.enabled: true
+      update.enabled: true
     roles:
       create.enabled: true
       read:
-        urn: true
-        all: true
+        urn.enabled: true
+        all.enabled: true
       update.enabled: true
       delete.enabled: true
 ----
