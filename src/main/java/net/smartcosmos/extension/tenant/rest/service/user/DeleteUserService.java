@@ -2,8 +2,7 @@ package net.smartcosmos.extension.tenant.rest.service.user;
 
 import java.util.Optional;
 
-import javax.inject.Inject;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,10 +27,9 @@ import net.smartcosmos.security.user.SmartCosmosUser;
 @Service
 public class DeleteUserService extends AbstractTenantService {
 
-    @Inject
-    public DeleteUserService(
-        TenantDao tenantDao, RoleDao roleDao, SmartCosmosEventTemplate smartCosmosEventTemplate, ConversionService
-        conversionService) {
+    @Autowired
+    public DeleteUserService(TenantDao tenantDao, RoleDao roleDao, SmartCosmosEventTemplate smartCosmosEventTemplate,
+            ConversionService conversionService) {
         super(tenantDao, roleDao, smartCosmosEventTemplate, conversionService);
     }
 
@@ -52,17 +50,16 @@ public class DeleteUserService extends AbstractTenantService {
             if (deleteUserResponse.isPresent()) {
                 response.setResult(ResponseEntity.noContent().build());
                 sendEvent(user, DefaultEventTypes.UserDeleted, deleteUserResponse.get());
-            } else {
+            }
+            else {
                 response.setResult(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
 
-                UserResponse eventPayload = UserResponse.builder()
-                    .urn(userUrn)
-                    .tenantUrn(user.getAccountUrn())
-                    .build();
+                UserResponse eventPayload = UserResponse.builder().urn(userUrn).tenantUrn(user.getAccountUrn()).build();
                 sendEvent(user, DefaultEventTypes.UserNotFound, eventPayload);
             }
 
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             log.debug(e.getMessage(), e);
             response.setErrorResult(e);
         }

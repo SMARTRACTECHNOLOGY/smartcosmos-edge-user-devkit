@@ -36,10 +36,7 @@ public class RolePersistenceService implements RoleDao {
     private final ConversionService conversionService;
 
     @Autowired
-    public RolePersistenceService(
-        RoleRepository roleRepository,
-        AuthorityRepository authorityRepository,
-        ConversionService conversionService) {
+    public RolePersistenceService(RoleRepository roleRepository, AuthorityRepository authorityRepository, ConversionService conversionService) {
 
         this.roleRepository = roleRepository;
         this.authorityRepository = authorityRepository;
@@ -47,12 +44,10 @@ public class RolePersistenceService implements RoleDao {
     }
 
     @Override
-    public Optional<RoleResponse> createRole(String tenantUrn, CreateOrUpdateRoleRequest createRoleRequest)
-        throws ConstraintViolationException {
+    public Optional<RoleResponse> createRole(String tenantUrn, CreateOrUpdateRoleRequest createRoleRequest) throws ConstraintViolationException {
 
         // This role already exists? we're not creating a new one
-        if (roleRepository.findByTenantIdAndNameIgnoreCase(UuidUtil.getUuidFromUrn(tenantUrn), createRoleRequest.getName())
-            .isPresent()) {
+        if (roleRepository.findByTenantIdAndNameIgnoreCase(UuidUtil.getUuidFromUrn(tenantUrn), createRoleRequest.getName()).isPresent()) {
             return Optional.empty();
         }
 
@@ -62,15 +57,14 @@ public class RolePersistenceService implements RoleDao {
             authorityEntities.add(authorityRepository.save(AuthorityEntity.builder().authority(authority).build()));
         }
 
-        RoleEntity role = roleRepository.save(RoleEntity.builder()
-                .id(UuidUtil.getNewUuid()).tenantId(UuidUtil.getUuidFromUrn(tenantUrn)).name(createRoleRequest.getName())
-                .authorities(authorityEntities).active(createRoleRequest.getActive()).build());
+        RoleEntity role = roleRepository.save(RoleEntity.builder().id(UuidUtil.getNewUuid()).tenantId(UuidUtil.getUuidFromUrn(tenantUrn))
+                .name(createRoleRequest.getName()).authorities(authorityEntities).active(createRoleRequest.getActive()).build());
         return Optional.ofNullable(conversionService.convert(role, RoleResponse.class));
     }
 
     @Override
     public Optional<RoleResponse> updateRole(String tenantUrn, String urn, CreateOrUpdateRoleRequest updateRoleRequest)
-        throws ConstraintViolationException {
+            throws ConstraintViolationException {
 
         UUID tenantId = UuidUtil.getUuidFromUrn(tenantUrn);
         UUID id = UuidUtil.getUuidFromUrn(urn);
@@ -83,13 +77,8 @@ public class RolePersistenceService implements RoleDao {
                 authorityEntities.add(authorityRepository.save(AuthorityEntity.builder().authority(authority).build()));
             }
 
-            RoleEntity role = roleRepository.save(RoleEntity.builder()
-                                                      .id(id)
-                                                      .tenantId(tenantId)
-                                                      .name(updateRoleRequest.getName())
-                                                      .authorities(authorityEntities)
-                                                      .active(updateRoleRequest.getActive())
-                                                      .build());
+            RoleEntity role = roleRepository.save(RoleEntity.builder().id(id).tenantId(tenantId).name(updateRoleRequest.getName())
+                    .authorities(authorityEntities).active(updateRoleRequest.getActive()).build());
             return Optional.ofNullable(conversionService.convert(role, RoleResponse.class));
         }
 
@@ -109,11 +98,9 @@ public class RolePersistenceService implements RoleDao {
     }
 
     @Override
-    public List<RoleResponse> delete(String tenantUrn, String urn)
-        throws IllegalArgumentException {
+    public List<RoleResponse> delete(String tenantUrn, String urn) throws IllegalArgumentException {
 
-        List<RoleEntity> roleEntities = roleRepository
-            .deleteByTenantIdAndId(UuidUtil.getUuidFromUrn(tenantUrn), UuidUtil.getUuidFromUrn(urn));
+        List<RoleEntity> roleEntities = roleRepository.deleteByTenantIdAndId(UuidUtil.getUuidFromUrn(tenantUrn), UuidUtil.getUuidFromUrn(urn));
         return convertList(roleEntities, RoleEntity.class, RoleResponse.class);
     }
 
@@ -156,4 +143,3 @@ public class RolePersistenceService implements RoleDao {
         return (List<T>) conversionService.convert(list, sourceDescriptor, targetDescriptor);
     }
 }
-

@@ -13,15 +13,11 @@ import net.smartcosmos.extension.tenant.rest.dto.role.RestCreateOrUpdateRoleRequ
  */
 @Component
 public class RestCreateOrUpdateRoleRequestToCreateOrUpdateRoleRequestConverter
-    implements Converter<RestCreateOrUpdateRoleRequest, CreateOrUpdateRoleRequest>, FormatterRegistrar {
+        implements Converter<RestCreateOrUpdateRoleRequest, CreateOrUpdateRoleRequest>, FormatterRegistrar {
 
     @Override
     public CreateOrUpdateRoleRequest convert(RestCreateOrUpdateRoleRequest request) {
-        return CreateOrUpdateRoleRequest.builder()
-            .name(request.getName())
-            .active(request.getActive())
-            .authorities(request.getAuthorities())
-            .build();
+        return CreateOrUpdateRoleRequest.builder().name(request.getName()).active(request.getActive()).authorities(request.getAuthorities()).build();
     }
 
     @Override

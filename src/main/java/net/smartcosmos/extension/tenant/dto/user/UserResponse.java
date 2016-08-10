@@ -1,14 +1,15 @@
 package net.smartcosmos.extension.tenant.dto.user;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.Builder;
-import lombok.Data;
-
 import java.beans.ConstructorProperties;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+import lombok.Builder;
+import lombok.Data;
 
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -29,8 +30,8 @@ public class UserResponse {
 
     @Builder
     @ConstructorProperties({ "urn", "tenantUrn", "username", "emailAddress", "givenName", "surname", "roles", "active" })
-    public UserResponse(
-            String urn, String tenantUrn, String username, String emailAddress, String givenName, String surname, Collection<String> roles, Boolean active) {
+    public UserResponse(String urn, String tenantUrn, String username, String emailAddress, String givenName, String surname,
+            Collection<String> roles, Boolean active) {
         this.urn = urn;
         this.tenantUrn = tenantUrn;
         this.username = username;

@@ -53,26 +53,15 @@ public class DeleteUserResourceTest extends AbstractTestResource {
         List<String> userRoles = new ArrayList<>();
         userRoles.add("User");
 
-        UserResponse getOrDeleteUserResponse = UserResponse
-            .builder()
-            .urn(expectedUserUrn)
-            .tenantUrn(expectedTenantUrn)
-            .username(username)
-            .emailAddress(emailAddress)
-            .roles(userRoles)
-            .active(true)
-            .build();
+        UserResponse getOrDeleteUserResponse = UserResponse.builder().urn(expectedUserUrn).tenantUrn(expectedTenantUrn).username(username)
+                .emailAddress(emailAddress).roles(userRoles).active(true).build();
 
         when(tenantDao.deleteUserByUrn(anyString(), anyString())).thenReturn(Optional.ofNullable(getOrDeleteUserResponse));
 
-        MvcResult mvcResult = this.mockMvc.perform(
-            delete("/users/" + expectedUserUrn).contentType(contentType))
-            .andExpect(status().isOk())
-            .andExpect(request().asyncStarted())
-            .andReturn();
+        MvcResult mvcResult = this.mockMvc.perform(delete("/users/" + expectedUserUrn).contentType(contentType)).andExpect(status().isOk())
+                .andExpect(request().asyncStarted()).andReturn();
 
-        this.mockMvc.perform(asyncDispatch(mvcResult))
-            .andExpect(status().isNoContent());
+        this.mockMvc.perform(asyncDispatch(mvcResult)).andExpect(status().isNoContent());
 
     }
 
@@ -88,14 +77,10 @@ public class DeleteUserResourceTest extends AbstractTestResource {
 
         when(tenantDao.deleteUserByUrn(anyString(), anyString())).thenReturn(Optional.empty());
 
-        MvcResult mvcResult = this.mockMvc.perform(
-                delete("/users/" + expectedUserUrn).contentType(contentType))
-                .andExpect(status().isOk())
-                .andExpect(request().asyncStarted())
-                .andReturn();
+        MvcResult mvcResult = this.mockMvc.perform(delete("/users/" + expectedUserUrn).contentType(contentType)).andExpect(status().isOk())
+                .andExpect(request().asyncStarted()).andReturn();
 
-        this.mockMvc.perform(asyncDispatch(mvcResult))
-                .andExpect(status().isNotFound());
+        this.mockMvc.perform(asyncDispatch(mvcResult)).andExpect(status().isNotFound());
 
     }
 }

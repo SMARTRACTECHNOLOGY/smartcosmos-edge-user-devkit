@@ -1,10 +1,12 @@
 package net.smartcosmos.extension.tenant.rest.service;
 
-import lombok.extern.slf4j.Slf4j;
+import java.util.List;
 
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.http.ResponseEntity;
+
+import lombok.extern.slf4j.Slf4j;
 
 import net.smartcosmos.events.SmartCosmosEventException;
 import net.smartcosmos.events.SmartCosmosEventTemplate;
@@ -12,8 +14,6 @@ import net.smartcosmos.extension.tenant.dao.RoleDao;
 import net.smartcosmos.extension.tenant.dao.TenantDao;
 import net.smartcosmos.extension.tenant.rest.dto.MessageDto;
 import net.smartcosmos.security.user.SmartCosmosUser;
-
-import java.util.List;
 
 @Slf4j
 public class AbstractTenantService {
@@ -26,11 +26,8 @@ public class AbstractTenantService {
 
     protected final ConversionService conversionService;
 
-    public AbstractTenantService(
-        TenantDao tenantDao,
-        RoleDao roleDao,
-        SmartCosmosEventTemplate smartCosmosEventTemplate,
-        ConversionService conversionService) {
+    public AbstractTenantService(TenantDao tenantDao, RoleDao roleDao, SmartCosmosEventTemplate smartCosmosEventTemplate,
+            ConversionService conversionService) {
         this.tenantDao = tenantDao;
         this.roleDao = roleDao;
         this.smartCosmosEventTemplate = smartCosmosEventTemplate;
@@ -41,10 +38,12 @@ public class AbstractTenantService {
         try {
             if (user != null) {
                 smartCosmosEventTemplate.sendEvent(entity, eventType, user);
-            } else {
+            }
+            else {
                 smartCosmosEventTemplate.sendEvent(entity, eventType);
             }
-        } catch (SmartCosmosEventException e) {
+        }
+        catch (SmartCosmosEventException e) {
             log.error(e.getMessage());
             log.debug(e.getMessage(), e);
         }
@@ -60,7 +59,6 @@ public class AbstractTenantService {
      * @param <T> the generic target type
      * @return the converted typed list
      */
-    @SuppressWarnings("unchecked")
     protected <S, T> List<T> convertList(List<S> list, Class sourceClass, Class targetClass) {
 
         TypeDescriptor sourceDescriptor = TypeDescriptor.collection(List.class, TypeDescriptor.valueOf(sourceClass));
@@ -70,10 +68,6 @@ public class AbstractTenantService {
     }
 
     protected ResponseEntity<?> buildBadRequestResponse(String responseMessage, int code) {
-        return ResponseEntity.badRequest()
-            .body(MessageDto.builder()
-                      .code(code)
-                      .message(responseMessage)
-                      .build());
+        return ResponseEntity.badRequest().body(MessageDto.builder().code(code).message(responseMessage).build());
     }
 }

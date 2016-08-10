@@ -13,14 +13,11 @@ import net.smartcosmos.extension.tenant.rest.dto.tenant.RestUpdateTenantRequest;
  */
 @Component
 public class RestUpdateTenantRequestToUpdateTenantRequestConverter
-    implements Converter<RestUpdateTenantRequest, UpdateTenantRequest>, FormatterRegistrar {
+        implements Converter<RestUpdateTenantRequest, UpdateTenantRequest>, FormatterRegistrar {
 
     @Override
     public UpdateTenantRequest convert(RestUpdateTenantRequest restUpdateTenantRequest) {
-        return UpdateTenantRequest.builder()
-            .name(restUpdateTenantRequest.getName())
-            .active(restUpdateTenantRequest.getActive())
-            .build();
+        return UpdateTenantRequest.builder().name(restUpdateTenantRequest.getName()).active(restUpdateTenantRequest.getActive()).build();
     }
 
     @Override

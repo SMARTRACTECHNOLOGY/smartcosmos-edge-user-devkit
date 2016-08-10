@@ -30,8 +30,7 @@ import net.smartcosmos.test.security.WithMockSmartCosmosUser;
  * Unit Testing sample for creating Tenants.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = { TenantPersistenceTestApplication.class,
-                                            TenantPersistenceConfig.class })
+@SpringApplicationConfiguration(classes = { TenantPersistenceTestApplication.class, TenantPersistenceConfig.class })
 public class UpdateTenantResourceTest extends AbstractTestResource {
 
     @Autowired
@@ -54,32 +53,18 @@ public class UpdateTenantResourceTest extends AbstractTestResource {
         final String name = "example.com";
         final Boolean active = false;
 
-        final String expectedTenantUrn = "urn:tenant:uuid:" + UuidUtil.getNewUuid()
-                .toString();
+        final String expectedTenantUrn = "urn:tenant:uuid:" + UuidUtil.getNewUuid().toString();
 
-        TenantResponse updateTenantResponse = TenantResponse.builder()
-            .urn(expectedTenantUrn)
-            .name(name)
-            .active(active)
-            .build();
+        TenantResponse updateTenantResponse = TenantResponse.builder().urn(expectedTenantUrn).name(name).active(active).build();
 
         when(tenantDao.updateTenant(anyString(), anyObject())).thenReturn(Optional.ofNullable(updateTenantResponse));
 
-        RestUpdateTenantRequest request = RestUpdateTenantRequest.builder()
-                .active(active)
-                .name(name)
-                .build();
+        RestUpdateTenantRequest request = RestUpdateTenantRequest.builder().active(active).name(name).build();
 
-        MvcResult mvcResult = this.mockMvc.perform(
-            put("/tenants/{urn}", expectedTenantUrn).content(this.json(request))
-                .contentType(contentType))
-            .andExpect(status().isOk())
-            .andExpect(request().asyncStarted())
-            .andReturn();
+        MvcResult mvcResult = this.mockMvc.perform(put("/tenants/{urn}", expectedTenantUrn).content(this.json(request)).contentType(contentType))
+                .andExpect(status().isOk()).andExpect(request().asyncStarted()).andReturn();
 
-        this.mockMvc.perform(asyncDispatch(mvcResult))
-            .andExpect(status().isNoContent())
-            .andReturn();
+        this.mockMvc.perform(asyncDispatch(mvcResult)).andExpect(status().isNoContent()).andReturn();
     }
 
     /**
@@ -94,26 +79,16 @@ public class UpdateTenantResourceTest extends AbstractTestResource {
         final String name = "example.com";
         final Boolean active = false;
 
-        final String expectedTenantUrn = "urn:tenant:uuid:" + UuidUtil.getNewUuid()
-                .toString();
+        final String expectedTenantUrn = "urn:tenant:uuid:" + UuidUtil.getNewUuid().toString();
 
         when(tenantDao.updateTenant(anyString(), anyObject())).thenReturn(Optional.empty());
 
-        RestUpdateTenantRequest request = RestUpdateTenantRequest.builder()
-                .active(active)
-                .name(name)
-                .build();
+        RestUpdateTenantRequest request = RestUpdateTenantRequest.builder().active(active).name(name).build();
 
-        MvcResult mvcResult = this.mockMvc.perform(
-                put("/tenants/{urn}", expectedTenantUrn).content(this.json(request))
-                        .contentType(contentType))
-                .andExpect(status().isOk())
-                .andExpect(request().asyncStarted())
-                .andReturn();
+        MvcResult mvcResult = this.mockMvc.perform(put("/tenants/{urn}", expectedTenantUrn).content(this.json(request)).contentType(contentType))
+                .andExpect(status().isOk()).andExpect(request().asyncStarted()).andReturn();
 
-        this.mockMvc.perform(asyncDispatch(mvcResult))
-                .andExpect(status().isNotFound())
-                .andReturn();
+        this.mockMvc.perform(asyncDispatch(mvcResult)).andExpect(status().isNotFound()).andReturn();
     }
 
     @Test
@@ -122,20 +97,12 @@ public class UpdateTenantResourceTest extends AbstractTestResource {
         final String name = "example.com";
         final Boolean active = false;
 
-        final String expectedTenantUrn = "urn:tenant:uuid:" + UuidUtil.getNewUuid()
-                .toString();
+        final String expectedTenantUrn = "urn:tenant:uuid:" + UuidUtil.getNewUuid().toString();
 
-        RestUpdateTenantRequest request = RestUpdateTenantRequest.builder()
-                .active(active)
-                .name(name)
-                .build();
+        RestUpdateTenantRequest request = RestUpdateTenantRequest.builder().active(active).name(name).build();
 
-        MvcResult mvcResult = this.mockMvc.perform(
-                put("/tenants/{urn}", expectedTenantUrn).content(this.json(request))
-                        .contentType(contentType))
-                .andExpect(status().isForbidden())
-                .andExpect(request().asyncNotStarted())
-                .andReturn();
+        MvcResult mvcResult = this.mockMvc.perform(put("/tenants/{urn}", expectedTenantUrn).content(this.json(request)).contentType(contentType))
+                .andExpect(status().isForbidden()).andExpect(request().asyncNotStarted()).andReturn();
     }
 
     /**
@@ -149,19 +116,11 @@ public class UpdateTenantResourceTest extends AbstractTestResource {
         final String name = "example.com";
         final Boolean active = false;
 
-        final String expectedTenantUrn = "urn:tenant:uuid:" + UuidUtil.getNewUuid()
-                .toString();
+        final String expectedTenantUrn = "urn:tenant:uuid:" + UuidUtil.getNewUuid().toString();
 
-        RestUpdateTenantRequest request = RestUpdateTenantRequest.builder()
-                .active(active)
-                .name(name)
-                .build();
+        RestUpdateTenantRequest request = RestUpdateTenantRequest.builder().active(active).name(name).build();
 
-        MvcResult mvcResult = this.mockMvc.perform(
-                put("/tenants/{urn}", expectedTenantUrn).content(this.json(request))
-                        .contentType(contentType))
-                .andExpect(status().isForbidden())
-                .andExpect(request().asyncNotStarted())
-                .andReturn();
+        MvcResult mvcResult = this.mockMvc.perform(put("/tenants/{urn}", expectedTenantUrn).content(this.json(request)).contentType(contentType))
+                .andExpect(status().isForbidden()).andExpect(request().asyncNotStarted()).andReturn();
     }
 }

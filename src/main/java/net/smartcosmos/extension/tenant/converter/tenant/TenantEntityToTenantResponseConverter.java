@@ -10,16 +10,11 @@ import net.smartcosmos.extension.tenant.domain.TenantEntity;
 import net.smartcosmos.extension.tenant.dto.tenant.TenantResponse;
 
 @Component
-public class TenantEntityToTenantResponseConverter
-    implements Converter<TenantEntity, TenantResponse>, FormatterRegistrar {
+public class TenantEntityToTenantResponseConverter implements Converter<TenantEntity, TenantResponse>, FormatterRegistrar {
 
     @Override
     public TenantResponse convert(TenantEntity entity) {
-        return TenantResponse.builder()
-            .active(entity.getActive())
-            .name(entity.getName())
-            .urn(UuidUtil.getTenantUrnFromUuid(entity.getId()))
-            .build();
+        return TenantResponse.builder().active(entity.getActive()).name(entity.getName()).urn(UuidUtil.getTenantUrnFromUuid(entity.getId())).build();
     }
 
     @Override

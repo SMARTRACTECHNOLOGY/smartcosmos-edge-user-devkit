@@ -19,7 +19,7 @@ import net.smartcosmos.extension.tenant.dto.user.CreateUserResponse;
  */
 @Component
 public class TenantEntityAndUserEntityDtoToCreateTenantResponseConverter
-    implements Converter<TenantEntityAndUserEntityDto, CreateTenantResponse>, FormatterRegistrar {
+        implements Converter<TenantEntityAndUserEntityDto, CreateTenantResponse>, FormatterRegistrar {
 
     @Override
     public CreateTenantResponse convert(TenantEntityAndUserEntityDto entityDto) {
@@ -28,22 +28,13 @@ public class TenantEntityAndUserEntityDtoToCreateTenantResponseConverter
             return null;
         }
 
-        Set<String> rolesAsStrings = entityDto.getUserEntity().getRoles().stream()
-            .map(RoleEntity::getName)
-            .collect(Collectors.toSet());
+        Set<String> rolesAsStrings = entityDto.getUserEntity().getRoles().stream().map(RoleEntity::getName).collect(Collectors.toSet());
 
-        CreateUserResponse userResponse = CreateUserResponse.builder()
-            .urn(UuidUtil.getUserUrnFromUuid(entityDto.getUserEntity().getId()))
-            .tenantUrn(UuidUtil.getUserUrnFromUuid(entityDto.getTenantEntity().getId()))
-            .username(entityDto.getUserEntity().getUsername())
-            .password(entityDto.getUserEntity().getPassword())
-            .roles(rolesAsStrings)
-            .build();
+        CreateUserResponse userResponse = CreateUserResponse.builder().urn(UuidUtil.getUserUrnFromUuid(entityDto.getUserEntity().getId()))
+                .tenantUrn(UuidUtil.getUserUrnFromUuid(entityDto.getTenantEntity().getId())).username(entityDto.getUserEntity().getUsername())
+                .password(entityDto.getUserEntity().getPassword()).roles(rolesAsStrings).build();
 
-        return CreateTenantResponse.builder()
-            .urn(UuidUtil.getTenantUrnFromUuid(entityDto.getTenantEntity().getId()))
-            .admin(userResponse)
-            .build();
+        return CreateTenantResponse.builder().urn(UuidUtil.getTenantUrnFromUuid(entityDto.getTenantEntity().getId())).admin(userResponse).build();
     }
 
     @Override

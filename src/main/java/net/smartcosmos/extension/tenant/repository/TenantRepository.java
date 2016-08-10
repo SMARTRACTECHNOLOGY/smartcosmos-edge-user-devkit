@@ -12,9 +12,8 @@ import net.smartcosmos.extension.tenant.domain.TenantEntity;
 /**
  * Initially created by SMART COSMOS Team on June 30, 2016.
  */
-public interface TenantRepository extends JpaRepository<TenantEntity, UUID>,
-                                          PagingAndSortingRepository<TenantEntity, UUID>,
-                                          JpaSpecificationExecutor<TenantEntity> {
+public interface TenantRepository
+        extends JpaRepository<TenantEntity, UUID>, PagingAndSortingRepository<TenantEntity, UUID>, JpaSpecificationExecutor<TenantEntity> {
 
     Optional<TenantEntity> findByIdAndNameIgnoreCase(UUID id, String name);
 

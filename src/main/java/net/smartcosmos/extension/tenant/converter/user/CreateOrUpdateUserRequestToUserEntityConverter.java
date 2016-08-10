@@ -14,8 +14,7 @@ import net.smartcosmos.extension.tenant.dto.user.CreateOrUpdateUserRequest;
  * Initially created by SMART COSMOS Team on June 30, 2016.
  */
 @Component
-public class CreateOrUpdateUserRequestToUserEntityConverter
-    implements Converter<CreateOrUpdateUserRequest, UserEntity>, FormatterRegistrar {
+public class CreateOrUpdateUserRequestToUserEntityConverter implements Converter<CreateOrUpdateUserRequest, UserEntity>, FormatterRegistrar {
 
     PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -23,18 +22,12 @@ public class CreateOrUpdateUserRequestToUserEntityConverter
     public UserEntity convert(CreateOrUpdateUserRequest request) {
 
         /*
-            The converter ignores the roles, because it isn't able to completely convert them.
-            We therefore have to separately add the roles later on.
+         * The converter ignores the roles, because it isn't able to completely convert them.
+         * We therefore have to separately add the roles later on.
          */
 
-        return UserEntity.builder()
-            .username(request.getUsername())
-            .emailAddress(request.getEmailAddress())
-            .givenName(request.getGivenName())
-            .surname(request.getSurname())
-            .active(request.getActive())
-            .password(request.getPassword())
-            .build();
+        return UserEntity.builder().username(request.getUsername()).emailAddress(request.getEmailAddress()).givenName(request.getGivenName())
+                .surname(request.getSurname()).active(request.getActive()).password(request.getPassword()).build();
     }
 
     @Override

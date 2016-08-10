@@ -3,6 +3,7 @@ package net.smartcosmos.extension.tenant.rest.dto.tenant;
 import java.beans.ConstructorProperties;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-//@ApiModel(description = "Create a \"Tenant\" in the smartcosmos-edge-tenant Server.")
+// @ApiModel(description = "Create a \"Tenant\" in the smartcosmos-edge-tenant Server.")
 public class RestCreateTenantRequest {
 
     private static final int VERSION = 1;

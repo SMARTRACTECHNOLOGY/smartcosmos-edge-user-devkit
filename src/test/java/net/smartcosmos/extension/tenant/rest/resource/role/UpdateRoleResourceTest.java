@@ -56,40 +56,23 @@ public class UpdateRoleResourceTest extends AbstractTestResource {
         String roleName = "newRole";
         Boolean active = false;
 
-        final String expectedTenantUrn = "urn:tenant:uuid:" + UuidUtil.getNewUuid()
-                .toString();
+        final String expectedTenantUrn = "urn:tenant:uuid:" + UuidUtil.getNewUuid().toString();
 
-        final String expectedRoleUrn = "urn:role:uuid:" + UuidUtil.getNewUuid()
-            .toString();
+        final String expectedRoleUrn = "urn:role:uuid:" + UuidUtil.getNewUuid().toString();
 
         List<String> userRoles = new ArrayList<>();
         userRoles.add("User");
 
-        RoleResponse roleResponse = RoleResponse.builder()
-            .urn(expectedRoleUrn)
-            .active(active)
-            .tenantUrn(expectedTenantUrn)
-            .name(roleName)
-            .build();
+        RoleResponse roleResponse = RoleResponse.builder().urn(expectedRoleUrn).active(active).tenantUrn(expectedTenantUrn).name(roleName).build();
 
         when(roleDao.updateRole(anyString(), anyString(), anyObject())).thenReturn(Optional.ofNullable(roleResponse));
 
-        RestCreateOrUpdateRoleRequest request = RestCreateOrUpdateRoleRequest.builder()
-            .name(roleName)
-            .active(active)
-            .build();
+        RestCreateOrUpdateRoleRequest request = RestCreateOrUpdateRoleRequest.builder().name(roleName).active(active).build();
 
-        MvcResult mvcResult = this.mockMvc.perform(
-            put("/roles/{urn}", expectedRoleUrn)
-                .content(this.json(request))
-                .contentType(contentType))
-            .andExpect(status().isOk())
-            .andExpect(request().asyncStarted())
-            .andReturn();
+        MvcResult mvcResult = this.mockMvc.perform(put("/roles/{urn}", expectedRoleUrn).content(this.json(request)).contentType(contentType))
+                .andExpect(status().isOk()).andExpect(request().asyncStarted()).andReturn();
 
-        MvcResult result = this.mockMvc.perform(asyncDispatch(mvcResult))
-            .andExpect(status().isNoContent())
-            .andReturn();
+        MvcResult result = this.mockMvc.perform(asyncDispatch(mvcResult)).andExpect(status().isNoContent()).andReturn();
     }
 
     /**
@@ -104,24 +87,13 @@ public class UpdateRoleResourceTest extends AbstractTestResource {
         Boolean active = false;
         final String expectedRoleUrn = "urn:role:uuid:" + UuidUtil.getNewUuid().toString();
 
-
         when(roleDao.updateRole(anyString(), anyString(), anyObject())).thenReturn(Optional.empty());
 
-        RestCreateOrUpdateRoleRequest request = RestCreateOrUpdateRoleRequest.builder()
-                .name(roleName)
-                .active(active)
-                .build();
+        RestCreateOrUpdateRoleRequest request = RestCreateOrUpdateRoleRequest.builder().name(roleName).active(active).build();
 
-        MvcResult mvcResult = this.mockMvc.perform(
-                put("/roles/{urn}", expectedRoleUrn)
-                    .content(this.json(request))
-                    .contentType(contentType))
-                .andExpect(status().isOk())
-                .andExpect(request().asyncStarted())
-                .andReturn();
+        MvcResult mvcResult = this.mockMvc.perform(put("/roles/{urn}", expectedRoleUrn).content(this.json(request)).contentType(contentType))
+                .andExpect(status().isOk()).andExpect(request().asyncStarted()).andReturn();
 
-        MvcResult result = this.mockMvc.perform(asyncDispatch(mvcResult))
-                .andExpect(status().isNotFound())
-                .andReturn();
+        MvcResult result = this.mockMvc.perform(asyncDispatch(mvcResult)).andExpect(status().isNotFound()).andReturn();
     }
 }

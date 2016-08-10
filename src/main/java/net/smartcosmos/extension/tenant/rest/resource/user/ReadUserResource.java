@@ -1,6 +1,6 @@
 package net.smartcosmos.extension.tenant.rest.resource.user;
 
-import lombok.extern.slf4j.Slf4j;
+import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -10,12 +10,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import lombok.extern.slf4j.Slf4j;
+
+import net.smartcosmos.annotation.SmartCosmosRdao;
 import net.smartcosmos.extension.tenant.rest.service.user.ReadUserService;
 import net.smartcosmos.security.EndpointMethodControl;
 import net.smartcosmos.security.user.SmartCosmosUser;
-import net.smartcosmos.annotation.SmartCosmosRdao;
-
-import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 
 @Slf4j
 @SmartCosmosRdao
@@ -25,7 +25,9 @@ public class ReadUserResource {
     private ReadUserService readUserService;
 
     @Autowired
-    public ReadUserResource(ReadUserService readUserService) { this.readUserService = readUserService; }
+    public ReadUserResource(ReadUserService readUserService) {
+        this.readUserService = readUserService;
+    }
 
     @RequestMapping(value = "/users/{urn}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8_VALUE)
     @EndpointMethodControl(key = "tenant.urn.get")
@@ -38,8 +40,7 @@ public class ReadUserResource {
     @RequestMapping(value = "/users", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8_VALUE)
     @EndpointMethodControl(key = "tenant.get")
     @ConditionalOnProperty(prefix = "smt.endpoints.user.get", name = "enabled", matchIfMissing = true)
-    public ResponseEntity<?> getByName(
-        @RequestParam(value = "name", required = false, defaultValue = "") String name, SmartCosmosUser user) {
+    public ResponseEntity<?> getByName(@RequestParam(value = "name", required = false, defaultValue = "") String name, SmartCosmosUser user) {
 
         return readUserService.query(name, user);
     }

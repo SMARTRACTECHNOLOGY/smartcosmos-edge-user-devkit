@@ -17,24 +17,15 @@ import net.smartcosmos.extension.tenant.dto.role.RoleResponse;
  * Initially created by SMART COSMOS Team on June 30, 2016.
  */
 @Component
-public class RoleEntityToRoleResponseConverter
-    implements Converter<RoleEntity, RoleResponse>, FormatterRegistrar {
+public class RoleEntityToRoleResponseConverter implements Converter<RoleEntity, RoleResponse>, FormatterRegistrar {
 
     @Override
     public RoleResponse convert(RoleEntity roleEntity) {
 
-        Set<String> authorities = roleEntity.getAuthorities()
-            .stream()
-            .map(AuthorityEntity::getAuthority)
-            .collect(Collectors.toSet());
+        Set<String> authorities = roleEntity.getAuthorities().stream().map(AuthorityEntity::getAuthority).collect(Collectors.toSet());
 
-        return RoleResponse.builder()
-            .urn(UuidUtil.getRoleUrnFromUuid(roleEntity.getId()))
-            .name(roleEntity.getName())
-            .active(roleEntity.getActive())
-            .authorities(authorities)
-            .tenantUrn(UuidUtil.getTenantUrnFromUuid(roleEntity.getTenantId()))
-            .build();
+        return RoleResponse.builder().urn(UuidUtil.getRoleUrnFromUuid(roleEntity.getId())).name(roleEntity.getName()).active(roleEntity.getActive())
+                .authorities(authorities).tenantUrn(UuidUtil.getTenantUrnFromUuid(roleEntity.getTenantId())).build();
     }
 
     @Override

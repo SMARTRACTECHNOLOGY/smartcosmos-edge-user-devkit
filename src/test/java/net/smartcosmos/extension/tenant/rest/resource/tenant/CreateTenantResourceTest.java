@@ -36,8 +36,7 @@ import net.smartcosmos.test.security.WithMockSmartCosmosUser;
  * Unit Testing sample for creating Tenants.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = { TenantPersistenceTestApplication.class,
-                                            TenantPersistenceConfig.class })
+@SpringApplicationConfiguration(classes = { TenantPersistenceTestApplication.class, TenantPersistenceConfig.class })
 public class CreateTenantResourceTest extends AbstractTestResource {
 
     @Autowired
@@ -61,54 +60,31 @@ public class CreateTenantResourceTest extends AbstractTestResource {
         final String username = "spam@example.com";
         final String password = "ChangeMe";
 
-        final String expectedTenantUrn = "urn:tenant:uuid:" + UuidUtil.getNewUuid()
-                .toString();
+        final String expectedTenantUrn = "urn:tenant:uuid:" + UuidUtil.getNewUuid().toString();
 
-        final String expectedUserUrn = "urn:user:uuid:" + UuidUtil.getNewUuid()
-            .toString();
+        final String expectedUserUrn = "urn:user:uuid:" + UuidUtil.getNewUuid().toString();
 
         Set<String> adminRoles = new HashSet<>();
         adminRoles.add("Admin");
 
-        CreateUserResponse createUserResponse = CreateUserResponse.builder()
-            .urn(expectedUserUrn)
-            .username(username)
-            .password(password)
-            .roles(adminRoles)
-            .tenantUrn(expectedTenantUrn)
-            .build();
+        CreateUserResponse createUserResponse = CreateUserResponse.builder().urn(expectedUserUrn).username(username).password(password)
+                .roles(adminRoles).tenantUrn(expectedTenantUrn).build();
 
-        CreateTenantResponse createTenantResponse = CreateTenantResponse.builder()
-            .urn(expectedTenantUrn)
-            .admin(createUserResponse)
-            .build();
+        CreateTenantResponse createTenantResponse = CreateTenantResponse.builder().urn(expectedTenantUrn).admin(createUserResponse).build();
 
         when(tenantDao.createTenant(anyObject())).thenReturn(Optional.ofNullable(createTenantResponse));
 
-        RestCreateTenantRequest request = RestCreateTenantRequest.builder()
-                .name(name)
-                .username(username)
-                .build();
+        RestCreateTenantRequest request = RestCreateTenantRequest.builder().name(name).username(username).build();
 
-        MvcResult mvcResult = this.mockMvc.perform(
-            post("/tenants").content(this.json(request))
-                .contentType(contentType))
-            .andExpect(status().isOk())
-            .andExpect(request().asyncStarted())
-            .andReturn();
+        MvcResult mvcResult = this.mockMvc.perform(post("/tenants").content(this.json(request)).contentType(contentType)).andExpect(status().isOk())
+                .andExpect(request().asyncStarted()).andReturn();
 
-        this.mockMvc.perform(asyncDispatch(mvcResult))
-            .andExpect(status().isCreated())
-            .andExpect(content().contentType(contentType))
-            .andExpect(jsonPath("$.urn", startsWith("urn:tenant:uuid")))
-            .andExpect(jsonPath("$.name").doesNotExist())
-            .andExpect(jsonPath("$.admin").isMap())
-            .andExpect(jsonPath("$.admin.emailAddress").doesNotExist())
-            .andExpect(jsonPath("$.admin.username", is(username)))
-            .andExpect(jsonPath("$.admin.password", is(password)))
-            .andExpect(jsonPath("$.admin.roles").isArray())
-            .andExpect(jsonPath("$.admin.tenantUrn", startsWith("urn:tenant:uuid")))
-            .andExpect(jsonPath("$.admin.urn", startsWith("urn:user:uuid")));
+        this.mockMvc.perform(asyncDispatch(mvcResult)).andExpect(status().isCreated()).andExpect(content().contentType(contentType))
+                .andExpect(jsonPath("$.urn", startsWith("urn:tenant:uuid"))).andExpect(jsonPath("$.name").doesNotExist())
+                .andExpect(jsonPath("$.admin").isMap()).andExpect(jsonPath("$.admin.emailAddress").doesNotExist())
+                .andExpect(jsonPath("$.admin.username", is(username))).andExpect(jsonPath("$.admin.password", is(password)))
+                .andExpect(jsonPath("$.admin.roles").isArray()).andExpect(jsonPath("$.admin.tenantUrn", startsWith("urn:tenant:uuid")))
+                .andExpect(jsonPath("$.admin.urn", startsWith("urn:user:uuid")));
 
     }
 
@@ -119,53 +95,30 @@ public class CreateTenantResourceTest extends AbstractTestResource {
         final String username = "spam@example.com";
         final String password = "ChangeMe";
 
-        final String expectedTenantUrn = "urn:tenant:uuid:" + UuidUtil.getNewUuid()
-                .toString();
+        final String expectedTenantUrn = "urn:tenant:uuid:" + UuidUtil.getNewUuid().toString();
 
-        final String expectedUserUrn = "urn:user:uuid:" + UuidUtil.getNewUuid()
-                .toString();
+        final String expectedUserUrn = "urn:user:uuid:" + UuidUtil.getNewUuid().toString();
 
         Set<String> adminRoles = new HashSet<>();
         adminRoles.add("Admin");
 
-        CreateUserResponse createUserResponse = CreateUserResponse.builder()
-                .urn(expectedUserUrn)
-                .username(username)
-                .password(password)
-                .roles(adminRoles)
-                .tenantUrn(expectedTenantUrn)
-                .build();
+        CreateUserResponse createUserResponse = CreateUserResponse.builder().urn(expectedUserUrn).username(username).password(password)
+                .roles(adminRoles).tenantUrn(expectedTenantUrn).build();
 
-        CreateTenantResponse createTenantResponse = CreateTenantResponse.builder()
-                .urn(expectedTenantUrn)
-                .admin(createUserResponse)
-                .build();
+        CreateTenantResponse createTenantResponse = CreateTenantResponse.builder().urn(expectedTenantUrn).admin(createUserResponse).build();
 
         when(tenantDao.createTenant(anyObject())).thenReturn(Optional.ofNullable(createTenantResponse));
 
-        RestCreateTenantRequest request = RestCreateTenantRequest.builder()
-                .name(name)
-                .username(username)
-                .build();
+        RestCreateTenantRequest request = RestCreateTenantRequest.builder().name(name).username(username).build();
 
-        MvcResult mvcResult = this.mockMvc.perform(
-                post("/tenants").content(this.json(request))
-                        .contentType(contentType))
-                .andExpect(status().isOk())
-                .andExpect(request().asyncStarted())
-                .andReturn();
+        MvcResult mvcResult = this.mockMvc.perform(post("/tenants").content(this.json(request)).contentType(contentType)).andExpect(status().isOk())
+                .andExpect(request().asyncStarted()).andReturn();
 
-        this.mockMvc.perform(asyncDispatch(mvcResult))
-                .andExpect(status().isCreated())
-                .andExpect(content().contentType(contentType))
-                .andExpect(jsonPath("$.urn", startsWith("urn:tenant:uuid")))
-                .andExpect(jsonPath("$.name").doesNotExist())
-                .andExpect(jsonPath("$.admin").isMap())
-                .andExpect(jsonPath("$.admin.emailAddress").doesNotExist())
-                .andExpect(jsonPath("$.admin.username", is(username)))
-                .andExpect(jsonPath("$.admin.password", is(password)))
-                .andExpect(jsonPath("$.admin.roles").isArray())
-                .andExpect(jsonPath("$.admin.tenantUrn", startsWith("urn:tenant:uuid")))
+        this.mockMvc.perform(asyncDispatch(mvcResult)).andExpect(status().isCreated()).andExpect(content().contentType(contentType))
+                .andExpect(jsonPath("$.urn", startsWith("urn:tenant:uuid"))).andExpect(jsonPath("$.name").doesNotExist())
+                .andExpect(jsonPath("$.admin").isMap()).andExpect(jsonPath("$.admin.emailAddress").doesNotExist())
+                .andExpect(jsonPath("$.admin.username", is(username))).andExpect(jsonPath("$.admin.password", is(password)))
+                .andExpect(jsonPath("$.admin.roles").isArray()).andExpect(jsonPath("$.admin.tenantUrn", startsWith("urn:tenant:uuid")))
                 .andExpect(jsonPath("$.admin.urn", startsWith("urn:user:uuid")));
 
     }
