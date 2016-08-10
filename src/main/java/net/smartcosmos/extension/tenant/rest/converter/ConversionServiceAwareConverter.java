@@ -1,15 +1,15 @@
 package net.smartcosmos.extension.tenant.rest.converter;
 
-import javax.annotation.PostConstruct;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.core.convert.converter.ConverterRegistry;
 
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+
 public abstract class ConversionServiceAwareConverter<S, T> implements Converter<S, T> {
 
-    @Autowired
+    @Inject
     private ConversionService conversionService;
 
     protected ConversionService conversionService() {
@@ -20,8 +20,7 @@ public abstract class ConversionServiceAwareConverter<S, T> implements Converter
     private void register() {
         if (conversionService instanceof ConverterRegistry) {
             ((ConverterRegistry) conversionService).addConverter(this);
-        }
-        else {
+        } else {
             throw new IllegalStateException("Can't register Converter to ConverterRegistry");
         }
     }

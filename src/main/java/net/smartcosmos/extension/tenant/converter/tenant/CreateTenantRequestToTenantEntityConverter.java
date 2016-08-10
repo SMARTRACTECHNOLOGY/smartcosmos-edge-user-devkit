@@ -13,11 +13,16 @@ import net.smartcosmos.extension.tenant.dto.tenant.CreateTenantRequest;
  * Initially created by SMART COSMOS Team on June 30, 2016.
  */
 @Component
-public class CreateTenantRequestToTenantEntityConverter implements Converter<CreateTenantRequest, TenantEntity>, FormatterRegistrar {
+public class CreateTenantRequestToTenantEntityConverter
+    implements Converter<CreateTenantRequest, TenantEntity>, FormatterRegistrar {
 
     @Override
     public TenantEntity convert(CreateTenantRequest createTenantRequest) {
-        return TenantEntity.builder().id(UuidUtil.getNewUuid()).name(createTenantRequest.getName()).active(createTenantRequest.getActive()).build();
+        return TenantEntity.builder()
+            .id(UuidUtil.getNewUuid())
+            .name(createTenantRequest.getName())
+            .active(createTenantRequest.getActive())
+            .build();
     }
 
     @Override

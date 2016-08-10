@@ -59,25 +59,45 @@ public class UpdateUserResourceTest extends AbstractTestResource {
         String givenName = "John";
         String surname = "Doe";
 
-        final String expectedTenantUrn = "urn:tenant:uuid:" + UuidUtil.getNewUuid().toString();
+        final String expectedTenantUrn = "urn:tenant:uuid:" + UuidUtil.getNewUuid()
+                .toString();
 
-        final String expectedUserUrn = "urn:user:uuid:" + UuidUtil.getNewUuid().toString();
+        final String expectedUserUrn = "urn:user:uuid:" + UuidUtil.getNewUuid()
+            .toString();
 
         List<String> userRoles = new ArrayList<>();
         userRoles.add("User");
 
-        UserResponse userResponse = UserResponse.builder().urn(expectedUserUrn).active(active).tenantUrn(expectedTenantUrn).username(username)
-                .roles(userRoles).emailAddress(emailAddress).givenName(givenName).surname(surname).build();
+        UserResponse userResponse = UserResponse.builder()
+            .urn(expectedUserUrn)
+            .active(active)
+            .tenantUrn(expectedTenantUrn)
+            .username(username)
+            .roles(userRoles)
+            .emailAddress(emailAddress)
+            .givenName(givenName)
+            .surname(surname)
+            .build();
 
         when(tenantDao.updateUser(anyString(), anyString(), anyObject())).thenReturn(Optional.ofNullable(userResponse));
 
-        RestCreateOrUpdateUserRequest request = RestCreateOrUpdateUserRequest.builder().username(username).emailAddress(emailAddress)
-                .roles(userRoleOnly).build();
+        RestCreateOrUpdateUserRequest request = RestCreateOrUpdateUserRequest.builder()
+            .username(username)
+            .emailAddress(emailAddress)
+            .roles(userRoleOnly)
+            .build();
 
-        MvcResult mvcResult = this.mockMvc.perform(put("/users/{urn}", expectedUserUrn).content(this.json(request)).contentType(contentType))
-                .andExpect(status().isOk()).andExpect(request().asyncStarted()).andReturn();
+        MvcResult mvcResult = this.mockMvc.perform(
+            put("/users/{urn}", expectedUserUrn)
+                .content(this.json(request))
+                .contentType(contentType))
+            .andExpect(status().isOk())
+            .andExpect(request().asyncStarted())
+            .andReturn();
 
-        MvcResult result = this.mockMvc.perform(asyncDispatch(mvcResult)).andExpect(status().isNoContent()).andReturn();
+        MvcResult result = this.mockMvc.perform(asyncDispatch(mvcResult))
+            .andExpect(status().isNoContent())
+            .andReturn();
     }
 
     /**
@@ -91,21 +111,34 @@ public class UpdateUserResourceTest extends AbstractTestResource {
         String username = "newUser";
         String emailAddress = "newUser@example.com";
 
-        final String expectedTenantUrn = "urn:tenant:uuid:" + UuidUtil.getNewUuid().toString();
+        final String expectedTenantUrn = "urn:tenant:uuid:" + UuidUtil.getNewUuid()
+                .toString();
 
-        final String expectedUserUrn = "urn:user:uuid:" + UuidUtil.getNewUuid().toString();
+        final String expectedUserUrn = "urn:user:uuid:" + UuidUtil.getNewUuid()
+                .toString();
 
         List<String> userRoles = new ArrayList<>();
         userRoles.add("User");
 
+
         when(tenantDao.updateUser(anyString(), anyString(), anyObject())).thenReturn(Optional.empty());
 
-        RestCreateOrUpdateUserRequest request = RestCreateOrUpdateUserRequest.builder().username(username).emailAddress(emailAddress)
-                .roles(userRoleOnly).build();
+        RestCreateOrUpdateUserRequest request = RestCreateOrUpdateUserRequest.builder()
+                .username(username)
+                .emailAddress(emailAddress)
+                .roles(userRoleOnly)
+                .build();
 
-        MvcResult mvcResult = this.mockMvc.perform(put("/users/{urn}", expectedUserUrn).content(this.json(request)).contentType(contentType))
-                .andExpect(status().isOk()).andExpect(request().asyncStarted()).andReturn();
+        MvcResult mvcResult = this.mockMvc.perform(
+                put("/users/{urn}", expectedUserUrn)
+                        .content(this.json(request))
+                        .contentType(contentType))
+                .andExpect(status().isOk())
+                .andExpect(request().asyncStarted())
+                .andReturn();
 
-        MvcResult result = this.mockMvc.perform(asyncDispatch(mvcResult)).andExpect(status().isNotFound()).andReturn();
+        MvcResult result = this.mockMvc.perform(asyncDispatch(mvcResult))
+                .andExpect(status().isNotFound())
+                .andReturn();
     }
 }

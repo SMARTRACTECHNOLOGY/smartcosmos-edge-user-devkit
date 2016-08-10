@@ -21,7 +21,11 @@ public class TenantEntityToTenantResponseConverterTest {
         final String urn = UuidUtil.getTenantUrnFromUuid(id);
         final TenantEntityToTenantResponseConverter converter = new TenantEntityToTenantResponseConverter();
 
-        TenantEntity entity = TenantEntity.builder().active(active).name(name).id(id).build();
+        TenantEntity entity = TenantEntity.builder()
+            .active(active)
+            .name(name)
+            .id(id)
+            .build();
 
         TenantResponse TenantResponse = converter.convert(entity);
 

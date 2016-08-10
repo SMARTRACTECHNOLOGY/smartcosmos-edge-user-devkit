@@ -2,7 +2,6 @@ package net.smartcosmos.extension.tenant.dao;
 
 import java.util.List;
 import java.util.Optional;
-
 import javax.validation.ConstraintViolationException;
 
 import net.smartcosmos.extension.tenant.dto.tenant.CreateTenantRequest;
@@ -18,15 +17,25 @@ import net.smartcosmos.extension.tenant.dto.user.UserResponse;
  */
 public interface TenantDao {
 
-    String[] DEFAULT_ADMIN_AUTHORITIES = { "https://authorities.smartcosmos.net/things/create", "https://authorities.smartcosmos.net/things/read",
-            "https://authorities.smartcosmos.net/things/update", "https://authorities.smartcosmos.net/things/delete",
-            "https://authorities.smartcosmos.net/metadata/create", "https://authorities.smartcosmos.net/metadata/read",
-            "https://authorities.smartcosmos.net/metadata/update", "https://authorities.smartcosmos.net/metadata/delete",
-            "https://authorities.smartcosmos.net/relationships/create", "https://authorities.smartcosmos.net/relationships/read",
-            "https://authorities.smartcosmos.net/relationships/delete" };
+    String[] DEFAULT_ADMIN_AUTHORITIES = {
+        "https://authorities.smartcosmos.net/things/create",
+        "https://authorities.smartcosmos.net/things/read",
+        "https://authorities.smartcosmos.net/things/update",
+        "https://authorities.smartcosmos.net/things/delete",
+        "https://authorities.smartcosmos.net/metadata/create",
+        "https://authorities.smartcosmos.net/metadata/read",
+        "https://authorities.smartcosmos.net/metadata/update",
+        "https://authorities.smartcosmos.net/metadata/delete",
+        "https://authorities.smartcosmos.net/relationships/create",
+        "https://authorities.smartcosmos.net/relationships/read",
+        "https://authorities.smartcosmos.net/relationships/delete"
+    };
 
-    String[] DEFAULT_USER_AUTHORITIES = { "https://authorities.smartcosmos.net/things/read", "https://authorities.smartcosmos.net/metadata/read",
-            "https://authorities.smartcosmos.net/relationships/read", };
+    String[] DEFAULT_USER_AUTHORITIES = {
+        "https://authorities.smartcosmos.net/things/read",
+        "https://authorities.smartcosmos.net/metadata/read",
+        "https://authorities.smartcosmos.net/relationships/read",
+    };
 
     Optional<CreateTenantResponse> createTenant(CreateTenantRequest tenantCreate) throws ConstraintViolationException;
 
@@ -38,7 +47,8 @@ public interface TenantDao {
 
     Optional<CreateUserResponse> createUser(String tenantUrn, CreateOrUpdateUserRequest userCreate) throws ConstraintViolationException;
 
-    Optional<UserResponse> updateUser(String tenantUrn, String userUrn, CreateOrUpdateUserRequest userUpdate) throws ConstraintViolationException;
+    Optional<UserResponse> updateUser(String tenantUrn, String userUrn, CreateOrUpdateUserRequest userUpdate)
+        throws ConstraintViolationException;
 
     Optional<UserResponse> findUserByUrn(String tenantUrn, String userUrn);
 

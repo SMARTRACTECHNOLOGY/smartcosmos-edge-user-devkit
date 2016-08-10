@@ -1,15 +1,14 @@
 package net.smartcosmos.extension.tenant.rest.dto.role;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.Builder;
+import lombok.Data;
+
 import java.beans.ConstructorProperties;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
-
-import lombok.Builder;
-import lombok.Data;
 
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)

@@ -6,16 +6,15 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
-
 import javax.validation.ConstraintViolationException;
+
+import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionException;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.stereotype.Service;
-
-import lombok.extern.slf4j.Slf4j;
 
 import net.smartcosmos.cluster.userdetails.domain.RoleEntity;
 import net.smartcosmos.cluster.userdetails.domain.UserEntity;
@@ -59,8 +58,12 @@ public class TenantPersistenceService implements TenantDao {
      * @param conversionService
      */
     @Autowired
-    public TenantPersistenceService(TenantRepository tenantRepository, UserRepository userRepository, RolePersistenceService rolePersistenceService,
-            RoleRepository roleRepository, ConversionService conversionService) {
+    public TenantPersistenceService(
+        TenantRepository tenantRepository,
+        UserRepository userRepository,
+        RolePersistenceService rolePersistenceService,
+        RoleRepository roleRepository,
+        ConversionService conversionService) {
 
         this.tenantRepository = tenantRepository;
         this.userRepository = userRepository;
@@ -78,7 +81,8 @@ public class TenantPersistenceService implements TenantDao {
      * @throws ConstraintViolationException
      */
     @Override
-    public Optional<CreateTenantResponse> createTenant(CreateTenantRequest createTenantRequest) throws ConstraintViolationException {
+    public Optional<CreateTenantResponse> createTenant(CreateTenantRequest createTenantRequest)
+        throws ConstraintViolationException {
 
         // Usernames have to be unique in the system for now, so we need that:
         if (userAlreadyExists(createTenantRequest.getUsername())) {
@@ -87,7 +91,8 @@ public class TenantPersistenceService implements TenantDao {
 
         try {
             // This tenant already exists? we're not creating a new one
-            if (tenantRepository.findByNameIgnoreCase(createTenantRequest.getName()).isPresent()) {
+            if (tenantRepository.findByNameIgnoreCase(createTenantRequest.getName())
+                .isPresent()) {
                 return Optional.empty();
             }
 
@@ -100,17 +105,21 @@ public class TenantPersistenceService implements TenantDao {
             Set<RoleEntity> roles = new HashSet<>();
             roles.add(adminRole);
 
-            UserEntity userEntity = UserEntity.builder().id(UuidUtil.getNewUuid()).tenantId(tenantEntity.getId())
-                    .username(createTenantRequest.getUsername()).emailAddress(createTenantRequest.getUsername()).password(INITIAL_PASSWORD)
-                    .roles(roles).active(createTenantRequest.getActive() == null ? true : createTenantRequest.getActive()).build();
+            UserEntity userEntity = UserEntity.builder()
+                    .id(UuidUtil.getNewUuid()).tenantId(tenantEntity.getId()).username(createTenantRequest.getUsername())
+                    .emailAddress(createTenantRequest.getUsername()).password(INITIAL_PASSWORD).roles(roles)
+                    .active(createTenantRequest.getActive() == null ? true : createTenantRequest.getActive()).build();
 
             userEntity = userRepository.save(userEntity);
 
-            return Optional.ofNullable(conversionService.convert(
-                    TenantEntityAndUserEntityDto.builder().tenantEntity(tenantEntity).userEntity(userEntity).build(), CreateTenantResponse.class));
+            return Optional
+                .ofNullable(conversionService.convert(TenantEntityAndUserEntityDto.builder()
+                                                          .tenantEntity(tenantEntity)
+                                                          .userEntity(userEntity)
+                                                          .build(),
+                                                      CreateTenantResponse.class));
 
-        }
-        catch (IllegalArgumentException | ConversionException e) {
+        } catch (IllegalArgumentException | ConversionException e) {
             String msg = String.format("create failed, tenant: '%s', cause: %s", createTenantRequest.getName(), e.toString());
             log.error(msg);
             log.debug(msg, e);
@@ -124,24 +133,26 @@ public class TenantPersistenceService implements TenantDao {
      * @throws ConstraintViolationException
      */
     @Override
-    public Optional<TenantResponse> updateTenant(String tenantUrn, UpdateTenantRequest updateTenantRequest) throws ConstraintViolationException {
+    public Optional<TenantResponse> updateTenant(String tenantUrn, UpdateTenantRequest updateTenantRequest)
+        throws ConstraintViolationException {
 
         Optional<TenantEntity> tenantEntityOptional = tenantRepository.findById(UuidUtil.getUuidFromUrn(tenantUrn));
 
         if (tenantEntityOptional.isPresent()) {
             try {
                 if (updateTenantRequest.getActive() != null) {
-                    tenantEntityOptional.get().setActive(updateTenantRequest.getActive());
+                    tenantEntityOptional.get()
+                        .setActive(updateTenantRequest.getActive());
                 }
                 if (updateTenantRequest.getName() != null) {
-                    tenantEntityOptional.get().setName(updateTenantRequest.getName());
+                    tenantEntityOptional.get()
+                        .setName(updateTenantRequest.getName());
                 }
                 TenantEntity tenantEntity = tenantRepository.save(tenantEntityOptional.get());
                 return Optional.ofNullable(conversionService.convert(tenantEntity, TenantResponse.class));
-            }
-            catch (IllegalArgumentException | ConstraintViolationException e) {
-                String msg = String.format("update failed, tenant: '%s', request: '%s', cause: %s", tenantUrn, updateTenantRequest.toString(),
-                        e.toString());
+            } catch(IllegalArgumentException | ConstraintViolationException e){
+                String msg = String.format("update failed, tenant: '%s', request: '%s', cause: %s", tenantUrn, updateTenantRequest.toString(), e
+                    .toString());
                 log.error(msg);
                 log.debug(msg, e);
                 throw e;
@@ -171,8 +182,7 @@ public class TenantPersistenceService implements TenantDao {
             }
             return Optional.empty();
 
-        }
-        catch (IllegalArgumentException | ConversionException e) {
+        } catch (IllegalArgumentException | ConversionException e) {
             String msg = String.format("findByUrn failed, tenant: '%s', cause: %s", tenantUrn, e.toString());
             log.error(msg);
             log.debug(msg, e);
@@ -198,7 +208,7 @@ public class TenantPersistenceService implements TenantDao {
     public List<TenantResponse> findAllTenants() {
 
         List<TenantEntity> entityList = tenantRepository.findAll();
-        return convertList(entityList, TenantEntity.class, TenantResponse.class);
+        return convertList(entityList,TenantEntity.class, TenantResponse.class);
     }
 
     // endregion
@@ -221,7 +231,7 @@ public class TenantPersistenceService implements TenantDao {
      */
     @Override
     public Optional<CreateUserResponse> createUser(String tenantUrn, CreateOrUpdateUserRequest createUserRequest)
-            throws ConstraintViolationException {
+        throws ConstraintViolationException {
 
         if (userAlreadyExists(createUserRequest.getUsername())) {
             // This user already exists? We're not creating a new one.
@@ -245,10 +255,11 @@ public class TenantPersistenceService implements TenantDao {
 
             return Optional.of(response);
 
-        }
-        catch (IllegalArgumentException | ConstraintViolationException e) {
-            String msg = String.format("create user failed, tenant: '%s', request: '%s', cause: %s", tenantUrn, createUserRequest.toString(),
-                    e.getMessage());
+        } catch (IllegalArgumentException | ConstraintViolationException e) {
+            String msg = String.format("create user failed, tenant: '%s', request: '%s', cause: %s",
+                                       tenantUrn,
+                                       createUserRequest.toString(),
+                                       e.getMessage());
             log.error(msg);
             log.debug(msg, e);
             throw e;
@@ -257,7 +268,7 @@ public class TenantPersistenceService implements TenantDao {
 
     @Override
     public Optional<UserResponse> updateUser(String tenantUrn, String userUrn, CreateOrUpdateUserRequest updateUserRequest)
-            throws ConstraintViolationException {
+        throws ConstraintViolationException {
 
         try {
             UUID tenantId = UuidUtil.getUuidFromUrn(tenantUrn);
@@ -269,10 +280,9 @@ public class TenantPersistenceService implements TenantDao {
                 return Optional.ofNullable(conversionService.convert(userEntity, UserResponse.class));
             }
 
-        }
-        catch (IllegalArgumentException | ConstraintViolationException e) {
-            String msg = String.format("update failed, tenant: '%s', request: '%s', cause: %s", tenantUrn, updateUserRequest.toString(),
-                    e.toString());
+        } catch (IllegalArgumentException | ConstraintViolationException e) {
+            String msg = String.format("update failed, tenant: '%s', request: '%s', cause: %s", tenantUrn, updateUserRequest.toString(), e.toString
+                ());
             log.error(msg);
             log.debug(msg, e);
             throw e;
@@ -302,8 +312,7 @@ public class TenantPersistenceService implements TenantDao {
             }
             return Optional.empty();
 
-        }
-        catch (IllegalArgumentException | ConversionException e) {
+        } catch (IllegalArgumentException | ConversionException e) {
             String msg = String.format("findByUrn failed, user: '%s', cause: %s", userUrn, e.toString());
             log.error(msg);
             log.debug(msg, e);
@@ -332,7 +341,7 @@ public class TenantPersistenceService implements TenantDao {
 
         UUID tenantId = UuidUtil.getUuidFromUrn(tenantUrn);
         List<UserEntity> entityList = userRepository.findByTenantId(tenantId);
-        return convertList(entityList, UserEntity.class, UserResponse.class);
+        return convertList(entityList,UserEntity.class, UserResponse.class);
     }
 
     /**
@@ -370,7 +379,11 @@ public class TenantPersistenceService implements TenantDao {
 
     private RoleEntity createRole(String tenantUrn, String name, List<String> authorities) {
 
-        CreateOrUpdateRoleRequest createRoleRequest = CreateOrUpdateRoleRequest.builder().name(name).authorities(authorities).active(true).build();
+        CreateOrUpdateRoleRequest createRoleRequest = CreateOrUpdateRoleRequest.builder()
+            .name(name)
+            .authorities(authorities)
+            .active(true)
+            .build();
 
         Optional<RoleResponse> optionalRole = rolePersistenceService.createRole(tenantUrn, createRoleRequest);
         Optional<RoleEntity> savedEntity = rolePersistenceService.findByUrnAsEntity(tenantUrn, optionalRole.get().getUrn());
@@ -400,3 +413,4 @@ public class TenantPersistenceService implements TenantDao {
 
     // endregion
 }
+

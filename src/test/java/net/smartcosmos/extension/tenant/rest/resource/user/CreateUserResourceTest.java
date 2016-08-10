@@ -62,29 +62,46 @@ public class CreateUserResourceTest extends AbstractTestResource {
         String username = "newUser";
         String emailAddress = "newUser@example.com";
 
-        final String expectedTenantUrn = "urn:tenant:uuid:" + UuidUtil.getNewUuid().toString();
+        final String expectedTenantUrn = "urn:tenant:uuid:" + UuidUtil.getNewUuid()
+                .toString();
 
-        final String expectedUserUrn = "urn:user:uuid:" + UuidUtil.getNewUuid().toString();
+        final String expectedUserUrn = "urn:user:uuid:" + UuidUtil.getNewUuid()
+            .toString();
 
         Set<String> userRoles = new HashSet<>();
         userRoles.add("User");
 
-        CreateUserResponse createUserResponse = CreateUserResponse.builder().urn(expectedUserUrn).tenantUrn(expectedTenantUrn).username(username)
-                .roles(userRoles).build();
+        CreateUserResponse createUserResponse = CreateUserResponse.builder()
+            .urn(expectedUserUrn)
+            .tenantUrn(expectedTenantUrn)
+            .username(username)
+            .roles(userRoles)
+            .build();
 
         when(tenantDao.createUser(anyString(), anyObject())).thenReturn(Optional.ofNullable(createUserResponse));
 
-        RestCreateOrUpdateUserRequest request = RestCreateOrUpdateUserRequest.builder().username(username).emailAddress(emailAddress)
-                .roles(userRoleOnly).build();
+        RestCreateOrUpdateUserRequest request = RestCreateOrUpdateUserRequest.builder()
+            .username(username)
+            .emailAddress(emailAddress)
+            .roles(userRoleOnly)
+            .build();
 
-        org.springframework.test.web.servlet.MvcResult mvcResult = this.mockMvc
-                .perform(post("/users").content(this.json(request)).contentType(contentType)).andExpect(status().isOk())
-                .andExpect(request().asyncStarted()).andReturn();
+        org.springframework.test.web.servlet.MvcResult mvcResult = this.mockMvc.perform(
+            post("/users")
+                .content(this.json(request))
+                .contentType(contentType))
+            .andExpect(status().isOk())
+            .andExpect(request().asyncStarted())
+            .andReturn();
 
-        MvcResult result = this.mockMvc.perform(asyncDispatch(mvcResult)).andExpect(status().isCreated())
-                .andExpect(content().contentType(contentType)).andExpect(jsonPath("$.urn", startsWith("urn:user:uuid")))
-                .andExpect(jsonPath("$.username", is(username))).andExpect(jsonPath("$.emailAddress").doesNotExist())
-                .andExpect(jsonPath("$.tenantUrn", startsWith("urn:tenant:uuid"))).andReturn();
+        MvcResult result = this.mockMvc.perform(asyncDispatch(mvcResult))
+            .andExpect(status().isCreated())
+            .andExpect(content().contentType(contentType))
+            .andExpect(jsonPath("$.urn", startsWith("urn:user:uuid")))
+            .andExpect(jsonPath("$.username", is(username)))
+            .andExpect(jsonPath("$.emailAddress").doesNotExist())
+            .andExpect(jsonPath("$.tenantUrn", startsWith("urn:tenant:uuid")))
+            .andReturn();
     }
 
 }

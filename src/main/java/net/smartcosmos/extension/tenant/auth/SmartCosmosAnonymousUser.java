@@ -1,12 +1,11 @@
 package net.smartcosmos.extension.tenant.auth;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
+import net.smartcosmos.security.user.SmartCosmosUser;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import net.smartcosmos.security.user.SmartCosmosUser;
+import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * Constant interface for ANONYMOUS User configuration.

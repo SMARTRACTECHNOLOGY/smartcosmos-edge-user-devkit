@@ -1,7 +1,6 @@
 package net.smartcosmos.extension.tenant.rest.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

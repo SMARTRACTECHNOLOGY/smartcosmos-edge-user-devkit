@@ -9,7 +9,8 @@ import net.smartcosmos.cluster.userdetails.domain.AuthorityEntity;
 /**
  * Initially created by SMART COSMOS Team on June 30, 2016.
  */
-public interface AuthorityRepository extends JpaRepository<AuthorityEntity, String>, PagingAndSortingRepository<AuthorityEntity, String>,
-        JpaSpecificationExecutor<AuthorityEntity> {
+public interface AuthorityRepository extends JpaRepository<AuthorityEntity, String>,
+                                             PagingAndSortingRepository<AuthorityEntity, String>,
+                                             JpaSpecificationExecutor<AuthorityEntity> {
 
 }

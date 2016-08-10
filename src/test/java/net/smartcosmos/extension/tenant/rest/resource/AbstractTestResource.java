@@ -1,14 +1,14 @@
 package net.smartcosmos.extension.tenant.rest.resource;
 
-import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
-
-import java.io.IOException;
-import java.util.Arrays;
-
+import net.smartcosmos.extension.tenant.TenantRdao;
+import net.smartcosmos.extension.tenant.dao.RoleDao;
+import net.smartcosmos.extension.tenant.dao.TenantDao;
 import org.apache.commons.codec.binary.Base64;
-import org.junit.*;
-import org.junit.runner.*;
-import org.mockito.*;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.runner.RunWith;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.context.annotation.Bean;
@@ -24,9 +24,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import net.smartcosmos.extension.tenant.TenantRdao;
-import net.smartcosmos.extension.tenant.dao.RoleDao;
-import net.smartcosmos.extension.tenant.dao.TenantDao;
+import java.io.IOException;
+import java.util.Arrays;
+
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 
 /**
  * Unit Testing sample for creating Tenants and Users.
@@ -47,21 +48,27 @@ public abstract class AbstractTestResource {
     void setConverters(HttpMessageConverter<?>[] converters) {
 
         this.mappingJackson2HttpMessageConverter = Arrays.asList(converters).stream()
-                .filter(hmc -> hmc instanceof MappingJackson2HttpMessageConverter).findAny().get();
+            .filter(hmc -> hmc instanceof MappingJackson2HttpMessageConverter)
+            .findAny().get();
 
-        Assert.assertNotNull("the JSON message converter must not be null", this.mappingJackson2HttpMessageConverter);
+        Assert.assertNotNull("the JSON message converter must not be null",
+                             this.mappingJackson2HttpMessageConverter);
     }
 
     @Before
     public void setup() throws Exception {
         MockitoAnnotations.initMocks(getClass());
 
-        this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).apply(springSecurity()).build();
+        this.mockMvc = MockMvcBuilders
+                .webAppContextSetup(webApplicationContext)
+                .apply(springSecurity())
+                .build();
     }
 
     protected String json(Object o) throws IOException {
         MockHttpOutputMessage mockHttpOutputMessage = new MockHttpOutputMessage();
-        this.mappingJackson2HttpMessageConverter.write(o, MediaType.APPLICATION_JSON, mockHttpOutputMessage);
+        this.mappingJackson2HttpMessageConverter.write(o, MediaType.APPLICATION_JSON,
+                                                       mockHttpOutputMessage);
         return mockHttpOutputMessage.getBodyAsString();
     }
 
