@@ -23,6 +23,7 @@ import static net.smartcosmos.extension.tenant.rest.resource.role.RoleEndpointCo
 import static net.smartcosmos.extension.tenant.rest.resource.role.RoleEndpointConstants.ENDPOINT_ROLES;
 import static net.smartcosmos.extension.tenant.rest.resource.role.RoleEndpointConstants.ENDPOINT_ROLES_URN;
 import static net.smartcosmos.extension.tenant.rest.resource.role.RoleEndpointConstants.NAME;
+import static net.smartcosmos.extension.tenant.rest.resource.role.RoleEndpointConstants.ROLE_URN;
 
 @SmartCosmosRdao
 @Slf4j
@@ -36,7 +37,9 @@ public class ReadRoleResource {
 
     @RequestMapping(value = ENDPOINT_ROLES_URN, method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8_VALUE)
     @ConditionalOnProperty(prefix = ENDPOINT_ENABLEMENT_ROLES_READ_URN, name = ENDPOINT_ENABLEMENT_PROPERTY_ENABLED, matchIfMissing = true)
-    public ResponseEntity<?> getByUrn(@PathVariable String urn, SmartCosmosUser user) {
+    public ResponseEntity<?> getByUrn(
+        @PathVariable(ROLE_URN) String urn,
+        SmartCosmosUser user) {
 
         return service.findByUrn(urn, user);
     }
@@ -44,7 +47,8 @@ public class ReadRoleResource {
     @RequestMapping(value = ENDPOINT_ROLES, method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8_VALUE)
     @ConditionalOnProperty(prefix = ENDPOINT_ENABLEMENT_ROLES_READ_ALL, name = ENDPOINT_ENABLEMENT_PROPERTY_ENABLED, matchIfMissing = true)
     public ResponseEntity<?> getByName(
-        @RequestParam(value = NAME, required = false, defaultValue = "") String name, SmartCosmosUser user) {
+        @RequestParam(value = NAME, required = false, defaultValue = "") String name,
+        SmartCosmosUser user) {
 
         return service.query(name, user);
     }

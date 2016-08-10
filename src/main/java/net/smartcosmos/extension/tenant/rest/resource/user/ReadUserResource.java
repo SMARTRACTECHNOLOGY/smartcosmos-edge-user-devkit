@@ -23,6 +23,7 @@ import static net.smartcosmos.extension.tenant.rest.resource.user.UserEndpointCo
 import static net.smartcosmos.extension.tenant.rest.resource.user.UserEndpointConstants.ENDPOINT_USERS;
 import static net.smartcosmos.extension.tenant.rest.resource.user.UserEndpointConstants.ENDPOINT_USERS_URN;
 import static net.smartcosmos.extension.tenant.rest.resource.user.UserEndpointConstants.NAME;
+import static net.smartcosmos.extension.tenant.rest.resource.user.UserEndpointConstants.USER_URN;
 
 @Slf4j
 @SmartCosmosRdao
@@ -36,7 +37,9 @@ public class ReadUserResource {
 
     @RequestMapping(value = ENDPOINT_USERS_URN, method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8_VALUE)
     @ConditionalOnProperty(prefix = ENDPOINT_ENABLEMENT_USERS_READ_URN, name = ENDPOINT_ENABLEMENT_PROPERTY_ENABLED, matchIfMissing = true)
-    public ResponseEntity<?> getByUrn(@PathVariable String urn, SmartCosmosUser user) {
+    public ResponseEntity<?> getByUrn(
+        @PathVariable(USER_URN) String urn,
+        SmartCosmosUser user) {
 
         return readUserService.findByUrn(urn, user);
     }
@@ -44,7 +47,8 @@ public class ReadUserResource {
     @RequestMapping(value = ENDPOINT_USERS, method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8_VALUE)
     @ConditionalOnProperty(prefix = ENDPOINT_ENABLEMENT_USERS_READ_ALL, name = ENDPOINT_ENABLEMENT_PROPERTY_ENABLED, matchIfMissing = true)
     public ResponseEntity<?> getByName(
-        @RequestParam(value = NAME, required = false, defaultValue = "") String name, SmartCosmosUser user) {
+        @RequestParam(value = NAME, required = false, defaultValue = "") String name,
+        SmartCosmosUser user) {
 
         return readUserService.query(name, user);
     }

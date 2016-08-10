@@ -44,7 +44,8 @@ public class CreateUserResource {
                     consumes = APPLICATION_JSON_UTF8_VALUE)
     @ConditionalOnProperty(prefix = ENDPOINT_ENABLEMENT_USERS_CREATE, name = ENDPOINT_ENABLEMENT_PROPERTY_ENABLED, matchIfMissing = true)
     public DeferredResult<ResponseEntity> createUser(
-        @RequestBody @Valid RestCreateOrUpdateUserRequest restCreateUserRequest, SmartCosmosUser user) {
+        @RequestBody @Valid RestCreateOrUpdateUserRequest restCreateUserRequest,
+        SmartCosmosUser user) {
 
         return service.create(restCreateUserRequest, user);
     }

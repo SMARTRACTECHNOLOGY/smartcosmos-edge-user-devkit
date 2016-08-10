@@ -24,7 +24,7 @@ public interface TenantEndpointConstants {
 
     // region Resource Paths
 
-    String ENDPOINT_TENANTS = "/{" + ENDPOINT_BASE_NAME_TENANTS + "}";
+    String ENDPOINT_TENANTS = "/" + ENDPOINT_BASE_NAME_TENANTS;
     String ENDPOINT_TENANTS_URN = ENDPOINT_TENANTS + "/{" + TENANT_URN + "}";
 
     // endregion

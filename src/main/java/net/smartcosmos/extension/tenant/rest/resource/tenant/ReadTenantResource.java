@@ -23,6 +23,7 @@ import static net.smartcosmos.extension.tenant.rest.resource.tenant.TenantEndpoi
 import static net.smartcosmos.extension.tenant.rest.resource.tenant.TenantEndpointConstants.ENDPOINT_TENANTS;
 import static net.smartcosmos.extension.tenant.rest.resource.tenant.TenantEndpointConstants.ENDPOINT_TENANTS_URN;
 import static net.smartcosmos.extension.tenant.rest.resource.tenant.TenantEndpointConstants.NAME;
+import static net.smartcosmos.extension.tenant.rest.resource.tenant.TenantEndpointConstants.TENANT_URN;
 
 @Slf4j
 @SmartCosmosRdao
@@ -37,7 +38,7 @@ public class ReadTenantResource {
     @RequestMapping(value = ENDPOINT_TENANTS_URN, method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8_VALUE)
     @ConditionalOnProperty(prefix = ENDPOINT_ENABLEMENT_TENANTS_READ_URN, name = ENDPOINT_ENABLEMENT_PROPERTY_ENABLED, matchIfMissing = true)
     public ResponseEntity<?> getByUrn(
-        @PathVariable String urn,
+        @PathVariable(TENANT_URN) String urn,
         SmartCosmosUser user) {
 
         return readTenantService.findByUrn(urn, user);

@@ -23,7 +23,7 @@ public interface RoleEndpointConstants {
 
     // region Resource Paths
 
-    String ENDPOINT_ROLES = "/{" + ENDPOINT_BASE_NAME_ROLES + "}";
+    String ENDPOINT_ROLES = "/" + ENDPOINT_BASE_NAME_ROLES;
     String ENDPOINT_ROLES_URN = ENDPOINT_ROLES + "/{" + ROLE_URN + "}";
 
     // endregion
