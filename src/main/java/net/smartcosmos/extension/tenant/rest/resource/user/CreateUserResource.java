@@ -15,17 +15,21 @@ import org.springframework.web.context.request.async.DeferredResult;
 import net.smartcosmos.annotation.SmartCosmosRdao;
 import net.smartcosmos.extension.tenant.rest.dto.user.RestCreateOrUpdateUserRequest;
 import net.smartcosmos.extension.tenant.rest.service.user.CreateUserService;
-import net.smartcosmos.security.EndpointMethodControl;
 import net.smartcosmos.security.user.SmartCosmosUser;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
+
+import static net.smartcosmos.extension.tenant.rest.resource.BasicEndpointConstants.ENDPOINT_ENABLEMENT_PROPERTY_ENABLED;
+import static net.smartcosmos.extension.tenant.rest.resource.user.UserEndpointConstants.ENDPOINT_ENABLEMENT_USERS;
+import static net.smartcosmos.extension.tenant.rest.resource.user.UserEndpointConstants.ENDPOINT_ENABLEMENT_USERS_CREATE;
+import static net.smartcosmos.extension.tenant.rest.resource.user.UserEndpointConstants.ENDPOINT_USERS;
 
 /**
  * Initially created by SMART COSMOS Team on July 01, 2016.
  */
 @SmartCosmosRdao
 @Slf4j
-@ConditionalOnProperty(prefix = "smt.endpoints.tenant", name = "enabled", matchIfMissing = true)
+@ConditionalOnProperty(prefix = ENDPOINT_ENABLEMENT_USERS, name = ENDPOINT_ENABLEMENT_PROPERTY_ENABLED, matchIfMissing = true)
 //@Api
 public class CreateUserResource {
 
@@ -34,9 +38,11 @@ public class CreateUserResource {
     @Autowired
     public CreateUserResource(CreateUserService service) { this.service = service; }
 
-    @RequestMapping(value = "/users", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8_VALUE, consumes = APPLICATION_JSON_UTF8_VALUE)
-    @EndpointMethodControl(key = "user.post")
-    @ConditionalOnProperty(prefix = "smt.endpoints.user.post", name = "enabled", matchIfMissing = true)
+    @RequestMapping(value = ENDPOINT_USERS,
+                    method = RequestMethod.POST,
+                    produces = APPLICATION_JSON_UTF8_VALUE,
+                    consumes = APPLICATION_JSON_UTF8_VALUE)
+    @ConditionalOnProperty(prefix = ENDPOINT_ENABLEMENT_USERS_CREATE, name = ENDPOINT_ENABLEMENT_PROPERTY_ENABLED, matchIfMissing = true)
     public DeferredResult<ResponseEntity> createUser(
         @RequestBody @Valid RestCreateOrUpdateUserRequest restCreateUserRequest, SmartCosmosUser user) {
 
