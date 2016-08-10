@@ -10,12 +10,12 @@ import org.springframework.stereotype.Service;
 import net.smartcosmos.events.SmartCosmosEventException;
 import net.smartcosmos.events.SmartCosmosEventTemplate;
 import net.smartcosmos.extension.tenant.rest.service.EventSendingService;
-import net.smartcosmos.extension.tenant.rest.utility.UserEventType;
+import net.smartcosmos.extension.tenant.rest.utility.RoleEventType;
 import net.smartcosmos.security.user.SmartCosmosUser;
 
 @Slf4j
 @Service
-public class RoleEventSendingService implements EventSendingService<UserEventType, Object> {
+public class RoleEventSendingService implements EventSendingService<RoleEventType, Object> {
 
     private final SmartCosmosEventTemplate smartCosmosEventTemplate;
 
@@ -26,7 +26,7 @@ public class RoleEventSendingService implements EventSendingService<UserEventTyp
     }
 
     @Override
-    public void sendEvent(SmartCosmosUser user, UserEventType eventType, Object entity) {
+    public void sendEvent(SmartCosmosUser user, RoleEventType eventType, Object entity) {
 
         sendEvent(user, eventType.getEventName(), entity);
     }
@@ -44,7 +44,7 @@ public class RoleEventSendingService implements EventSendingService<UserEventTyp
     }
 
     @Override
-    public void sendEvents(SmartCosmosUser user, UserEventType eventType, Collection<Object> entities) {
+    public void sendEvents(SmartCosmosUser user, RoleEventType eventType, Collection<Object> entities) {
 
         entities.stream()
             .forEach((item) -> sendEvent(user, eventType.getEventName(), item));

@@ -11,29 +11,33 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.async.DeferredResult;
 
-import net.smartcosmos.events.DefaultEventTypes;
-import net.smartcosmos.events.SmartCosmosEventTemplate;
-import net.smartcosmos.extension.tenant.dao.RoleDao;
 import net.smartcosmos.extension.tenant.dao.TenantDao;
 import net.smartcosmos.extension.tenant.dto.tenant.TenantResponse;
 import net.smartcosmos.extension.tenant.dto.tenant.UpdateTenantRequest;
 import net.smartcosmos.extension.tenant.rest.dto.tenant.RestUpdateTenantRequest;
-import net.smartcosmos.extension.tenant.rest.service.AbstractTenantService;
+import net.smartcosmos.extension.tenant.rest.service.EventSendingService;
 import net.smartcosmos.security.user.SmartCosmosUser;
+
+import static net.smartcosmos.extension.tenant.rest.utility.TenantEventType.TENANT_NOT_FOUND;
+import static net.smartcosmos.extension.tenant.rest.utility.TenantEventType.TENANT_UPDATED;
 
 /**
  * Initially created by SMART COSMOS Team on July 01, 2016.
  */
 @Slf4j
 @Service
-public class UpdateTenantService extends AbstractTenantService {
+public class UpdateTenantService {
+
+    private final TenantDao tenantDao;
+    private final EventSendingService eventSendingService;
+    private final ConversionService conversionService;
 
     @Autowired
-    public UpdateTenantService(
-        TenantDao tenantDao, RoleDao roleDao, SmartCosmosEventTemplate smartCosmosEventTemplate, ConversionService
-        conversionService) {
+    public UpdateTenantService(TenantDao tenantDao, EventSendingService tenantEventSendingService, ConversionService conversionService) {
 
-        super(tenantDao, roleDao, smartCosmosEventTemplate, conversionService);
+        this.tenantDao = tenantDao;
+        this.eventSendingService = tenantEventSendingService;
+        this.conversionService = conversionService;
     }
 
     public DeferredResult<ResponseEntity> update(String tenantUrn, RestUpdateTenantRequest restUpdateTenantRequest, SmartCosmosUser user) {
@@ -59,11 +63,11 @@ public class UpdateTenantService extends AbstractTenantService {
                 ResponseEntity responseEntity = ResponseEntity.noContent()
                     .build();
                 response.setResult(responseEntity);
-                sendEvent(user, DefaultEventTypes.TenantUpdated, tenantResponseOptional.get());
+                eventSendingService.sendEvent(user, TENANT_UPDATED, tenantResponseOptional.get());
             } else {
                 response.setResult(ResponseEntity.notFound()
                                        .build());
-                sendEvent(user, DefaultEventTypes.TenantNotFound, restUpdateTenantRequest);
+                eventSendingService.sendEvent(user, TENANT_NOT_FOUND, restUpdateTenantRequest);
             }
 
         } catch (Exception e) {

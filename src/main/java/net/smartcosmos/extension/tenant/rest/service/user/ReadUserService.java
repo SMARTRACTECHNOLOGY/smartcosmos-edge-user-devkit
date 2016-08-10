@@ -8,30 +8,33 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import net.smartcosmos.events.DefaultEventTypes;
-import net.smartcosmos.events.SmartCosmosEventTemplate;
-import net.smartcosmos.extension.tenant.dao.RoleDao;
 import net.smartcosmos.extension.tenant.dao.TenantDao;
 import net.smartcosmos.extension.tenant.dto.user.UserResponse;
 import net.smartcosmos.extension.tenant.rest.dto.user.RestUserResponse;
-import net.smartcosmos.extension.tenant.rest.service.AbstractTenantService;
+import net.smartcosmos.extension.tenant.rest.service.EventSendingService;
 import net.smartcosmos.security.user.SmartCosmosUser;
+
+import static net.smartcosmos.extension.tenant.rest.utility.UserEventType.USER_NOT_FOUND;
+import static net.smartcosmos.extension.tenant.rest.utility.UserEventType.USER_READ;
 
 @Slf4j
 @Service
-public class ReadUserService extends AbstractTenantService {
+public class ReadUserService {
+
+    private final TenantDao tenantDao;
+    private final EventSendingService eventSendingService;
+    private final ConversionService conversionService;
 
     @Autowired
-    public ReadUserService(
-        TenantDao tenantDao,
-        RoleDao roleDao,
-        SmartCosmosEventTemplate smartCosmosEventTemplate,
-        ConversionService conversionService) {
+    public ReadUserService(TenantDao tenantDao, EventSendingService userEventSendingService, ConversionService conversionService) {
 
-        super(tenantDao, roleDao, smartCosmosEventTemplate, conversionService);
+        this.tenantDao = tenantDao;
+        this.eventSendingService = userEventSendingService;
+        this.conversionService = conversionService;
     }
 
     public ResponseEntity<?> findByUrn(String urn, SmartCosmosUser user) {
@@ -39,7 +42,7 @@ public class ReadUserService extends AbstractTenantService {
         Optional<UserResponse> entity = tenantDao.findUserByUrn(user.getAccountUrn(), urn);
 
         if (entity.isPresent()) {
-            sendEvent(user, DefaultEventTypes.UserRead, entity.get());
+            eventSendingService.sendEvent(user, USER_READ, entity.get());
             return ResponseEntity
                 .ok()
                 .body(conversionService.convert(entity.get(), RestUserResponse.class));
@@ -49,7 +52,7 @@ public class ReadUserService extends AbstractTenantService {
             .urn(urn)
             .tenantUrn(user.getAccountUrn())
             .build();
-        sendEvent(user, DefaultEventTypes.UserNotFound, eventPayload);
+        eventSendingService.sendEvent(user, USER_NOT_FOUND, eventPayload);
         return ResponseEntity.notFound()
             .build();
     }
@@ -67,7 +70,7 @@ public class ReadUserService extends AbstractTenantService {
 
         List<UserResponse> userList = tenantDao.findAllUsers(user.getAccountUrn());
         for (UserResponse userResponse : userList) {
-            sendEvent(user, DefaultEventTypes.UserRead, userResponse);
+            eventSendingService.sendEvent(user, USER_READ, userResponse);
         }
 
         return ResponseEntity
@@ -80,7 +83,7 @@ public class ReadUserService extends AbstractTenantService {
         Optional<UserResponse> entity = tenantDao.findUserByName(user.getAccountUrn(), name);
 
         if (entity.isPresent()) {
-            sendEvent(user, DefaultEventTypes.UserRead, entity.get());
+            eventSendingService.sendEvent(user, USER_READ, entity.get());
             return ResponseEntity
                 .ok()
                 .body(conversionService.convert(entity.get(), RestUserResponse.class));
@@ -90,8 +93,16 @@ public class ReadUserService extends AbstractTenantService {
             .username(name)
             .tenantUrn(user.getAccountUrn())
             .build();
-        sendEvent(user, DefaultEventTypes.UserNotFound, eventPayload);
+        eventSendingService.sendEvent(user, USER_NOT_FOUND, eventPayload);
         return ResponseEntity.notFound()
             .build();
+    }
+
+    private <S, T> List<T> convertList(List<S> list, Class sourceClass, Class targetClass) {
+
+        TypeDescriptor sourceDescriptor = TypeDescriptor.collection(List.class, TypeDescriptor.valueOf(sourceClass));
+        TypeDescriptor targetDescriptor = TypeDescriptor.collection(List.class, TypeDescriptor.valueOf(targetClass));
+
+        return (List<T>) conversionService.convert(list, sourceDescriptor, targetDescriptor);
     }
 }
