@@ -39,11 +39,12 @@ public class ReadUserResource {
 
     @RequestMapping(value = ENDPOINT_USERS_URN, method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8_VALUE)
     @ConditionalOnProperty(prefix = ENDPOINT_ENABLEMENT_USERS_READ_URN, name = ENDPOINT_ENABLEMENT_PROPERTY_ENABLED, matchIfMissing = true)
+    @PreAuthorize("hasAuthority('https://authorities.smartcosmos.net/users/read') or #userUrn.equals(#user.getUserUrn())")
     public ResponseEntity<?> getByUrn(
-        @PathVariable(USER_URN) String urn,
+        @PathVariable(USER_URN) String userUrn,
         SmartCosmosUser user) {
 
-        return readUserService.findByUrn(urn, user);
+        return readUserService.findByUrn(userUrn, user);
     }
 
     @RequestMapping(value = ENDPOINT_USERS, method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8_VALUE)
