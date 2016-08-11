@@ -33,7 +33,6 @@ import static net.smartcosmos.extension.tenant.rest.resource.user.UserEndpointCo
 @SmartCosmosRdao
 @Slf4j
 @ConditionalOnProperty(prefix = ENDPOINT_ENABLEMENT_USERS, name = ENDPOINT_ENABLEMENT_PROPERTY_ENABLED, matchIfMissing = true)
-@PreAuthorize("hasAuthority('https://authorities.smartcosmos.net/users/update')")
 //@Api
 public class UpdateUserResource {
 
@@ -47,12 +46,17 @@ public class UpdateUserResource {
                     produces = APPLICATION_JSON_UTF8_VALUE,
                     consumes = APPLICATION_JSON_UTF8_VALUE)
     @ConditionalOnProperty(prefix = ENDPOINT_ENABLEMENT_USERS_UPDATE, name = ENDPOINT_ENABLEMENT_PROPERTY_ENABLED, matchIfMissing = true)
+    @PreAuthorize(
+        "hasAuthority('https://authorities.smartcosmos.net/users/update') "
+        + "or (#userUrn.equals(#user.getUserUrn()) and (#requestBody.roles == null or #requestBody.roles.size() == 0))")
     public DeferredResult<ResponseEntity> updateUser(
         @PathVariable(USER_URN) String userUrn,
         @RequestBody @Valid RestCreateOrUpdateUserRequest requestBody,
         SmartCosmosUser user) {
 
-        return service.update(userUrn, requestBody, user);
+        DeferredResult<ResponseEntity> response = new DeferredResult<>();
+        service.update(response, userUrn, requestBody, user);
+        return response;
     }
 }
 

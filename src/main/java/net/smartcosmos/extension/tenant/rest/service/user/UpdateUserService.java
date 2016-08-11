@@ -7,7 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.async.DeferredResult;
 
@@ -40,39 +39,29 @@ public class UpdateUserService {
         this.conversionService = conversionService;
     }
 
-    public DeferredResult<ResponseEntity> update(String userUrn, RestCreateOrUpdateUserRequest userRequest, SmartCosmosUser user) {
-        // Async worker thread reduces timeouts and disconnects for long queries and processing.
-        DeferredResult<ResponseEntity> response = new DeferredResult<>();
-        updateUserWorker(response, user, userUrn, userRequest);
-
-        return response;
-    }
-
-    @Async
-    private void updateUserWorker(
-        DeferredResult<ResponseEntity> response,
-        SmartCosmosUser user,
-        String userUrn,
-        RestCreateOrUpdateUserRequest userRequest) {
+    public void update(DeferredResult<ResponseEntity> response, String userUrn, RestCreateOrUpdateUserRequest userRequest, SmartCosmosUser user) {
 
         try {
-            CreateOrUpdateUserRequest updateUserRequest = conversionService.convert(userRequest, CreateOrUpdateUserRequest.class);
-            Optional<UserResponse> updateUserResponse = tenantDao.updateUser(user.getAccountUrn(), userUrn, updateUserRequest);
-
-            if (updateUserResponse.isPresent()) {
-                ResponseEntity responseEntity = ResponseEntity.noContent()
-                    .build();
-                response.setResult(responseEntity);
-                eventSendingService.sendEvent(user, USER_UPDATED, updateUserResponse.get());
-            } else {
-                response.setResult(ResponseEntity.notFound()
-                                       .build());
-                eventSendingService.sendEvent(user, USER_NOT_FOUND, userRequest);
-            }
-
+            response.setResult(update(userUrn, userRequest, user));
         } catch (Exception e) {
             log.debug(e.getMessage(), e);
             response.setErrorResult(e);
+        }
+    }
+
+    private ResponseEntity<?> update(String userUrn, RestCreateOrUpdateUserRequest userRequest, SmartCosmosUser user) {
+
+        CreateOrUpdateUserRequest updateUserRequest = conversionService.convert(userRequest, CreateOrUpdateUserRequest.class);
+        Optional<UserResponse> updateUserResponse = tenantDao.updateUser(user.getAccountUrn(), userUrn, updateUserRequest);
+
+        if (updateUserResponse.isPresent()) {
+            eventSendingService.sendEvent(user, USER_UPDATED, updateUserResponse.get());
+            return ResponseEntity.noContent()
+                .build();
+        } else {
+            eventSendingService.sendEvent(user, USER_NOT_FOUND, userRequest);
+            return ResponseEntity.notFound()
+                .build();
         }
     }
 }

@@ -152,6 +152,37 @@ public class UpdateUserResourceTest extends AbstractTestResource {
             .andReturn();
     }
 
+    @Test
+    @WithMockSmartCosmosUser(authorities = {}, usernUrn = "myOwnUrn")
+    public void thatUpdateOwnRoleFails() throws Exception {
+
+        String ownUrn = "myOwnUrn";
+        String username = "newUser";
+        String emailAddress = "newUser@example.com";
+
+        final String expectedTenantUrn = "urn:tenant:uuid:" + UuidUtil.getNewUuid()
+            .toString();
+
+        final String expectedUserUrn = ownUrn;
+
+        List<String> userRoles = new ArrayList<>();
+        userRoles.add("Admin");
+
+        RestCreateOrUpdateUserRequest request = RestCreateOrUpdateUserRequest.builder()
+            .username(username)
+            .emailAddress(emailAddress)
+            .roles(userRoles)
+            .build();
+
+        MvcResult mvcResult = this.mockMvc.perform(
+            put("/users/{urn}", expectedUserUrn)
+                .content(this.json(request))
+                .contentType(contentType))
+            .andExpect(status().isForbidden())
+            .andExpect(request().asyncNotStarted())
+            .andReturn();
+    }
+
     /**
      * Test that updating a nonexistent User fails.
      *
