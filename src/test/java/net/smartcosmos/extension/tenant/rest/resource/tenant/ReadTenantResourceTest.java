@@ -37,11 +37,40 @@ public class ReadTenantResourceTest extends AbstractTestResource {
     }
 
     @Test
-    @WithMockSmartCosmosUser
+    @WithMockSmartCosmosUser(authorities = { "https://authorities.smartcosmos.net/tenants/read" })
     public void thatGetByUrnSucceeds() throws Exception {
 
         String name = "getByUrn";
         String urn = "accountUrn"; // Tenant URN from AbstractTestResource
+
+        TenantResponse response1 = TenantResponse.builder()
+            .active(true)
+            .name(name)
+            .urn(urn)
+            .build();
+        Optional<TenantResponse> response = Optional.of(response1);
+
+        when(tenantDao.findTenantByUrn(anyString())).thenReturn(response);
+
+        MvcResult mvcResult = mockMvc.perform(
+            get("/tenants/{urn}", urn).contentType(APPLICATION_JSON_UTF8))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(APPLICATION_JSON_UTF8))
+            .andExpect(jsonPath("$.active", is(true)))
+            .andExpect(jsonPath("$.name", is(name)))
+            .andExpect(jsonPath("$.urn", is(urn)))
+            .andReturn();
+
+        verify(tenantDao, times(1)).findTenantByUrn(anyString());
+        verifyNoMoreInteractions(tenantDao);
+    }
+
+    @Test
+    @WithMockSmartCosmosUser(tenantUrn = "myOwnTenantUrn", authorities = {})
+    public void thatGetByOwnUrnSucceeds() throws Exception {
+
+        String name = "getByUrn";
+        String urn = "myOwnTenantUrn";
 
         TenantResponse response1 = TenantResponse.builder()
             .active(true)
@@ -80,7 +109,7 @@ public class ReadTenantResourceTest extends AbstractTestResource {
     }
 
     @Test
-    @WithMockSmartCosmosUser
+    @WithMockSmartCosmosUser(authorities = { "https://authorities.smartcosmos.net/tenants/read" })
     public void thatGetByUnknownUrnFails() throws Exception {
 
         String urn = UuidUtil.getTenantUrnFromUuid(UuidUtil.getNewUuid());
@@ -113,7 +142,7 @@ public class ReadTenantResourceTest extends AbstractTestResource {
     }
 
     @Test
-    @WithMockSmartCosmosUser
+    @WithMockSmartCosmosUser(authorities = { "https://authorities.smartcosmos.net/tenants/read" })
     public void thatGetByNameSucceeds() throws Exception {
 
         String name = "getByName";
@@ -160,7 +189,7 @@ public class ReadTenantResourceTest extends AbstractTestResource {
     }
 
     @Test
-    @WithMockSmartCosmosUser
+    @WithMockSmartCosmosUser(authorities = { "https://authorities.smartcosmos.net/tenants/read" })
     public void thatGetByUnknownNameFails() throws Exception {
 
         String name = "noSuchTenant";
@@ -197,7 +226,7 @@ public class ReadTenantResourceTest extends AbstractTestResource {
     }
 
     @Test
-    @WithMockSmartCosmosUser
+    @WithMockSmartCosmosUser(authorities = { "https://authorities.smartcosmos.net/tenants/read" })
     public void thatGetAllNoTenantSucceeds() throws Exception {
 
         List<TenantResponse> response = new ArrayList<>();
@@ -230,7 +259,7 @@ public class ReadTenantResourceTest extends AbstractTestResource {
     }
 
     @Test
-    @WithMockSmartCosmosUser
+    @WithMockSmartCosmosUser(authorities = { "https://authorities.smartcosmos.net/tenants/read" })
     public void thatGetAllTenantSucceeds() throws Exception {
 
         List<TenantResponse> response = new ArrayList<>();

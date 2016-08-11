@@ -26,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WithMockSmartCosmosUser
+@WithMockSmartCosmosUser(authorities = { "https://authorities.smartcosmos.net/roles/read" })
 public class ReadRoleResourceTest extends AbstractTestResource {
 
     @Autowired

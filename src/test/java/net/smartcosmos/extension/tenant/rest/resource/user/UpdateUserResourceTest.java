@@ -28,7 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * Unit Testing sample for updating Users.
  */
 @org.springframework.boot.test.SpringApplicationConfiguration(classes = { TenantPersistenceTestApplication.class })
-@WithMockSmartCosmosUser
+@WithMockSmartCosmosUser(authorities = { "https://authorities.smartcosmos.net/users/update" })
 public class UpdateUserResourceTest extends AbstractTestResource {
 
     @Autowired
@@ -65,6 +65,57 @@ public class UpdateUserResourceTest extends AbstractTestResource {
 
         final String expectedUserUrn = "urn:user:uuid:" + UuidUtil.getNewUuid()
             .toString();
+
+        List<String> userRoles = new ArrayList<>();
+        userRoles.add("User");
+
+        UserResponse userResponse = UserResponse.builder()
+            .urn(expectedUserUrn)
+            .active(active)
+            .tenantUrn(expectedTenantUrn)
+            .username(username)
+            .roles(userRoles)
+            .emailAddress(emailAddress)
+            .givenName(givenName)
+            .surname(surname)
+            .build();
+
+        when(tenantDao.updateUser(anyString(), anyString(), anyObject())).thenReturn(Optional.ofNullable(userResponse));
+
+        RestCreateOrUpdateUserRequest request = RestCreateOrUpdateUserRequest.builder()
+            .username(username)
+            .emailAddress(emailAddress)
+            .roles(userRoleOnly)
+            .build();
+
+        MvcResult mvcResult = this.mockMvc.perform(
+            put("/users/{urn}", expectedUserUrn)
+                .content(this.json(request))
+                .contentType(contentType))
+            .andExpect(status().isOk())
+            .andExpect(request().asyncStarted())
+            .andReturn();
+
+        MvcResult result = this.mockMvc.perform(asyncDispatch(mvcResult))
+            .andExpect(status().isNoContent())
+            .andReturn();
+    }
+
+    @Test
+    @WithMockSmartCosmosUser(authorities = {}, usernUrn = "myOwnUrn")
+    public void thatUpdateOwnUserSucceeds() throws Exception {
+
+        String ownUrn = "myOwnUrn";
+        String username = "newUser";
+        String emailAddress = "newUser@example.com";
+        Boolean active = false;
+        String givenName = "John";
+        String surname = "Doe";
+
+        final String expectedTenantUrn = "urn:tenant:uuid:" + UuidUtil.getNewUuid()
+            .toString();
+
+        final String expectedUserUrn = ownUrn;
 
         List<String> userRoles = new ArrayList<>();
         userRoles.add("User");
