@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * Unit Testing sample for deleting Users.
  */
 @org.springframework.boot.test.SpringApplicationConfiguration(classes = { TenantPersistenceTestApplication.class })
-@WithMockSmartCosmosUser
+@WithMockSmartCosmosUser(authorities = { "https://authorities.smartcosmos.net/users/delete" })
 public class DeleteUserResourceTest extends AbstractTestResource {
 
     private String tenantUrn;

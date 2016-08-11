@@ -24,7 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * Unit Testing sample for deleting Roles.
  */
 @org.springframework.boot.test.SpringApplicationConfiguration(classes = { TenantPersistenceTestApplication.class })
-@WithMockSmartCosmosUser
+@WithMockSmartCosmosUser(authorities = { "https://authorities.smartcosmos.net/roles/delete" })
 public class DeleteRoleResourceTest extends AbstractTestResource {
 
     @Autowired

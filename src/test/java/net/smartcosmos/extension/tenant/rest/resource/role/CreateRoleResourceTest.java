@@ -37,7 +37,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @org.springframework.boot.test.SpringApplicationConfiguration(classes = { DevKitUserManagementService.class, UserManagementPersistenceConfig.class,
                                                                           UserDetailsPersistenceConfig.class })
-@WithMockSmartCosmosUser
+@WithMockSmartCosmosUser(authorities = { "https://authorities.smartcosmos.net/roles/create" })
 public class CreateRoleResourceTest extends AbstractTestResource {
 
     @Autowired

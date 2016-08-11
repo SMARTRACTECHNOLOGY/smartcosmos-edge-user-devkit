@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -45,12 +46,17 @@ public class UpdateUserResource {
                     produces = APPLICATION_JSON_UTF8_VALUE,
                     consumes = APPLICATION_JSON_UTF8_VALUE)
     @ConditionalOnProperty(prefix = ENDPOINT_ENABLEMENT_USERS_UPDATE, name = ENDPOINT_ENABLEMENT_PROPERTY_ENABLED, matchIfMissing = true)
+    @PreAuthorize(
+        "hasAuthority('https://authorities.smartcosmos.net/users/update') "
+        + "or (#userUrn.equals(#user.getUserUrn()) and (#requestBody.roles == null or #requestBody.roles.size() == 0))")
     public DeferredResult<ResponseEntity> updateUser(
         @PathVariable(USER_URN) String userUrn,
         @RequestBody @Valid RestCreateOrUpdateUserRequest requestBody,
         SmartCosmosUser user) {
 
-        return service.update(userUrn, requestBody, user);
+        DeferredResult<ResponseEntity> response = new DeferredResult<>();
+        service.update(response, userUrn, requestBody, user);
+        return response;
     }
 }
 

@@ -7,7 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.async.DeferredResult;
 
@@ -48,7 +47,6 @@ public class UpdateTenantService {
         return response;
     }
 
-    @Async
     private void updateTenantWorker(
         DeferredResult<ResponseEntity> response,
         SmartCosmosUser user,

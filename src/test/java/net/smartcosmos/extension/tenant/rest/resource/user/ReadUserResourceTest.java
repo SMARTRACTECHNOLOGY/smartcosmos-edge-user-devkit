@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WithMockSmartCosmosUser
+@WithMockSmartCosmosUser(authorities = { "https://authorities.smartcosmos.net/users/read" })
 public class ReadUserResourceTest extends AbstractTestResource {
 
     @Autowired
@@ -80,6 +80,49 @@ public class ReadUserResourceTest extends AbstractTestResource {
     }
 
     @Test
+    @WithMockSmartCosmosUser(authorities = {}, usernUrn = "myOwnUrn")
+    public void thatGetByOwnUrnSucceeds() throws Exception {
+
+        String name = "getByUrn";
+        String urn = "myOwnUrn";
+        String tenantUrn = UuidUtil.getTenantUrnFromUuid(UuidUtil.getNewUuid());
+        String emailAddress = "getByUrn@example.com";
+        Boolean active = true;
+        String givenName = "John";
+        String surname = "Doe";
+
+        UserResponse response1 = UserResponse.builder()
+            .active(active)
+            .username(name)
+            .emailAddress(emailAddress)
+            .urn(urn)
+            .tenantUrn(tenantUrn)
+            .givenName(givenName)
+            .surname(surname)
+            .build();
+        Optional<UserResponse> response = Optional.of(response1);
+
+        when(tenantDao.findUserByUrn(anyString(), anyString())).thenReturn(response);
+
+        MvcResult mvcResult = mockMvc.perform(
+            get("/users/{urn}", urn).contentType(APPLICATION_JSON_UTF8))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(APPLICATION_JSON_UTF8))
+            .andExpect(jsonPath("$.active", is(active)))
+            .andExpect(jsonPath("$.givenName", is(givenName)))
+            .andExpect(jsonPath("$.surname", is(surname)))
+            .andExpect(jsonPath("$.emailAddress", is(emailAddress)))
+            .andExpect(jsonPath("$.username", is(name)))
+            .andExpect(jsonPath("$.urn", is(urn)))
+            .andExpect(jsonPath("$.tenantUrn", is(tenantUrn)))
+            .andExpect(jsonPath("$.roles").isArray())
+            .andReturn();
+
+        verify(tenantDao, times(1)).findUserByUrn(anyString(), anyString());
+        verifyNoMoreInteractions(tenantDao);
+    }
+
+    @Test
     public void thatGetByUrnFails() throws Exception {
 
         String urn = UuidUtil.getUserUrnFromUuid(UuidUtil.getNewUuid());
@@ -94,6 +137,40 @@ public class ReadUserResourceTest extends AbstractTestResource {
             .andReturn();
 
         verify(tenantDao, times(1)).findUserByUrn(anyString(), anyString());
+        verifyNoMoreInteractions(tenantDao);
+    }
+
+    @Test
+    @WithMockSmartCosmosUser(authorities = {}, username = "myOwnName")
+    public void thatGetByOwnNameSucceeds() throws Exception {
+
+        String name = "myOwnName";
+        String urn = UuidUtil.getUserUrnFromUuid(UuidUtil.getNewUuid());
+        String tenantUrn = UuidUtil.getTenantUrnFromUuid(UuidUtil.getNewUuid());
+
+        UserResponse response1 = UserResponse.builder()
+            .active(true)
+            .username(name)
+            .urn(urn)
+            .tenantUrn(tenantUrn)
+            .build();
+        Optional<UserResponse> response = Optional.of(response1);
+
+        when(tenantDao.findUserByName(anyString(), anyString())).thenReturn(response);
+
+        MvcResult mvcResult = mockMvc.perform(
+            get("/users")
+                .param("name", name)
+                .contentType(APPLICATION_JSON_UTF8))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(APPLICATION_JSON_UTF8))
+            .andExpect(jsonPath("$.active", is(true)))
+            .andExpect(jsonPath("$.username", is(name)))
+            .andExpect(jsonPath("$.urn", is(urn)))
+            .andExpect(jsonPath("$.tenantUrn", is(tenantUrn)))
+            .andReturn();
+
+        verify(tenantDao, times(1)).findUserByName(anyString(), anyString());
         verifyNoMoreInteractions(tenantDao);
     }
 
@@ -178,6 +255,19 @@ public class ReadUserResourceTest extends AbstractTestResource {
             .andReturn();
 
         verify(tenantDao, times(1)).findAllUsers(anyString());
+        verifyNoMoreInteractions(tenantDao);
+    }
+
+    @Test
+    @WithMockSmartCosmosUser
+    public void thatFindAllUsersInTenantWithoutAuthorityFails() throws Exception {
+        
+        MvcResult mvcResult = mockMvc.perform(
+            get("/users")
+                .contentType(APPLICATION_JSON_UTF8))
+            .andExpect(status().isForbidden())
+            .andReturn();
+
         verifyNoMoreInteractions(tenantDao);
     }
 }

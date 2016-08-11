@@ -1,4 +1,4 @@
-= REST Implementations for User Edge Microservice
+= REST Implementations for User Management Edge Microservice
 SMARTRAC Technology Fletcher Inc <api@smartrac-group.com>
 :version: 3.0.0-SNAPSHOT
 ifdef::env-github[:USER: SMARTRACTECHNOLOGY]
@@ -9,6 +9,27 @@ Microservice which provides basic management functionality for tenants, user and
 
 == License
 This is a private licensed repository, and as such, should not be shared publicly.
+
+== Authorities
+
+=== Tenant Authorities
+
+- https://authorities.smartcosmos.net/tenants/read
+- https://authorities.smartcosmos.net/tenants/update
+
+=== User Authorities
+
+- https://authorities.smartcosmos.net/users/create
+- https://authorities.smartcosmos.net/users/read
+- https://authorities.smartcosmos.net/users/update
+- https://authorities.smartcosmos.net/users/delete
+
+=== Role Authorities
+
+- https://authorities.smartcosmos.net/roles/create
+- https://authorities.smartcosmos.net/roles/read
+- https://authorities.smartcosmos.net/roles/update
+- https://authorities.smartcosmos.net/roles/delete
 
 == REST API
 
