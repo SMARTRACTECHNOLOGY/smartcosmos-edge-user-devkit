@@ -28,14 +28,27 @@ public interface TenantDao {
         "https://authorities.smartcosmos.net/metadata/delete",
         "https://authorities.smartcosmos.net/relationships/create",
         "https://authorities.smartcosmos.net/relationships/read",
-        "https://authorities.smartcosmos.net/relationships/delete"
+        "https://authorities.smartcosmos.net/relationships/delete",
+        "https://authorities.smartcosmos.net/tenants/read",
+        "https://authorities.smartcosmos.net/tenants/update",
+        "https://authorities.smartcosmos.net/users/create",
+        "https://authorities.smartcosmos.net/users/read",
+        "https://authorities.smartcosmos.net/users/update",
+        "https://authorities.smartcosmos.net/users/delete",
+        "https://authorities.smartcosmos.net/roles/create",
+        "https://authorities.smartcosmos.net/roles/read",
+        "https://authorities.smartcosmos.net/roles/update",
+        "https://authorities.smartcosmos.net/roles/delete"
     };
 
     String[] DEFAULT_USER_AUTHORITIES = {
         "https://authorities.smartcosmos.net/things/read",
         "https://authorities.smartcosmos.net/metadata/read",
         "https://authorities.smartcosmos.net/relationships/read",
-        };
+        "https://authorities.smartcosmos.net/tenants/read",
+        "https://authorities.smartcosmos.net/users/read",
+        "https://authorities.smartcosmos.net/roles/read"
+    };
 
     Optional<CreateTenantResponse> createTenant(CreateTenantRequest tenantCreate) throws ConstraintViolationException;
 

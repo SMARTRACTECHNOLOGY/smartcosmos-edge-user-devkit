@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -30,6 +31,7 @@ import static net.smartcosmos.extension.tenant.rest.resource.user.UserEndpointCo
 @SmartCosmosRdao
 @Slf4j
 @ConditionalOnProperty(prefix = ENDPOINT_ENABLEMENT_USERS, name = ENDPOINT_ENABLEMENT_PROPERTY_ENABLED, matchIfMissing = true)
+@PreAuthorize("hasAuthority('https://authorities.smartcosmos.net/users/create')")
 //@Api
 public class CreateUserResource {
 
