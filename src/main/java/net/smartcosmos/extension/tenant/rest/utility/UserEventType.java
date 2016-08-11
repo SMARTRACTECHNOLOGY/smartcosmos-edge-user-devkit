@@ -4,19 +4,19 @@ import org.apache.commons.lang.StringUtils;
 
 public enum UserEventType {
 
-    USER_READ("user:read"),
-    USER_BATCH_START("user:batch:start"),
-    USER_BATCH_STOP("user:batch:stop"),
-    USER_CREATED("user:created"),
-    USER_LOGIN_FAILURE("user:login:failure"),
-    USER_LOGIN_SUCCESS("user:login:success"),
-    USER_PASSWORD_CHANGED("user:password:changed"),
-    USER_PASSWORD_RESET("user:password:reset"),
-    USER_REGISTRATION_REQUEST("user:registration:requested"),
-    USER_UPDATED("user:updated"),
-    USER_CREATE_FAILED_ALREADY_EXISTS("user:createFailedAlreadyExists"),
-    USER_DELETED("user:deleted"),
-    USER_NOT_FOUND("user:notFound"),
+    USER_READ("user.read"),
+    USER_BATCH_START("user.batch.start"),
+    USER_BATCH_STOP("user.batch.stop"),
+    USER_CREATED("user.created"),
+    USER_LOGIN_FAILURE("user.login.failure"),
+    USER_LOGIN_SUCCESS("user.login.success"),
+    USER_PASSWORD_CHANGED("user.password.changed"),
+    USER_PASSWORD_RESET("user.password.reset"),
+    USER_REGISTRATION_REQUEST("user.registration.requested"),
+    USER_UPDATED("user.updated"),
+    USER_CREATE_FAILED_ALREADY_EXISTS("user.createFailedAlreadyExists"),
+    USER_DELETED("user.deleted"),
+    USER_NOT_FOUND("user.notFound"),
     UNKNOWN("Unknown");
 
     private String eventName;

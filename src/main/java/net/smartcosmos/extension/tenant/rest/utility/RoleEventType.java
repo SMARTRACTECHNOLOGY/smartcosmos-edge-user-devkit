@@ -4,12 +4,12 @@ import org.apache.commons.lang.StringUtils;
 
 public enum RoleEventType {
 
-    ROLE_CREATED("role:created"),
-    ROLE_READ("role:read"),
-    ROLE_CREATE_FAILED_ALREADY_EXISTS("role:createFailedAlreadyExists"),
-    ROLE_NOT_FOUND("role:notFound"),
-    ROLE_DELETED("role:deleted"),
-    ROLE_UPDATED("role:updated"),
+    ROLE_CREATED("role.created"),
+    ROLE_READ("role.read"),
+    ROLE_CREATE_FAILED_ALREADY_EXISTS("role.createFailedAlreadyExists"),
+    ROLE_NOT_FOUND("role.notFound"),
+    ROLE_DELETED("role.deleted"),
+    ROLE_UPDATED("role.updated"),
     UNKNOWN("Unknown");
 
     private String eventName;

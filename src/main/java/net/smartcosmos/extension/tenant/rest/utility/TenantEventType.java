@@ -4,12 +4,12 @@ import org.apache.commons.lang.StringUtils;
 
 public enum TenantEventType {
 
-    TENANT_READ("tenant:read"),
-    TENANT_CONFIRMED("tenant:confirmed"),
-    TENANT_CREATED("tenant:created"),
-    TENANT_UPDATED("tenant:updated"),
-    TENANT_CREATE_FAILED_ALREADY_EXISTS("tenant:createFailedAlreadyExists"),
-    TENANT_NOT_FOUND("tenant:notFound"),
+    TENANT_READ("tenant.read"),
+    TENANT_CONFIRMED("tenant.confirmed"),
+    TENANT_CREATED("tenant.created"),
+    TENANT_UPDATED("tenant.updated"),
+    TENANT_CREATE_FAILED_ALREADY_EXISTS("tenant.createFailedAlreadyExists"),
+    TENANT_NOT_FOUND("tenant.notFound"),
     UNKNOWN("Unknown");
 
     private String eventName;
