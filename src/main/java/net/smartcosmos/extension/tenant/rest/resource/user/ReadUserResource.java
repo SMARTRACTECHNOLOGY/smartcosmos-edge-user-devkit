@@ -29,7 +29,6 @@ import static net.smartcosmos.extension.tenant.rest.resource.user.UserEndpointCo
 @Slf4j
 @SmartCosmosRdao
 @ConditionalOnProperty(prefix = ENDPOINT_ENABLEMENT_USERS, name = ENDPOINT_ENABLEMENT_PROPERTY_ENABLED, matchIfMissing = true)
-@PreAuthorize("hasAuthority('https://authorities.smartcosmos.net/users/read')")
 public class ReadUserResource {
 
     private ReadUserService readUserService;
@@ -49,6 +48,7 @@ public class ReadUserResource {
 
     @RequestMapping(value = ENDPOINT_USERS, method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8_VALUE)
     @ConditionalOnProperty(prefix = ENDPOINT_ENABLEMENT_USERS_READ_ALL, name = ENDPOINT_ENABLEMENT_PROPERTY_ENABLED, matchIfMissing = true)
+    @PreAuthorize("hasAuthority('https://authorities.smartcosmos.net/users/read') or #name.equals(#user.getUsername())")
     public ResponseEntity<?> getByName(
         @RequestParam(value = NAME, required = false, defaultValue = "") String name,
         SmartCosmosUser user) {
