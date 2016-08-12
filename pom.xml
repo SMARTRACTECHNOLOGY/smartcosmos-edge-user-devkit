@@ -10,7 +10,7 @@
     <parent>
         <groupId>net.smartcosmos</groupId>
         <artifactId>smartcosmos-framework-parent</artifactId>
-        <version>3.0.0-SNAPSHOT</version>
+        <version>3.0.0</version>
         <relativePath></relativePath>
     </parent>
     <artifactId>smartcosmos-edge-user-devkit</artifactId>
@@ -30,7 +30,7 @@
         <dependency>
             <groupId>net.smartcosmos</groupId>
             <artifactId>smartcosmos-user-entity-devkit</artifactId>
-            <version>3.0.0-SNAPSHOT</version>
+            <version>3.0.0</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -117,9 +117,10 @@
     </build>
 
     <scm>
-        <connection>scm:git:git://github.com/SMARTRACTECHNOLOGY/smartcosmos-edge-user-devkit.git</connection>
-        <developerConnection>scm:git@github.com:SMARTRACTECHNOLOGY/smartcosmos-edge-user-devkit.git</developerConnection>
+        <connection>scm:git:ssh://git@github.com/SMARTRACTECHNOLOGY/smartcosmos-edge-user-devkit.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/SMARTRACTECHNOLOGY/smartcosmos-edge-user-devkit.git</developerConnection>
         <url>https://github.com/SMARTRACTECHNOLOGY/smartcosmos-edge-user-devkit/tree/master/</url>
+        <tag>HEAD</tag>
     </scm>
 
 </project>
