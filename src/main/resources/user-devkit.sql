@@ -84,3 +84,36 @@ CREATE TABLE user_roles (
   role BINARY(16) NOT NULL,
   PRIMARY KEY (user, role)
 );
+
+-- *************************************
+--       CONSTRAINTS
+-- *************************************
+ALTER TABLE role_authorities
+  ADD CONSTRAINT FK_TO_AUTHORITY_01
+FOREIGN KEY (authority)
+REFERENCES authority (authority);
+
+ALTER TABLE role_authorities
+  ADD CONSTRAINT FK_TO_ROLE_01
+FOREIGN KEY (role)
+REFERENCES role (id);
+
+ALTER TABLE role_user
+  ADD CONSTRAINT FK_TO_USER_01
+FOREIGN KEY (users_id)
+REFERENCES user (id);
+
+ALTER TABLE role_user
+  ADD CONSTRAINT FK_TO_ROLE_02
+FOREIGN KEY (role_id)
+REFERENCES role (id);
+
+ALTER TABLE user_roles
+  ADD CONSTRAINT FK_TO_ROLE_01
+FOREIGN KEY (role)
+REFERENCES role (id);
+
+ALTER TABLE user_roles
+  ADD CONSTRAINT FK_TO_USER_01
+FOREIGN KEY (user)
+REFERENCES user (id);
