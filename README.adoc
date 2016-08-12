@@ -7,8 +7,8 @@ ifdef::env-github[:BRANCH: master]
 
 Microservice which provides basic management functionality for tenants, user and roles. This services is not recommended for production purposes.
 
-== License
-This is a private licensed repository, and as such, should not be shared publicly.
+== Copyright and License
+Code and documentation copyright 2016 Smartrac Technology Fletcher, Inc.  Code released under link:LICENSE[Apache 2.0 License].
 
 == Authorities
 
