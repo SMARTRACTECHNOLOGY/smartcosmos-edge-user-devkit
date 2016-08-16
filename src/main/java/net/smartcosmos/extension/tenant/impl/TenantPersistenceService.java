@@ -10,6 +10,7 @@ import javax.validation.ConstraintViolationException;
 
 import lombok.extern.slf4j.Slf4j;
 
+import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionException;
 import org.springframework.core.convert.ConversionService;
@@ -49,7 +50,7 @@ public class TenantPersistenceService implements TenantDao {
     private final RoleRepository roleRepository;
     private final ConversionService conversionService;
 
-    private static final String INITIAL_PASSWORD = "PleaseChangeMeImmediately";
+    private static final String INITIAL_PASSWORD = RandomStringUtils.randomAlphanumeric(8);
 
     /**
      * @param tenantRepository
