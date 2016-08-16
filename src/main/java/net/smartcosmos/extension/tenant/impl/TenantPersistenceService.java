@@ -50,8 +50,6 @@ public class TenantPersistenceService implements TenantDao {
     private final RoleRepository roleRepository;
     private final ConversionService conversionService;
 
-    private static final String INITIAL_PASSWORD = RandomStringUtils.randomAlphanumeric(8);
-
     /**
      * @param tenantRepository
      * @param userRepository
@@ -110,7 +108,7 @@ public class TenantPersistenceService implements TenantDao {
                 .tenantId(tenantEntity.getId())
                 .username(createTenantRequest.getUsername())
                 .emailAddress(createTenantRequest.getUsername())
-                .password(INITIAL_PASSWORD)
+                .password(RandomStringUtils.randomAlphanumeric(8))
                 .roles(roles)
                 .active(createTenantRequest.getActive() == null ? true : createTenantRequest.getActive())
                 .build();
@@ -246,7 +244,7 @@ public class TenantPersistenceService implements TenantDao {
             return Optional.empty();
         }
 
-        String password = INITIAL_PASSWORD;
+        String password = RandomStringUtils.randomAlphanumeric(8);
 
         try {
             UUID tenantId = UuidUtil.getUuidFromUrn(tenantUrn);
