@@ -250,13 +250,16 @@ public class TenantPersistenceService implements TenantDao {
         try {
             UUID tenantId = UuidUtil.getUuidFromUrn(tenantUrn);
 
+            if (!tenantRepository.exists(tenantId)) {
+                throw new IllegalArgumentException(String.format("Tenant '%s' does not exist!", tenantUrn));
+            }
+
             UserEntity userEntity = conversionService.convert(createUserRequest, UserEntity.class);
             userEntity.setId(UuidUtil.getNewUuid());
             userEntity.setTenantId(tenantId);
             userEntity.setPassword(password);
-            userEntity = userRepository.persist(userEntity);
-            userEntity = userRepository.addRolesToUser(userEntity.getTenantId(), userEntity.getId(), createUserRequest.getRoles())
-                .get();
+            userEntity.setRoles(roleRepository.findByTenantIdAndNameInAllIgnoreCase(tenantId, createUserRequest.getRoles()));
+            userEntity = userRepository.save(userEntity);
 
             CreateUserResponse response = conversionService.convert(userEntity, CreateUserResponse.class);
             response.setPassword(password);
@@ -284,7 +287,7 @@ public class TenantPersistenceService implements TenantDao {
 
             if (userEntityOptional.isPresent()) {
                 UserEntity userEntity = MergeUtil.merge(userEntityOptional.get(), updateUserRequest);
-                userEntity = userRepository.persist(userEntity);
+                userEntity = userRepository.save(userEntity);
                 return Optional.ofNullable(conversionService.convert(userEntity, UserResponse.class));
             }
 
