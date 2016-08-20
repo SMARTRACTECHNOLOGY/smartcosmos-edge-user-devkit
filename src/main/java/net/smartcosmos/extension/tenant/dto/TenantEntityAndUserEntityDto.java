@@ -24,4 +24,5 @@ public class TenantEntityAndUserEntityDto {
 
     private TenantEntity tenantEntity;
     private UserEntity userEntity;
+    private String rawPassword;
 }

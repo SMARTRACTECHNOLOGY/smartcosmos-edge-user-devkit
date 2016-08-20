@@ -10,10 +10,12 @@ import javax.validation.ConstraintViolationException;
 
 import lombok.extern.slf4j.Slf4j;
 
+import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionException;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.TypeDescriptor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import net.smartcosmos.cluster.userdetails.domain.RoleEntity;
@@ -49,8 +51,6 @@ public class TenantPersistenceService implements TenantDao {
     private final RoleRepository roleRepository;
     private final ConversionService conversionService;
 
-    private static final String INITIAL_PASSWORD = "PleaseChangeMeImmediately";
-
     /**
      * @param tenantRepository
      * @param userRepository
@@ -63,7 +63,8 @@ public class TenantPersistenceService implements TenantDao {
         UserRepository userRepository,
         RolePersistenceService rolePersistenceService,
         RoleRepository roleRepository,
-        ConversionService conversionService) {
+        ConversionService conversionService,
+        PasswordEncoder passwordEncoder) {
 
         this.tenantRepository = tenantRepository;
         this.userRepository = userRepository;
@@ -104,12 +105,13 @@ public class TenantPersistenceService implements TenantDao {
             Set<RoleEntity> roles = new HashSet<>();
             roles.add(adminRole);
 
+            final String rawPassword = RandomStringUtils.random(12);
             UserEntity userEntity = UserEntity.builder()
                 .id(UuidUtil.getNewUuid())
                 .tenantId(tenantEntity.getId())
                 .username(createTenantRequest.getUsername())
                 .emailAddress(createTenantRequest.getUsername())
-                .password(INITIAL_PASSWORD)
+                .password(rawPassword)
                 .roles(roles)
                 .active(createTenantRequest.getActive() == null ? true : createTenantRequest.getActive())
                 .build();
@@ -120,6 +122,7 @@ public class TenantPersistenceService implements TenantDao {
                 .ofNullable(conversionService.convert(TenantEntityAndUserEntityDto.builder()
                                                           .tenantEntity(tenantEntity)
                                                           .userEntity(userEntity)
+                                                          .rawPassword(rawPassword)
                                                           .build(),
                                                       CreateTenantResponse.class));
 
@@ -245,7 +248,7 @@ public class TenantPersistenceService implements TenantDao {
             return Optional.empty();
         }
 
-        String password = INITIAL_PASSWORD;
+
 
         try {
             UUID tenantId = UuidUtil.getUuidFromUrn(tenantUrn);
@@ -253,6 +256,8 @@ public class TenantPersistenceService implements TenantDao {
             if (!tenantRepository.exists(tenantId)) {
                 throw new IllegalArgumentException(String.format("Tenant '%s' does not exist!", tenantUrn));
             }
+
+            final String password = RandomStringUtils.random(12);
 
             UserEntity userEntity = conversionService.convert(createUserRequest, UserEntity.class);
             userEntity.setId(UuidUtil.getNewUuid());

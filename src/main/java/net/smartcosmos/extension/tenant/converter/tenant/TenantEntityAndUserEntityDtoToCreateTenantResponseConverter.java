@@ -41,8 +41,7 @@ public class TenantEntityAndUserEntityDtoToCreateTenantResponseConverter
                                                        .getId()))
             .username(entityDto.getUserEntity()
                           .getUsername())
-            .password(entityDto.getUserEntity()
-                          .getPassword())
+            .password(entityDto.getRawPassword())
             .roles(rolesAsStrings)
             .build();
 
