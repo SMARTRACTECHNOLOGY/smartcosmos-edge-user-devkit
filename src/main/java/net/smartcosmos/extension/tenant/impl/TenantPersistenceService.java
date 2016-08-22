@@ -105,7 +105,7 @@ public class TenantPersistenceService implements TenantDao {
             Set<RoleEntity> roles = new HashSet<>();
             roles.add(adminRole);
 
-            final String rawPassword = RandomStringUtils.random(12);
+            final String rawPassword = RandomStringUtils.randomAlphanumeric(12);
             UserEntity userEntity = UserEntity.builder()
                 .id(UuidUtil.getNewUuid())
                 .tenantId(tenantEntity.getId())
@@ -257,7 +257,7 @@ public class TenantPersistenceService implements TenantDao {
                 throw new IllegalArgumentException(String.format("Tenant '%s' does not exist!", tenantUrn));
             }
 
-            final String password = RandomStringUtils.random(12);
+            final String password = RandomStringUtils.randomAlphanumeric(12);
 
             UserEntity userEntity = conversionService.convert(createUserRequest, UserEntity.class);
             userEntity.setId(UuidUtil.getNewUuid());
