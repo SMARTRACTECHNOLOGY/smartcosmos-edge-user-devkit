@@ -18,10 +18,33 @@
     <name>SMART COSMOS DAO for Tenant Entities</name>
     <description>Devkit implementation of tenant management for SMART COSMOS Tenants</description>
 
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.mapstruct</groupId>
+                <artifactId>mapstruct</artifactId>
+                <version>1.0.0.Final</version>
+            </dependency>
+            <dependency>
+                <groupId>net.smartcosmos</groupId>
+                <artifactId>smartcosmos-database-devkit</artifactId>
+                <version>3.0.1-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>net.smartcosmos</groupId>
+                <artifactId>smartcosmos-user-entity-devkit</artifactId>
+                <version>3.0.1-SNAPSHOT</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
     <dependencies>
         <dependency>
             <groupId>org.mariadb.jdbc</groupId>
             <artifactId>mariadb-java-client</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.smartcosmos</groupId>
+            <artifactId>smartcosmos-database-devkit</artifactId>
         </dependency>
         <dependency>
             <groupId>net.smartcosmos</groupId>
@@ -30,7 +53,6 @@
         <dependency>
             <groupId>net.smartcosmos</groupId>
             <artifactId>smartcosmos-user-entity-devkit</artifactId>
-            <version>3.0.0</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -86,7 +108,6 @@
         <dependency>
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
-            <version>1.0.0.Final</version>
             <scope>test</scope>
         </dependency>
         <dependency>

@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionException;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.TypeDescriptor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import net.smartcosmos.cluster.userdetails.domain.RoleEntity;
@@ -62,7 +63,8 @@ public class TenantPersistenceService implements TenantDao {
         UserRepository userRepository,
         RolePersistenceService rolePersistenceService,
         RoleRepository roleRepository,
-        ConversionService conversionService) {
+        ConversionService conversionService,
+        PasswordEncoder passwordEncoder) {
 
         this.tenantRepository = tenantRepository;
         this.userRepository = userRepository;
@@ -103,12 +105,13 @@ public class TenantPersistenceService implements TenantDao {
             Set<RoleEntity> roles = new HashSet<>();
             roles.add(adminRole);
 
+            final String rawPassword = RandomStringUtils.randomAlphanumeric(12);
             UserEntity userEntity = UserEntity.builder()
                 .id(UuidUtil.getNewUuid())
                 .tenantId(tenantEntity.getId())
                 .username(createTenantRequest.getUsername())
                 .emailAddress(createTenantRequest.getUsername())
-                .password(RandomStringUtils.randomAlphanumeric(8))
+                .password(rawPassword)
                 .roles(roles)
                 .active(createTenantRequest.getActive() == null ? true : createTenantRequest.getActive())
                 .build();
@@ -119,6 +122,7 @@ public class TenantPersistenceService implements TenantDao {
                 .ofNullable(conversionService.convert(TenantEntityAndUserEntityDto.builder()
                                                           .tenantEntity(tenantEntity)
                                                           .userEntity(userEntity)
+                                                          .rawPassword(rawPassword)
                                                           .build(),
                                                       CreateTenantResponse.class));
 
@@ -249,13 +253,16 @@ public class TenantPersistenceService implements TenantDao {
         try {
             UUID tenantId = UuidUtil.getUuidFromUrn(tenantUrn);
 
-            UserEntity userEntity = conversionService.convert(createUserRequest, UserEntity.class);
+            if (!tenantRepository.exists(tenantId)) {
+                throw new IllegalArgumentException(String.format("Tenant '%s' does not exist!", tenantUrn));
+            }
+
+             UserEntity userEntity = conversionService.convert(createUserRequest, UserEntity.class);
             userEntity.setId(UuidUtil.getNewUuid());
             userEntity.setTenantId(tenantId);
             userEntity.setPassword(password);
-            userEntity = userRepository.persist(userEntity);
-            userEntity = userRepository.addRolesToUser(userEntity.getTenantId(), userEntity.getId(), createUserRequest.getRoles())
-                .get();
+            userEntity.setRoles(roleRepository.findByTenantIdAndNameInAllIgnoreCase(tenantId, createUserRequest.getRoles()));
+            userEntity = userRepository.save(userEntity);
 
             CreateUserResponse response = conversionService.convert(userEntity, CreateUserResponse.class);
             response.setPassword(password);
@@ -283,7 +290,7 @@ public class TenantPersistenceService implements TenantDao {
 
             if (userEntityOptional.isPresent()) {
                 UserEntity userEntity = MergeUtil.merge(userEntityOptional.get(), updateUserRequest);
-                userEntity = userRepository.persist(userEntity);
+                userEntity = userRepository.save(userEntity);
                 return Optional.ofNullable(conversionService.convert(userEntity, UserResponse.class));
             }
 

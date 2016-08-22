@@ -1,6 +1,7 @@
 package net.smartcosmos.extension.tenant.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -528,8 +529,8 @@ public class TenantPersistenceServiceTest {
 
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void thatCreateUserFailsInvalidRole() {
+    @Test
+    public void thatCreateUserSuccessInvalidRole() {
 
         final String emailAddress = "noSuchRole.user@example.com";
         final String givenName = "user";
@@ -550,6 +551,12 @@ public class TenantPersistenceServiceTest {
             .build();
 
         Optional<CreateUserResponse> userResponse = tenantPersistenceService.createUser(testUserTenantUrn, createUserRequest);
+
+        assertTrue(userResponse.isPresent());
+
+        assertTrue(!userResponse.get()
+            .getRoles()
+            .contains(role));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -575,6 +582,7 @@ public class TenantPersistenceServiceTest {
             .build();
 
         Optional<CreateUserResponse> userResponse = tenantPersistenceService.createUser(noSuchTenant, createUserRequest);
+
     }
 
     @Test
@@ -635,38 +643,34 @@ public class TenantPersistenceServiceTest {
         final String role = "User";
         final String surname = "create";
         final String username = "create.tenant.user";
-        final String tenantUrn1 = UuidUtil.getTenantUrnFromUuid(UUID.randomUUID());
-        final String tenantUrn2 = UuidUtil.getTenantUrnFromUuid(UUID.randomUUID());
 
-        List<String> roles = new ArrayList<>();
+        final String tenantUrn1 = tenantPersistenceService.createTenant(
+            CreateTenantRequest
+                .builder()
+                .active(true)
+                .name("Tenant 1")
+                .username(emailAddress1)
+                .build())
+            .get()
+            .getUrn();
 
-        CreateOrUpdateUserRequest createUserRequest1 = CreateOrUpdateUserRequest.builder()
-            .active(true)
-            .emailAddress(emailAddress1)
-            .givenName(givenName)
-            .roles(roles)
-            .surname(surname)
-            .username(username)
-            .build();
-
-        Optional<CreateUserResponse> userResponse1 = tenantPersistenceService.createUser(tenantUrn1, createUserRequest1);
-
-        assertTrue(userResponse1.isPresent());
-        assertEquals(roles.size(),
-                     userResponse1.get()
-                         .getRoles()
-                         .size());
-        assertEquals(username,
-                     userResponse1.get()
-                         .getUsername());
+        final String tenantUrn2 = tenantPersistenceService.createTenant(
+            CreateTenantRequest
+                .builder()
+                .active(true)
+                .name("Tenant 2")
+                .username("randomwhocares@example.com")
+                .build())
+            .get()
+            .getUrn();
 
         CreateOrUpdateUserRequest createUserRequest2 = CreateOrUpdateUserRequest.builder()
             .active(true)
             .emailAddress(emailAddress2)
             .givenName(givenName)
-            .roles(roles)
+            .roles(Arrays.asList(role))
             .surname(surname)
-            .username(username)
+            .username(emailAddress1)
             .build();
 
         Optional<CreateUserResponse> userResponse2 = tenantPersistenceService.createUser(tenantUrn2, createUserRequest2);
