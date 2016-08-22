@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
+import org.apache.commons.lang.RandomStringUtils;
 import org.junit.*;
 import org.junit.runner.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,7 +61,7 @@ public class CreateTenantResourceTest extends AbstractTestResource {
 
         final String name = "example.com";
         final String username = "spam@example.com";
-        final String password = "ChangeMe";
+        final String password = RandomStringUtils.randomAlphanumeric(8);
 
         final String expectedTenantUrn = "urn:tenant:uuid:" + UuidUtil.getNewUuid()
             .toString();
@@ -118,7 +119,7 @@ public class CreateTenantResourceTest extends AbstractTestResource {
 
         final String name = "example.com";
         final String username = "spam@example.com";
-        final String password = "ChangeMe";
+        final String password = RandomStringUtils.randomAlphanumeric(8);
 
         final String expectedTenantUrn = "urn:tenant:uuid:" + UuidUtil.getNewUuid()
             .toString();
