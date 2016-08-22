@@ -27,12 +27,12 @@
             </dependency>
             <dependency>
                 <groupId>net.smartcosmos</groupId>
-                <artifactId>smartcosmos-user-entity-devkit</artifactId>
+                <artifactId>smartcosmos-database-devkit</artifactId>
                 <version>3.0.1-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>net.smartcosmos</groupId>
-                <artifactId>smartcosmos-database-devkit</artifactId>
+                <artifactId>smartcosmos-user-entity-devkit</artifactId>
                 <version>3.0.1-SNAPSHOT</version>
             </dependency>
         </dependencies>
