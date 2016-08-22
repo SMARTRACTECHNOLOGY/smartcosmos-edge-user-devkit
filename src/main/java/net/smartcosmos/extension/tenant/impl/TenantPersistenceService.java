@@ -248,7 +248,7 @@ public class TenantPersistenceService implements TenantDao {
             return Optional.empty();
         }
 
-
+        String password = RandomStringUtils.randomAlphanumeric(8);
 
         try {
             UUID tenantId = UuidUtil.getUuidFromUrn(tenantUrn);
@@ -257,9 +257,7 @@ public class TenantPersistenceService implements TenantDao {
                 throw new IllegalArgumentException(String.format("Tenant '%s' does not exist!", tenantUrn));
             }
 
-            final String password = RandomStringUtils.randomAlphanumeric(12);
-
-            UserEntity userEntity = conversionService.convert(createUserRequest, UserEntity.class);
+             UserEntity userEntity = conversionService.convert(createUserRequest, UserEntity.class);
             userEntity.setId(UuidUtil.getNewUuid());
             userEntity.setTenantId(tenantId);
             userEntity.setPassword(password);
