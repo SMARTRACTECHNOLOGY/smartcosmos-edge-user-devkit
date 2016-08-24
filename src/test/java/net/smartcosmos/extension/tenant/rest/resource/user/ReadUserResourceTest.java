@@ -261,11 +261,11 @@ public class ReadUserResourceTest extends AbstractTestResource {
     @Test
     @WithMockSmartCosmosUser
     public void thatFindAllUsersInTenantWithoutAuthorityFails() throws Exception {
-        
+
         MvcResult mvcResult = mockMvc.perform(
             get("/users")
                 .contentType(APPLICATION_JSON_UTF8))
-            .andExpect(status().isForbidden())
+            .andExpect(status().isUnauthorized())
             .andReturn();
 
         verifyNoMoreInteractions(tenantDao);

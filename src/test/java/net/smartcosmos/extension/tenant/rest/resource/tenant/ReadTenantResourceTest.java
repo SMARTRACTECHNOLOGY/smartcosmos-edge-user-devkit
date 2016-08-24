@@ -101,7 +101,7 @@ public class ReadTenantResourceTest extends AbstractTestResource {
 
         MvcResult mvcResult = mockMvc.perform(
             get("/tenants/{urn}", urn).contentType(APPLICATION_JSON_UTF8))
-            .andExpect(status().isForbidden())
+            .andExpect(status().isUnauthorized())
             .andReturn();
 
         verify(tenantDao, times(0)).findTenantByUrn(anyString());
@@ -134,7 +134,7 @@ public class ReadTenantResourceTest extends AbstractTestResource {
 
         MvcResult mvcResult = mockMvc.perform(
             get("/tenants/{urn}", urn).contentType(APPLICATION_JSON_UTF8))
-            .andExpect(status().isForbidden())
+            .andExpect(status().isUnauthorized())
             .andReturn();
 
         verify(tenantDao, times(0)).findTenantByUrn(anyString());
@@ -181,7 +181,7 @@ public class ReadTenantResourceTest extends AbstractTestResource {
             get("/tenants")
                 .param("name", name)
                 .contentType(APPLICATION_JSON_UTF8))
-            .andExpect(status().isForbidden())
+            .andExpect(status().isUnauthorized())
             .andReturn();
 
         verify(tenantDao, times(0)).findTenantByName(anyString());
@@ -218,7 +218,7 @@ public class ReadTenantResourceTest extends AbstractTestResource {
             get("/tenants")
                 .param("name", name)
                 .contentType(APPLICATION_JSON_UTF8))
-            .andExpect(status().isForbidden())
+            .andExpect(status().isUnauthorized())
             .andReturn();
 
         verify(tenantDao, times(0)).findTenantByName(anyString());
@@ -251,7 +251,7 @@ public class ReadTenantResourceTest extends AbstractTestResource {
         MvcResult mvcResult = mockMvc.perform(
             get("/tenants")
                 .contentType(APPLICATION_JSON_UTF8))
-            .andExpect(status().isForbidden())
+            .andExpect(status().isUnauthorized())
             .andReturn();
 
         verify(tenantDao, times(0)).findAllTenants();
@@ -296,7 +296,7 @@ public class ReadTenantResourceTest extends AbstractTestResource {
         MvcResult mvcResult = mockMvc.perform(
             get("/tenants")
                 .contentType(APPLICATION_JSON_UTF8))
-            .andExpect(status().isForbidden())
+            .andExpect(status().isUnauthorized())
             .andReturn();
 
         verify(tenantDao, times(0)).findAllTenants();
