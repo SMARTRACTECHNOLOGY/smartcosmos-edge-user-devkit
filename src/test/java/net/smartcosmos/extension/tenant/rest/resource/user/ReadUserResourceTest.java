@@ -265,7 +265,7 @@ public class ReadUserResourceTest extends AbstractTestResource {
         MvcResult mvcResult = mockMvc.perform(
             get("/users")
                 .contentType(APPLICATION_JSON_UTF8))
-            .andExpect(status().isUnauthorized())
+            .andExpect(status().isForbidden())
             .andReturn();
 
         verifyNoMoreInteractions(tenantDao);

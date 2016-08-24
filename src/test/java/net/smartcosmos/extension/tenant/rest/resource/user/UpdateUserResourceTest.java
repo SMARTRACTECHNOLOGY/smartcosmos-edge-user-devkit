@@ -178,7 +178,7 @@ public class UpdateUserResourceTest extends AbstractTestResource {
             put("/users/{urn}", expectedUserUrn)
                 .content(this.json(request))
                 .contentType(contentType))
-            .andExpect(status().isUnauthorized())
+            .andExpect(status().isForbidden())
             .andExpect(request().asyncNotStarted())
             .andReturn();
     }

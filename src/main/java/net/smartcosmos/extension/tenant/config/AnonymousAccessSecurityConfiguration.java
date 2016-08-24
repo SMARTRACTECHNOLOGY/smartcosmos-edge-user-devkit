@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
@@ -23,6 +24,7 @@ import net.smartcosmos.security.user.SmartCosmosUserConfiguration;
 @Slf4j
 @EnableResourceServer
 @Import(SmartCosmosUserConfiguration.class)
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class AnonymousAccessSecurityConfiguration extends ResourceServerConfigurerAdapter {
 
     @Autowired
