@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 
+import net.smartcosmos.extension.tenant.auth.SmartCosmosAnonymousUser;
 import net.smartcosmos.security.user.SmartCosmosUserConfiguration;
 
 @Configuration
@@ -35,6 +36,9 @@ public class AnonymousAccessSecurityConfiguration extends ResourceServerConfigur
             .authenticated()
             .and()
             .csrf()
-            .disable();
+            .disable()
+            .anonymous()
+            .key(SmartCosmosAnonymousUser.ANONYMOUS_AUTHENTICATION_KEY)
+            .principal(SmartCosmosAnonymousUser.ANONYMOUS_USER))
     }
 }

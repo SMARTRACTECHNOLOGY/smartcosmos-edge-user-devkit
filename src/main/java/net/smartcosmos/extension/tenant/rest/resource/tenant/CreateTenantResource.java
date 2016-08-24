@@ -15,6 +15,7 @@ import org.springframework.web.context.request.async.DeferredResult;
 import net.smartcosmos.annotation.SmartCosmosRdao;
 import net.smartcosmos.extension.tenant.rest.dto.tenant.RestCreateTenantRequest;
 import net.smartcosmos.extension.tenant.rest.service.tenant.CreateTenantService;
+import net.smartcosmos.security.user.SmartCosmosUser;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 
@@ -43,9 +44,9 @@ public class CreateTenantResource {
                     consumes = APPLICATION_JSON_UTF8_VALUE)
     @ConditionalOnProperty(prefix = ENDPOINT_ENABLEMENT_TENANTS_CREATE, name = ENDPOINT_ENABLEMENT_PROPERTY_ENABLED, matchIfMissing = true)
     public DeferredResult<ResponseEntity> createTenant(
-        @RequestBody @Valid RestCreateTenantRequest restCreateTenantRequest) {
+        @RequestBody @Valid RestCreateTenantRequest restCreateTenantRequest, SmartCosmosUser smartCosmosUser) {
 
-        return service.create(restCreateTenantRequest, null);
+        return service.create(restCreateTenantRequest, smartCosmosUser);
     }
 }
 

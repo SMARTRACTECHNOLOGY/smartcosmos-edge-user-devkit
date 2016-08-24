@@ -15,7 +15,7 @@
     </parent>
     <artifactId>smartcosmos-edge-user-devkit</artifactId>
     <version>3.0.1-SNAPSHOT</version>
-    <name>SMART COSMOS DAO for Tenant Entities</name>
+    <name>SMART COSMOS Objects User Edge REST Service</name>
     <description>Devkit implementation of tenant management for SMART COSMOS Tenants</description>
 
     <dependencyManagement>
