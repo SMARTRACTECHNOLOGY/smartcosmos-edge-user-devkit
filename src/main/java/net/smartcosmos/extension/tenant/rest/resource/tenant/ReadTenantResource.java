@@ -29,7 +29,6 @@ import static net.smartcosmos.extension.tenant.rest.resource.tenant.TenantEndpoi
 @Slf4j
 @SmartCosmosRdao
 @ConditionalOnProperty(prefix = ENDPOINT_ENABLEMENT_TENANTS, name = ENDPOINT_ENABLEMENT_PROPERTY_ENABLED, matchIfMissing = true)
-@PreAuthorize("hasAuthority('https://authorities.smartcosmos.net/tenants/read')")
 public class ReadTenantResource {
 
     private ReadTenantService readTenantService;
@@ -49,6 +48,7 @@ public class ReadTenantResource {
 
     @RequestMapping(value = ENDPOINT_TENANTS, method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8_VALUE)
     @ConditionalOnProperty(prefix = ENDPOINT_ENABLEMENT_TENANTS_READ_ALL, name = ENDPOINT_ENABLEMENT_PROPERTY_ENABLED, matchIfMissing = true)
+    @PreAuthorize("hasAuthority('https://authorities.smartcosmos.net/tenants/read')")
     public ResponseEntity<?> getByName(
         @RequestParam(value = NAME, required = false, defaultValue = "") String name,
         SmartCosmosUser user) {

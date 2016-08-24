@@ -134,7 +134,7 @@ public class UpdateTenantResourceTest extends AbstractTestResource {
         MvcResult mvcResult = this.mockMvc.perform(
             put("/tenants/{urn}", expectedTenantUrn).content(this.json(request))
                 .contentType(contentType))
-            .andExpect(status().isForbidden())
+            .andExpect(status().isUnauthorized())
             .andExpect(request().asyncNotStarted())
             .andReturn();
     }
@@ -161,7 +161,7 @@ public class UpdateTenantResourceTest extends AbstractTestResource {
         MvcResult mvcResult = this.mockMvc.perform(
             put("/tenants/{urn}", expectedTenantUrn).content(this.json(request))
                 .contentType(contentType))
-            .andExpect(status().isForbidden())
+            .andExpect(status().isUnauthorized())
             .andExpect(request().asyncNotStarted())
             .andReturn();
     }

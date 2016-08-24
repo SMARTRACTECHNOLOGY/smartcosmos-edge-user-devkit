@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -47,10 +46,9 @@ public class CreateTenantResource {
                     consumes = APPLICATION_JSON_UTF8_VALUE)
     @ConditionalOnProperty(prefix = ENDPOINT_ENABLEMENT_TENANTS_CREATE, name = ENDPOINT_ENABLEMENT_PROPERTY_ENABLED, matchIfMissing = true)
     public DeferredResult<ResponseEntity> createTenant(
-        @RequestBody @Valid RestCreateTenantRequest restCreateTenantRequest,
-        @AuthenticationPrincipal SmartCosmosUser user) {
+        @RequestBody @Valid RestCreateTenantRequest restCreateTenantRequest, SmartCosmosUser smartCosmosUser) {
 
-        return service.create(restCreateTenantRequest, user);
+        return service.create(restCreateTenantRequest, smartCosmosUser);
     }
 }
 
