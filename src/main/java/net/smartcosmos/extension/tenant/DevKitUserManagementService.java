@@ -13,6 +13,7 @@ import net.smartcosmos.extension.tenant.config.AnonymousAccessSecurityConfigurat
 
 @EnableSmartCosmosExtension
 @EnableSmartCosmosEvents
+@EnableSmartCosmosMonitoring
 //@EnableSmartCosmosSecurity
 @ComponentScan
 @Import(AnonymousAccessSecurityConfiguration.class)
