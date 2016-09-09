@@ -9,6 +9,7 @@
 === Bugfixes & Improvements
 
 * OBJECTS-991 User Creation throws NullPointerException
+* PROFILES-667: add zipkin starter for distributed tracing
 * reduces un-used complexity regarding Spring Security
 
 == Release 3.0.0 (August 12, 2016)
