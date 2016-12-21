@@ -83,7 +83,7 @@ public class RolePersistenceService implements RoleDao {
         // This role name already exists in a different role? we're not doing the update
         Optional<RoleEntity> existingRole = roleRepository.findByTenantIdAndNameIgnoreCase(UuidUtil.getUuidFromUrn(tenantUrn),
                                                                                            updateRoleRequest.getName());
-        if (existingRole.isPresent() && existingRole.get().getId() != id) {
+        if (existingRole.isPresent() && existingRole.get().getId().equals(id)) {
             return Optional.empty();
         }
 
