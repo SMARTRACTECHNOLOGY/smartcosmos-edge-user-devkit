@@ -82,6 +82,7 @@ public class RolePersistenceServiceTest {
     public void thatUpdateRoleSucceeds() {
 
         final String roleName = "updateTestRole";
+        final String newRoleName = "updateTestNewRoleName";
         final String authority1 = "testAuth1";
         final String authority2 = "testAuth2";
 
@@ -91,14 +92,14 @@ public class RolePersistenceServiceTest {
         CreateOrUpdateRoleRequest createRole = CreateOrUpdateRoleRequest.builder()
             .active(true)
             .authorities(authorities)
-            .name(roleName)
+            .name(newRoleName)
             .build();
 
         Optional<RoleResponse> createResponse = rolePersistenceService
             .createRole(tenantRoleTest, createRole);
 
         assertTrue(createResponse.isPresent());
-        assertEquals(roleName,
+        assertEquals(newRoleName,
                      createResponse.get()
                          .getName());
         assertEquals(1,
@@ -128,6 +129,65 @@ public class RolePersistenceServiceTest {
                      updateResponse.get()
                          .getAuthorities()
                          .size());
+    }
+
+    @Test
+    public void thatUpdateRoleFailsWhenNameAlreadyExistsForDifferentRole() {
+
+        final String roleName1 = "updateTestRole1";
+        final String authority1 = "testAuth1";
+
+        final String roleName2 = "updateTestRole1";
+        final String authority2 = "testAuth2";
+
+        List<String> authorities1 = new ArrayList<>();
+        authorities1.add(authority1);
+
+        List<String> authorities2 = new ArrayList<>();
+        authorities2.add(authority2);
+
+        CreateOrUpdateRoleRequest createRole1 = CreateOrUpdateRoleRequest.builder()
+            .active(true)
+            .authorities(authorities1)
+            .name(roleName1)
+            .build();
+
+        CreateOrUpdateRoleRequest createRole2 = CreateOrUpdateRoleRequest.builder()
+            .active(true)
+            .authorities(authorities2)
+            .name(roleName2)
+            .build();
+
+        Optional<RoleResponse> createResponse1 = rolePersistenceService
+            .createRole(tenantRoleTest, createRole1);
+
+        Optional<RoleResponse> createResponse2 = rolePersistenceService
+            .createRole(tenantRoleTest, createRole2);
+
+        assertTrue(createResponse1.isPresent());
+        assertEquals(roleName1,
+                     createResponse1.get()
+                         .getName());
+        assertEquals(1,
+                     createResponse1.get()
+                         .getAuthorities()
+                         .size());
+
+        String urn = createResponse1.get()
+            .getUrn();
+
+        authorities1.add(authority2);
+
+        CreateOrUpdateRoleRequest updateRole = CreateOrUpdateRoleRequest.builder()
+            .active(true)
+            .authorities(authorities1)
+            .name(roleName2)
+            .build();
+
+        Optional<RoleResponse> updateResponse = rolePersistenceService
+            .updateRole(tenantRoleTest, urn, updateRole);
+
+        assertFalse(updateResponse.isPresent());
     }
 
     @Test
