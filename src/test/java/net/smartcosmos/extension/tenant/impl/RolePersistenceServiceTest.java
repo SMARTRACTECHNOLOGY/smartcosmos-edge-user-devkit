@@ -137,7 +137,7 @@ public class RolePersistenceServiceTest {
         final String roleName1 = "updateTestRole1";
         final String authority1 = "testAuth1";
 
-        final String roleName2 = "updateTestRole1";
+        final String roleName2 = "updateTestRole2";
         final String authority2 = "testAuth2";
 
         List<String> authorities1 = new ArrayList<>();
