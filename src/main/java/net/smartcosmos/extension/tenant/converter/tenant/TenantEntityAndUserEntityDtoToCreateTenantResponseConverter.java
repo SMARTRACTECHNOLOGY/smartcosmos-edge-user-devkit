@@ -37,7 +37,7 @@ public class TenantEntityAndUserEntityDtoToCreateTenantResponseConverter
         CreateUserResponse userResponse = CreateUserResponse.builder()
             .urn(UuidUtil.getUserUrnFromUuid(entityDto.getUserEntity()
                                                  .getId()))
-            .tenantUrn(UuidUtil.getUserUrnFromUuid(entityDto.getTenantEntity()
+            .tenantUrn(UuidUtil.getTenantUrnFromUuid(entityDto.getTenantEntity()
                                                        .getId()))
             .username(entityDto.getUserEntity()
                           .getUsername())
