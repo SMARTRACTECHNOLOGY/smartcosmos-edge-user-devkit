@@ -3,9 +3,8 @@ package net.smartcosmos.extension.tenant.rest.resource;
 import java.io.IOException;
 import java.util.Arrays;
 
-import org.apache.commons.codec.binary.Base64;
 import org.junit.*;
-import org.junit.runner.*;
+import org.junit.runner.RunWith;
 import org.mockito.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
@@ -73,13 +72,6 @@ public abstract class AbstractTestResource {
         this.mappingJackson2HttpMessageConverter.write(o, MediaType.APPLICATION_JSON,
                                                        mockHttpOutputMessage);
         return mockHttpOutputMessage.getBodyAsString();
-    }
-
-    protected String basicAuth(String username, String password) {
-
-        byte[] bytes = (username + ":" + password).getBytes();
-
-        return "Basic " + Base64.encodeBase64String(bytes);
     }
 
     @Configuration
