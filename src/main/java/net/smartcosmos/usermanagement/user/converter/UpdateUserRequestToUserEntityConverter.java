@@ -3,6 +3,7 @@ package net.smartcosmos.usermanagement.user.converter;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.format.FormatterRegistrar;
 import org.springframework.format.FormatterRegistry;
+import org.springframework.stereotype.Component;
 
 import net.smartcosmos.cluster.userdetails.domain.UserEntity;
 import net.smartcosmos.usermanagement.user.dto.UpdateUserRequest;
@@ -10,6 +11,7 @@ import net.smartcosmos.usermanagement.user.dto.UpdateUserRequest;
 /**
  * Initially created by SMART COSMOS Team on January 13, 2017.
  */
+@Component
 public class UpdateUserRequestToUserEntityConverter
     implements Converter<UpdateUserRequest, UserEntity>, FormatterRegistrar {
 
