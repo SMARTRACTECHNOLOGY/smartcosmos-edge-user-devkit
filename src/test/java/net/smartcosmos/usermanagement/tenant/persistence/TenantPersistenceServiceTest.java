@@ -23,8 +23,9 @@ import net.smartcosmos.usermanagement.tenant.dto.CreateTenantResponse;
 import net.smartcosmos.usermanagement.tenant.dto.TenantResponse;
 import net.smartcosmos.usermanagement.tenant.dto.UpdateTenantRequest;
 import net.smartcosmos.usermanagement.tenant.repository.TenantRepository;
-import net.smartcosmos.usermanagement.user.dto.CreateOrUpdateUserRequest;
+import net.smartcosmos.usermanagement.user.dto.CreateUserRequest;
 import net.smartcosmos.usermanagement.user.dto.CreateUserResponse;
+import net.smartcosmos.usermanagement.user.dto.UpdateUserRequest;
 import net.smartcosmos.usermanagement.user.dto.UserResponse;
 
 import static org.junit.Assert.*;
@@ -372,7 +373,7 @@ public class TenantPersistenceServiceTest {
         List<String> roles = new ArrayList<>();
         roles.add(role);
 
-        CreateOrUpdateUserRequest createUserRequest = CreateOrUpdateUserRequest.builder()
+        CreateUserRequest createUserRequest = CreateUserRequest.builder()
             .active(true)
             .emailAddress(emailAddress)
             .givenName(givenName)
@@ -410,7 +411,7 @@ public class TenantPersistenceServiceTest {
         roles.add(role1);
         roles.add(role2);
 
-        CreateOrUpdateUserRequest createUserRequest = CreateOrUpdateUserRequest.builder()
+        CreateUserRequest createUserRequest = CreateUserRequest.builder()
             .active(true)
             .emailAddress(emailAddress)
             .givenName(givenName)
@@ -450,7 +451,7 @@ public class TenantPersistenceServiceTest {
         List<String> roles = new ArrayList<>();
         roles.add(role);
 
-        CreateOrUpdateUserRequest createUserRequest = CreateOrUpdateUserRequest.builder()
+        CreateUserRequest createUserRequest = CreateUserRequest.builder()
             .active(true)
             .emailAddress(emailAddress)
             .givenName(givenName)
@@ -538,7 +539,7 @@ public class TenantPersistenceServiceTest {
         List<String> roles = new ArrayList<>();
         roles.add(role);
 
-        CreateOrUpdateUserRequest createUserRequest = CreateOrUpdateUserRequest.builder()
+        CreateUserRequest createUserRequest = CreateUserRequest.builder()
             .active(true)
             .emailAddress(emailAddress)
             .givenName(givenName)
@@ -569,7 +570,7 @@ public class TenantPersistenceServiceTest {
         List<String> roles = new ArrayList<>();
         roles.add(role);
 
-        CreateOrUpdateUserRequest createUserRequest = CreateOrUpdateUserRequest.builder()
+        CreateUserRequest createUserRequest = CreateUserRequest.builder()
             .active(true)
             .emailAddress(emailAddress)
             .givenName(givenName)
@@ -595,7 +596,7 @@ public class TenantPersistenceServiceTest {
         List<String> roles = new ArrayList<>();
         roles.add(role);
 
-        CreateOrUpdateUserRequest createUserRequest1 = CreateOrUpdateUserRequest.builder()
+        CreateUserRequest createUserRequest1 = CreateUserRequest.builder()
             .active(true)
             .emailAddress(emailAddress1)
             .givenName(givenName)
@@ -618,7 +619,7 @@ public class TenantPersistenceServiceTest {
                      userResponse1.get()
                          .getUsername());
 
-        CreateOrUpdateUserRequest createUserRequest2 = CreateOrUpdateUserRequest.builder()
+        CreateUserRequest createUserRequest2 = CreateUserRequest.builder()
             .active(true)
             .emailAddress(emailAddress2)
             .givenName(givenName)
@@ -661,7 +662,7 @@ public class TenantPersistenceServiceTest {
             .get()
             .getUrn();
 
-        CreateOrUpdateUserRequest createUserRequest2 = CreateOrUpdateUserRequest.builder()
+        CreateUserRequest createUserRequest2 = CreateUserRequest.builder()
             .active(true)
             .emailAddress(emailAddress2)
             .givenName(givenName)
@@ -690,7 +691,7 @@ public class TenantPersistenceServiceTest {
         List<String> roles = new ArrayList<>();
         roles.add("Admin");
 
-        CreateOrUpdateUserRequest userRequest = CreateOrUpdateUserRequest.builder()
+        CreateUserRequest userRequest = CreateUserRequest.builder()
             .username(username)
             .active(true)
             .emailAddress(emailAddress)
@@ -743,7 +744,7 @@ public class TenantPersistenceServiceTest {
         List<String> roles = new ArrayList<>();
         roles.add("Admin");
 
-        CreateOrUpdateUserRequest userRequest = CreateOrUpdateUserRequest.builder()
+        CreateUserRequest userRequest = CreateUserRequest.builder()
             .username(username)
             .active(true)
             .emailAddress(emailAddress)
@@ -797,7 +798,7 @@ public class TenantPersistenceServiceTest {
         List<String> roles = new ArrayList<>();
         roles.add("Admin");
 
-        CreateOrUpdateUserRequest createRequest = CreateOrUpdateUserRequest.builder()
+        CreateUserRequest createRequest = CreateUserRequest.builder()
             .username(username)
             .active(true)
             .emailAddress(emailAddress1)
@@ -808,7 +809,7 @@ public class TenantPersistenceServiceTest {
         CreateUserResponse createResponse = tenantPersistenceService.createUser(testUserTenantUrn, createRequest)
             .get();
 
-        CreateOrUpdateUserRequest updateRequest = CreateOrUpdateUserRequest.builder()
+        UpdateUserRequest updateRequest = UpdateUserRequest.builder()
             .active(false)
             .emailAddress(emailAddress2)
             .build();

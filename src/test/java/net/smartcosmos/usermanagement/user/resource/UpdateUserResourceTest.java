@@ -13,7 +13,7 @@ import net.smartcosmos.test.AbstractTestResource;
 import net.smartcosmos.test.security.WithMockSmartCosmosUser;
 import net.smartcosmos.usermanagement.DevKitUserManagementService;
 import net.smartcosmos.usermanagement.tenant.persistence.TenantDao;
-import net.smartcosmos.usermanagement.user.dto.RestCreateOrUpdateUserRequest;
+import net.smartcosmos.usermanagement.user.dto.UpdateUserRequest;
 import net.smartcosmos.usermanagement.user.dto.UserResponse;
 
 import static org.mockito.Matchers.anyObject;
@@ -83,7 +83,7 @@ public class UpdateUserResourceTest extends AbstractTestResource {
 
         when(tenantDao.updateUser(anyString(), anyString(), anyObject())).thenReturn(Optional.ofNullable(userResponse));
 
-        RestCreateOrUpdateUserRequest request = RestCreateOrUpdateUserRequest.builder()
+        UpdateUserRequest request = UpdateUserRequest.builder()
             .username(username)
             .emailAddress(emailAddress)
             .roles(userRoleOnly)
@@ -134,7 +134,7 @@ public class UpdateUserResourceTest extends AbstractTestResource {
 
         when(tenantDao.updateUser(anyString(), anyString(), anyObject())).thenReturn(Optional.ofNullable(userResponse));
 
-        RestCreateOrUpdateUserRequest request = RestCreateOrUpdateUserRequest.builder()
+        UpdateUserRequest request = UpdateUserRequest.builder()
             .username(username)
             .emailAddress(emailAddress)
             .roles(userRoleOnly)
@@ -169,7 +169,7 @@ public class UpdateUserResourceTest extends AbstractTestResource {
         List<String> userRoles = new ArrayList<>();
         userRoles.add("Admin");
 
-        RestCreateOrUpdateUserRequest request = RestCreateOrUpdateUserRequest.builder()
+        UpdateUserRequest request = UpdateUserRequest.builder()
             .username(username)
             .emailAddress(emailAddress)
             .roles(userRoles)
@@ -206,7 +206,7 @@ public class UpdateUserResourceTest extends AbstractTestResource {
 
         when(tenantDao.updateUser(anyString(), anyString(), anyObject())).thenReturn(Optional.empty());
 
-        RestCreateOrUpdateUserRequest request = RestCreateOrUpdateUserRequest.builder()
+        UpdateUserRequest request = UpdateUserRequest.builder()
             .username(username)
             .emailAddress(emailAddress)
             .roles(userRoleOnly)

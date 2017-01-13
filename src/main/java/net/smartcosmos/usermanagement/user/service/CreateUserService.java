@@ -15,9 +15,8 @@ import org.springframework.web.context.request.async.DeferredResult;
 import net.smartcosmos.security.user.SmartCosmosUser;
 import net.smartcosmos.usermanagement.event.EventSendingService;
 import net.smartcosmos.usermanagement.tenant.persistence.TenantDao;
-import net.smartcosmos.usermanagement.user.dto.CreateOrUpdateUserRequest;
+import net.smartcosmos.usermanagement.user.dto.CreateUserRequest;
 import net.smartcosmos.usermanagement.user.dto.CreateUserResponse;
-import net.smartcosmos.usermanagement.user.dto.RestCreateOrUpdateUserRequest;
 
 import static net.smartcosmos.usermanagement.event.UserEventType.USER_CREATED;
 import static net.smartcosmos.usermanagement.event.UserEventType.USER_CREATE_FAILED_ALREADY_EXISTS;
@@ -41,7 +40,7 @@ public class CreateUserService {
         this.conversionService = conversionService;
     }
 
-    public DeferredResult<ResponseEntity> create(RestCreateOrUpdateUserRequest restCreateUserRequest, SmartCosmosUser user) {
+    public DeferredResult<ResponseEntity> create(CreateUserRequest restCreateUserRequest, SmartCosmosUser user) {
         // Async worker thread reduces timeouts and disconnects for long queries and processing.
         DeferredResult<ResponseEntity> response = new DeferredResult<>();
         createUserWorker(response, user, restCreateUserRequest);
@@ -50,11 +49,11 @@ public class CreateUserService {
     }
 
     private void createUserWorker(
-        DeferredResult<ResponseEntity> response, SmartCosmosUser user, RestCreateOrUpdateUserRequest
+        DeferredResult<ResponseEntity> response, SmartCosmosUser user, CreateUserRequest
         restCreateUserRequest) {
 
         try {
-            final CreateOrUpdateUserRequest createUserRequest = conversionService.convert(restCreateUserRequest, CreateOrUpdateUserRequest.class);
+            final CreateUserRequest createUserRequest = conversionService.convert(restCreateUserRequest, CreateUserRequest.class);
 
             Optional<CreateUserResponse> newUser = tenantDao.createUser(user.getAccountUrn(), createUserRequest);
 

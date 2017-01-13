@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
-import net.smartcosmos.usermanagement.user.dto.RestCreateUserResponse;
+import net.smartcosmos.usermanagement.user.dto.CreateUserResponse;
 
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -19,5 +19,5 @@ public class RestCreateTenantResponse {
     private final int version = VERSION;
 
     private final String urn;
-    private final RestCreateUserResponse admin;
+    private final CreateUserResponse admin;
 }

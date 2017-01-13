@@ -16,7 +16,7 @@ import org.springframework.web.context.request.async.DeferredResult;
 
 import net.smartcosmos.annotation.SmartCosmosRdao;
 import net.smartcosmos.security.user.SmartCosmosUser;
-import net.smartcosmos.usermanagement.user.dto.RestCreateOrUpdateUserRequest;
+import net.smartcosmos.usermanagement.user.dto.UpdateUserRequest;
 import net.smartcosmos.usermanagement.user.service.UpdateUserService;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
@@ -48,7 +48,7 @@ public class UpdateUserResource {
         + "or (#userUrn.equals(#user.getUserUrn()) and (#requestBody.roles == null or #requestBody.roles.size() == 0))")
     public DeferredResult<ResponseEntity> updateUser(
         @PathVariable(UserEndpointConstants.USER_URN) String userUrn,
-        @RequestBody @Valid RestCreateOrUpdateUserRequest requestBody,
+        @RequestBody @Valid UpdateUserRequest requestBody,
         SmartCosmosUser user) {
 
         DeferredResult<ResponseEntity> response = new DeferredResult<>();

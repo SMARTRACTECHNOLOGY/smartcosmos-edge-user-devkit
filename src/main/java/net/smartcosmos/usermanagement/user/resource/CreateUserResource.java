@@ -15,7 +15,7 @@ import org.springframework.web.context.request.async.DeferredResult;
 
 import net.smartcosmos.annotation.SmartCosmosRdao;
 import net.smartcosmos.security.user.SmartCosmosUser;
-import net.smartcosmos.usermanagement.user.dto.RestCreateOrUpdateUserRequest;
+import net.smartcosmos.usermanagement.user.dto.CreateUserRequest;
 import net.smartcosmos.usermanagement.user.service.CreateUserService;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
@@ -44,7 +44,7 @@ public class CreateUserResource {
                            name = ENDPOINT_ENABLEMENT_PROPERTY_ENABLED,
                            matchIfMissing = true)
     public DeferredResult<ResponseEntity> createUser(
-        @RequestBody @Valid RestCreateOrUpdateUserRequest restCreateUserRequest,
+        @RequestBody @Valid CreateUserRequest restCreateUserRequest,
         SmartCosmosUser user) {
 
         return service.create(restCreateUserRequest, user);
