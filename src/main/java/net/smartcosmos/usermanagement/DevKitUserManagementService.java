@@ -2,21 +2,18 @@ package net.smartcosmos.usermanagement;
 
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Import;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import net.smartcosmos.annotation.EnableSmartCosmosEvents;
 import net.smartcosmos.annotation.EnableSmartCosmosExtension;
 import net.smartcosmos.annotation.EnableSmartCosmosMonitoring;
-import net.smartcosmos.usermanagement.config.AnonymousAccessSecurityConfiguration;
-import net.smartcosmos.usermanagement.config.UserManagementPersistenceConfig;
+import net.smartcosmos.annotation.EnableSmartCosmosSecurity;
 
 @EnableSmartCosmosExtension
 @EnableSmartCosmosEvents
 @EnableSmartCosmosMonitoring
-//@EnableSmartCosmosSecurity
-@Import({ AnonymousAccessSecurityConfiguration.class, UserManagementPersistenceConfig.class })
+@EnableSmartCosmosSecurity
 public class DevKitUserManagementService {
 
     public static void main(String[] args) {
