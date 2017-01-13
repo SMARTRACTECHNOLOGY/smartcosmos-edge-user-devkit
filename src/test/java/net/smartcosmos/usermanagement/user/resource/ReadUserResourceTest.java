@@ -1,4 +1,4 @@
-package net.smartcosmos.extension.tenant.rest.resource.user;
+package net.smartcosmos.usermanagement.user.resource;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,16 +9,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MvcResult;
 
 import net.smartcosmos.cluster.userdetails.util.UuidUtil;
+import net.smartcosmos.test.AbstractTestResource;
+import net.smartcosmos.test.security.WithMockSmartCosmosUser;
 import net.smartcosmos.usermanagement.tenant.persistence.TenantDao;
 import net.smartcosmos.usermanagement.user.dto.UserResponse;
-import net.smartcosmos.extension.tenant.rest.resource.AbstractTestResource;
-import net.smartcosmos.test.security.WithMockSmartCosmosUser;
 
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;

@@ -1,4 +1,4 @@
-package net.smartcosmos.extension.tenant.rest.resource.tenant;
+package net.smartcosmos.usermanagement.tenant.resource;
 
 import java.util.Optional;
 
@@ -10,7 +10,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MvcResult;
 
 import net.smartcosmos.cluster.userdetails.util.UuidUtil;
-import net.smartcosmos.extension.tenant.rest.resource.AbstractTestResource;
+import net.smartcosmos.test.AbstractTestResource;
 import net.smartcosmos.test.security.WithMockSmartCosmosUser;
 import net.smartcosmos.usermanagement.DevKitUserManagementService;
 import net.smartcosmos.usermanagement.tenant.dto.RestUpdateTenantRequest;

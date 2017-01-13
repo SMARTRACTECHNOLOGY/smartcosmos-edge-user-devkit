@@ -1,4 +1,4 @@
-package net.smartcosmos.extension.tenant.impl;
+package net.smartcosmos.usermanagement.role.persistence;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +19,6 @@ import net.smartcosmos.cluster.userdetails.util.UuidUtil;
 import net.smartcosmos.usermanagement.DevKitUserManagementService;
 import net.smartcosmos.usermanagement.role.dto.CreateOrUpdateRoleRequest;
 import net.smartcosmos.usermanagement.role.dto.RoleResponse;
-import net.smartcosmos.usermanagement.role.persistence.RolePersistenceService;
 
 import static org.junit.Assert.*;
 

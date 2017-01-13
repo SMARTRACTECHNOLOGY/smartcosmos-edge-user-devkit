@@ -1,4 +1,4 @@
-package net.smartcosmos.extension.tenant.impl;
+package net.smartcosmos.usermanagement.tenant.persistence;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,7 +22,6 @@ import net.smartcosmos.usermanagement.tenant.dto.CreateTenantRequest;
 import net.smartcosmos.usermanagement.tenant.dto.CreateTenantResponse;
 import net.smartcosmos.usermanagement.tenant.dto.TenantResponse;
 import net.smartcosmos.usermanagement.tenant.dto.UpdateTenantRequest;
-import net.smartcosmos.usermanagement.tenant.persistence.TenantPersistenceService;
 import net.smartcosmos.usermanagement.tenant.repository.TenantRepository;
 import net.smartcosmos.usermanagement.user.dto.CreateOrUpdateUserRequest;
 import net.smartcosmos.usermanagement.user.dto.CreateUserResponse;

@@ -1,4 +1,4 @@
-package net.smartcosmos.extension.tenant.converter.tenant;
+package net.smartcosmos.usermanagement.tenant.converter;
 
 import java.util.UUID;
 
@@ -7,7 +7,6 @@ import org.junit.*;
 import net.smartcosmos.cluster.userdetails.util.UuidUtil;
 import net.smartcosmos.usermanagement.tenant.domain.TenantEntity;
 import net.smartcosmos.usermanagement.tenant.dto.TenantResponse;
-import net.smartcosmos.usermanagement.tenant.converter.TenantEntityToTenantResponseConverter;
 
 import static org.junit.Assert.*;
 

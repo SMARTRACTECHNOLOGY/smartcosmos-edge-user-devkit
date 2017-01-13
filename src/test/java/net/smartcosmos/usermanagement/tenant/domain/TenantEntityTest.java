@@ -1,4 +1,4 @@
-package net.smartcosmos.extension.tenant.domain;
+package net.smartcosmos.usermanagement.tenant.domain;
 
 import java.util.Set;
 import javax.validation.ConstraintViolation;
@@ -9,7 +9,6 @@ import javax.validation.ValidatorFactory;
 import org.junit.*;
 
 import net.smartcosmos.usermanagement.DevKitUserManagementService;
-import net.smartcosmos.usermanagement.tenant.domain.TenantEntity;
 
 import static org.junit.Assert.*;
 

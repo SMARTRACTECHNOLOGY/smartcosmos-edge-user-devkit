@@ -1,4 +1,4 @@
-package net.smartcosmos.extension.tenant.rest.resource;
+package net.smartcosmos.test;
 
 import java.io.IOException;
 import java.util.Arrays;

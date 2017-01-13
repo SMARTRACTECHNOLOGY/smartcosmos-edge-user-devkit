@@ -1,4 +1,4 @@
-package net.smartcosmos.extension.tenant.converter.tenant;
+package net.smartcosmos.usermanagement.tenant.converter;
 
 import java.util.Collection;
 import java.util.Set;
@@ -10,7 +10,6 @@ import org.junit.*;
 
 import net.smartcosmos.cluster.userdetails.domain.RoleEntity;
 import net.smartcosmos.cluster.userdetails.domain.UserEntity;
-import net.smartcosmos.usermanagement.tenant.converter.TenantEntityAndUserEntityDtoToCreateTenantResponseConverter;
 import net.smartcosmos.usermanagement.tenant.domain.TenantEntity;
 import net.smartcosmos.usermanagement.tenant.dto.CreateTenantResponse;
 import net.smartcosmos.usermanagement.tenant.dto.TenantEntityAndUserEntityDto;
