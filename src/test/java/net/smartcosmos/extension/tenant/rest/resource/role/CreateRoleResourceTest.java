@@ -12,19 +12,20 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import net.smartcosmos.cluster.userdetails.UserDetailsPersistenceConfig;
 import net.smartcosmos.cluster.userdetails.util.UuidUtil;
-import net.smartcosmos.extension.tenant.DevKitUserManagementService;
-import net.smartcosmos.extension.tenant.UserManagementPersistenceConfig;
-import net.smartcosmos.extension.tenant.dao.RoleDao;
-import net.smartcosmos.extension.tenant.dto.role.RoleResponse;
-import net.smartcosmos.extension.tenant.rest.dto.role.RestCreateOrUpdateRoleRequest;
 import net.smartcosmos.extension.tenant.rest.resource.AbstractTestResource;
 import net.smartcosmos.test.security.WithMockSmartCosmosUser;
+import net.smartcosmos.usermanagement.DevKitUserManagementService;
+import net.smartcosmos.usermanagement.config.UserManagementPersistenceConfig;
+import net.smartcosmos.usermanagement.role.dto.RestCreateOrUpdateRoleRequest;
+import net.smartcosmos.usermanagement.role.dto.RoleResponse;
+import net.smartcosmos.usermanagement.role.persistence.RoleDao;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.anyString;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.asyncDispatch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;

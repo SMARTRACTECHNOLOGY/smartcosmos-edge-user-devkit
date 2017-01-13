@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.junit.*;
-import org.junit.runner.*;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
@@ -16,17 +16,15 @@ import org.springframework.test.context.web.WebAppConfiguration;
 
 import net.smartcosmos.cluster.userdetails.repository.RoleRepository;
 import net.smartcosmos.cluster.userdetails.util.UuidUtil;
-import net.smartcosmos.extension.tenant.TenantPersistenceTestApplication;
-import net.smartcosmos.extension.tenant.UserManagementPersistenceConfig;
-import net.smartcosmos.extension.tenant.dto.role.CreateOrUpdateRoleRequest;
-import net.smartcosmos.extension.tenant.dto.role.RoleResponse;
+import net.smartcosmos.usermanagement.DevKitUserManagementService;
+import net.smartcosmos.usermanagement.role.dto.CreateOrUpdateRoleRequest;
+import net.smartcosmos.usermanagement.role.dto.RoleResponse;
+import net.smartcosmos.usermanagement.role.persistence.RolePersistenceService;
 
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = {
-    TenantPersistenceTestApplication.class,
-    UserManagementPersistenceConfig.class })
+@SpringApplicationConfiguration(classes = { DevKitUserManagementService.class })
 @ActiveProfiles("test")
 @WebAppConfiguration
 @IntegrationTest({ "spring.cloud.config.enabled=false", "eureka.client.enabled:false" })

@@ -6,26 +6,26 @@ import java.util.Set;
 
 import org.apache.commons.lang.RandomStringUtils;
 import org.junit.*;
-import org.junit.runner.*;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MvcResult;
 
 import net.smartcosmos.cluster.userdetails.util.UuidUtil;
-import net.smartcosmos.extension.tenant.TenantPersistenceTestApplication;
-import net.smartcosmos.extension.tenant.UserManagementPersistenceConfig;
-import net.smartcosmos.extension.tenant.dao.TenantDao;
-import net.smartcosmos.extension.tenant.dto.tenant.CreateTenantResponse;
-import net.smartcosmos.extension.tenant.dto.user.CreateUserResponse;
-import net.smartcosmos.extension.tenant.rest.dto.tenant.RestCreateTenantRequest;
 import net.smartcosmos.extension.tenant.rest.resource.AbstractTestResource;
 import net.smartcosmos.test.security.WithMockSmartCosmosUser;
+import net.smartcosmos.usermanagement.DevKitUserManagementService;
+import net.smartcosmos.usermanagement.tenant.dto.CreateTenantResponse;
+import net.smartcosmos.usermanagement.tenant.dto.RestCreateTenantRequest;
+import net.smartcosmos.usermanagement.tenant.persistence.TenantDao;
+import net.smartcosmos.usermanagement.user.dto.CreateUserResponse;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.startsWith;
 import static org.mockito.Matchers.anyObject;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.asyncDispatch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -37,8 +37,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * Unit Testing sample for creating Tenants.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = { TenantPersistenceTestApplication.class,
-                                            UserManagementPersistenceConfig.class })
+@SpringApplicationConfiguration(classes = { DevKitUserManagementService.class })
 public class CreateTenantResourceTest extends AbstractTestResource {
 
     @Autowired

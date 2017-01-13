@@ -7,7 +7,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.junit.*;
-import org.junit.runner.*;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
@@ -17,23 +17,21 @@ import org.springframework.test.context.web.WebAppConfiguration;
 
 import net.smartcosmos.cluster.userdetails.repository.UserRepository;
 import net.smartcosmos.cluster.userdetails.util.UuidUtil;
-import net.smartcosmos.extension.tenant.TenantPersistenceTestApplication;
-import net.smartcosmos.extension.tenant.UserManagementPersistenceConfig;
-import net.smartcosmos.extension.tenant.dto.tenant.CreateTenantRequest;
-import net.smartcosmos.extension.tenant.dto.tenant.CreateTenantResponse;
-import net.smartcosmos.extension.tenant.dto.tenant.TenantResponse;
-import net.smartcosmos.extension.tenant.dto.tenant.UpdateTenantRequest;
-import net.smartcosmos.extension.tenant.dto.user.CreateOrUpdateUserRequest;
-import net.smartcosmos.extension.tenant.dto.user.CreateUserResponse;
-import net.smartcosmos.extension.tenant.dto.user.UserResponse;
-import net.smartcosmos.extension.tenant.repository.TenantRepository;
+import net.smartcosmos.usermanagement.DevKitUserManagementService;
+import net.smartcosmos.usermanagement.tenant.dto.CreateTenantRequest;
+import net.smartcosmos.usermanagement.tenant.dto.CreateTenantResponse;
+import net.smartcosmos.usermanagement.tenant.dto.TenantResponse;
+import net.smartcosmos.usermanagement.tenant.dto.UpdateTenantRequest;
+import net.smartcosmos.usermanagement.tenant.persistence.TenantPersistenceService;
+import net.smartcosmos.usermanagement.tenant.repository.TenantRepository;
+import net.smartcosmos.usermanagement.user.dto.CreateOrUpdateUserRequest;
+import net.smartcosmos.usermanagement.user.dto.CreateUserResponse;
+import net.smartcosmos.usermanagement.user.dto.UserResponse;
 
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = {
-    TenantPersistenceTestApplication.class,
-    UserManagementPersistenceConfig.class })
+@SpringApplicationConfiguration(classes = { DevKitUserManagementService.class })
 @ActiveProfiles("test")
 @WebAppConfiguration
 @IntegrationTest({ "spring.cloud.config.enabled=false", "eureka.client.enabled:false" })

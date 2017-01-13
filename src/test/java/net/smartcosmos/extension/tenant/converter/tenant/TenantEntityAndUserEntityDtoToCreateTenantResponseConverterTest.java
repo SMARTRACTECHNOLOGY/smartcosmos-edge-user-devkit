@@ -10,10 +10,11 @@ import org.junit.*;
 
 import net.smartcosmos.cluster.userdetails.domain.RoleEntity;
 import net.smartcosmos.cluster.userdetails.domain.UserEntity;
-import net.smartcosmos.extension.tenant.domain.TenantEntity;
-import net.smartcosmos.extension.tenant.dto.TenantEntityAndUserEntityDto;
-import net.smartcosmos.extension.tenant.dto.tenant.CreateTenantResponse;
-import net.smartcosmos.extension.tenant.dto.user.CreateUserResponse;
+import net.smartcosmos.usermanagement.tenant.converter.TenantEntityAndUserEntityDtoToCreateTenantResponseConverter;
+import net.smartcosmos.usermanagement.tenant.domain.TenantEntity;
+import net.smartcosmos.usermanagement.tenant.dto.CreateTenantResponse;
+import net.smartcosmos.usermanagement.tenant.dto.TenantEntityAndUserEntityDto;
+import net.smartcosmos.usermanagement.user.dto.CreateUserResponse;
 
 import static org.junit.Assert.*;
 

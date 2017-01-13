@@ -9,8 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MvcResult;
 
 import net.smartcosmos.cluster.userdetails.util.UuidUtil;
-import net.smartcosmos.extension.tenant.dao.TenantDao;
-import net.smartcosmos.extension.tenant.dto.tenant.TenantResponse;
+import net.smartcosmos.usermanagement.tenant.persistence.TenantDao;
+import net.smartcosmos.usermanagement.tenant.dto.TenantResponse;
 import net.smartcosmos.extension.tenant.rest.resource.AbstractTestResource;
 import net.smartcosmos.test.security.WithMockSmartCosmosUser;
 

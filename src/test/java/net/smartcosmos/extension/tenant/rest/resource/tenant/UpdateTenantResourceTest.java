@@ -3,24 +3,24 @@ package net.smartcosmos.extension.tenant.rest.resource.tenant;
 import java.util.Optional;
 
 import org.junit.*;
-import org.junit.runner.*;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MvcResult;
 
 import net.smartcosmos.cluster.userdetails.util.UuidUtil;
-import net.smartcosmos.extension.tenant.TenantPersistenceTestApplication;
-import net.smartcosmos.extension.tenant.UserManagementPersistenceConfig;
-import net.smartcosmos.extension.tenant.dao.TenantDao;
-import net.smartcosmos.extension.tenant.dto.tenant.TenantResponse;
-import net.smartcosmos.extension.tenant.rest.dto.tenant.RestUpdateTenantRequest;
 import net.smartcosmos.extension.tenant.rest.resource.AbstractTestResource;
 import net.smartcosmos.test.security.WithMockSmartCosmosUser;
+import net.smartcosmos.usermanagement.DevKitUserManagementService;
+import net.smartcosmos.usermanagement.tenant.dto.RestUpdateTenantRequest;
+import net.smartcosmos.usermanagement.tenant.dto.TenantResponse;
+import net.smartcosmos.usermanagement.tenant.persistence.TenantDao;
 
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.asyncDispatch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
@@ -30,8 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * Unit Testing sample for creating Tenants.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = { TenantPersistenceTestApplication.class,
-                                            UserManagementPersistenceConfig.class })
+@SpringApplicationConfiguration(classes = { DevKitUserManagementService.class })
 public class UpdateTenantResourceTest extends AbstractTestResource {
 
     @Autowired

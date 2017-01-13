@@ -21,9 +21,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import net.smartcosmos.extension.tenant.DevKitUserManagementService;
-import net.smartcosmos.extension.tenant.dao.RoleDao;
-import net.smartcosmos.extension.tenant.dao.TenantDao;
+import net.smartcosmos.usermanagement.DevKitUserManagementService;
+import net.smartcosmos.usermanagement.role.persistence.RoleDao;
+import net.smartcosmos.usermanagement.tenant.persistence.TenantDao;
 
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 

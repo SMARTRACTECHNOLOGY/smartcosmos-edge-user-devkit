@@ -8,11 +8,12 @@ import javax.validation.ValidatorFactory;
 
 import org.junit.*;
 
-import net.smartcosmos.extension.tenant.TenantPersistenceTestApplication;
+import net.smartcosmos.usermanagement.DevKitUserManagementService;
+import net.smartcosmos.usermanagement.tenant.domain.TenantEntity;
 
 import static org.junit.Assert.*;
 
-@org.springframework.boot.test.SpringApplicationConfiguration(classes = { TenantPersistenceTestApplication.class })
+@org.springframework.boot.test.SpringApplicationConfiguration(classes = { DevKitUserManagementService.class })
 public class TenantEntityTest {
 
     private static Validator validator;
