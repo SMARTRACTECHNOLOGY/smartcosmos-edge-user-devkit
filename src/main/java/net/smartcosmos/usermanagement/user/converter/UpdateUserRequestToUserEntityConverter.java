@@ -12,8 +12,7 @@ import net.smartcosmos.usermanagement.user.dto.UpdateUserRequest;
  * Initially created by SMART COSMOS Team on January 13, 2017.
  */
 @Component
-public class UpdateUserRequestToUserEntityConverter
-    implements Converter<UpdateUserRequest, UserEntity>, FormatterRegistrar {
+public class UpdateUserRequestToUserEntityConverter implements Converter<UpdateUserRequest, UserEntity>, FormatterRegistrar {
 
     @Override
     public UserEntity convert(UpdateUserRequest request) {
