@@ -674,11 +674,6 @@ public class TenantPersistenceServiceTest {
 
         Optional<CreateUserResponse> userResponse2 = tenantPersistenceService.createUser(tenantUrn2, createUserRequest2);
         assertFalse(userResponse2.isPresent());
-        //        assertEquals(emailAddress2, userResponse2.get().getEmailAddress());
-        //        assertEquals(givenName, userResponse2.get().getGivenName());
-        //        assertEquals(roles.size(),userResponse2.get().getRoles().size());
-        //        assertEquals(surname, userResponse2.get().getSurname());
-        //        assertEquals(username, userResponse2.get().getUsername());
     }
 
     @Test
