@@ -44,12 +44,6 @@ public class CreateRoleResourceTest extends AbstractTestResource {
     @Autowired
     protected RoleDao roleDao;
 
-    private String tenantUrn;
-
-    private List<String> adminRoleOnly = new ArrayList<>();
-    private List<String> userRoleOnly = new ArrayList<>();
-    private List<String> adminAndUserRoles = new ArrayList<>();
-
     @After
     public void tearDown() throws Exception {
 
