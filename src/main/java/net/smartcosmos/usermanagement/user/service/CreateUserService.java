@@ -6,7 +6,6 @@ import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.convert.ConversionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -30,46 +29,36 @@ public class CreateUserService {
 
     private final TenantDao tenantDao;
     private final EventSendingService eventSendingService;
-    private final ConversionService conversionService;
 
     @Autowired
-    public CreateUserService(TenantDao tenantDao, EventSendingService userEventSendingService, ConversionService conversionService) {
+    public CreateUserService(TenantDao tenantDao, EventSendingService userEventSendingService) {
 
         this.tenantDao = tenantDao;
         this.eventSendingService = userEventSendingService;
-        this.conversionService = conversionService;
     }
 
-    public DeferredResult<ResponseEntity> create(CreateUserRequest restCreateUserRequest, SmartCosmosUser user) {
-        // Async worker thread reduces timeouts and disconnects for long queries and processing.
-        DeferredResult<ResponseEntity> response = new DeferredResult<>();
-        createUserWorker(response, user, restCreateUserRequest);
-
-        return response;
-    }
-
-    private void createUserWorker(
-        DeferredResult<ResponseEntity> response, SmartCosmosUser user, CreateUserRequest
-        restCreateUserRequest) {
+    public void create(DeferredResult<ResponseEntity<?>> response, CreateUserRequest restCreateUserRequest, SmartCosmosUser user) {
 
         try {
-            final CreateUserRequest createUserRequest = conversionService.convert(restCreateUserRequest, CreateUserRequest.class);
-
-            Optional<CreateUserResponse> newUser = tenantDao.createUser(user.getAccountUrn(), createUserRequest);
-
-            if (newUser.isPresent()) {
-                ResponseEntity responseEntity = buildCreatedResponseEntity(newUser.get());
-                response.setResult(responseEntity);
-                eventSendingService.sendEvent(user, USER_CREATED, newUser.get());
-            } else {
-                response.setResult(ResponseEntity.status(HttpStatus.CONFLICT)
-                                       .build());
-                eventSendingService.sendEvent(user, USER_CREATE_FAILED_ALREADY_EXISTS, createUserRequest);
-            }
-
+            response.setResult(createUserWorker(user, restCreateUserRequest));
         } catch (Exception e) {
             log.debug(e.getMessage(), e);
             response.setErrorResult(e);
+        }
+    }
+
+    private ResponseEntity<?> createUserWorker(SmartCosmosUser user, CreateUserRequest createUserRequest) {
+
+        Optional<CreateUserResponse> newUser = tenantDao.createUser(user.getAccountUrn(), createUserRequest);
+
+        if (newUser.isPresent()) {
+            ResponseEntity responseEntity = buildCreatedResponseEntity(newUser.get());
+            eventSendingService.sendEvent(user, USER_CREATED, newUser.get());
+            return responseEntity;
+        } else {
+            eventSendingService.sendEvent(user, USER_CREATE_FAILED_ALREADY_EXISTS, createUserRequest);
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                .build();
         }
     }
 
