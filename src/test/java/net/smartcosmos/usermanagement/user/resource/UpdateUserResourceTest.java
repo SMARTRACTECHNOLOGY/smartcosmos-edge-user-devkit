@@ -60,6 +60,7 @@ public class UpdateUserResourceTest extends AbstractTestResource {
         Boolean active = false;
         String givenName = "John";
         String surname = "Doe";
+        String password = "newPassword";
 
         final String expectedTenantUrn = "urn:tenant:uuid:" + UuidUtil.getNewUuid()
             .toString();
@@ -87,6 +88,7 @@ public class UpdateUserResourceTest extends AbstractTestResource {
             .username(username)
             .emailAddress(emailAddress)
             .roles(userRoleOnly)
+            .password(password)
             .build();
 
         MvcResult mvcResult = this.mockMvc.perform(

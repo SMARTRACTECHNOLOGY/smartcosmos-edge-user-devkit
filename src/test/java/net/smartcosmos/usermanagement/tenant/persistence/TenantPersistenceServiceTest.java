@@ -15,6 +15,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
+import net.smartcosmos.cluster.userdetails.domain.UserEntity;
 import net.smartcosmos.cluster.userdetails.repository.UserRepository;
 import net.smartcosmos.cluster.userdetails.util.UuidUtil;
 import net.smartcosmos.usermanagement.DevKitUserManagementService;
@@ -794,6 +795,7 @@ public class TenantPersistenceServiceTest {
         String emailAddress2 = "update.user1@example.com";
         String givenName = "John";
         String surname = "Doe";
+        String newPassword = "newPassword";
 
         List<String> roles = new ArrayList<>();
         roles.add("Admin");
@@ -812,6 +814,7 @@ public class TenantPersistenceServiceTest {
         UpdateUserRequest updateRequest = UpdateUserRequest.builder()
             .active(false)
             .emailAddress(emailAddress2)
+            .password(newPassword)
             .build();
 
         Optional<UserResponse> updateResponse = tenantPersistenceService.updateUser(testUserTenantUrn, createResponse.getUrn(),
@@ -838,6 +841,45 @@ public class TenantPersistenceServiceTest {
         assertEquals(emailAddress2,
                      findResponse.get()
                          .getEmailAddress());
+    }
+
+    @Test
+    public void thatChangePasswordSucceeds() throws Exception {
+
+        String username = "ChangePasswordTestUser";
+        String emailAddress = "change.password.user1@example.com";
+        String newPassword = "newPassword";
+
+        List<String> roles = new ArrayList<>();
+        roles.add("Admin");
+
+        CreateUserRequest createRequest = CreateUserRequest.builder()
+            .username(username)
+            .active(true)
+            .emailAddress(emailAddress)
+            .roles(roles)
+            .build();
+
+        CreateUserResponse createResponse = tenantPersistenceService.createUser(testUserTenantUrn, createRequest)
+            .get();
+
+        UUID tenantUuid = UuidUtil.getUuidFromUrn(createResponse.getTenantUrn());
+        UserEntity userEntityBefore = userRepository.findByUsernameAndTenantId(createRequest.getUsername(), tenantUuid).get();
+
+        UpdateUserRequest updateRequest = UpdateUserRequest.builder()
+            .password(newPassword)
+            .build();
+
+        Optional<UserResponse> updateResponse = tenantPersistenceService.updateUser(testUserTenantUrn, createResponse.getUrn(),
+                                                                                    updateRequest);
+
+        UserEntity userEntityAfter =  userRepository.findByUsernameAndTenantId(createRequest.getUsername(), tenantUuid).get();
+
+        // same entity
+        assertTrue(userEntityBefore.getId().equals(userEntityAfter.getId()));
+        assertTrue(userEntityBefore.getTenantId().equals(userEntityAfter.getTenantId()));
+        // different passwords
+        assertTrue(!userEntityBefore.getPassword().equals(userEntityAfter.getPassword()));
     }
 
     @Test
