@@ -43,11 +43,13 @@ public class CreateUserResource {
     @ConditionalOnProperty(prefix = UserEndpointConstants.ENDPOINT_ENABLEMENT_USERS_CREATE,
                            name = ENDPOINT_ENABLEMENT_PROPERTY_ENABLED,
                            matchIfMissing = true)
-    public DeferredResult<ResponseEntity> createUser(
-        @RequestBody @Valid CreateUserRequest restCreateUserRequest,
+    public DeferredResult<ResponseEntity<?>> createUser(
+        @RequestBody @Valid CreateUserRequest createUserRequest,
         SmartCosmosUser user) {
 
-        return service.create(restCreateUserRequest, user);
+        DeferredResult<ResponseEntity<?>> response = new DeferredResult<>();
+        service.create(response, createUserRequest, user);
+        return response;
     }
 }
 
