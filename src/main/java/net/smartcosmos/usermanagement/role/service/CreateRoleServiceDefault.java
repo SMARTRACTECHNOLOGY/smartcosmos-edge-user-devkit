@@ -23,7 +23,7 @@ import static net.smartcosmos.usermanagement.event.RoleEventType.ROLE_CREATED;
 import static net.smartcosmos.usermanagement.event.RoleEventType.ROLE_CREATE_FAILED_ALREADY_EXISTS;
 
 /**
- * Initially created by SMART COSMOS Team on July 01, 2016.
+ * The default implementation of of the {@link CreateRoleService}.
  */
 @Slf4j
 @Service

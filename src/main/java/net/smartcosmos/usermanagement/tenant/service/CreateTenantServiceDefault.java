@@ -19,7 +19,7 @@ import net.smartcosmos.usermanagement.tenant.dto.CreateTenantResponse;
 import net.smartcosmos.usermanagement.tenant.persistence.TenantDao;
 
 /**
- * Initially created by SMART COSMOS Team on July 01, 2016.
+ * The default implementation of of the {@link CreateTenantService}.
  */
 @Slf4j
 @Service

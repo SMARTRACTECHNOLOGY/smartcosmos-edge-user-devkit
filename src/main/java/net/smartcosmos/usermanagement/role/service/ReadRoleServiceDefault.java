@@ -19,6 +19,9 @@ import net.smartcosmos.usermanagement.role.persistence.RoleDao;
 import static net.smartcosmos.usermanagement.event.RoleEventType.ROLE_NOT_FOUND;
 import static net.smartcosmos.usermanagement.event.RoleEventType.ROLE_READ;
 
+/**
+ * The default implementation of of the {@link ReadRoleService}.
+ */
 @Slf4j
 @Service
 public class ReadRoleServiceDefault implements ReadRoleService {

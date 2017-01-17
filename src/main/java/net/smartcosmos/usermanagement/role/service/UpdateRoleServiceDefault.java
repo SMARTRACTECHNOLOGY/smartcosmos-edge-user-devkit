@@ -24,7 +24,7 @@ import static net.smartcosmos.usermanagement.util.ResponseFactory.noContentRespo
 import static net.smartcosmos.usermanagement.util.ResponseFactory.notFoundResponse;
 
 /**
- * Initially created by SMART COSMOS Team on July 01, 2016.
+ * The default implementation of of the {@link UpdateRoleService}.
  */
 @Slf4j
 @Service

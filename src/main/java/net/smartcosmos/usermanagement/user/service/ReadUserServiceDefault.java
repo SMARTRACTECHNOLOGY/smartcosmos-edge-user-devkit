@@ -18,6 +18,9 @@ import net.smartcosmos.usermanagement.user.dto.UserResponse;
 import static net.smartcosmos.usermanagement.event.UserEventType.USER_NOT_FOUND;
 import static net.smartcosmos.usermanagement.event.UserEventType.USER_READ;
 
+/**
+ * The default implementation of of the {@link ReadUserService}.
+ */
 @Slf4j
 @Service
 public class ReadUserServiceDefault implements ReadUserService {
