@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import net.smartcosmos.annotation.SmartCosmosRdao;
 import net.smartcosmos.security.user.SmartCosmosUser;
-import net.smartcosmos.usermanagement.role.service.ReadRoleServiceDefault;
+import net.smartcosmos.usermanagement.role.service.ReadRoleService;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 
@@ -25,10 +25,10 @@ import static net.smartcosmos.usermanagement.role.resource.RoleEndpointConstants
 @PreAuthorize("hasAuthority('https://authorities.smartcosmos.net/roles/read')")
 public class ReadRoleResource {
 
-    private ReadRoleServiceDefault service;
+    private ReadRoleService service;
 
     @Autowired
-    public ReadRoleResource(ReadRoleServiceDefault readRoleService) { this.service = readRoleService; }
+    public ReadRoleResource(ReadRoleService readRoleService) { this.service = readRoleService; }
 
     @RequestMapping(value = RoleEndpointConstants.ENDPOINT_ROLES_URN, method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8_VALUE)
     @ConditionalOnProperty(prefix = RoleEndpointConstants.ENDPOINT_ENABLEMENT_ROLES_READ_URN,
