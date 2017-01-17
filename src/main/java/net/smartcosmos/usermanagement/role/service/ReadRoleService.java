@@ -14,7 +14,7 @@ public interface ReadRoleService {
      *
      * @param urn the URN of the Role to return
      * @param user the current logged in user
-     * @return the response containing the requested role if existent. Otherwise an appropriate error response is returned.
+     * @return the response containing the requested Role if existent. Otherwise an appropriate error response is returned.
      */
     ResponseEntity<?> findByUrn(String urn, SmartCosmosUser user);
 
@@ -23,7 +23,7 @@ public interface ReadRoleService {
      *
      * @param name the name of the Role to return
      * @param user the current logged in user
-     * @return the response containing the requested role if existent. Otherwise an appropriate error response is returned.
+     * @return the response containing the requested Role if existent. Otherwise an appropriate error response is returned.
      */
     ResponseEntity<?> findByName(String name, SmartCosmosUser user);
 
@@ -32,7 +32,7 @@ public interface ReadRoleService {
      *
      * @param name the name of the Role to return (optional)
      * @param user the current logged in user
-     * @return the response containing the role(s), or an appropriate error response.
+     * @return the response containing the Role(s), or an appropriate error response.
      */
     ResponseEntity<?> query(String name, SmartCosmosUser user);
 
