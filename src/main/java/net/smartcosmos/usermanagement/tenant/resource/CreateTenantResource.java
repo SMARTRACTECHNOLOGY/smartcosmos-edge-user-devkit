@@ -17,7 +17,6 @@ import net.smartcosmos.annotation.SmartCosmosRdao;
 import net.smartcosmos.security.user.SmartCosmosUser;
 import net.smartcosmos.usermanagement.tenant.dto.CreateTenantRequest;
 import net.smartcosmos.usermanagement.tenant.service.CreateTenantService;
-import net.smartcosmos.usermanagement.tenant.service.CreateTenantServiceDefault;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 
@@ -37,7 +36,7 @@ public class CreateTenantResource {
     private CreateTenantService service;
 
     @Autowired
-    public CreateTenantResource(CreateTenantServiceDefault service) { this.service = service; }
+    public CreateTenantResource(CreateTenantService service) { this.service = service; }
 
     @RequestMapping(value = TenantEndpointConstants.ENDPOINT_TENANTS,
                     method = RequestMethod.POST,
