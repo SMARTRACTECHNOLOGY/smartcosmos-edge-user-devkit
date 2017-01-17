@@ -103,7 +103,7 @@ public class UpdateRoleResourceTest extends AbstractTestResource {
      * @throws Exception
      */
     @Test
-    public void thatUpdateNonexistentRoleFails() throws Exception {
+    public void thatUpdateNonExistentRoleFails() throws Exception {
 
         String roleName = "newRoleName";
         Boolean active = false;
@@ -131,7 +131,7 @@ public class UpdateRoleResourceTest extends AbstractTestResource {
     }
 
     @Test
-    public void thatUpdateExistentRoleNameFails() throws Exception {
+    public void thatUpdateExistingRoleNameFails() throws Exception {
 
         String roleName = "newRoleName";
         Boolean active = false;
