@@ -6,6 +6,7 @@ import javax.validation.ConstraintViolationException;
 
 import net.smartcosmos.usermanagement.role.dto.RoleRequest;
 import net.smartcosmos.usermanagement.role.dto.RoleResponse;
+import net.smartcosmos.usermanagement.role.exception.RoleAlreadyExistsException;
 
 /**
  * Initially created by SMART COSMOS Team on June 30, 2016.
@@ -33,13 +34,13 @@ public interface RoleDao {
      * @param updateRoleRequest changed properties of role
      * @return the updated role or Optional.empty() in case of failure
      * @throws ConstraintViolationException in case data constraints are violated
-     * @throws IllegalArgumentException if the role name shall be changed to a name already taken
+     * @throws RoleAlreadyExistsException if the role name shall be changed to a name already taken
      */
     Optional<RoleResponse> updateRole(
         String tenantUrn,
         String urn,
         RoleRequest updateRoleRequest)
-        throws ConstraintViolationException, IllegalArgumentException;
+        throws ConstraintViolationException, RoleAlreadyExistsException;
 
     /**
      * Find a role identified by their name in the given tenant.

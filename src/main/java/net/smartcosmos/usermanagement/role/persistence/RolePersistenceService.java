@@ -20,6 +20,7 @@ import net.smartcosmos.cluster.userdetails.repository.RoleRepository;
 import net.smartcosmos.cluster.userdetails.util.UuidUtil;
 import net.smartcosmos.usermanagement.role.dto.RoleRequest;
 import net.smartcosmos.usermanagement.role.dto.RoleResponse;
+import net.smartcosmos.usermanagement.role.exception.RoleAlreadyExistsException;
 import net.smartcosmos.usermanagement.role.repository.AuthorityRepository;
 
 /**
@@ -74,12 +75,11 @@ public class RolePersistenceService implements RoleDao {
 
     @Override
     public Optional<RoleResponse> updateRole(String tenantUrn, String urn, RoleRequest updateRoleRequest)
-        throws ConstraintViolationException, IllegalArgumentException {
+        throws ConstraintViolationException, RoleAlreadyExistsException {
 
         findRoleByName(tenantUrn, updateRoleRequest.getName()).ifPresent(roleResponse -> {
             if (!urn.equalsIgnoreCase(roleResponse.getUrn())) {
-                throw new IllegalArgumentException(String.format("Can not update role. Name '%s' is already in use.", updateRoleRequest.getName()));
-            }
+                throw new RoleAlreadyExistsException(tenantUrn, updateRoleRequest.getName());            }
         });
 
         UUID tenantId = UuidUtil.getUuidFromUrn(tenantUrn);
