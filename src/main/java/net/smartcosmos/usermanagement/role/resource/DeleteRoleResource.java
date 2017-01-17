@@ -13,7 +13,7 @@ import org.springframework.web.context.request.async.DeferredResult;
 
 import net.smartcosmos.annotation.SmartCosmosRdao;
 import net.smartcosmos.security.user.SmartCosmosUser;
-import net.smartcosmos.usermanagement.role.service.DeleteRoleServiceDefault;
+import net.smartcosmos.usermanagement.role.service.DeleteRoleService;
 
 import static net.smartcosmos.usermanagement.role.resource.RoleEndpointConstants.ENDPOINT_ENABLEMENT_PROPERTY_ENABLED;
 
@@ -26,10 +26,10 @@ import static net.smartcosmos.usermanagement.role.resource.RoleEndpointConstants
 @PreAuthorize("hasAuthority('https://authorities.smartcosmos.net/roles/delete')")
 public class DeleteRoleResource {
 
-    private DeleteRoleServiceDefault service;
+    private DeleteRoleService service;
 
     @Autowired
-    public DeleteRoleResource(DeleteRoleServiceDefault service) { this.service = service; }
+    public DeleteRoleResource(DeleteRoleService service) { this.service = service; }
 
     @RequestMapping(value = RoleEndpointConstants.ENDPOINT_ROLES_URN, method = RequestMethod.DELETE)
     @ConditionalOnProperty(prefix = RoleEndpointConstants.ENDPOINT_ENABLEMENT_ROLES_DELETE,
