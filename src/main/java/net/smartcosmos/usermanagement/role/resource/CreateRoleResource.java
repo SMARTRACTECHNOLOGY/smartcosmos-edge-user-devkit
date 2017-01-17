@@ -16,7 +16,7 @@ import org.springframework.web.context.request.async.DeferredResult;
 import net.smartcosmos.annotation.SmartCosmosRdao;
 import net.smartcosmos.security.user.SmartCosmosUser;
 import net.smartcosmos.usermanagement.role.dto.RoleRequest;
-import net.smartcosmos.usermanagement.role.service.CreateRoleServiceDefault;
+import net.smartcosmos.usermanagement.role.service.CreateRoleService;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 
@@ -31,10 +31,10 @@ import static net.smartcosmos.usermanagement.role.resource.RoleEndpointConstants
 @PreAuthorize("hasAuthority('https://authorities.smartcosmos.net/roles/create')")
 public class CreateRoleResource {
 
-    private CreateRoleServiceDefault service;
+    private CreateRoleService service;
 
     @Autowired
-    public CreateRoleResource(CreateRoleServiceDefault service) { this.service = service; }
+    public CreateRoleResource(CreateRoleService service) { this.service = service; }
 
     @RequestMapping(value = RoleEndpointConstants.ENDPOINT_ROLES,
                     method = RequestMethod.POST,
