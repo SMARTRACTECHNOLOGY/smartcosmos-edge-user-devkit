@@ -51,10 +51,13 @@ public class CreateRoleServiceDefault implements CreateRoleService {
             Throwable rootException = ExceptionUtils.getRootCause(e);
             String rootCause = "";
             if (rootException != null) {
-                rootCause = ", rootCause: '" + rootException.toString() + "'";
+                rootCause = String.format(", rootCause: '%s'", rootException.toString());
             }
             String msg = String.format("Exception on create role. request: %s, user: %s, cause: '%s'%s.",
-                                       createRoleRequest, user.getUserUrn(), e.toString(), rootCause);
+                                       createRoleRequest,
+                                       user.getUserUrn(),
+                                       e.toString(),
+                                       rootCause);
             log.warn(msg);
             log.debug(msg, e);
             response.setErrorResult(e);

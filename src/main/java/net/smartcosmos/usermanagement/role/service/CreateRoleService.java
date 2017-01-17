@@ -7,7 +7,7 @@ import net.smartcosmos.security.user.SmartCosmosUser;
 import net.smartcosmos.usermanagement.role.dto.RestCreateOrUpdateRoleRequest;
 
 /**
- * Methods for creating roles.
+ * Methods for creating Roles.
  */
 public interface CreateRoleService {
 
