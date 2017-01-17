@@ -23,7 +23,7 @@ import static net.smartcosmos.usermanagement.event.RoleEventType.ROLE_READ;
 
 @Slf4j
 @Service
-public class ReadRoleServiceDefault {
+public class ReadRoleServiceDefault implements ReadRoleService {
 
     private final RoleDao roleDao;
     private final EventSendingService eventSendingService;
@@ -37,6 +37,7 @@ public class ReadRoleServiceDefault {
         this.conversionService = conversionService;
     }
 
+    @Override
     public ResponseEntity<?> findByUrn(String urn, SmartCosmosUser user) {
 
         Optional<RoleResponse> entity = roleDao.findRoleByUrn(user.getAccountUrn(), urn);
@@ -57,6 +58,7 @@ public class ReadRoleServiceDefault {
             .build();
     }
 
+    @Override
     public ResponseEntity<?> query(String name, SmartCosmosUser user) {
 
         if (StringUtils.isBlank(name)) {
@@ -66,7 +68,8 @@ public class ReadRoleServiceDefault {
         }
     }
 
-    private ResponseEntity<?> findAll(SmartCosmosUser user) {
+    @Override
+    public ResponseEntity<?> findAll(SmartCosmosUser user) {
 
         List<RoleResponse> roleList = roleDao.findAllRoles(user.getAccountUrn());
         for (RoleResponse role : roleList) {
@@ -78,6 +81,7 @@ public class ReadRoleServiceDefault {
             .body(convertList(roleList, RoleResponse.class, RestRoleResponse.class));
     }
 
+    @Override
     public ResponseEntity<?> findByName(String name, SmartCosmosUser user) {
 
         Optional<RoleResponse> entity = roleDao.findRoleByName(user.getAccountUrn(), name);
