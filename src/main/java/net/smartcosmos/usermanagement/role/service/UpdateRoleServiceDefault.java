@@ -19,6 +19,9 @@ import net.smartcosmos.usermanagement.role.persistence.RoleDao;
 
 import static net.smartcosmos.usermanagement.event.RoleEventType.ROLE_NOT_FOUND;
 import static net.smartcosmos.usermanagement.event.RoleEventType.ROLE_UPDATED;
+import static net.smartcosmos.usermanagement.util.ResponseFactory.conflictResponse;
+import static net.smartcosmos.usermanagement.util.ResponseFactory.noContentResponse;
+import static net.smartcosmos.usermanagement.util.ResponseFactory.notFoundResponse;
 
 /**
  * Initially created by SMART COSMOS Team on July 01, 2016.
@@ -47,7 +50,7 @@ public class UpdateRoleServiceDefault implements UpdateRoleService {
         SmartCosmosUser user) {
 
         try {
-            response.setResult(updateRoleWorker(user.getAccountUrn(), updateRoleRequest, user));
+            response.setResult(updateRoleWorker(roleUrn, updateRoleRequest, user));
         } catch (Exception e) {
             Throwable rootException = ExceptionUtils.getRootCause(e);
             String rootCause = "";
@@ -66,25 +69,25 @@ public class UpdateRoleServiceDefault implements UpdateRoleService {
         }
     }
 
-    private ResponseEntity<?> updateRoleWorker(String roleUrn, RoleRequest restRequest, SmartCosmosUser user) {
+    private ResponseEntity<?> updateRoleWorker(String roleUrn, RoleRequest updateRoleRequest, SmartCosmosUser user) {
 
-        final RoleRequest updateRoleRequest = conversionService
-            .convert(restRequest, RoleRequest.class);
-
-        Optional<RoleResponse> updateRoleResponse = roleDao.updateRole(user.getAccountUrn(), roleUrn, updateRoleRequest);
+        Optional<RoleResponse> updateRoleResponse;
+        try {
+            updateRoleResponse = roleDao.updateRole(user.getAccountUrn(), roleUrn, updateRoleRequest);
+        } catch (IllegalArgumentException e) {
+            return conflictResponse(e.getMessage());
+        }
 
         if (updateRoleResponse.isPresent()) {
             eventSendingService.sendEvent(user, ROLE_UPDATED, updateRoleResponse.get());
-            return ResponseEntity.noContent()
-                .build();
+            return noContentResponse();
         } else {
             RoleResponse eventPayload = RoleResponse.builder()
                 .urn(roleUrn)
                 .tenantUrn(user.getAccountUrn())
                 .build();
             eventSendingService.sendEvent(user, ROLE_NOT_FOUND, eventPayload);
-            return ResponseEntity.notFound()
-                .build();
+            return notFoundResponse();
         }
     }
 
