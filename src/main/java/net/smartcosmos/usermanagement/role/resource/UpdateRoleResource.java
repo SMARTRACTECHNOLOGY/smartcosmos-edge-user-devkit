@@ -44,12 +44,14 @@ public class UpdateRoleResource {
     @ConditionalOnProperty(prefix = RoleEndpointConstants.ENDPOINT_ENABLEMENT_ROLES_UPDATE,
                            name = ENDPOINT_ENABLEMENT_PROPERTY_ENABLED,
                            matchIfMissing = true)
-    public DeferredResult<ResponseEntity> updateRole(
+    public DeferredResult<ResponseEntity<?>> updateRole(
         @PathVariable(RoleEndpointConstants.ROLE_URN) String roleUrn,
         @RequestBody @Valid RestCreateOrUpdateRoleRequest requestBody,
         SmartCosmosUser user) {
 
-        return service.update(roleUrn, requestBody, user);
+        DeferredResult<ResponseEntity<?>> response = new DeferredResult<>();
+        service.update(response, roleUrn, requestBody, user);
+        return response;
     }
 }
 
