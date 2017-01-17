@@ -18,9 +18,6 @@ import net.smartcosmos.usermanagement.tenant.dto.CreateTenantRequest;
 import net.smartcosmos.usermanagement.tenant.dto.CreateTenantResponse;
 import net.smartcosmos.usermanagement.tenant.persistence.TenantDao;
 
-import static net.smartcosmos.usermanagement.event.TenantEventType.TENANT_CREATED;
-import static net.smartcosmos.usermanagement.event.TenantEventType.TENANT_CREATE_FAILED_ALREADY_EXISTS;
-
 /**
  * Initially created by SMART COSMOS Team on July 01, 2016.
  */
@@ -64,11 +61,18 @@ public class CreateTenantServiceDefault implements CreateTenantService {
 
         Optional<CreateTenantResponse> createTenantResponse = tenantDao.createTenant(createTenantRequest);
 
+        /**
+         * TODO: Use client authentication instead of user's access token from the request context, because there isn't any for tenant creation
+         * requests (OBJECTS-1213)
+         * author: asiegel
+         * date: 17 Jan 2017
+         */
+
         if (createTenantResponse.isPresent()) {
-            eventSendingService.sendEvent(user, TENANT_CREATED, createTenantResponse.get());
+            //            eventSendingService.sendEvent(user, TENANT_CREATED, createTenantResponse.get());
             return buildCreatedResponseEntity(createTenantResponse.get());
         } else {
-            eventSendingService.sendEvent(user, TENANT_CREATE_FAILED_ALREADY_EXISTS, createTenantRequest);
+            //            eventSendingService.sendEvent(user, TENANT_CREATE_FAILED_ALREADY_EXISTS, createTenantRequest);
             return ResponseEntity.status(HttpStatus.CONFLICT)
                 .build();
         }
