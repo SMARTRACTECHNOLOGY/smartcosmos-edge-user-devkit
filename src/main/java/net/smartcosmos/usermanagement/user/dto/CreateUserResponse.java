@@ -12,7 +12,6 @@ import lombok.Data;
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties({ "version" })
-@Builder
 public class CreateUserResponse {
 
     private static final int VERSION = 1;
@@ -24,6 +23,7 @@ public class CreateUserResponse {
     private final Set<String> roles;
     private final String tenantUrn;
 
+    @Builder
     @ConstructorProperties({ "urn", "username", "password", "roles", "tenantUrn" })
     public CreateUserResponse(String urn, String username, String password, Set<String> roles, String tenantUrn) {
 
