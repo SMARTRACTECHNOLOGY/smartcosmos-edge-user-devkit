@@ -17,6 +17,7 @@ import net.smartcosmos.annotation.SmartCosmosRdao;
 import net.smartcosmos.security.user.SmartCosmosUser;
 import net.smartcosmos.usermanagement.tenant.dto.RestCreateTenantRequest;
 import net.smartcosmos.usermanagement.tenant.service.CreateTenantService;
+import net.smartcosmos.usermanagement.tenant.service.CreateTenantServiceDefault;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 
@@ -36,7 +37,7 @@ public class CreateTenantResource {
     private CreateTenantService service;
 
     @Autowired
-    public CreateTenantResource(CreateTenantService service) { this.service = service; }
+    public CreateTenantResource(CreateTenantServiceDefault service) { this.service = service; }
 
     @RequestMapping(value = TenantEndpointConstants.ENDPOINT_TENANTS,
                     method = RequestMethod.POST,
@@ -45,10 +46,12 @@ public class CreateTenantResource {
     @ConditionalOnProperty(prefix = TenantEndpointConstants.ENDPOINT_ENABLEMENT_TENANTS_CREATE,
                            name = ENDPOINT_ENABLEMENT_PROPERTY_ENABLED,
                            matchIfMissing = true)
-    public DeferredResult<ResponseEntity> createTenant(
+    public DeferredResult<ResponseEntity<?>> createTenant(
         @RequestBody @Valid RestCreateTenantRequest restCreateTenantRequest, SmartCosmosUser smartCosmosUser) {
 
-        return service.create(restCreateTenantRequest, smartCosmosUser);
+        DeferredResult<ResponseEntity<?>> response = new DeferredResult<>();
+        service.create(response, restCreateTenantRequest, smartCosmosUser);
+        return response;
     }
 }
 
