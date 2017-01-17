@@ -128,6 +128,58 @@ public class RolePersistenceServiceTest {
                          .size());
     }
 
+    @Test
+    public void thatUpdateRoleSucceedsWithSameName() {
+
+        final String roleName = "updateTestRole2";
+        final String authority1 = "testAuth1";
+        final String authority2 = "testAuth2";
+
+        List<String> authorities = new ArrayList<>();
+        authorities.add(authority1);
+
+        RoleRequest createRole = RoleRequest.builder()
+            .active(true)
+            .authorities(authorities)
+            .name(roleName)
+            .build();
+
+        Optional<RoleResponse> createResponse = rolePersistenceService
+            .createRole(tenantRoleTest, createRole);
+
+        assertTrue(createResponse.isPresent());
+        assertEquals(roleName,
+                     createResponse.get()
+                         .getName());
+        assertEquals(1,
+                     createResponse.get()
+                         .getAuthorities()
+                         .size());
+
+        String urn = createResponse.get()
+            .getUrn();
+
+        authorities.add(authority2);
+
+        RoleRequest updateRole = RoleRequest.builder()
+            .active(true)
+            .authorities(authorities)
+            .name(roleName)
+            .build();
+
+        Optional<RoleResponse> updateResponse = rolePersistenceService
+            .updateRole(tenantRoleTest, urn, updateRole);
+
+        assertTrue(updateResponse.isPresent());
+        assertEquals(roleName,
+                     updateResponse.get()
+                         .getName());
+        assertEquals(2,
+                     updateResponse.get()
+                         .getAuthorities()
+                         .size());
+    }
+
     @Test(expected = IllegalArgumentException.class)
     public void thatUpdateRoleFailsWhenNameAlreadyExistsForDifferentRole() {
 

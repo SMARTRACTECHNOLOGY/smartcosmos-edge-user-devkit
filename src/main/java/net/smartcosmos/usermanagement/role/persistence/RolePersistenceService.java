@@ -81,8 +81,12 @@ public class RolePersistenceService implements RoleDao {
         UUID tenantId = UuidUtil.getUuidFromUrn(tenantUrn);
         UUID id = UuidUtil.getUuidFromUrn(urn);
 
-        if (isNotBlank(updateRoleRequest.getName()) && findRoleByName(tenantUrn, updateRoleRequest.getName()).isPresent()) {
-            throw new IllegalArgumentException(String.format("Can not update role. Name '%s' is already in use.", updateRoleRequest.getName()));
+        if (isNotBlank(updateRoleRequest.getName())) {
+            Optional<RoleResponse> existingRole = findRoleByName(tenantUrn, updateRoleRequest.getName());
+            if (existingRole.isPresent() && !urn.equals(existingRole.get()
+                                                            .getUrn())) {
+                throw new IllegalArgumentException(String.format("Can not update role. Name '%s' is already in use.", updateRoleRequest.getName()));
+            }
         }
 
         // Cancel update if role doesn't exist
