@@ -12,7 +12,7 @@ import net.smartcosmos.cluster.userdetails.util.UuidUtil;
 import net.smartcosmos.test.AbstractTestResource;
 import net.smartcosmos.test.security.WithMockSmartCosmosUser;
 import net.smartcosmos.usermanagement.DevKitUserManagementService;
-import net.smartcosmos.usermanagement.role.dto.RestCreateOrUpdateRoleRequest;
+import net.smartcosmos.usermanagement.role.dto.RoleRequest;
 import net.smartcosmos.usermanagement.role.dto.RoleResponse;
 import net.smartcosmos.usermanagement.role.persistence.RoleDao;
 
@@ -76,7 +76,7 @@ public class UpdateRoleResourceTest extends AbstractTestResource {
 
         when(roleDao.updateRole(anyString(), anyString(), anyObject())).thenReturn(Optional.ofNullable(roleResponse));
 
-        RestCreateOrUpdateRoleRequest request = RestCreateOrUpdateRoleRequest.builder()
+        RoleRequest request = RoleRequest.builder()
             .name(roleName)
             .active(active)
             .build();
@@ -109,7 +109,7 @@ public class UpdateRoleResourceTest extends AbstractTestResource {
 
         when(roleDao.updateRole(anyString(), anyString(), anyObject())).thenReturn(Optional.empty());
 
-        RestCreateOrUpdateRoleRequest request = RestCreateOrUpdateRoleRequest.builder()
+        RoleRequest request = RoleRequest.builder()
             .name(roleName)
             .active(active)
             .build();

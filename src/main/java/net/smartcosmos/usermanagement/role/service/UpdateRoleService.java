@@ -4,7 +4,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.context.request.async.DeferredResult;
 
 import net.smartcosmos.security.user.SmartCosmosUser;
-import net.smartcosmos.usermanagement.role.dto.RestCreateOrUpdateRoleRequest;
+import net.smartcosmos.usermanagement.role.dto.RoleRequest;
 
 public interface UpdateRoleService {
 
@@ -19,6 +19,6 @@ public interface UpdateRoleService {
     void update(
         DeferredResult<ResponseEntity<?>> response,
         String roleUrn,
-        RestCreateOrUpdateRoleRequest updateRoleRequest,
+        RoleRequest updateRoleRequest,
         SmartCosmosUser user);
 }

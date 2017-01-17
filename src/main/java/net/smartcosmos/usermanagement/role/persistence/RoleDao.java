@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import javax.validation.ConstraintViolationException;
 
-import net.smartcosmos.usermanagement.role.dto.CreateOrUpdateRoleRequest;
+import net.smartcosmos.usermanagement.role.dto.RoleRequest;
 import net.smartcosmos.usermanagement.role.dto.RoleResponse;
 
 /**
@@ -22,7 +22,7 @@ public interface RoleDao {
      */
     Optional<RoleResponse> createRole(
         String tenantUrn,
-        CreateOrUpdateRoleRequest createRoleRequest)
+        RoleRequest createRoleRequest)
         throws ConstraintViolationException;
 
     /**
@@ -37,7 +37,7 @@ public interface RoleDao {
     Optional<RoleResponse> updateRole(
         String tenantUrn,
         String urn,
-        CreateOrUpdateRoleRequest updateRoleRequest)
+        RoleRequest updateRoleRequest)
         throws ConstraintViolationException;
 
     /**

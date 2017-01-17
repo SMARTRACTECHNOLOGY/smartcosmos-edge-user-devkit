@@ -17,7 +17,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import net.smartcosmos.cluster.userdetails.repository.RoleRepository;
 import net.smartcosmos.cluster.userdetails.util.UuidUtil;
 import net.smartcosmos.usermanagement.DevKitUserManagementService;
-import net.smartcosmos.usermanagement.role.dto.CreateOrUpdateRoleRequest;
+import net.smartcosmos.usermanagement.role.dto.RoleRequest;
 import net.smartcosmos.usermanagement.role.dto.RoleResponse;
 
 import static org.junit.Assert.*;
@@ -53,7 +53,7 @@ public class RolePersistenceServiceTest {
         List<String> authorities = new ArrayList<>();
         authorities.add(authority);
 
-        CreateOrUpdateRoleRequest createRole = CreateOrUpdateRoleRequest.builder()
+        RoleRequest createRole = RoleRequest.builder()
             .active(true)
             .authorities(authorities)
             .name(roleName)
@@ -86,7 +86,7 @@ public class RolePersistenceServiceTest {
         List<String> authorities = new ArrayList<>();
         authorities.add(authority1);
 
-        CreateOrUpdateRoleRequest createRole = CreateOrUpdateRoleRequest.builder()
+        RoleRequest createRole = RoleRequest.builder()
             .active(true)
             .authorities(authorities)
             .name(newRoleName)
@@ -109,7 +109,7 @@ public class RolePersistenceServiceTest {
 
         authorities.add(authority2);
 
-        CreateOrUpdateRoleRequest updateRole = CreateOrUpdateRoleRequest.builder()
+        RoleRequest updateRole = RoleRequest.builder()
             .active(true)
             .authorities(authorities)
             .name(roleName)
@@ -143,13 +143,13 @@ public class RolePersistenceServiceTest {
         List<String> authorities2 = new ArrayList<>();
         authorities2.add(authority2);
 
-        CreateOrUpdateRoleRequest createRole1 = CreateOrUpdateRoleRequest.builder()
+        RoleRequest createRole1 = RoleRequest.builder()
             .active(true)
             .authorities(authorities1)
             .name(roleName1)
             .build();
 
-        CreateOrUpdateRoleRequest createRole2 = CreateOrUpdateRoleRequest.builder()
+        RoleRequest createRole2 = RoleRequest.builder()
             .active(true)
             .authorities(authorities2)
             .name(roleName2)
@@ -175,7 +175,7 @@ public class RolePersistenceServiceTest {
 
         authorities1.add(authority2);
 
-        CreateOrUpdateRoleRequest updateRole = CreateOrUpdateRoleRequest.builder()
+        RoleRequest updateRole = RoleRequest.builder()
             .active(true)
             .authorities(authorities1)
             .name(roleName2)
@@ -196,7 +196,7 @@ public class RolePersistenceServiceTest {
         List<String> authorities = new ArrayList<>();
         authorities.add(authority);
 
-        CreateOrUpdateRoleRequest createRole = CreateOrUpdateRoleRequest.builder()
+        RoleRequest createRole = RoleRequest.builder()
             .active(true)
             .authorities(authorities)
             .name(roleName)
@@ -253,7 +253,7 @@ public class RolePersistenceServiceTest {
         List<String> authorities = new ArrayList<>();
         authorities.add(authority);
 
-        CreateOrUpdateRoleRequest createRole = CreateOrUpdateRoleRequest.builder()
+        RoleRequest createRole = RoleRequest.builder()
             .active(true)
             .authorities(authorities)
             .name(roleName)
@@ -293,7 +293,7 @@ public class RolePersistenceServiceTest {
         List<String> authorities = new ArrayList<>();
         authorities.add(authority);
 
-        CreateOrUpdateRoleRequest createRole = CreateOrUpdateRoleRequest.builder()
+        RoleRequest createRole = RoleRequest.builder()
             .active(true)
             .authorities(authorities)
             .name(roleName)
@@ -335,7 +335,7 @@ public class RolePersistenceServiceTest {
         List<String> authorities = new ArrayList<>();
         authorities.add(authority);
 
-        CreateOrUpdateRoleRequest createRole = CreateOrUpdateRoleRequest.builder()
+        RoleRequest createRole = RoleRequest.builder()
             .active(true)
             .authorities(authorities)
             .name(roleName)

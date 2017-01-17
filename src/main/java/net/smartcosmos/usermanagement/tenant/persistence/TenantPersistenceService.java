@@ -23,7 +23,7 @@ import net.smartcosmos.cluster.userdetails.domain.UserEntity;
 import net.smartcosmos.cluster.userdetails.repository.RoleRepository;
 import net.smartcosmos.cluster.userdetails.repository.UserRepository;
 import net.smartcosmos.cluster.userdetails.util.UuidUtil;
-import net.smartcosmos.usermanagement.role.dto.CreateOrUpdateRoleRequest;
+import net.smartcosmos.usermanagement.role.dto.RoleRequest;
 import net.smartcosmos.usermanagement.role.dto.RoleResponse;
 import net.smartcosmos.usermanagement.role.persistence.RolePersistenceService;
 import net.smartcosmos.usermanagement.tenant.domain.TenantEntity;
@@ -392,7 +392,7 @@ public class TenantPersistenceService implements TenantDao {
 
     private RoleEntity createRole(String tenantUrn, String name, List<String> authorities) {
 
-        CreateOrUpdateRoleRequest createRoleRequest = CreateOrUpdateRoleRequest.builder()
+        RoleRequest createRoleRequest = RoleRequest.builder()
             .name(name)
             .authorities(authorities)
             .active(true)

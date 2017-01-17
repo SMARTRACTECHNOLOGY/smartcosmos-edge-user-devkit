@@ -15,8 +15,7 @@ import org.springframework.web.context.request.async.DeferredResult;
 
 import net.smartcosmos.security.user.SmartCosmosUser;
 import net.smartcosmos.usermanagement.event.EventSendingService;
-import net.smartcosmos.usermanagement.role.dto.CreateOrUpdateRoleRequest;
-import net.smartcosmos.usermanagement.role.dto.RestCreateOrUpdateRoleRequest;
+import net.smartcosmos.usermanagement.role.dto.RoleRequest;
 import net.smartcosmos.usermanagement.role.dto.RoleResponse;
 import net.smartcosmos.usermanagement.role.persistence.RoleDao;
 
@@ -43,7 +42,7 @@ public class CreateRoleServiceDefault implements CreateRoleService {
     }
 
     @Override
-    public void create(DeferredResult<ResponseEntity<?>> response, RestCreateOrUpdateRoleRequest createRoleRequest, SmartCosmosUser user) {
+    public void create(DeferredResult<ResponseEntity<?>> response, RoleRequest createRoleRequest, SmartCosmosUser user) {
 
         try {
             response.setResult(createRoleWorker(user.getAccountUrn(), createRoleRequest, user));
@@ -64,10 +63,10 @@ public class CreateRoleServiceDefault implements CreateRoleService {
         }
     }
 
-    private ResponseEntity<?> createRoleWorker(String tenantUrn, RestCreateOrUpdateRoleRequest roleRequest, SmartCosmosUser user) {
+    private ResponseEntity<?> createRoleWorker(String tenantUrn, RoleRequest roleRequest, SmartCosmosUser user) {
 
-        final CreateOrUpdateRoleRequest createRoleRequest = conversionService
-            .convert(roleRequest, CreateOrUpdateRoleRequest.class);
+        final RoleRequest createRoleRequest = conversionService
+            .convert(roleRequest, RoleRequest.class);
 
         Optional<RoleResponse> newRole = roleDao.createRole(tenantUrn, createRoleRequest);
 

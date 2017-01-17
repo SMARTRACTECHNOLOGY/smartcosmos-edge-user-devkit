@@ -1,8 +1,6 @@
 package net.smartcosmos.usermanagement.role.resource;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -16,7 +14,7 @@ import net.smartcosmos.test.AbstractTestResource;
 import net.smartcosmos.test.security.WithMockSmartCosmosUser;
 import net.smartcosmos.usermanagement.DevKitUserManagementService;
 import net.smartcosmos.usermanagement.config.UserManagementPersistenceConfig;
-import net.smartcosmos.usermanagement.role.dto.RestCreateOrUpdateRoleRequest;
+import net.smartcosmos.usermanagement.role.dto.RoleRequest;
 import net.smartcosmos.usermanagement.role.dto.RoleResponse;
 import net.smartcosmos.usermanagement.role.persistence.RoleDao;
 
@@ -81,7 +79,7 @@ public class CreateRoleResourceTest extends AbstractTestResource {
 
         when(roleDao.createRole(anyString(), anyObject())).thenReturn(Optional.ofNullable(createRoleResponse));
 
-        RestCreateOrUpdateRoleRequest request = RestCreateOrUpdateRoleRequest.builder()
+        RoleRequest request = RoleRequest.builder()
             .name(roleName)
             .authorities(authorities)
             .build();

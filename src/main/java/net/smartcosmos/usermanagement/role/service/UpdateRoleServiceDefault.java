@@ -13,8 +13,7 @@ import org.springframework.web.context.request.async.DeferredResult;
 
 import net.smartcosmos.security.user.SmartCosmosUser;
 import net.smartcosmos.usermanagement.event.EventSendingService;
-import net.smartcosmos.usermanagement.role.dto.CreateOrUpdateRoleRequest;
-import net.smartcosmos.usermanagement.role.dto.RestCreateOrUpdateRoleRequest;
+import net.smartcosmos.usermanagement.role.dto.RoleRequest;
 import net.smartcosmos.usermanagement.role.dto.RoleResponse;
 import net.smartcosmos.usermanagement.role.persistence.RoleDao;
 
@@ -44,7 +43,7 @@ public class UpdateRoleServiceDefault implements UpdateRoleService {
     public void update(
         DeferredResult<ResponseEntity<?>> response,
         String roleUrn,
-        RestCreateOrUpdateRoleRequest updateRoleRequest,
+        RoleRequest updateRoleRequest,
         SmartCosmosUser user) {
 
         try {
@@ -67,10 +66,10 @@ public class UpdateRoleServiceDefault implements UpdateRoleService {
         }
     }
 
-    private ResponseEntity<?> updateRoleWorker(String roleUrn, RestCreateOrUpdateRoleRequest restRequest, SmartCosmosUser user) {
+    private ResponseEntity<?> updateRoleWorker(String roleUrn, RoleRequest restRequest, SmartCosmosUser user) {
 
-        final CreateOrUpdateRoleRequest updateRoleRequest = conversionService
-            .convert(restRequest, CreateOrUpdateRoleRequest.class);
+        final RoleRequest updateRoleRequest = conversionService
+            .convert(restRequest, RoleRequest.class);
 
         Optional<RoleResponse> updateRoleResponse = roleDao.updateRole(user.getAccountUrn(), roleUrn, updateRoleRequest);
 
