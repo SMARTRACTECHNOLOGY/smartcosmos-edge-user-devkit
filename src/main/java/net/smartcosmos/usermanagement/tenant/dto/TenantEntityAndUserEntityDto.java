@@ -10,7 +10,7 @@ import net.smartcosmos.cluster.userdetails.domain.UserEntity;
 import net.smartcosmos.usermanagement.tenant.domain.TenantEntity;
 
 /**
- * Detail for a Tenant with a corresponding user.
+ * Details for a Tenant with a corresponding user.
  */
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
