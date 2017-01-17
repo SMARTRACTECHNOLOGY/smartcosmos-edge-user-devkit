@@ -57,7 +57,7 @@ public class UpdateRoleServiceDefault implements UpdateRoleService {
             if (rootException != null) {
                 rootCause = String.format(", rootCause: '%s'", rootException.toString());
             }
-            String msg = String.format("Exception on update role. role URN: %s,  request: %s, user: %s, cause: '%s'%s.",
+            String msg = String.format("Exception on update role. role URN: %s,  request: %s, user: %s, cause: '%s', rootCause: '%s'.",
                                        roleUrn,
                                        updateRoleRequest,
                                        user.getUserUrn(),

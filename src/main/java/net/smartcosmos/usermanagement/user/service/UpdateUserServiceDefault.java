@@ -47,7 +47,7 @@ public class UpdateUserServiceDefault implements UpdateUserService {
             if (rootException != null) {
                 rootCause = String.format(", rootCause: '%s'", rootException.toString());
             }
-            String msg = String.format("Exception on update user. user URN: %s,  request: %s, user: %s, cause: '%s'%s.",
+            String msg = String.format("Exception on update user. user URN: %s,  request: %s, user: %s, cause: '%s', rootCause: '%s'.",
                                        userUrn,
                                        userRequest,
                                        user.getUserUrn(),

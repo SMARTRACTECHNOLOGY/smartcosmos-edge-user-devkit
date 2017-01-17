@@ -47,7 +47,7 @@ public class DeleteRoleServiceDefault implements DeleteRoleService {
             if (rootException != null) {
                 rootCause = String.format(", rootCause: '%s'", rootException.toString());
             }
-            String msg = String.format("Exception on delete role. role URN: %s, user: %s, cause: '%s'%s.",
+            String msg = String.format("Exception on delete role. role URN: %s, user: %s, cause: '%s', rootCause: '%s'.",
                                        roleUrn,
                                        user.getUserUrn(),
                                        e.toString(),
