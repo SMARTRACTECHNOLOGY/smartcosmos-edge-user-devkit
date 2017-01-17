@@ -1,107 +1,46 @@
 package net.smartcosmos.usermanagement.user.service;
 
-import java.util.List;
-import java.util.Optional;
-
-import lombok.extern.slf4j.Slf4j;
-
-import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.convert.ConversionService;
-import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
 
 import net.smartcosmos.security.user.SmartCosmosUser;
-import net.smartcosmos.usermanagement.event.EventSendingService;
-import net.smartcosmos.usermanagement.tenant.persistence.TenantDao;
-import net.smartcosmos.usermanagement.user.dto.UserResponse;
 
-import static net.smartcosmos.usermanagement.event.UserEventType.USER_NOT_FOUND;
-import static net.smartcosmos.usermanagement.event.UserEventType.USER_READ;
+/**
+ * Methods to read Users.
+ */
+public interface ReadUserService {
 
-@Slf4j
-@Service
-public class ReadUserService {
+    /**
+     * Finds a User by its URN.
+     *
+     * @param urn the URN of the User to return
+     * @param user the current logged in user
+     * @return the response containing the requested User if existent. Otherwise an appropriate error response is returned.
+     */
+    ResponseEntity<?> findByUrn(String urn, SmartCosmosUser user);
 
-    private final TenantDao tenantDao;
-    private final EventSendingService eventSendingService;
-    private final ConversionService conversionService;
+    /**
+     * Finds a User by its Name.
+     *
+     * @param name the name of the User to return
+     * @param user the current logged in user
+     * @return the response containing the requested User if existent. Otherwise an appropriate error response is returned.
+     */
+    ResponseEntity<?> findByName(String name, SmartCosmosUser user);
 
-    @Autowired
-    public ReadUserService(TenantDao tenantDao, EventSendingService userEventSendingService, ConversionService conversionService) {
+    /**
+     * Queries Users by Name. If no name is provided all existing Users will be returned.
+     *
+     * @param name the name of the User to return (optional)
+     * @param user the current logged in user
+     * @return the response containing the User(s), or an appropriate error response.
+     */
+    ResponseEntity<?> query(String name, SmartCosmosUser user);
 
-        this.tenantDao = tenantDao;
-        this.eventSendingService = userEventSendingService;
-        this.conversionService = conversionService;
-    }
-
-    public ResponseEntity<?> findByUrn(String urn, SmartCosmosUser user) {
-
-        Optional<UserResponse> entity = tenantDao.findUserByUrn(user.getAccountUrn(), urn);
-
-        if (entity.isPresent()) {
-            eventSendingService.sendEvent(user, USER_READ, entity.get());
-            return ResponseEntity
-                .ok()
-                .body(entity.get());
-        }
-
-        UserResponse eventPayload = UserResponse.builder()
-            .urn(urn)
-            .tenantUrn(user.getAccountUrn())
-            .build();
-        eventSendingService.sendEvent(user, USER_NOT_FOUND, eventPayload);
-        return ResponseEntity.notFound()
-            .build();
-    }
-
-    public ResponseEntity<?> query(String name, SmartCosmosUser user) {
-
-        if (StringUtils.isBlank(name)) {
-            return findAll(user);
-        } else {
-            return findByName(name, user);
-        }
-    }
-
-    private ResponseEntity<?> findAll(SmartCosmosUser user) {
-
-        List<UserResponse> userList = tenantDao.findAllUsers(user.getAccountUrn());
-        for (UserResponse userResponse : userList) {
-            eventSendingService.sendEvent(user, USER_READ, userResponse);
-        }
-
-        return ResponseEntity
-            .ok()
-            .body(userList);
-    }
-
-    public ResponseEntity<?> findByName(String name, SmartCosmosUser user) {
-
-        Optional<UserResponse> entity = tenantDao.findUserByName(user.getAccountUrn(), name);
-
-        if (entity.isPresent()) {
-            eventSendingService.sendEvent(user, USER_READ, entity.get());
-            return ResponseEntity
-                .ok()
-                .body(entity.get());
-        }
-
-        UserResponse eventPayload = UserResponse.builder()
-            .username(name)
-            .tenantUrn(user.getAccountUrn())
-            .build();
-        eventSendingService.sendEvent(user, USER_NOT_FOUND, eventPayload);
-        return ResponseEntity.notFound()
-            .build();
-    }
-
-    private <S, T> List<T> convertList(List<S> list, Class sourceClass, Class targetClass) {
-
-        TypeDescriptor sourceDescriptor = TypeDescriptor.collection(List.class, TypeDescriptor.valueOf(sourceClass));
-        TypeDescriptor targetDescriptor = TypeDescriptor.collection(List.class, TypeDescriptor.valueOf(targetClass));
-
-        return (List<T>) conversionService.convert(list, sourceDescriptor, targetDescriptor);
-    }
+    /**
+     * Finds all Users in the realm of the current user.
+     *
+     * @param user the current logged in user
+     * @return the response containing all Users in the user's tenant.
+     */
+    ResponseEntity<?> findAll(SmartCosmosUser user);
 }
