@@ -10,7 +10,7 @@ import net.smartcosmos.cluster.userdetails.domain.UserEntity;
 import net.smartcosmos.usermanagement.tenant.domain.TenantEntity;
 
 /**
- * Initially created by SMART COSMOS Team on June 30, 2016.
+ * Detail for a Tenant with a corresponding user.
  */
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)

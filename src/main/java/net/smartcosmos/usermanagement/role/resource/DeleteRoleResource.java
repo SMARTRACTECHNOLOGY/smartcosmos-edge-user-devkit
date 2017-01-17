@@ -18,7 +18,7 @@ import net.smartcosmos.usermanagement.role.service.DeleteRoleService;
 import static net.smartcosmos.usermanagement.role.resource.RoleEndpointConstants.ENDPOINT_ENABLEMENT_PROPERTY_ENABLED;
 
 /**
- * Initially created by SMART COSMOS Team on July 01, 2016.
+ * The endpoints for deleting Roles.
  */
 @SmartCosmosRdao
 @Slf4j

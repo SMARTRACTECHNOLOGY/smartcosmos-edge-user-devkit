@@ -23,7 +23,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 import static net.smartcosmos.usermanagement.tenant.resource.TenantEndpointConstants.ENDPOINT_ENABLEMENT_PROPERTY_ENABLED;
 
 /**
- * Initially created by SMART COSMOS Team on July 01, 2016.
+ * Endpoints for creating tenants.
  */
 @SmartCosmosRdao
 @Slf4j

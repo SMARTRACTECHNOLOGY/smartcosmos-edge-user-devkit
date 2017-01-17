@@ -9,7 +9,7 @@ import net.smartcosmos.usermanagement.role.dto.RoleResponse;
 import net.smartcosmos.usermanagement.role.exception.RoleAlreadyExistsException;
 
 /**
- * Initially created by SMART COSMOS Team on June 30, 2016.
+ * The DAO interface methods for working with Roles.
  */
 public interface RoleDao {
 

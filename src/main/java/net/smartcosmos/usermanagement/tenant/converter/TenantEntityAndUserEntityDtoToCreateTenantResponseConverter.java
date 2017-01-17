@@ -15,7 +15,7 @@ import net.smartcosmos.usermanagement.tenant.dto.TenantEntityAndUserEntityDto;
 import net.smartcosmos.usermanagement.user.dto.CreateUserResponse;
 
 /**
- * Initially created by SMART COSMOS Team on June 30, 2016.
+ * Convert @{link TenantEntityAndUserEntityDto}s to @{link CreateTenantResponse}s.
  */
 @Component
 public class TenantEntityAndUserEntityDtoToCreateTenantResponseConverter

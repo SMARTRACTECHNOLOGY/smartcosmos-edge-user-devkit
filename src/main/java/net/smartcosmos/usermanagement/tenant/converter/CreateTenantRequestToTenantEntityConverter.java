@@ -10,7 +10,7 @@ import net.smartcosmos.usermanagement.tenant.domain.TenantEntity;
 import net.smartcosmos.usermanagement.tenant.dto.CreateTenantRequest;
 
 /**
- * Initially created by SMART COSMOS Team on June 30, 2016.
+ * Convert {@link CreateTenantRequest}s to {@link TenantEntity}s.
  */
 @Component
 public class CreateTenantRequestToTenantEntityConverter

@@ -24,7 +24,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 import static net.smartcosmos.usermanagement.user.resource.UserEndpointConstants.ENDPOINT_ENABLEMENT_PROPERTY_ENABLED;
 
 /**
- * Initially created by SMART COSMOS Team on July 01, 2016.
+ * The endpoints for updating user information.
  */
 @SmartCosmosRdao
 @Slf4j
