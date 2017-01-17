@@ -22,6 +22,8 @@ import net.smartcosmos.usermanagement.role.dto.RoleRequest;
 import net.smartcosmos.usermanagement.role.dto.RoleResponse;
 import net.smartcosmos.usermanagement.role.repository.AuthorityRepository;
 
+import static org.apache.commons.lang.StringUtils.isNotBlank;
+
 /**
  * Initially created by SMART COSMOS Team on June 30, 2016.
  */
@@ -74,16 +76,13 @@ public class RolePersistenceService implements RoleDao {
 
     @Override
     public Optional<RoleResponse> updateRole(String tenantUrn, String urn, RoleRequest updateRoleRequest)
-        throws ConstraintViolationException {
+        throws ConstraintViolationException, IllegalArgumentException {
 
         UUID tenantId = UuidUtil.getUuidFromUrn(tenantUrn);
         UUID id = UuidUtil.getUuidFromUrn(urn);
 
-        // This role name already exists in a different role? we're not doing the update
-        Optional<RoleEntity> existingRole = roleRepository.findByTenantIdAndNameIgnoreCase(UuidUtil.getUuidFromUrn(tenantUrn),
-                                                                                           updateRoleRequest.getName());
-        if (existingRole.isPresent() && !id.equals(existingRole.get().getId())) {
-            return Optional.empty();
+        if (isNotBlank(updateRoleRequest.getName()) && findRoleByName(tenantUrn, updateRoleRequest.getName()).isPresent()) {
+            throw new IllegalArgumentException(String.format("Can not update role. Name '%s' is already in use.", updateRoleRequest.getName()));
         }
 
         // Cancel update if role doesn't exist
