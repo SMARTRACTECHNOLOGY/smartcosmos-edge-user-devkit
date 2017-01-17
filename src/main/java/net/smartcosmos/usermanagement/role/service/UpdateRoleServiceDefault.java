@@ -24,7 +24,7 @@ import static net.smartcosmos.usermanagement.util.ResponseFactory.noContentRespo
 import static net.smartcosmos.usermanagement.util.ResponseFactory.notFoundResponse;
 
 /**
- * The default implementation of of the {@link UpdateRoleService}.
+ * The default implementation of the {@link UpdateRoleService}.
  */
 @Slf4j
 @Service

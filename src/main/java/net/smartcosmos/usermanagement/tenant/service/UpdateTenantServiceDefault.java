@@ -20,7 +20,7 @@ import static net.smartcosmos.usermanagement.event.TenantEventType.TENANT_NOT_FO
 import static net.smartcosmos.usermanagement.event.TenantEventType.TENANT_UPDATED;
 
 /**
- * The default implementation of of the {@link UpdateTenantService}.
+ * The default implementation of the {@link UpdateTenantService}.
  */
 @Slf4j
 @Service

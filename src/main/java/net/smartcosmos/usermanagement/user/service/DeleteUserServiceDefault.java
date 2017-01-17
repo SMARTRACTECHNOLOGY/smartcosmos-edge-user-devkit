@@ -20,7 +20,7 @@ import static net.smartcosmos.usermanagement.event.UserEventType.USER_DELETED;
 import static net.smartcosmos.usermanagement.event.UserEventType.USER_NOT_FOUND;
 
 /**
- * The default implementation of of the {@link DeleteUserService}.
+ * The default implementation of the {@link DeleteUserService}.
  */
 @Slf4j
 @Service

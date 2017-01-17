@@ -19,7 +19,7 @@ import static net.smartcosmos.usermanagement.event.TenantEventType.TENANT_NOT_FO
 import static net.smartcosmos.usermanagement.event.TenantEventType.TENANT_READ;
 
 /**
- * The default implementation of of the {@link ReadTenantService}.
+ * The default implementation of the {@link ReadTenantService}.
  */
 @Slf4j
 @Service

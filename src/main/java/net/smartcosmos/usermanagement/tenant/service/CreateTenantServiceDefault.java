@@ -19,7 +19,7 @@ import net.smartcosmos.usermanagement.tenant.dto.CreateTenantResponse;
 import net.smartcosmos.usermanagement.tenant.persistence.TenantDao;
 
 /**
- * The default implementation of of the {@link CreateTenantService}.
+ * The default implementation of the {@link CreateTenantService}.
  */
 @Slf4j
 @Service

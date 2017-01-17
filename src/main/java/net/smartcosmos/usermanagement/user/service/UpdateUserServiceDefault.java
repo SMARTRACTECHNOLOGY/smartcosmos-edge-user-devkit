@@ -20,7 +20,7 @@ import static net.smartcosmos.usermanagement.event.UserEventType.USER_NOT_FOUND;
 import static net.smartcosmos.usermanagement.event.UserEventType.USER_UPDATED;
 
 /**
- * The default implementation of of the {@link UpdateUserService}.
+ * The default implementation of the {@link UpdateUserService}.
  */
 @Slf4j
 @Service
