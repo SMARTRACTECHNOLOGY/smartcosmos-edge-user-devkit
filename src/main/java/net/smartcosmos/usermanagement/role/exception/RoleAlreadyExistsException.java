@@ -1,13 +1,11 @@
 package net.smartcosmos.usermanagement.role.exception;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import net.smartcosmos.exceptions.SmartCosmosException;
 
 /**
  * The requested role already exists in the system
  */
-@ResponseStatus(value = HttpStatus.CONFLICT, reason = "Role already exists.")
-public class RoleAlreadyExistsException extends RuntimeException {
+public class RoleAlreadyExistsException extends SmartCosmosException {
 
     /**
      * Create the exception with the rolename in the message;

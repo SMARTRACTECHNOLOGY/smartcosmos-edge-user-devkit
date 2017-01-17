@@ -19,7 +19,6 @@ import net.smartcosmos.usermanagement.role.persistence.RoleDao;
 
 import static net.smartcosmos.usermanagement.event.RoleEventType.ROLE_NOT_FOUND;
 import static net.smartcosmos.usermanagement.event.RoleEventType.ROLE_UPDATED;
-import static net.smartcosmos.usermanagement.util.ResponseFactory.conflictResponse;
 import static net.smartcosmos.usermanagement.util.ResponseFactory.noContentResponse;
 import static net.smartcosmos.usermanagement.util.ResponseFactory.notFoundResponse;
 
@@ -71,12 +70,7 @@ public class UpdateRoleServiceDefault implements UpdateRoleService {
 
     private ResponseEntity<?> updateRoleWorker(String roleUrn, RoleRequest updateRoleRequest, SmartCosmosUser user) {
 
-        Optional<RoleResponse> updateRoleResponse;
-        try {
-            updateRoleResponse = roleDao.updateRole(user.getAccountUrn(), roleUrn, updateRoleRequest);
-        } catch (IllegalArgumentException e) {
-            return conflictResponse(e.getMessage());
-        }
+        Optional<RoleResponse> updateRoleResponse = roleDao.updateRole(user.getAccountUrn(), roleUrn, updateRoleRequest);
 
         if (updateRoleResponse.isPresent()) {
             eventSendingService.sendEvent(user, ROLE_UPDATED, updateRoleResponse.get());
