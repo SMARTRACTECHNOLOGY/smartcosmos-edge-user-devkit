@@ -6,13 +6,15 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * Initially created by SMART COSMOS Team on June 30, 2016.
  */
 @Data
+@NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties({ "version" })
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class CreateTenantRequest {
 
     private static final int VERSION = 1;

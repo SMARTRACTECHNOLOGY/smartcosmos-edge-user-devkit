@@ -16,8 +16,8 @@ import net.smartcosmos.cluster.userdetails.util.UuidUtil;
 import net.smartcosmos.test.AbstractTestResource;
 import net.smartcosmos.test.security.WithMockSmartCosmosUser;
 import net.smartcosmos.usermanagement.DevKitUserManagementService;
+import net.smartcosmos.usermanagement.tenant.dto.CreateTenantRequest;
 import net.smartcosmos.usermanagement.tenant.dto.CreateTenantResponse;
-import net.smartcosmos.usermanagement.tenant.dto.RestCreateTenantRequest;
 import net.smartcosmos.usermanagement.tenant.persistence.TenantDao;
 import net.smartcosmos.usermanagement.user.dto.CreateUserResponse;
 
@@ -86,7 +86,7 @@ public class CreateTenantResourceTest extends AbstractTestResource {
 
         when(tenantDao.createTenant(anyObject())).thenReturn(Optional.ofNullable(createTenantResponse));
 
-        RestCreateTenantRequest request = RestCreateTenantRequest.builder()
+        CreateTenantRequest request = CreateTenantRequest.builder()
             .name(name)
             .username(username)
             .build();
@@ -144,7 +144,7 @@ public class CreateTenantResourceTest extends AbstractTestResource {
 
         when(tenantDao.createTenant(anyObject())).thenReturn(Optional.ofNullable(createTenantResponse));
 
-        RestCreateTenantRequest request = RestCreateTenantRequest.builder()
+        CreateTenantRequest request = CreateTenantRequest.builder()
             .name(name)
             .username(username)
             .build();

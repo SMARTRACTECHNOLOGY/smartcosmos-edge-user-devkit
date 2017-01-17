@@ -16,9 +16,5 @@ public interface UpdateRoleService {
      * @param updateRoleRequest the request object
      * @param user the current logged in user
      */
-    void update(
-        DeferredResult<ResponseEntity<?>> response,
-        String roleUrn,
-        RoleRequest updateRoleRequest,
-        SmartCosmosUser user);
+    void update(DeferredResult<ResponseEntity<?>> response, String roleUrn, RoleRequest updateRoleRequest, SmartCosmosUser user);
 }

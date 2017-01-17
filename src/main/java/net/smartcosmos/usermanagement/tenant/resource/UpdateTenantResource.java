@@ -16,7 +16,7 @@ import org.springframework.web.context.request.async.DeferredResult;
 
 import net.smartcosmos.annotation.SmartCosmosRdao;
 import net.smartcosmos.security.user.SmartCosmosUser;
-import net.smartcosmos.usermanagement.tenant.dto.RestUpdateTenantRequest;
+import net.smartcosmos.usermanagement.tenant.dto.UpdateTenantRequest;
 import net.smartcosmos.usermanagement.tenant.service.UpdateTenantService;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
@@ -48,11 +48,11 @@ public class UpdateTenantResource {
                            matchIfMissing = true)
     public DeferredResult<ResponseEntity<?>> updateTenant(
         @PathVariable(TenantEndpointConstants.TENANT_URN) String tenantUrn,
-        @RequestBody @Valid RestUpdateTenantRequest restUpdateTenantRequest,
+        @RequestBody @Valid UpdateTenantRequest updateTenantRequest,
         SmartCosmosUser user) {
 
         DeferredResult<ResponseEntity<?>> response = new DeferredResult<>();
-        service.update(response, tenantUrn, restUpdateTenantRequest, user);
+        service.update(response, tenantUrn, updateTenantRequest, user);
         return response;
     }
 }
