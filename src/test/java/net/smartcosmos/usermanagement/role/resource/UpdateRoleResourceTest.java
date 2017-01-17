@@ -16,12 +16,15 @@ import net.smartcosmos.usermanagement.role.dto.RoleRequest;
 import net.smartcosmos.usermanagement.role.dto.RoleResponse;
 import net.smartcosmos.usermanagement.role.persistence.RoleDao;
 
+import static org.hamcrest.Matchers.is;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.asyncDispatch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -124,6 +127,37 @@ public class UpdateRoleResourceTest extends AbstractTestResource {
 
         MvcResult result = this.mockMvc.perform(asyncDispatch(mvcResult))
             .andExpect(status().isNotFound())
+            .andReturn();
+    }
+
+    @Test
+    public void thatUpdateExistentRoleNameFails() throws Exception {
+
+        String roleName = "newRoleName";
+        Boolean active = false;
+        final String roleUrn = "urn:role:uuid:" + UuidUtil.getNewUuid()
+            .toString();
+        final String expectedMessage = "someErrorMessage";
+
+        when(roleDao.updateRole(anyString(), anyString(), anyObject())).thenThrow(new IllegalArgumentException(expectedMessage));
+
+        RoleRequest request = RoleRequest.builder()
+            .name(roleName)
+            .active(active)
+            .build();
+
+        MvcResult mvcResult = this.mockMvc.perform(
+            put("/roles/{urn}", roleUrn)
+                .content(this.json(request))
+                .contentType(contentType))
+            .andExpect(status().isOk())
+            .andExpect(request().asyncStarted())
+            .andReturn();
+
+        MvcResult result = this.mockMvc.perform(asyncDispatch(mvcResult))
+            .andExpect(status().isConflict())
+            .andExpect(content().contentType(contentType))
+            .andExpect(jsonPath("$.message", is(expectedMessage)))
             .andReturn();
     }
 }
