@@ -21,8 +21,7 @@ import net.smartcosmos.usermanagement.user.dto.UserResponse;
  * Initially created by SMART COSMOS Team on June 30, 2016.
  */
 @Component
-public class UserEntityToGetOrDeleteUserResponseConverter
-    implements Converter<UserEntity, UserResponse>, FormatterRegistrar {
+public class UserEntityToUserResponseConverter implements Converter<UserEntity, UserResponse>, FormatterRegistrar {
 
     @Override
     public UserResponse convert(UserEntity userEntity) {

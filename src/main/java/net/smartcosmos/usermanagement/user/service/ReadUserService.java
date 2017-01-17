@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import net.smartcosmos.security.user.SmartCosmosUser;
 import net.smartcosmos.usermanagement.event.EventSendingService;
 import net.smartcosmos.usermanagement.tenant.persistence.TenantDao;
-import net.smartcosmos.usermanagement.user.dto.RestUserResponse;
 import net.smartcosmos.usermanagement.user.dto.UserResponse;
 
 import static net.smartcosmos.usermanagement.event.UserEventType.USER_NOT_FOUND;
@@ -45,7 +44,7 @@ public class ReadUserService {
             eventSendingService.sendEvent(user, USER_READ, entity.get());
             return ResponseEntity
                 .ok()
-                .body(conversionService.convert(entity.get(), RestUserResponse.class));
+                .body(entity.get());
         }
 
         UserResponse eventPayload = UserResponse.builder()
@@ -75,7 +74,7 @@ public class ReadUserService {
 
         return ResponseEntity
             .ok()
-            .body(convertList(userList, UserResponse.class, RestUserResponse.class));
+            .body(userList);
     }
 
     public ResponseEntity<?> findByName(String name, SmartCosmosUser user) {
@@ -86,7 +85,7 @@ public class ReadUserService {
             eventSendingService.sendEvent(user, USER_READ, entity.get());
             return ResponseEntity
                 .ok()
-                .body(conversionService.convert(entity.get(), RestUserResponse.class));
+                .body(entity.get());
         }
 
         UserResponse eventPayload = UserResponse.builder()

@@ -10,31 +10,26 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/**
- * Initially created by SMART COSMOS Team on July 01, 2016.
- */
 @Data
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-//@ApiModel(description = "Create a \"Tenant\" in the smartcosmos-edge-tenant Server.")
-public class RestCreateOrUpdateUserRequest {
+public class UpdateUserRequest {
 
     private static final int VERSION = 1;
     private final int version = VERSION;
 
-    String username;
-    String emailAddress;
-    String givenName;
-    String surname;
-    String password;
-    Set<String> roles;
-    Boolean active;
+    private String username;
+    private String emailAddress;
+    private String givenName;
+    private String surname;
+    private String password;
+    private Set<String> roles;
+    private Boolean active;
 
     @Builder
     @ConstructorProperties({ "username", "emailAddress", "givenName", "surname", "password", "roles", "active" })
-    public RestCreateOrUpdateUserRequest(
-        String username, String emailAddress, String givenName, String surname, String password, Collection<String> roles,
-        Boolean active) {
+    public UpdateUserRequest(
+        String username, String emailAddress, String givenName, String surname, String password, Collection<String> roles, Boolean active) {
 
         this.username = username;
         this.emailAddress = emailAddress;
@@ -47,4 +42,5 @@ public class RestCreateOrUpdateUserRequest {
         }
         this.active = active;
     }
+
 }

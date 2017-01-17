@@ -15,8 +15,8 @@ import net.smartcosmos.test.AbstractTestResource;
 import net.smartcosmos.test.security.WithMockSmartCosmosUser;
 import net.smartcosmos.usermanagement.DevKitUserManagementService;
 import net.smartcosmos.usermanagement.tenant.persistence.TenantDao;
+import net.smartcosmos.usermanagement.user.dto.CreateUserRequest;
 import net.smartcosmos.usermanagement.user.dto.CreateUserResponse;
-import net.smartcosmos.usermanagement.user.dto.RestCreateOrUpdateUserRequest;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.startsWith;
@@ -40,12 +40,6 @@ public class CreateUserResourceTest extends AbstractTestResource {
 
     @Autowired
     protected TenantDao tenantDao;
-
-    private String tenantUrn;
-
-    private List<String> adminRoleOnly = new ArrayList<>();
-    private List<String> userRoleOnly = new ArrayList<>();
-    private List<String> adminAndUserRoles = new ArrayList<>();
 
     @After
     public void tearDown() throws Exception {
@@ -82,10 +76,10 @@ public class CreateUserResourceTest extends AbstractTestResource {
 
         when(tenantDao.createUser(anyString(), anyObject())).thenReturn(Optional.ofNullable(createUserResponse));
 
-        RestCreateOrUpdateUserRequest request = RestCreateOrUpdateUserRequest.builder()
+        CreateUserRequest request = CreateUserRequest.builder()
             .username(username)
             .emailAddress(emailAddress)
-            .roles(userRoleOnly)
+            .roles(userRoles)
             .build();
 
         org.springframework.test.web.servlet.MvcResult mvcResult = this.mockMvc.perform(

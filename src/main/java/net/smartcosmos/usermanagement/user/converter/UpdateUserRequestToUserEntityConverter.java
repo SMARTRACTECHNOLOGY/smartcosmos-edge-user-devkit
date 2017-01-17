@@ -3,24 +3,19 @@ package net.smartcosmos.usermanagement.user.converter;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.format.FormatterRegistrar;
 import org.springframework.format.FormatterRegistry;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import net.smartcosmos.cluster.userdetails.domain.UserEntity;
-import net.smartcosmos.usermanagement.user.dto.CreateOrUpdateUserRequest;
+import net.smartcosmos.usermanagement.user.dto.UpdateUserRequest;
 
 /**
- * Initially created by SMART COSMOS Team on June 30, 2016.
+ * Initially created by SMART COSMOS Team on January 13, 2017.
  */
 @Component
-public class CreateOrUpdateUserRequestToUserEntityConverter
-    implements Converter<CreateOrUpdateUserRequest, UserEntity>, FormatterRegistrar {
-
-    PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+public class UpdateUserRequestToUserEntityConverter implements Converter<UpdateUserRequest, UserEntity>, FormatterRegistrar {
 
     @Override
-    public UserEntity convert(CreateOrUpdateUserRequest request) {
+    public UserEntity convert(UpdateUserRequest request) {
 
         /*
             The converter ignores the roles, because it isn't able to completely convert them.
@@ -32,8 +27,8 @@ public class CreateOrUpdateUserRequestToUserEntityConverter
             .emailAddress(request.getEmailAddress())
             .givenName(request.getGivenName())
             .surname(request.getSurname())
-            .active(request.getActive())
             .password(request.getPassword())
+            .active(request.getActive())
             .build();
     }
 
@@ -42,4 +37,5 @@ public class CreateOrUpdateUserRequestToUserEntityConverter
 
         registry.addConverter(this);
     }
+
 }

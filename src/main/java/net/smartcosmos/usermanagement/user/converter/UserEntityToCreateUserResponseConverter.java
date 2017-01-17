@@ -17,8 +17,7 @@ import net.smartcosmos.usermanagement.user.dto.CreateUserResponse;
  * Initially created by SMART COSMOS Team on June 30, 2016.
  */
 @Component
-public class UserEntityToCreateUserResponseConverter
-    implements Converter<UserEntity, CreateUserResponse>, FormatterRegistrar {
+public class UserEntityToCreateUserResponseConverter implements Converter<UserEntity, CreateUserResponse>, FormatterRegistrar {
 
     @Override
     public CreateUserResponse convert(UserEntity userEntity) {

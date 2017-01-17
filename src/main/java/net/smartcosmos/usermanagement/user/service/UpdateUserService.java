@@ -13,8 +13,7 @@ import org.springframework.web.context.request.async.DeferredResult;
 import net.smartcosmos.security.user.SmartCosmosUser;
 import net.smartcosmos.usermanagement.event.EventSendingService;
 import net.smartcosmos.usermanagement.tenant.persistence.TenantDao;
-import net.smartcosmos.usermanagement.user.dto.CreateOrUpdateUserRequest;
-import net.smartcosmos.usermanagement.user.dto.RestCreateOrUpdateUserRequest;
+import net.smartcosmos.usermanagement.user.dto.UpdateUserRequest;
 import net.smartcosmos.usermanagement.user.dto.UserResponse;
 
 import static net.smartcosmos.usermanagement.event.UserEventType.USER_NOT_FOUND;
@@ -39,7 +38,7 @@ public class UpdateUserService {
         this.conversionService = conversionService;
     }
 
-    public void update(DeferredResult<ResponseEntity> response, String userUrn, RestCreateOrUpdateUserRequest userRequest, SmartCosmosUser user) {
+    public void update(DeferredResult<ResponseEntity> response, String userUrn, UpdateUserRequest userRequest, SmartCosmosUser user) {
 
         try {
             response.setResult(update(userUrn, userRequest, user));
@@ -49,10 +48,9 @@ public class UpdateUserService {
         }
     }
 
-    private ResponseEntity<?> update(String userUrn, RestCreateOrUpdateUserRequest userRequest, SmartCosmosUser user) {
+    private ResponseEntity<?> update(String userUrn, UpdateUserRequest userRequest, SmartCosmosUser user) {
 
-        CreateOrUpdateUserRequest updateUserRequest = conversionService.convert(userRequest, CreateOrUpdateUserRequest.class);
-        Optional<UserResponse> updateUserResponse = tenantDao.updateUser(user.getAccountUrn(), userUrn, updateUserRequest);
+        Optional<UserResponse> updateUserResponse = tenantDao.updateUser(user.getAccountUrn(), userUrn, userRequest);
 
         if (updateUserResponse.isPresent()) {
             eventSendingService.sendEvent(user, USER_UPDATED, updateUserResponse.get());
