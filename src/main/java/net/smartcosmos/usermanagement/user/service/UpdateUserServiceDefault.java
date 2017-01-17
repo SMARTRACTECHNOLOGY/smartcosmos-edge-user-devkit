@@ -6,7 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.convert.ConversionService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.async.DeferredResult;
@@ -29,14 +28,12 @@ public class UpdateUserServiceDefault implements UpdateUserService {
 
     private final TenantDao tenantDao;
     private final EventSendingService eventSendingService;
-    private final ConversionService conversionService;
 
     @Autowired
-    public UpdateUserServiceDefault(TenantDao tenantDao, EventSendingService userEventSendingService, ConversionService conversionService) {
+    public UpdateUserServiceDefault(TenantDao tenantDao, EventSendingService userEventSendingService) {
 
         this.tenantDao = tenantDao;
         this.eventSendingService = userEventSendingService;
-        this.conversionService = conversionService;
     }
 
     @Override
