@@ -4,6 +4,7 @@ import java.util.List;
 
 import lombok.extern.slf4j.Slf4j;
 
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +24,7 @@ import static net.smartcosmos.usermanagement.event.RoleEventType.ROLE_NOT_FOUND;
  */
 @Slf4j
 @Service
-public class DeleteRoleServiceDefault {
+public class DeleteRoleServiceDefault implements DeleteRoleService {
 
     private final RoleDao roleDao;
     private final EventSendingService eventSendingService;
@@ -35,36 +36,44 @@ public class DeleteRoleServiceDefault {
         this.eventSendingService = roleEventSendingService;
     }
 
-    public DeferredResult<ResponseEntity> delete(String roleUrn, SmartCosmosUser user) {
-        // Async worker thread reduces timeouts and disconnects for long queries and processing.
-        DeferredResult<ResponseEntity> response = new DeferredResult<>();
-        deleteRoleWorker(response, user, roleUrn);
-
-        return response;
-    }
-
-    private void deleteRoleWorker(DeferredResult<ResponseEntity> response, SmartCosmosUser user, String roleUrn) {
+    @Override
+    public void delete(DeferredResult<ResponseEntity<?>> response, String roleUrn, SmartCosmosUser user) {
 
         try {
-            List<RoleResponse> deleteRoleResponse = roleDao.delete(user.getAccountUrn(), roleUrn);
-
-            if (!deleteRoleResponse.isEmpty()) {
-                response.setResult(ResponseEntity.noContent()
-                                       .build());
-                eventSendingService.sendEvent(user, ROLE_DELETED, deleteRoleResponse.get(0));
-            } else {
-                response.setResult(ResponseEntity.status(HttpStatus.NOT_FOUND)
-                                       .build());
-
-                RoleResponse eventPayload = RoleResponse.builder()
-                    .urn(roleUrn)
-                    .tenantUrn(user.getAccountUrn())
-                    .build();
-                eventSendingService.sendEvent(user, ROLE_NOT_FOUND, eventPayload);
-            }
+            response.setResult(deleteRoleWorker(roleUrn, user));
         } catch (Exception e) {
-            log.debug(e.getMessage(), e);
+            Throwable rootException = ExceptionUtils.getRootCause(e);
+            String rootCause = "";
+            if (rootException != null) {
+                rootCause = String.format(", rootCause: '%s'", rootException.toString());
+            }
+            String msg = String.format("Exception on delete role. role URN: %s, user: %s, cause: '%s'%s.",
+                                       roleUrn,
+                                       user.getUserUrn(),
+                                       e.toString(),
+                                       rootCause);
+            log.warn(msg);
+            log.debug(msg, e);
             response.setErrorResult(e);
+        }
+    }
+
+    private ResponseEntity<?> deleteRoleWorker(String roleUrn, SmartCosmosUser user) {
+
+        List<RoleResponse> deleteRoleResponse = roleDao.delete(user.getAccountUrn(), roleUrn);
+
+        if (!deleteRoleResponse.isEmpty()) {
+            eventSendingService.sendEvent(user, ROLE_DELETED, deleteRoleResponse.get(0));
+            return ResponseEntity.noContent()
+                .build();
+        } else {
+            RoleResponse eventPayload = RoleResponse.builder()
+                .urn(roleUrn)
+                .tenantUrn(user.getAccountUrn())
+                .build();
+            eventSendingService.sendEvent(user, ROLE_NOT_FOUND, eventPayload);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .build();
         }
     }
 }
