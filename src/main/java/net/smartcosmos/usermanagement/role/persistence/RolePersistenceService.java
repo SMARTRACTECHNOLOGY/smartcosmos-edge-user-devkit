@@ -22,8 +22,6 @@ import net.smartcosmos.usermanagement.role.dto.RoleRequest;
 import net.smartcosmos.usermanagement.role.dto.RoleResponse;
 import net.smartcosmos.usermanagement.role.repository.AuthorityRepository;
 
-import static org.apache.commons.lang.StringUtils.isNotBlank;
-
 /**
  * Initially created by SMART COSMOS Team on June 30, 2016.
  */
@@ -78,16 +76,14 @@ public class RolePersistenceService implements RoleDao {
     public Optional<RoleResponse> updateRole(String tenantUrn, String urn, RoleRequest updateRoleRequest)
         throws ConstraintViolationException, IllegalArgumentException {
 
-        UUID tenantId = UuidUtil.getUuidFromUrn(tenantUrn);
-        UUID id = UuidUtil.getUuidFromUrn(urn);
-
-        if (isNotBlank(updateRoleRequest.getName())) {
-            Optional<RoleResponse> existingRole = findRoleByName(tenantUrn, updateRoleRequest.getName());
-            if (existingRole.isPresent() && !urn.equals(existingRole.get()
-                                                            .getUrn())) {
+        findRoleByName(tenantUrn, updateRoleRequest.getName()).ifPresent(roleResponse -> {
+            if (!urn.equalsIgnoreCase(roleResponse.getUrn())) {
                 throw new IllegalArgumentException(String.format("Can not update role. Name '%s' is already in use.", updateRoleRequest.getName()));
             }
-        }
+        });
+
+        UUID tenantId = UuidUtil.getUuidFromUrn(tenantUrn);
+        UUID id = UuidUtil.getUuidFromUrn(urn);
 
         // Cancel update if role doesn't exist
         if (roleRepository.findByTenantIdAndId(tenantId, id)
