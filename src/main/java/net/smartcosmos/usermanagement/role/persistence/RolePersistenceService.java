@@ -79,7 +79,8 @@ public class RolePersistenceService implements RoleDao {
 
         findRoleByName(tenantUrn, updateRoleRequest.getName()).ifPresent(roleResponse -> {
             if (!urn.equalsIgnoreCase(roleResponse.getUrn())) {
-                throw new RoleAlreadyExistsException(tenantUrn, updateRoleRequest.getName());            }
+                throw new RoleAlreadyExistsException(tenantUrn, updateRoleRequest.getName());
+            }
         });
 
         UUID tenantId = UuidUtil.getUuidFromUrn(tenantUrn);
