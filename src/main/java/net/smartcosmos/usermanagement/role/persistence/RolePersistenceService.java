@@ -18,7 +18,7 @@ import net.smartcosmos.cluster.userdetails.domain.AuthorityEntity;
 import net.smartcosmos.cluster.userdetails.domain.RoleEntity;
 import net.smartcosmos.cluster.userdetails.repository.RoleRepository;
 import net.smartcosmos.cluster.userdetails.util.UuidUtil;
-import net.smartcosmos.usermanagement.role.dto.CreateOrUpdateRoleRequest;
+import net.smartcosmos.usermanagement.role.dto.RoleRequest;
 import net.smartcosmos.usermanagement.role.dto.RoleResponse;
 import net.smartcosmos.usermanagement.role.repository.AuthorityRepository;
 
@@ -45,7 +45,7 @@ public class RolePersistenceService implements RoleDao {
     }
 
     @Override
-    public Optional<RoleResponse> createRole(String tenantUrn, CreateOrUpdateRoleRequest createRoleRequest)
+    public Optional<RoleResponse> createRole(String tenantUrn, RoleRequest createRoleRequest)
         throws ConstraintViolationException {
 
         // This role already exists? we're not creating a new one
@@ -73,7 +73,7 @@ public class RolePersistenceService implements RoleDao {
     }
 
     @Override
-    public Optional<RoleResponse> updateRole(String tenantUrn, String urn, CreateOrUpdateRoleRequest updateRoleRequest)
+    public Optional<RoleResponse> updateRole(String tenantUrn, String urn, RoleRequest updateRoleRequest)
         throws ConstraintViolationException {
 
         UUID tenantId = UuidUtil.getUuidFromUrn(tenantUrn);

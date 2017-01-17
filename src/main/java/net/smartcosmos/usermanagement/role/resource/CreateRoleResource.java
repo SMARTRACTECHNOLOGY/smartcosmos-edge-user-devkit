@@ -15,7 +15,7 @@ import org.springframework.web.context.request.async.DeferredResult;
 
 import net.smartcosmos.annotation.SmartCosmosRdao;
 import net.smartcosmos.security.user.SmartCosmosUser;
-import net.smartcosmos.usermanagement.role.dto.RestCreateOrUpdateRoleRequest;
+import net.smartcosmos.usermanagement.role.dto.RoleRequest;
 import net.smartcosmos.usermanagement.role.service.CreateRoleService;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
@@ -44,7 +44,7 @@ public class CreateRoleResource {
                            name = ENDPOINT_ENABLEMENT_PROPERTY_ENABLED,
                            matchIfMissing = true)
     public DeferredResult<ResponseEntity<?>> createRole(
-        @RequestBody @Valid RestCreateOrUpdateRoleRequest requestBody,
+        @RequestBody @Valid RoleRequest requestBody,
         SmartCosmosUser user) {
 
         DeferredResult<ResponseEntity<?>> response = new DeferredResult<>();

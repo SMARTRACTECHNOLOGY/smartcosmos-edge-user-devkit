@@ -4,7 +4,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.context.request.async.DeferredResult;
 
 import net.smartcosmos.security.user.SmartCosmosUser;
-import net.smartcosmos.usermanagement.role.dto.RestCreateOrUpdateRoleRequest;
+import net.smartcosmos.usermanagement.role.dto.RoleRequest;
 
 /**
  * Methods for creating Roles.
@@ -18,5 +18,5 @@ public interface CreateRoleService {
      * @param createRoleRequest the Role to create
      * @param user the current logged in user
      */
-    void create(DeferredResult<ResponseEntity<?>> response, RestCreateOrUpdateRoleRequest createRoleRequest, SmartCosmosUser user);
+    void create(DeferredResult<ResponseEntity<?>> response, RoleRequest createRoleRequest, SmartCosmosUser user);
 }

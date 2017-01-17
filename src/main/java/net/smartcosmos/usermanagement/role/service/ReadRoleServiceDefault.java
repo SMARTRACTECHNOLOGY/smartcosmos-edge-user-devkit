@@ -8,13 +8,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
-import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import net.smartcosmos.security.user.SmartCosmosUser;
 import net.smartcosmos.usermanagement.event.EventSendingService;
-import net.smartcosmos.usermanagement.role.dto.RestRoleResponse;
 import net.smartcosmos.usermanagement.role.dto.RoleResponse;
 import net.smartcosmos.usermanagement.role.persistence.RoleDao;
 
@@ -46,7 +44,7 @@ public class ReadRoleServiceDefault implements ReadRoleService {
             eventSendingService.sendEvent(user, ROLE_READ, entity.get());
             return ResponseEntity
                 .ok()
-                .body(conversionService.convert(entity.get(), RestRoleResponse.class));
+                .body(conversionService.convert(entity.get(), RoleResponse.class));
         }
 
         RoleResponse eventPayload = RoleResponse.builder()
@@ -78,7 +76,7 @@ public class ReadRoleServiceDefault implements ReadRoleService {
 
         return ResponseEntity
             .ok()
-            .body(convertList(roleList, RoleResponse.class, RestRoleResponse.class));
+            .body(roleList);
     }
 
     @Override
@@ -90,7 +88,7 @@ public class ReadRoleServiceDefault implements ReadRoleService {
             eventSendingService.sendEvent(user, ROLE_READ, entity.get());
             return ResponseEntity
                 .ok()
-                .body(conversionService.convert(entity.get(), RestRoleResponse.class));
+                .body(conversionService.convert(entity.get(), RoleResponse.class));
         }
 
         RoleResponse eventPayload = RoleResponse.builder()
@@ -101,12 +99,5 @@ public class ReadRoleServiceDefault implements ReadRoleService {
         return ResponseEntity.notFound()
             .build();
     }
-
-    private <S, T> List<T> convertList(List<S> list, Class sourceClass, Class targetClass) {
-
-        TypeDescriptor sourceDescriptor = TypeDescriptor.collection(List.class, TypeDescriptor.valueOf(sourceClass));
-        TypeDescriptor targetDescriptor = TypeDescriptor.collection(List.class, TypeDescriptor.valueOf(targetClass));
-
-        return (List<T>) conversionService.convert(list, sourceDescriptor, targetDescriptor);
-    }
 }
+
