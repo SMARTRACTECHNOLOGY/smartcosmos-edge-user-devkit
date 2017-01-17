@@ -22,7 +22,7 @@ import static net.smartcosmos.usermanagement.event.UserEventType.USER_CREATED;
 import static net.smartcosmos.usermanagement.event.UserEventType.USER_CREATE_FAILED_ALREADY_EXISTS;
 
 /**
- * Initially created by SMART COSMOS Team on July 01, 2016.
+ * The default implementation of of the {@link CreateUserService}.
  */
 @Slf4j
 @Service

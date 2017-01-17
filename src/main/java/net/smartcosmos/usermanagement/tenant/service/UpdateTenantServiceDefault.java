@@ -20,7 +20,7 @@ import static net.smartcosmos.usermanagement.event.TenantEventType.TENANT_NOT_FO
 import static net.smartcosmos.usermanagement.event.TenantEventType.TENANT_UPDATED;
 
 /**
- * Initially created by SMART COSMOS Team on July 01, 2016.
+ * The default implementation of of the {@link UpdateTenantService}.
  */
 @Slf4j
 @Service

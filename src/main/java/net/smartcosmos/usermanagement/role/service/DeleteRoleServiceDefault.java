@@ -20,7 +20,7 @@ import static net.smartcosmos.usermanagement.event.RoleEventType.ROLE_DELETED;
 import static net.smartcosmos.usermanagement.event.RoleEventType.ROLE_NOT_FOUND;
 
 /**
- * Initially created by SMART COSMOS Team on July 01, 2016.
+ * The default implementation of of the {@link DeleteRoleService}.
  */
 @Slf4j
 @Service

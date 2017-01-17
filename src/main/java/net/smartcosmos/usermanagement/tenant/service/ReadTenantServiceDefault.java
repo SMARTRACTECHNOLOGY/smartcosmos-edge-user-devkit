@@ -18,6 +18,9 @@ import net.smartcosmos.usermanagement.tenant.persistence.TenantDao;
 import static net.smartcosmos.usermanagement.event.TenantEventType.TENANT_NOT_FOUND;
 import static net.smartcosmos.usermanagement.event.TenantEventType.TENANT_READ;
 
+/**
+ * The default implementation of of the {@link ReadTenantService}.
+ */
 @Slf4j
 @Service
 public class ReadTenantServiceDefault implements ReadTenantService {

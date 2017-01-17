@@ -20,7 +20,7 @@ import static net.smartcosmos.usermanagement.event.UserEventType.USER_DELETED;
 import static net.smartcosmos.usermanagement.event.UserEventType.USER_NOT_FOUND;
 
 /**
- * Initially created by SMART COSMOS Team on July 01, 2016.
+ * The default implementation of of the {@link DeleteUserService}.
  */
 @Slf4j
 @Service
