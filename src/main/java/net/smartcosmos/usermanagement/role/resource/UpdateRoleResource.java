@@ -17,7 +17,7 @@ import org.springframework.web.context.request.async.DeferredResult;
 import net.smartcosmos.annotation.SmartCosmosRdao;
 import net.smartcosmos.security.user.SmartCosmosUser;
 import net.smartcosmos.usermanagement.role.dto.RoleRequest;
-import net.smartcosmos.usermanagement.role.service.UpdateRoleServiceDefault;
+import net.smartcosmos.usermanagement.role.service.UpdateRoleService;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 
@@ -32,10 +32,10 @@ import static net.smartcosmos.usermanagement.role.resource.RoleEndpointConstants
 @PreAuthorize("hasAuthority('https://authorities.smartcosmos.net/roles/update')")
 public class UpdateRoleResource {
 
-    private UpdateRoleServiceDefault service;
+    private UpdateRoleService service;
 
     @Autowired
-    public UpdateRoleResource(UpdateRoleServiceDefault service) { this.service = service; }
+    public UpdateRoleResource(UpdateRoleService service) { this.service = service; }
 
     @RequestMapping(value = RoleEndpointConstants.ENDPOINT_ROLES_URN,
                     method = RequestMethod.PUT,
