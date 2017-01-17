@@ -12,6 +12,8 @@ import net.smartcosmos.usermanagement.role.dto.RestCreateOrUpdateRoleRequest;
 public interface CreateRoleService {
 
     /**
+     * Creates a Role based on a provided request object.
+     *
      * @param response the DeferredResult containing a response, if there is one
      * @param createRoleRequest the Role to create
      * @param user the current logged in user
