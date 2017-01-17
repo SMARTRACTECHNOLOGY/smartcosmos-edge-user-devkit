@@ -128,7 +128,7 @@ public class RolePersistenceServiceTest {
                          .size());
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void thatUpdateRoleFailsWhenNameAlreadyExistsForDifferentRole() {
 
         final String roleName1 = "updateTestRole1";
@@ -181,10 +181,7 @@ public class RolePersistenceServiceTest {
             .name(roleName2)
             .build();
 
-        Optional<RoleResponse> updateResponse = rolePersistenceService
-            .updateRole(tenantRoleTest, urn, updateRole);
-
-        assertFalse(updateResponse.isPresent());
+        rolePersistenceService.updateRole(tenantRoleTest, urn, updateRole);
     }
 
     @Test
