@@ -871,10 +871,11 @@ public class TenantPersistenceServiceTest {
         UserEntity userEntityAfter =  userRepository.findByUsernameAndTenantId(createRequest.getUsername(), tenantUuid).get();
 
         // same entity
-        assertTrue(userEntityBefore.getId().equals(userEntityAfter.getId()));
-        assertTrue(userEntityBefore.getTenantId().equals(userEntityAfter.getTenantId()));
+        assertEquals(userEntityBefore.getId(), userEntityAfter.getId());
+        assertEquals(userEntityBefore.getTenantId(), userEntityAfter.getTenantId());
         // different passwords
-        assertTrue(!userEntityBefore.getPassword().equals(userEntityAfter.getPassword()));
+        assertFalse(userEntityBefore.getPassword()
+                        .equals(userEntityAfter.getPassword()));
     }
 
     @Test
