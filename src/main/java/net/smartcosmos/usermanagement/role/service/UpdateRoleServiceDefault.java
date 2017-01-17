@@ -25,14 +25,14 @@ import static net.smartcosmos.usermanagement.event.RoleEventType.ROLE_UPDATED;
  */
 @Slf4j
 @Service
-public class UpdateRoleService {
+public class UpdateRoleServiceDefault {
 
     private final RoleDao roleDao;
     private final EventSendingService eventSendingService;
     private final ConversionService conversionService;
 
     @Autowired
-    public UpdateRoleService(RoleDao roleDao, EventSendingService roleEventSendingService, ConversionService conversionService) {
+    public UpdateRoleServiceDefault(RoleDao roleDao, EventSendingService roleEventSendingService, ConversionService conversionService) {
 
         this.roleDao = roleDao;
         this.eventSendingService = roleEventSendingService;

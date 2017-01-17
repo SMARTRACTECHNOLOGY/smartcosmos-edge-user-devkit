@@ -23,13 +23,13 @@ import static net.smartcosmos.usermanagement.event.RoleEventType.ROLE_NOT_FOUND;
  */
 @Slf4j
 @Service
-public class DeleteRoleService {
+public class DeleteRoleServiceDefault {
 
     private final RoleDao roleDao;
     private final EventSendingService eventSendingService;
 
     @Autowired
-    public DeleteRoleService(RoleDao roleDao, EventSendingService roleEventSendingService) {
+    public DeleteRoleServiceDefault(RoleDao roleDao, EventSendingService roleEventSendingService) {
 
         this.roleDao = roleDao;
         this.eventSendingService = roleEventSendingService;

@@ -1,84 +1,20 @@
 package net.smartcosmos.usermanagement.role.service;
 
-import java.net.URI;
-import java.util.Optional;
-
-import lombok.extern.slf4j.Slf4j;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.convert.ConversionService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.async.DeferredResult;
 
 import net.smartcosmos.security.user.SmartCosmosUser;
-import net.smartcosmos.usermanagement.event.EventSendingService;
-import net.smartcosmos.usermanagement.role.dto.CreateOrUpdateRoleRequest;
 import net.smartcosmos.usermanagement.role.dto.RestCreateOrUpdateRoleRequest;
-import net.smartcosmos.usermanagement.role.dto.RoleResponse;
-import net.smartcosmos.usermanagement.role.persistence.RoleDao;
-
-import static net.smartcosmos.usermanagement.event.RoleEventType.ROLE_CREATED;
-import static net.smartcosmos.usermanagement.event.RoleEventType.ROLE_CREATE_FAILED_ALREADY_EXISTS;
 
 /**
- * Initially created by SMART COSMOS Team on July 01, 2016.
+ * Methods for creating roles.
  */
-@Slf4j
-@Service
-public class CreateRoleService {
+public interface CreateRoleService {
 
-    private final RoleDao roleDao;
-    private final EventSendingService eventSendingService;
-    private final ConversionService conversionService;
-
-    @Autowired
-    public CreateRoleService(RoleDao roleDao, EventSendingService roleEventSendingService, ConversionService conversionService) {
-
-        this.roleDao = roleDao;
-        this.eventSendingService = roleEventSendingService;
-        this.conversionService = conversionService;
-    }
-
-    public DeferredResult<ResponseEntity> create(RestCreateOrUpdateRoleRequest restCreateOrUpdateRoleRequest, SmartCosmosUser user) {
-        // Async worker thread reduces timeouts and disconnects for long queries and processing.
-        DeferredResult<ResponseEntity> response = new DeferredResult<>();
-        createRoleWorker(response, user.getAccountUrn(), restCreateOrUpdateRoleRequest, user);
-
-        return response;
-    }
-
-    private void createRoleWorker(
-        DeferredResult<ResponseEntity> response, String tenantUrn, RestCreateOrUpdateRoleRequest
-        roleRequest, SmartCosmosUser user) {
-
-        try {
-            final CreateOrUpdateRoleRequest createRoleRequest = conversionService
-                .convert(roleRequest, CreateOrUpdateRoleRequest.class);
-
-            Optional<RoleResponse> newRole = roleDao.createRole(tenantUrn, createRoleRequest);
-
-            if (newRole.isPresent()) {
-                ResponseEntity responseEntity = buildCreatedResponseEntity(newRole.get());
-                response.setResult(responseEntity);
-                eventSendingService.sendEvent(user, ROLE_CREATED, newRole.get());
-            } else {
-                response.setResult(ResponseEntity.status(HttpStatus.CONFLICT)
-                                       .build());
-                eventSendingService.sendEvent(user, ROLE_CREATE_FAILED_ALREADY_EXISTS, roleRequest);
-            }
-
-        } catch (Exception e) {
-            log.debug(e.getMessage(), e);
-            response.setErrorResult(e);
-        }
-    }
-
-    private ResponseEntity buildCreatedResponseEntity(RoleResponse response) {
-
-        return ResponseEntity
-            .created(URI.create(response.getUrn()))
-            .body(response);
-    }
+    /**
+     * @param response the DeferredResult containing a response, if there is one
+     * @param createRoleRequest the Role to create
+     * @param user the current logged in user
+     */
+    void create(DeferredResult<ResponseEntity<?>> response, RestCreateOrUpdateRoleRequest createRoleRequest, SmartCosmosUser user);
 }

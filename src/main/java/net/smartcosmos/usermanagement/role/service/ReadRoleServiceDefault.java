@@ -23,14 +23,14 @@ import static net.smartcosmos.usermanagement.event.RoleEventType.ROLE_READ;
 
 @Slf4j
 @Service
-public class ReadRoleService {
+public class ReadRoleServiceDefault {
 
     private final RoleDao roleDao;
     private final EventSendingService eventSendingService;
     private final ConversionService conversionService;
 
     @Autowired
-    public ReadRoleService(RoleDao roleDao, EventSendingService roleEventSendingService, ConversionService conversionService) {
+    public ReadRoleServiceDefault(RoleDao roleDao, EventSendingService roleEventSendingService, ConversionService conversionService) {
 
         this.roleDao = roleDao;
         this.eventSendingService = roleEventSendingService;

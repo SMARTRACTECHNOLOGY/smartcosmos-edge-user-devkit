@@ -16,7 +16,7 @@ import org.springframework.web.context.request.async.DeferredResult;
 import net.smartcosmos.annotation.SmartCosmosRdao;
 import net.smartcosmos.security.user.SmartCosmosUser;
 import net.smartcosmos.usermanagement.role.dto.RestCreateOrUpdateRoleRequest;
-import net.smartcosmos.usermanagement.role.service.CreateRoleService;
+import net.smartcosmos.usermanagement.role.service.CreateRoleServiceDefault;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 
@@ -31,10 +31,10 @@ import static net.smartcosmos.usermanagement.role.resource.RoleEndpointConstants
 @PreAuthorize("hasAuthority('https://authorities.smartcosmos.net/roles/create')")
 public class CreateRoleResource {
 
-    private CreateRoleService service;
+    private CreateRoleServiceDefault service;
 
     @Autowired
-    public CreateRoleResource(CreateRoleService service) { this.service = service; }
+    public CreateRoleResource(CreateRoleServiceDefault service) { this.service = service; }
 
     @RequestMapping(value = RoleEndpointConstants.ENDPOINT_ROLES,
                     method = RequestMethod.POST,
@@ -43,11 +43,13 @@ public class CreateRoleResource {
     @ConditionalOnProperty(prefix = RoleEndpointConstants.ENDPOINT_ENABLEMENT_ROLES_CREATE,
                            name = ENDPOINT_ENABLEMENT_PROPERTY_ENABLED,
                            matchIfMissing = true)
-    public DeferredResult<ResponseEntity> createRole(
+    public DeferredResult<ResponseEntity<?>> createRole(
         @RequestBody @Valid RestCreateOrUpdateRoleRequest requestBody,
         SmartCosmosUser user) {
 
-        return service.create(requestBody, user);
+        DeferredResult<ResponseEntity<?>> response = new DeferredResult<>();
+        service.create(response, requestBody, user);
+        return response;
     }
 }
 
