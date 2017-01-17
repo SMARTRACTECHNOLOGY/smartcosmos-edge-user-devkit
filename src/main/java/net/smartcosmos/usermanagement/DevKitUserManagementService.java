@@ -12,7 +12,7 @@ import net.smartcosmos.annotation.EnableSmartCosmosMonitoring;
 @EnableSmartCosmosExtension
 @EnableSmartCosmosEvents
 @EnableSmartCosmosMonitoring
-//@EnableSmartCosmosSecurity
+@EnableSmartCosmosSecurity
 public class DevKitUserManagementService {
 
     public static void main(String[] args) {
