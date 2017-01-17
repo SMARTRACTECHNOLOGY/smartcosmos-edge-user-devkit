@@ -9,7 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * Details for teh request to create a Tenant.
+ * Details for the request to create a Tenant.
  */
 @Data
 @NoArgsConstructor
