@@ -14,7 +14,7 @@ public interface ReadUserService {
      *
      * @param urn the URN of the User to return
      * @param user the current logged in user
-     * @return the response containing the requested User it it exists, otherwise an appropriate error response is returned.
+     * @return the response containing the requested User if it exists, otherwise an appropriate error response is returned.
      */
     ResponseEntity<?> findByUrn(String urn, SmartCosmosUser user);
 
@@ -23,7 +23,7 @@ public interface ReadUserService {
      *
      * @param name the name of the User to return
      * @param user the current logged in user
-     * @return the response containing the requested User it it exists, otherwise an appropriate error response is returned.
+     * @return the response containing the requested User if it exists, otherwise an appropriate error response is returned.
      */
     ResponseEntity<?> findByName(String name, SmartCosmosUser user);
 

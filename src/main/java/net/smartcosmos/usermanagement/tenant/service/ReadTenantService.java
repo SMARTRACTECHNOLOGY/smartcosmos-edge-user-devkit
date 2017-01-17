@@ -14,7 +14,7 @@ public interface ReadTenantService {
      *
      * @param urn the URN of the Tenant to return
      * @param user the current logged in user
-     * @return the response containing the requested Role it it exists, otherwise an appropriate error response is returned.
+     * @return the response containing the requested Role if it exists, otherwise an appropriate error response is returned.
      */
     ResponseEntity<?> findByUrn(String urn, SmartCosmosUser user);
 
@@ -23,7 +23,7 @@ public interface ReadTenantService {
      *
      * @param name the name of the Tenant to return
      * @param user the current logged in user
-     * @return the response containing the requested Tenant it it exists, otherwise an appropriate error response is returned.
+     * @return the response containing the requested Tenant if it exists, otherwise an appropriate error response is returned.
      */
     ResponseEntity<?> findByName(String name, SmartCosmosUser user);
 
