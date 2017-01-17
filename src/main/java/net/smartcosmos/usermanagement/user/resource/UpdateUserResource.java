@@ -46,12 +46,12 @@ public class UpdateUserResource {
     @PreAuthorize(
         "hasAuthority('https://authorities.smartcosmos.net/users/update') "
         + "or (#userUrn.equals(#user.getUserUrn()) and (#requestBody.roles == null or #requestBody.roles.size() == 0))")
-    public DeferredResult<ResponseEntity> updateUser(
+    public DeferredResult<ResponseEntity<?>> updateUser(
         @PathVariable(UserEndpointConstants.USER_URN) String userUrn,
         @RequestBody @Valid UpdateUserRequest requestBody,
         SmartCosmosUser user) {
 
-        DeferredResult<ResponseEntity> response = new DeferredResult<>();
+        DeferredResult<ResponseEntity<?>> response = new DeferredResult<>();
         service.update(response, userUrn, requestBody, user);
         return response;
     }

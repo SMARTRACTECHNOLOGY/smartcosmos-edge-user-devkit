@@ -35,10 +35,12 @@ public class DeleteUserResource {
     @ConditionalOnProperty(prefix = UserEndpointConstants.ENDPOINT_ENABLEMENT_USERS_DELETE,
                            name = ENDPOINT_ENABLEMENT_PROPERTY_ENABLED,
                            matchIfMissing = true)
-    public DeferredResult<ResponseEntity> deleteUser(
+    public DeferredResult<ResponseEntity<?>> deleteUser(
         @PathVariable(UserEndpointConstants.USER_URN) String userUrn,
         SmartCosmosUser user) {
 
-        return service.delete(userUrn, user);
+        DeferredResult<ResponseEntity<?>> response = new DeferredResult<>();
+        service.delete(response, userUrn, user);
+        return response;
     }
 }
