@@ -35,10 +35,12 @@ public class DeleteRoleResource {
     @ConditionalOnProperty(prefix = RoleEndpointConstants.ENDPOINT_ENABLEMENT_ROLES_DELETE,
                            name = ENDPOINT_ENABLEMENT_PROPERTY_ENABLED,
                            matchIfMissing = true)
-    public DeferredResult<ResponseEntity> deleteRole(
+    public DeferredResult<ResponseEntity<?>> deleteRole(
         @PathVariable(RoleEndpointConstants.ROLE_URN) String roleUrn,
         SmartCosmosUser user) {
 
-        return service.delete(roleUrn, user);
+        DeferredResult<ResponseEntity<?>> response = new DeferredResult<>();
+        service.delete(response, roleUrn, user);
+        return response;
     }
 }

@@ -43,11 +43,13 @@ public class CreateRoleResource {
     @ConditionalOnProperty(prefix = RoleEndpointConstants.ENDPOINT_ENABLEMENT_ROLES_CREATE,
                            name = ENDPOINT_ENABLEMENT_PROPERTY_ENABLED,
                            matchIfMissing = true)
-    public DeferredResult<ResponseEntity> createRole(
+    public DeferredResult<ResponseEntity<?>> createRole(
         @RequestBody @Valid RestCreateOrUpdateRoleRequest requestBody,
         SmartCosmosUser user) {
 
-        return service.create(requestBody, user);
+        DeferredResult<ResponseEntity<?>> response = new DeferredResult<>();
+        service.create(response, requestBody, user);
+        return response;
     }
 }
 
