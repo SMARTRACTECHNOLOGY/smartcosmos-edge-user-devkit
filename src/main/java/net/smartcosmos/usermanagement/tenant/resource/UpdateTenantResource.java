@@ -46,12 +46,14 @@ public class UpdateTenantResource {
     @ConditionalOnProperty(prefix = TenantEndpointConstants.ENDPOINT_ENABLEMENT_TENANTS_UPDATE,
                            name = ENDPOINT_ENABLEMENT_PROPERTY_ENABLED,
                            matchIfMissing = true)
-    public DeferredResult<ResponseEntity> updateTenant(
+    public DeferredResult<ResponseEntity<?>> updateTenant(
         @PathVariable(TenantEndpointConstants.TENANT_URN) String tenantUrn,
         @RequestBody @Valid RestUpdateTenantRequest restUpdateTenantRequest,
         SmartCosmosUser user) {
 
-        return service.update(tenantUrn, restUpdateTenantRequest, user);
+        DeferredResult<ResponseEntity<?>> response = new DeferredResult<>();
+        service.update(response, tenantUrn, restUpdateTenantRequest, user);
+        return response;
     }
 }
 
