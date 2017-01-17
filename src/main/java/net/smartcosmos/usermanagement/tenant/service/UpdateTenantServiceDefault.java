@@ -6,14 +6,12 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.convert.ConversionService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.async.DeferredResult;
 
 import net.smartcosmos.security.user.SmartCosmosUser;
 import net.smartcosmos.usermanagement.event.EventSendingService;
-import net.smartcosmos.usermanagement.tenant.dto.RestUpdateTenantRequest;
 import net.smartcosmos.usermanagement.tenant.dto.TenantResponse;
 import net.smartcosmos.usermanagement.tenant.dto.UpdateTenantRequest;
 import net.smartcosmos.usermanagement.tenant.persistence.TenantDao;
@@ -30,21 +28,19 @@ public class UpdateTenantServiceDefault implements UpdateTenantService {
 
     private final TenantDao tenantDao;
     private final EventSendingService eventSendingService;
-    private final ConversionService conversionService;
 
     @Autowired
-    public UpdateTenantServiceDefault(TenantDao tenantDao, EventSendingService tenantEventSendingService, ConversionService conversionService) {
+    public UpdateTenantServiceDefault(TenantDao tenantDao, EventSendingService tenantEventSendingService) {
 
         this.tenantDao = tenantDao;
         this.eventSendingService = tenantEventSendingService;
-        this.conversionService = conversionService;
     }
 
     @Override
     public void update(
         DeferredResult<ResponseEntity<?>> response,
         String tenantUrn,
-        RestUpdateTenantRequest updateTenantRequest,
+        UpdateTenantRequest updateTenantRequest,
         SmartCosmosUser user) {
 
         try {
@@ -66,9 +62,8 @@ public class UpdateTenantServiceDefault implements UpdateTenantService {
         }
     }
 
-    private ResponseEntity<?> updateTenantWorker(String tenantUrn, RestUpdateTenantRequest restUpdateTenantRequest, SmartCosmosUser user) {
+    private ResponseEntity<?> updateTenantWorker(String tenantUrn, UpdateTenantRequest updateTenantRequest, SmartCosmosUser user) {
 
-        UpdateTenantRequest updateTenantRequest = conversionService.convert(restUpdateTenantRequest, UpdateTenantRequest.class);
         Optional<TenantResponse> tenantResponseOptional = tenantDao.updateTenant(tenantUrn, updateTenantRequest);
 
         if (tenantResponseOptional.isPresent()) {
@@ -76,7 +71,7 @@ public class UpdateTenantServiceDefault implements UpdateTenantService {
             return ResponseEntity.noContent()
                 .build();
         } else {
-            eventSendingService.sendEvent(user, TENANT_NOT_FOUND, restUpdateTenantRequest);
+            eventSendingService.sendEvent(user, TENANT_NOT_FOUND, updateTenantRequest);
             return ResponseEntity.notFound()
                 .build();
         }

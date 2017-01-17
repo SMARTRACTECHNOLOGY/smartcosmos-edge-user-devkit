@@ -7,14 +7,11 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.convert.ConversionService;
-import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import net.smartcosmos.security.user.SmartCosmosUser;
 import net.smartcosmos.usermanagement.event.EventSendingService;
-import net.smartcosmos.usermanagement.tenant.dto.RestTenantResponse;
 import net.smartcosmos.usermanagement.tenant.dto.TenantResponse;
 import net.smartcosmos.usermanagement.tenant.persistence.TenantDao;
 
@@ -27,14 +24,12 @@ public class ReadTenantServiceDefault implements ReadTenantService {
 
     private final TenantDao tenantDao;
     private final EventSendingService eventSendingService;
-    private final ConversionService conversionService;
 
     @Autowired
-    public ReadTenantServiceDefault(TenantDao tenantDao, EventSendingService tenantEventSendingService, ConversionService conversionService) {
+    public ReadTenantServiceDefault(TenantDao tenantDao, EventSendingService tenantEventSendingService) {
 
         this.tenantDao = tenantDao;
         this.eventSendingService = tenantEventSendingService;
-        this.conversionService = conversionService;
     }
 
     @Override
@@ -46,7 +41,7 @@ public class ReadTenantServiceDefault implements ReadTenantService {
             eventSendingService.sendEvent(user, TENANT_READ, entity.get());
             return ResponseEntity
                 .ok()
-                .body(conversionService.convert(entity.get(), RestTenantResponse.class));
+                .body(entity.get());
         }
 
         eventSendingService.sendEvent(user, TENANT_NOT_FOUND, urn);
@@ -74,7 +69,7 @@ public class ReadTenantServiceDefault implements ReadTenantService {
 
         return ResponseEntity
             .ok()
-            .body(convertList(tenantList, TenantResponse.class, RestTenantResponse.class));
+            .body(tenantList);
     }
 
     @Override
@@ -86,19 +81,11 @@ public class ReadTenantServiceDefault implements ReadTenantService {
             eventSendingService.sendEvent(user, TENANT_READ, entity.get());
             return ResponseEntity
                 .ok()
-                .body(conversionService.convert(entity.get(), RestTenantResponse.class));
+                .body(entity.get());
         }
 
         eventSendingService.sendEvent(user, TENANT_NOT_FOUND, name);
         return ResponseEntity.notFound()
             .build();
-    }
-
-    private <S, T> List<T> convertList(List<S> list, Class sourceClass, Class targetClass) {
-
-        TypeDescriptor sourceDescriptor = TypeDescriptor.collection(List.class, TypeDescriptor.valueOf(sourceClass));
-        TypeDescriptor targetDescriptor = TypeDescriptor.collection(List.class, TypeDescriptor.valueOf(targetClass));
-
-        return (List<T>) conversionService.convert(list, sourceDescriptor, targetDescriptor);
     }
 }

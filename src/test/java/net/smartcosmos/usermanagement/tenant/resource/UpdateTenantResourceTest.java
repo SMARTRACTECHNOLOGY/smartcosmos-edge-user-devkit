@@ -13,8 +13,8 @@ import net.smartcosmos.cluster.userdetails.util.UuidUtil;
 import net.smartcosmos.test.AbstractTestResource;
 import net.smartcosmos.test.security.WithMockSmartCosmosUser;
 import net.smartcosmos.usermanagement.DevKitUserManagementService;
-import net.smartcosmos.usermanagement.tenant.dto.RestUpdateTenantRequest;
 import net.smartcosmos.usermanagement.tenant.dto.TenantResponse;
+import net.smartcosmos.usermanagement.tenant.dto.UpdateTenantRequest;
 import net.smartcosmos.usermanagement.tenant.persistence.TenantDao;
 
 import static org.mockito.Matchers.anyObject;
@@ -65,7 +65,7 @@ public class UpdateTenantResourceTest extends AbstractTestResource {
 
         when(tenantDao.updateTenant(anyString(), anyObject())).thenReturn(Optional.ofNullable(updateTenantResponse));
 
-        RestUpdateTenantRequest request = RestUpdateTenantRequest.builder()
+        UpdateTenantRequest request = UpdateTenantRequest.builder()
             .active(active)
             .name(name)
             .build();
@@ -99,7 +99,7 @@ public class UpdateTenantResourceTest extends AbstractTestResource {
 
         when(tenantDao.updateTenant(anyString(), anyObject())).thenReturn(Optional.empty());
 
-        RestUpdateTenantRequest request = RestUpdateTenantRequest.builder()
+        UpdateTenantRequest request = UpdateTenantRequest.builder()
             .active(active)
             .name(name)
             .build();
@@ -125,7 +125,7 @@ public class UpdateTenantResourceTest extends AbstractTestResource {
         final String expectedTenantUrn = "urn:tenant:uuid:" + UuidUtil.getNewUuid()
             .toString();
 
-        RestUpdateTenantRequest request = RestUpdateTenantRequest.builder()
+        UpdateTenantRequest request = UpdateTenantRequest.builder()
             .active(active)
             .name(name)
             .build();
@@ -152,7 +152,7 @@ public class UpdateTenantResourceTest extends AbstractTestResource {
         final String expectedTenantUrn = "urn:tenant:uuid:" + UuidUtil.getNewUuid()
             .toString();
 
-        RestUpdateTenantRequest request = RestUpdateTenantRequest.builder()
+        UpdateTenantRequest request = UpdateTenantRequest.builder()
             .active(active)
             .name(name)
             .build();

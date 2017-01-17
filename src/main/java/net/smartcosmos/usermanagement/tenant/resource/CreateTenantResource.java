@@ -15,7 +15,7 @@ import org.springframework.web.context.request.async.DeferredResult;
 
 import net.smartcosmos.annotation.SmartCosmosRdao;
 import net.smartcosmos.security.user.SmartCosmosUser;
-import net.smartcosmos.usermanagement.tenant.dto.RestCreateTenantRequest;
+import net.smartcosmos.usermanagement.tenant.dto.CreateTenantRequest;
 import net.smartcosmos.usermanagement.tenant.service.CreateTenantService;
 import net.smartcosmos.usermanagement.tenant.service.CreateTenantServiceDefault;
 
@@ -47,10 +47,10 @@ public class CreateTenantResource {
                            name = ENDPOINT_ENABLEMENT_PROPERTY_ENABLED,
                            matchIfMissing = true)
     public DeferredResult<ResponseEntity<?>> createTenant(
-        @RequestBody @Valid RestCreateTenantRequest restCreateTenantRequest, SmartCosmosUser smartCosmosUser) {
+        @RequestBody @Valid CreateTenantRequest createTenantRequest, SmartCosmosUser smartCosmosUser) {
 
         DeferredResult<ResponseEntity<?>> response = new DeferredResult<>();
-        service.create(response, restCreateTenantRequest, smartCosmosUser);
+        service.create(response, createTenantRequest, smartCosmosUser);
         return response;
     }
 }
