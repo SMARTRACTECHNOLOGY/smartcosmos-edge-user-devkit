@@ -14,6 +14,7 @@
 * OBJECTS-1153 Updates to Roles were not updating Role name.
 * OBJECTS-1197 Edge User DevKit returns Tenant URN with "user" prefix at tenant creation
 * OBJECTS-1198 Change Password in Edge User DevKit doesn't work
+* OBJECTS-1214 Update Role doesn't work
 
 == Release 3.0.0 (August 12, 2016)
 

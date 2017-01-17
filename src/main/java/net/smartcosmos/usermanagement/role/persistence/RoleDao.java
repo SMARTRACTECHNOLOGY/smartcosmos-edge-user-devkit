@@ -32,13 +32,14 @@ public interface RoleDao {
      * @param urn URN of role to be updated
      * @param updateRoleRequest changed properties of role
      * @return the updated role or Optional.empty() in case of failure
-     * @throws ConstraintViolationException
+     * @throws ConstraintViolationException in case data constraints are violated
+     * @throws IllegalArgumentException if the role name shall be changed to a name already taken
      */
     Optional<RoleResponse> updateRole(
         String tenantUrn,
         String urn,
         RoleRequest updateRoleRequest)
-        throws ConstraintViolationException;
+        throws ConstraintViolationException, IllegalArgumentException;
 
     /**
      * Find a role identified by their name in the given tenant.
