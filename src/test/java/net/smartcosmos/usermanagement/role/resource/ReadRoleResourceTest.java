@@ -6,12 +6,22 @@ import java.util.List;
 import java.util.Optional;
 
 import org.junit.*;
+import org.junit.runner.RunWith;
+import org.mockito.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 import net.smartcosmos.cluster.userdetails.util.UuidUtil;
-import net.smartcosmos.test.AbstractTestResource;
+import net.smartcosmos.test.config.ResourceTestConfiguration;
 import net.smartcosmos.test.security.WithMockSmartCosmosUser;
+import net.smartcosmos.usermanagement.DevKitUserManagementService;
 import net.smartcosmos.usermanagement.role.dto.RoleResponse;
 import net.smartcosmos.usermanagement.role.persistence.RoleDao;
 
@@ -21,26 +31,52 @@ import static org.hamcrest.Matchers.is;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.validateMockitoUsage;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@WebAppConfiguration
+@ActiveProfiles("test")
+@RunWith(SpringJUnit4ClassRunner.class)
+@SpringApplicationConfiguration(classes = { DevKitUserManagementService.class, ResourceTestConfiguration.class })
 @WithMockSmartCosmosUser(authorities = { "https://authorities.smartcosmos.net/roles/read" })
-public class ReadRoleResourceTest extends AbstractTestResource {
+public class ReadRoleResourceTest {
 
     @Autowired
     protected RoleDao roleDao;
 
+    @Autowired
+    WebApplicationContext webApplicationContext;
+    MockMvc mockMvc;
+
+    // region Setup
+
+    @Before
+    public void setup() throws Exception {
+
+        MockitoAnnotations.initMocks(this);
+
+        this.mockMvc = MockMvcBuilders
+            .webAppContextSetup(webApplicationContext)
+            .apply(springSecurity())
+            .build();
+    }
+
     @After
     public void tearDown() throws Exception {
 
+        validateMockitoUsage();
         reset(roleDao);
     }
+
+    // endregion
 
     @Test
     public void thatGetByUrnSucceeds() throws Exception {

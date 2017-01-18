@@ -1,17 +1,24 @@
 package net.smartcosmos.usermanagement.user.resource;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
 import org.junit.*;
+import org.junit.runner.RunWith;
+import org.mockito.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 import net.smartcosmos.cluster.userdetails.util.UuidUtil;
-import net.smartcosmos.test.AbstractTestResource;
+import net.smartcosmos.test.config.ResourceTestConfiguration;
 import net.smartcosmos.test.security.WithMockSmartCosmosUser;
 import net.smartcosmos.usermanagement.DevKitUserManagementService;
 import net.smartcosmos.usermanagement.tenant.persistence.TenantDao;
@@ -23,7 +30,9 @@ import static org.hamcrest.Matchers.startsWith;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.validateMockitoUsage;
 import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.asyncDispatch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -31,21 +40,44 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-/**
- * Unit Testing sample for creating Users.
- */
-@org.springframework.boot.test.SpringApplicationConfiguration(classes = { DevKitUserManagementService.class })
+import static net.smartcosmos.test.util.CommonTestConstants.CONTENT_TYPE_JSON;
+import static net.smartcosmos.test.util.TestUtil.json;
+
+@WebAppConfiguration
+@ActiveProfiles("test")
+@RunWith(SpringJUnit4ClassRunner.class)
+@SpringApplicationConfiguration(classes = { DevKitUserManagementService.class, ResourceTestConfiguration.class })
 @WithMockSmartCosmosUser(authorities = { "https://authorities.smartcosmos.net/users/create" })
-public class CreateUserResourceTest extends AbstractTestResource {
+public class CreateUserResourceTest {
 
     @Autowired
     protected TenantDao tenantDao;
 
+    @Autowired
+    WebApplicationContext webApplicationContext;
+    MockMvc mockMvc;
+
+    // region Setup
+
+    @Before
+    public void setup() throws Exception {
+
+        MockitoAnnotations.initMocks(this);
+
+        this.mockMvc = MockMvcBuilders
+            .webAppContextSetup(webApplicationContext)
+            .apply(springSecurity())
+            .build();
+    }
+
     @After
     public void tearDown() throws Exception {
 
+        validateMockitoUsage();
         reset(tenantDao);
     }
+
+    // endregion
 
     /**
      * Test that creating a User is successful.
@@ -84,15 +116,15 @@ public class CreateUserResourceTest extends AbstractTestResource {
 
         org.springframework.test.web.servlet.MvcResult mvcResult = this.mockMvc.perform(
             post("/users")
-                .content(this.json(request))
-                .contentType(contentType))
+                .content(json(request))
+                .contentType(CONTENT_TYPE_JSON))
             .andExpect(status().isOk())
             .andExpect(request().asyncStarted())
             .andReturn();
 
         MvcResult result = this.mockMvc.perform(asyncDispatch(mvcResult))
             .andExpect(status().isCreated())
-            .andExpect(content().contentType(contentType))
+            .andExpect(content().contentType(CONTENT_TYPE_JSON))
             .andExpect(jsonPath("$.urn", startsWith("urn:user:uuid")))
             .andExpect(jsonPath("$.username", is(username)))
             .andExpect(jsonPath("$.emailAddress").doesNotExist())
