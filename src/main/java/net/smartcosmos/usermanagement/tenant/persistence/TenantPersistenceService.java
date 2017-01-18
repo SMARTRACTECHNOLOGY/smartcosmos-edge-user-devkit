@@ -40,7 +40,7 @@ import net.smartcosmos.usermanagement.user.dto.UserResponse;
 import net.smartcosmos.usermanagement.user.util.MergeUtil;
 
 /**
- * The Hibernate JPA persistence implementation for Tenants.
+ * The JPA persistence implementation for Tenants.
  */
 @Slf4j
 @Service

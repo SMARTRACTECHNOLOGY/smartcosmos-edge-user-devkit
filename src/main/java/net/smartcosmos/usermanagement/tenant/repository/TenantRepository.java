@@ -10,7 +10,7 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import net.smartcosmos.usermanagement.tenant.domain.TenantEntity;
 
 /**
- * The Hibernate JPA persistence definition for the tenant repository.
+ * The Spring Data JPA persistence definition for the tenant repository.
  */
 public interface TenantRepository extends JpaRepository<TenantEntity, UUID>,
                                           PagingAndSortingRepository<TenantEntity, UUID>,

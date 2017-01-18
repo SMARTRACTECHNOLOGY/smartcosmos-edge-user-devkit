@@ -24,7 +24,7 @@ import net.smartcosmos.usermanagement.role.exception.RoleAlreadyExistsException;
 import net.smartcosmos.usermanagement.role.repository.AuthorityRepository;
 
 /**
- * The Hibernate JPA persistence implementation for Roles.
+ * The JPA persistence implementation for Roles.
  */
 @Slf4j
 @Service
