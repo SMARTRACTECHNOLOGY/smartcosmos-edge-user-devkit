@@ -19,6 +19,7 @@ import net.smartcosmos.cluster.userdetails.util.UuidUtil;
 import net.smartcosmos.usermanagement.DevKitUserManagementService;
 import net.smartcosmos.usermanagement.role.dto.RoleRequest;
 import net.smartcosmos.usermanagement.role.dto.RoleResponse;
+import net.smartcosmos.usermanagement.role.exception.RoleAlreadyExistsException;
 
 import static org.junit.Assert.*;
 
@@ -180,7 +181,7 @@ public class RolePersistenceServiceTest {
                          .size());
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = RoleAlreadyExistsException.class)
     public void thatUpdateRoleFailsWhenNameAlreadyExistsForDifferentRole() {
 
         final String roleName1 = "updateTestRole1";

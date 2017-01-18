@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,14 +18,16 @@ import org.springframework.web.context.request.async.DeferredResult;
 import net.smartcosmos.annotation.SmartCosmosRdao;
 import net.smartcosmos.security.user.SmartCosmosUser;
 import net.smartcosmos.usermanagement.role.dto.RoleRequest;
+import net.smartcosmos.usermanagement.role.exception.RoleAlreadyExistsException;
 import net.smartcosmos.usermanagement.role.service.UpdateRoleService;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 
 import static net.smartcosmos.usermanagement.role.resource.RoleEndpointConstants.ENDPOINT_ENABLEMENT_PROPERTY_ENABLED;
+import static net.smartcosmos.usermanagement.util.ResponseFactory.conflictResponse;
 
 /**
- * Initially created by SMART COSMOS Team on July 01, 2016.
+ * The endpoints for updating Roles.
  */
 @SmartCosmosRdao
 @Slf4j
@@ -52,6 +55,12 @@ public class UpdateRoleResource {
         DeferredResult<ResponseEntity<?>> response = new DeferredResult<>();
         service.update(response, roleUrn, requestBody, user);
         return response;
+    }
+
+    @ExceptionHandler(RoleAlreadyExistsException.class)
+    public ResponseEntity<?> handleRoleNameConflict(RoleAlreadyExistsException e) {
+
+        return conflictResponse(e.getMessage());
     }
 }
 

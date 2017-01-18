@@ -77,7 +77,7 @@ public class DeleteRoleResourceTest extends AbstractTestResource {
      * @throws Exception
      */
     @Test
-    public void thatDeleteNonexistentRoleFails() throws Exception {
+    public void thatDeleteNonExistentRoleFails() throws Exception {
 
         final String expectedRoleUrn = "urn:role:uuid:" + UuidUtil.getNewUuid()
             .toString();

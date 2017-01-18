@@ -22,7 +22,7 @@ import static net.smartcosmos.usermanagement.event.UserEventType.USER_CREATED;
 import static net.smartcosmos.usermanagement.event.UserEventType.USER_CREATE_FAILED_ALREADY_EXISTS;
 
 /**
- * The default implementation of of the {@link CreateUserService}.
+ * The default implementation of the {@link CreateUserService}.
  */
 @Slf4j
 @Service
@@ -49,7 +49,7 @@ public class CreateUserServiceDefault implements CreateUserService {
             if (rootException != null) {
                 rootCause = String.format(", rootCause: '%s'", rootException.toString());
             }
-            String msg = String.format("Exception on create user. request: %s, user: %s, cause: '%s'%s.",
+            String msg = String.format("Exception on create user. request: %s, user: %s, cause: '%s', rootCause: '%s'.",
                                        createUserRequest,
                                        user,
                                        e.toString(),

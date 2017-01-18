@@ -23,7 +23,7 @@ import static net.smartcosmos.usermanagement.event.RoleEventType.ROLE_CREATED;
 import static net.smartcosmos.usermanagement.event.RoleEventType.ROLE_CREATE_FAILED_ALREADY_EXISTS;
 
 /**
- * The default implementation of of the {@link CreateRoleService}.
+ * The default implementation of the {@link CreateRoleService}.
  */
 @Slf4j
 @Service
@@ -52,7 +52,7 @@ public class CreateRoleServiceDefault implements CreateRoleService {
             if (rootException != null) {
                 rootCause = String.format(", rootCause: '%s'", rootException.toString());
             }
-            String msg = String.format("Exception on create role. request: %s, user: %s, cause: '%s'%s.",
+            String msg = String.format("Exception on create role. request: %s, user: %s, cause: '%s', rootCause: '%s'.",
                                        createRoleRequest,
                                        user.getUserUrn(),
                                        e.toString(),

@@ -19,7 +19,7 @@ import net.smartcosmos.usermanagement.tenant.dto.CreateTenantResponse;
 import net.smartcosmos.usermanagement.tenant.persistence.TenantDao;
 
 /**
- * The default implementation of of the {@link CreateTenantService}.
+ * The default implementation of the {@link CreateTenantService}.
  */
 @Slf4j
 @Service
@@ -46,7 +46,7 @@ public class CreateTenantServiceDefault implements CreateTenantService {
             if (rootException != null) {
                 rootCause = String.format(", rootCause: '%s'", rootException.toString());
             }
-            String msg = String.format("Exception on create tenant. request: %s, user: %s, cause: '%s'%s.",
+            String msg = String.format("Exception on create tenant. request: %s, user: %s, cause: '%s', rootCause: '%s'.",
                                        createTenantRequest,
                                        user,
                                        e.toString(),

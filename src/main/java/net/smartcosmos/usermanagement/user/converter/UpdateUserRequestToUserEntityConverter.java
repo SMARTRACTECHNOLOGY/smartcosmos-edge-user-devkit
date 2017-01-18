@@ -9,7 +9,7 @@ import net.smartcosmos.cluster.userdetails.domain.UserEntity;
 import net.smartcosmos.usermanagement.user.dto.UpdateUserRequest;
 
 /**
- * Initially created by SMART COSMOS Team on January 13, 2017.
+ * Convert a {@link UpdateUserRequest} to a {@link UserEntity}.
  */
 @Component
 public class UpdateUserRequestToUserEntityConverter implements Converter<UpdateUserRequest, UserEntity>, FormatterRegistrar {

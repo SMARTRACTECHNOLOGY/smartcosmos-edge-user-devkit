@@ -14,9 +14,10 @@ import net.smartcosmos.test.security.WithMockSmartCosmosUser;
 import net.smartcosmos.usermanagement.DevKitUserManagementService;
 import net.smartcosmos.usermanagement.role.dto.RoleRequest;
 import net.smartcosmos.usermanagement.role.dto.RoleResponse;
+import net.smartcosmos.usermanagement.role.exception.RoleAlreadyExistsException;
 import net.smartcosmos.usermanagement.role.persistence.RoleDao;
 
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.reset;
@@ -103,7 +104,7 @@ public class UpdateRoleResourceTest extends AbstractTestResource {
      * @throws Exception
      */
     @Test
-    public void thatUpdateNonexistentRoleFails() throws Exception {
+    public void thatUpdateNonExistentRoleFails() throws Exception {
 
         String roleName = "newRoleName";
         Boolean active = false;
@@ -131,15 +132,17 @@ public class UpdateRoleResourceTest extends AbstractTestResource {
     }
 
     @Test
-    public void thatUpdateExistentRoleNameFails() throws Exception {
+    public void thatUpdateExistingRoleNameFails() throws Exception {
 
         String roleName = "newRoleName";
         Boolean active = false;
         final String roleUrn = "urn:role:uuid:" + UuidUtil.getNewUuid()
             .toString();
-        final String expectedMessage = "someErrorMessage";
+        final String message = "someErrorMessage";
+        final String tenantUrn = "someTenantUrn";
+        final String expectedErrorMessage = String.format("Cannot update role in tenant: '%s'. Name '%s' is already in use.", tenantUrn, message);
 
-        when(roleDao.updateRole(anyString(), anyString(), anyObject())).thenThrow(new IllegalArgumentException(expectedMessage));
+        when(roleDao.updateRole(anyString(), anyString(), anyObject())).thenThrow(new RoleAlreadyExistsException(tenantUrn, message));
 
         RoleRequest request = RoleRequest.builder()
             .name(roleName)
@@ -157,7 +160,7 @@ public class UpdateRoleResourceTest extends AbstractTestResource {
         MvcResult result = this.mockMvc.perform(asyncDispatch(mvcResult))
             .andExpect(status().isConflict())
             .andExpect(content().contentType(contentType))
-            .andExpect(jsonPath("$.message", is(expectedMessage)))
+            .andExpect(jsonPath("$.message", is(expectedErrorMessage)))
             .andReturn();
     }
 }

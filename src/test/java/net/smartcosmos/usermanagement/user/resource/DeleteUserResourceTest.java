@@ -85,7 +85,7 @@ public class DeleteUserResourceTest extends AbstractTestResource {
      * @throws Exception
      */
     @Test
-    public void thatDeleteNonexistentUserFails() throws Exception {
+    public void thatDeleteNonExistentUserFails() throws Exception {
 
         final String expectedUserUrn = "urn:user:uuid:" + UuidUtil.getNewUuid()
             .toString();

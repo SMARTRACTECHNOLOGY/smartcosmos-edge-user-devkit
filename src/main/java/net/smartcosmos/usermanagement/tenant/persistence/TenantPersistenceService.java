@@ -40,7 +40,7 @@ import net.smartcosmos.usermanagement.user.dto.UserResponse;
 import net.smartcosmos.usermanagement.user.util.MergeUtil;
 
 /**
- * Initially created by SMART COSMOS Team on June 30, 2016.
+ * The JPA persistence implementation for Tenants.
  */
 @Slf4j
 @Service

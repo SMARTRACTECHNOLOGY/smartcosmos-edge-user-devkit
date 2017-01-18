@@ -19,7 +19,7 @@ import static net.smartcosmos.usermanagement.event.UserEventType.USER_NOT_FOUND;
 import static net.smartcosmos.usermanagement.event.UserEventType.USER_READ;
 
 /**
- * The default implementation of of the {@link ReadUserService}.
+ * The default implementation of the {@link ReadUserService}.
  */
 @Slf4j
 @Service

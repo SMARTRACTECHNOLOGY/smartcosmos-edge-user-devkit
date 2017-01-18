@@ -10,7 +10,7 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import net.smartcosmos.usermanagement.tenant.domain.TenantEntity;
 
 /**
- * Initially created by SMART COSMOS Team on June 30, 2016.
+ * The Spring Data JPA persistence definition for the tenant repository.
  */
 public interface TenantRepository extends JpaRepository<TenantEntity, UUID>,
                                           PagingAndSortingRepository<TenantEntity, UUID>,

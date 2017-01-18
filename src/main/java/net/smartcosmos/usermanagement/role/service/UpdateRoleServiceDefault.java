@@ -19,12 +19,11 @@ import net.smartcosmos.usermanagement.role.persistence.RoleDao;
 
 import static net.smartcosmos.usermanagement.event.RoleEventType.ROLE_NOT_FOUND;
 import static net.smartcosmos.usermanagement.event.RoleEventType.ROLE_UPDATED;
-import static net.smartcosmos.usermanagement.util.ResponseFactory.conflictResponse;
 import static net.smartcosmos.usermanagement.util.ResponseFactory.noContentResponse;
 import static net.smartcosmos.usermanagement.util.ResponseFactory.notFoundResponse;
 
 /**
- * The default implementation of of the {@link UpdateRoleService}.
+ * The default implementation of the {@link UpdateRoleService}.
  */
 @Slf4j
 @Service
@@ -57,7 +56,7 @@ public class UpdateRoleServiceDefault implements UpdateRoleService {
             if (rootException != null) {
                 rootCause = String.format(", rootCause: '%s'", rootException.toString());
             }
-            String msg = String.format("Exception on update role. role URN: %s,  request: %s, user: %s, cause: '%s'%s.",
+            String msg = String.format("Exception on update role. role URN: %s,  request: %s, user: %s, cause: '%s', rootCause: '%s'.",
                                        roleUrn,
                                        updateRoleRequest,
                                        user.getUserUrn(),
@@ -71,12 +70,7 @@ public class UpdateRoleServiceDefault implements UpdateRoleService {
 
     private ResponseEntity<?> updateRoleWorker(String roleUrn, RoleRequest updateRoleRequest, SmartCosmosUser user) {
 
-        Optional<RoleResponse> updateRoleResponse;
-        try {
-            updateRoleResponse = roleDao.updateRole(user.getAccountUrn(), roleUrn, updateRoleRequest);
-        } catch (IllegalArgumentException e) {
-            return conflictResponse(e.getMessage());
-        }
+        Optional<RoleResponse> updateRoleResponse = roleDao.updateRole(user.getAccountUrn(), roleUrn, updateRoleRequest);
 
         if (updateRoleResponse.isPresent()) {
             eventSendingService.sendEvent(user, ROLE_UPDATED, updateRoleResponse.get());

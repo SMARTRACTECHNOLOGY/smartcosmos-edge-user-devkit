@@ -9,7 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * Initially created by SMART COSMOS Team on June 30, 2016.
+ * Details for the request to create a Tenant.
  */
 @Data
 @NoArgsConstructor

@@ -12,7 +12,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * Initially created by SMART COSMOS Team on June 30, 2016.
+ * The request information for a Role.
  */
 @Data
 @NoArgsConstructor

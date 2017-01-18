@@ -14,7 +14,7 @@ import net.smartcosmos.usermanagement.user.dto.UpdateUserRequest;
 import net.smartcosmos.usermanagement.user.dto.UserResponse;
 
 /**
- * Initially created by SMART COSMOS Team on June 30, 2016.
+ * Interface defining methods used when dealing with Tenant datastore information.
  */
 public interface TenantDao {
 

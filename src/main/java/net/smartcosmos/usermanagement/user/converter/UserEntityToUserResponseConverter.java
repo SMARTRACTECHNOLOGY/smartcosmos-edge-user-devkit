@@ -18,7 +18,7 @@ import net.smartcosmos.cluster.userdetails.util.UuidUtil;
 import net.smartcosmos.usermanagement.user.dto.UserResponse;
 
 /**
- * Initially created by SMART COSMOS Team on June 30, 2016.
+ * Convert a {@link UserEntity} to a {@link UserResponse}.
  */
 @Component
 public class UserEntityToUserResponseConverter implements Converter<UserEntity, UserResponse>, FormatterRegistrar {

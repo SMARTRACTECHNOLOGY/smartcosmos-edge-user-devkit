@@ -192,7 +192,7 @@ public class UpdateUserResourceTest extends AbstractTestResource {
      * @throws Exception
      */
     @Test
-    public void thatUpdateNonexistentUserFails() throws Exception {
+    public void thatUpdateNonExistentUserFails() throws Exception {
 
         String username = "newUser";
         String emailAddress = "newUser@example.com";

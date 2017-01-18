@@ -20,7 +20,7 @@ import static net.smartcosmos.usermanagement.event.RoleEventType.ROLE_DELETED;
 import static net.smartcosmos.usermanagement.event.RoleEventType.ROLE_NOT_FOUND;
 
 /**
- * The default implementation of of the {@link DeleteRoleService}.
+ * The default implementation of the {@link DeleteRoleService}.
  */
 @Slf4j
 @Service
@@ -47,7 +47,7 @@ public class DeleteRoleServiceDefault implements DeleteRoleService {
             if (rootException != null) {
                 rootCause = String.format(", rootCause: '%s'", rootException.toString());
             }
-            String msg = String.format("Exception on delete role. role URN: %s, user: %s, cause: '%s'%s.",
+            String msg = String.format("Exception on delete role. role URN: %s, user: %s, cause: '%s', rootCause: '%s'.",
                                        roleUrn,
                                        user.getUserUrn(),
                                        e.toString(),

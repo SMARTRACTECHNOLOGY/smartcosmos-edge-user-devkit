@@ -18,7 +18,7 @@ import net.smartcosmos.usermanagement.user.service.DeleteUserService;
 import static net.smartcosmos.usermanagement.user.resource.UserEndpointConstants.ENDPOINT_ENABLEMENT_PROPERTY_ENABLED;
 
 /**
- * Initially created by SMART COSMOS Team on July 01, 2016.
+ * The endpoints for deleting users.
  */
 @SmartCosmosRdao
 @Slf4j

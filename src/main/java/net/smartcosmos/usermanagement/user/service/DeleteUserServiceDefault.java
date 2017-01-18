@@ -20,7 +20,7 @@ import static net.smartcosmos.usermanagement.event.UserEventType.USER_DELETED;
 import static net.smartcosmos.usermanagement.event.UserEventType.USER_NOT_FOUND;
 
 /**
- * The default implementation of of the {@link DeleteUserService}.
+ * The default implementation of the {@link DeleteUserService}.
  */
 @Slf4j
 @Service
@@ -47,7 +47,7 @@ public class DeleteUserServiceDefault implements DeleteUserService {
             if (rootException != null) {
                 rootCause = String.format(", rootCause: '%s'", rootException.toString());
             }
-            String msg = String.format("Exception on delete user. user URN: %s, user: %s, cause: '%s'%s.",
+            String msg = String.format("Exception on delete user. user URN: %s, user: %s, cause: '%s', rootCause: '%s'.",
                                        userUrn,
                                        user.getUserUrn(),
                                        e.toString(),

@@ -14,7 +14,7 @@ import net.smartcosmos.cluster.userdetails.util.UuidUtil;
 import net.smartcosmos.usermanagement.role.dto.RoleResponse;
 
 /**
- * Initially created by SMART COSMOS Team on June 30, 2016.
+ * Convert a {@link RoleEntity} to a {@link RoleResponse}.
  */
 @Component
 public class RoleEntityToRoleResponseConverter

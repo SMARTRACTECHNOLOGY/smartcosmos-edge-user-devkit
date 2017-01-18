@@ -20,7 +20,7 @@ import static net.smartcosmos.usermanagement.event.TenantEventType.TENANT_NOT_FO
 import static net.smartcosmos.usermanagement.event.TenantEventType.TENANT_UPDATED;
 
 /**
- * The default implementation of of the {@link UpdateTenantService}.
+ * The default implementation of the {@link UpdateTenantService}.
  */
 @Slf4j
 @Service
@@ -51,7 +51,7 @@ public class UpdateTenantServiceDefault implements UpdateTenantService {
             if (rootException != null) {
                 rootCause = String.format(", rootCause: '%s'", rootException.toString());
             }
-            String msg = String.format("Exception on update tenant. request: %s, user: %s, cause: '%s'%s.",
+            String msg = String.format("Exception on update tenant. request: %s, user: %s, cause: '%s', rootCause: '%s'.",
                                        updateTenantRequest,
                                        user.getAccountUrn(),
                                        e.toString(),

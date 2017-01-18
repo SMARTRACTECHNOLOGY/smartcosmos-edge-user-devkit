@@ -89,7 +89,7 @@ public class UpdateTenantResourceTest extends AbstractTestResource {
      */
     @Test
     @WithMockSmartCosmosUser(authorities = { "https://authorities.smartcosmos.net/tenants/update" })
-    public void thatUpdateNonexistentTenantFails() throws Exception {
+    public void thatUpdateNonExistentTenantFails() throws Exception {
 
         final String name = "example.com";
         final Boolean active = false;
@@ -144,7 +144,7 @@ public class UpdateTenantResourceTest extends AbstractTestResource {
      * @throws Exception
      */
     @Test
-    public void thatUpdateNonexistentTenantAnonymousFails() throws Exception {
+    public void thatUpdateNonExistentTenantAnonymousFails() throws Exception {
 
         final String name = "example.com";
         final Boolean active = false;
