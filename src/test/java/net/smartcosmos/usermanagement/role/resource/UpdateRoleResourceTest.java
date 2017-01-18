@@ -5,11 +5,20 @@ import java.util.List;
 import java.util.Optional;
 
 import org.junit.*;
+import org.junit.runner.RunWith;
+import org.mockito.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 import net.smartcosmos.cluster.userdetails.util.UuidUtil;
-import net.smartcosmos.test.AbstractTestResource;
+import net.smartcosmos.test.config.ResourceTestConfiguration;
 import net.smartcosmos.test.security.WithMockSmartCosmosUser;
 import net.smartcosmos.usermanagement.DevKitUserManagementService;
 import net.smartcosmos.usermanagement.role.dto.RoleRequest;
@@ -21,7 +30,9 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.validateMockitoUsage;
 import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.asyncDispatch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -29,27 +40,44 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-/**
- * Unit Testing sample for updating Roles.
- */
-@org.springframework.boot.test.SpringApplicationConfiguration(classes = { DevKitUserManagementService.class })
+import static net.smartcosmos.test.util.CommonTestConstants.CONTENT_TYPE_JSON;
+import static net.smartcosmos.test.util.TestUtil.json;
+
+@WebAppConfiguration
+@ActiveProfiles("test")
+@RunWith(SpringJUnit4ClassRunner.class)
+@SpringApplicationConfiguration(classes = { DevKitUserManagementService.class, ResourceTestConfiguration.class })
 @WithMockSmartCosmosUser(authorities = { "https://authorities.smartcosmos.net/roles/update" })
-public class UpdateRoleResourceTest extends AbstractTestResource {
+public class UpdateRoleResourceTest {
 
     @Autowired
     protected RoleDao roleDao;
 
-    private String tenantUrn;
+    @Autowired
+    WebApplicationContext webApplicationContext;
+    MockMvc mockMvc;
 
-    private List<String> adminRoleOnly = new ArrayList<>();
-    private List<String> userRoleOnly = new ArrayList<>();
-    private List<String> adminAndUserRoles = new ArrayList<>();
+    // region Setup
+
+    @Before
+    public void setup() throws Exception {
+
+        MockitoAnnotations.initMocks(this);
+
+        this.mockMvc = MockMvcBuilders
+            .webAppContextSetup(webApplicationContext)
+            .apply(springSecurity())
+            .build();
+    }
 
     @After
     public void tearDown() throws Exception {
 
+        validateMockitoUsage();
         reset(roleDao);
     }
+
+    // endregion
 
     /**
      * Test that updating a Role is successful.
@@ -87,8 +115,8 @@ public class UpdateRoleResourceTest extends AbstractTestResource {
 
         MvcResult mvcResult = this.mockMvc.perform(
             put("/roles/{urn}", expectedRoleUrn)
-                .content(this.json(request))
-                .contentType(contentType))
+                .content(json(request))
+                .contentType(CONTENT_TYPE_JSON))
             .andExpect(status().isOk())
             .andExpect(request().asyncStarted())
             .andReturn();
@@ -120,8 +148,8 @@ public class UpdateRoleResourceTest extends AbstractTestResource {
 
         MvcResult mvcResult = this.mockMvc.perform(
             put("/roles/{urn}", expectedRoleUrn)
-                .content(this.json(request))
-                .contentType(contentType))
+                .content(json(request))
+                .contentType(CONTENT_TYPE_JSON))
             .andExpect(status().isOk())
             .andExpect(request().asyncStarted())
             .andReturn();
@@ -151,15 +179,15 @@ public class UpdateRoleResourceTest extends AbstractTestResource {
 
         MvcResult mvcResult = this.mockMvc.perform(
             put("/roles/{urn}", roleUrn)
-                .content(this.json(request))
-                .contentType(contentType))
+                .content(json(request))
+                .contentType(CONTENT_TYPE_JSON))
             .andExpect(status().isOk())
             .andExpect(request().asyncStarted())
             .andReturn();
 
         MvcResult result = this.mockMvc.perform(asyncDispatch(mvcResult))
             .andExpect(status().isConflict())
-            .andExpect(content().contentType(contentType))
+            .andExpect(content().contentType(CONTENT_TYPE_JSON))
             .andExpect(jsonPath("$.message", is(expectedErrorMessage)))
             .andReturn();
     }
