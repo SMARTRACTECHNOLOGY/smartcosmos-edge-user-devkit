@@ -29,10 +29,7 @@ or more Authorities, and these are the Authorities referred to below.
 
 The SMART COSMOS DevKit creates two Roles by default: Admin and User. Both Roles
 contain all of the authorities listed below; the difference between the two Roles
-is that a User with the Admin Role can create and edit Users. More information on
-these elements can be found here:
-
-* https://api.smartcosmos.net/microservices/smartcosmos-edge-user-devkit/index.html[User Management]
+is that a User with the Admin Role can create and edit Users.
 
 The developer can customize Roles and Authorities as needed, but the Authorities
 listed in the API documentation are absolutely required by any User to execute the

@@ -85,7 +85,7 @@
 [width="100%",options="header",cols="1,^1,2,^1,5"]
 |====================
 | Field | Format | Default | Required | Description
-| `urn` | String representation of a user identifier in a common scheme, e.g. `urn:role:uuid:<UUID>` | generated, value and format depend on the persistence layer implementation | | will be generated
+| `urn` | String representation of a Role identifier in a common scheme, e.g. `urn:role:uuid:<UUID>` | generated, value and format depend on the persistence layer implementation | | will be generated
 | `name` | String | | yes | Unique name of the role, e.g. `Admin`
 | `authorities` | Array of String |  | yes | e.g. `https://authorities.smartcosmos.net/things/read` or `https://authorities.smartcosmos.net/things/create`
 | `tenantUrn` | String representation of the tenant identifier in a common scheme, e.g. `urn:tenant:uuid:<UUID>` |  | yes |
@@ -98,7 +98,7 @@ Note that the illustrated scheme for URNs is only for documentation purposes. Th
 [width="100%",options="header",cols="1,^1,2,^1,5"]
 |====================
 | Parameter | Parameter Type |Format | Default | Description
-| `urn` | url | String | no default | the URN of the Thing
+| `urn` | url | String | no default | the URN of the Tenant, User, or Role
 | `name` | query | String | optional | Optional search parameter to filter the search result by `name`
 |====================
 
@@ -551,9 +551,6 @@ Below is a typical `smartcosmos-edge-user-devkit.yml` file, which provides confi
 for the service.  Individual endpoints can be turned off by setting their respective
 `enabled` flags to false. The default behavior (i.e., in the absence of an `enabled`
   flag for the endpoint) is enabled.
-
-If `thread-pool.queue-capacity` is set to `-1`, the queue will have maximum capacity
-(`Integer.MAX_VALUE`).
 
 For a docker-compose deployment of
 https://github.com/SMARTRACTECHNOLOGY/smartcosmos-devkit[SMART COSMOS DevKit],
