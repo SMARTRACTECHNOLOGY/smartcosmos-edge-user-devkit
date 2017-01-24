@@ -56,60 +56,74 @@
 |====================
 
 === JSON Fields for Tenants
-[width="100%",options="header",cols="1,^1,2,^1,5"]
+[width="100%",options="header",cols="1,^2,2,^1,4"]
 |====================
 | Field | Format | Default | Required | Description
-| `urn` | String representation of a tenant identifier in a common scheme, e.g. `urn:tenant:uuid:<UUID>` | generated, value and format depend on the persistence layer implementation | | will be generated
-| `name` | String | | yes | Name of the tenant organization (e.g. `Example Company`)
-| `active` | boolean |  true | no |
-| `username` | String | | yes (for create) | Initial admin account
+| `urn` | String | generated | no | representation of a User identifier in a common scheme, e.g. `urn:user:uuid:<UUID>`, will be generated if not provided
+| `name` | String | no default | yes | Name of the tenant organization (e.g. `Example Company`)
+| `active` | boolean |  true | no|
+| `username` | String | no default | yes (for create) | Initial admin account
 |====================
 
 === JSON Fields for Users
 [width="100%",options="header",cols="1,^1,2,^1,5"]
 |====================
 | Field | Format | Default | Required | Description
-| `urn` | String representation of a user identifier in a common scheme, e.g. `urn:user:uuid:<UUID>` | generated, value and format depend on the persistence layer implementation | | will be generated
-| `username` | String | | yes | login name, e.g. `bob@example.com`
-| `emailAddress` | String | | no | e.g. `bob@example.com`
-| `active` | boolean |  true | no |
-| `givenName` | String |  | no |
-| `surname` | String |  | no |
-| `password` | String |  | no |
-| `roles` | Array of String |  | yes | e.g. `Admin` or `User`
-| `authorities` | Array of String |  | yes | e.g. `https://authorities.smartcosmos.net/things/read` or `https://authorities.smartcosmos.net/things/create`
-| `tenantUrn` | String representation of the tenant identifier in a common scheme, e.g. `urn:tenant:uuid:<UUID>` |  | yes |
+| `urn` | String  | generated | no | representation of a User identifier in a common scheme, e.g. `urn:user:uuid:<UUID>`, will be generated if not provided
+| `username` | String | no default | yes | login name, e.g. `bob@example.com`
+| `emailAddress` | String | no default | no | e.g. `bob@example.com`
+| `active` | boolean | true | no |
+| `givenName` | String | no default | no |
+| `surname` | String | no default | no |
+| `password` | String | no default | no |
+| `roles` | Array of String | no default | yes | e.g. `Admin` or `User`
+| `authorities` | Array of String | no default | yes | e.g. `[https://authorities.smartcosmos.net/things/read, https://authorities.smartcosmos.net/things/create]`
+| `tenantUrn` | String  | no default | yes | representation of the tenant identifier in a common scheme, e.g. `urn:tenant:uuid:<UUID>`, will be generated if not provided
 |====================
 
 === JSON Fields for Roles
 [width="100%",options="header",cols="1,^1,2,^1,5"]
 |====================
 | Field | Format | Default | Required | Description
-| `urn` | String representation of a Role identifier in a common scheme, e.g. `urn:role:uuid:<UUID>` | generated, value and format depend on the persistence layer implementation | | will be generated
-| `name` | String | | yes | Unique name of the role, e.g. `Admin`
-| `authorities` | Array of String |  | yes | e.g. `https://authorities.smartcosmos.net/things/read` or `https://authorities.smartcosmos.net/things/create`
-| `tenantUrn` | String representation of the tenant identifier in a common scheme, e.g. `urn:tenant:uuid:<UUID>` |  | yes |
+| `urn` | String  | generated | no | representation of a Role identifier in a common scheme, e.g. `urn:role:uuid:<UUID>`, will be generated if not provided
+| `name` | String | no default | yes | Unique name of the role, e.g. `Admin`
+| `authorities` | Array of String | no default  | yes | e.g. `[https://authorities.smartcosmos.net/things/read, https://authorities.smartcosmos.net/things/create]`
+| `tenantUrn` | String  | no default | yes | representation of the tenant identifier in a common scheme, e.g. `urn:tenant:uuid:<UUID>`, will be generated if not provided
 |====================
 
 .**URN Scheme**
 Note that the illustrated scheme for URNs is only for documentation purposes. There must not be any assumptions or expectations on the scheme in the REST layer. All URNs or identifiers are just `String` values in the scope of REST modules!
 
 === Request parameters
-[width="100%",options="header",cols="1,^1,2,^1,5"]
+[width="100%",options="header",cols="1,^1,1,5"]
 |====================
-| Parameter | Parameter Type |Format | Default | Description
-| `urn` | url | String | no default | the URN of the Tenant, User, or Role
-| `name` | query | String | optional | Optional search parameter to filter the search result by `name`
+| Parameter | Parameter Type | Format | Description
+| `urn` | url | String | the URN of the Tenant, User, or Role
+| `name` | query | String | Optional search parameter to filter the search result by `name`
 |====================
 
 
 === API Endpoints
+
+:grid: rows
+[frame="topbot", cols="2,4", options="header"]
+|====
+| Response| Description
+| 400 BAD REQUEST | There were constraint violations in the request body.
+| 401 UNAUTHORIZED | The User represented by the authentication header could not be authenticated.
+| 403 FORBIDDEN | The User represented by the authentication header lacks the authority to perform this action.
+| 404 NOT FOUND | The Thing or Metadata was not found.
+| 409 CONFLICT | A Thing with this URN already exists.
+|====
+:grid: all
 
 [[tenants]]
 ==== Tenant Endpoints
 
 [[tenantcreate1]]
 ===== Create - `POST /tenants`
+
+Create a new Tenant, and a default User with the Admin Role.
 
 ----
 POST /tenants
@@ -177,9 +191,12 @@ POST /tenants
 [[tenantupdate1]]
 ===== Update - `PUT /tenants/{urn}`
 
+Update an existing Tenant.
+
 ----
 PUT /tenants/urn:tenant:uuid:346e742e-2f1e-4d91-9ffe-7b38eec6219c
 ----
+
 [source,json]
 ----
 {
@@ -195,9 +212,12 @@ PUT /tenants/urn:tenant:uuid:346e742e-2f1e-4d91-9ffe-7b38eec6219c
 [[tenantread1]]
 ===== Find by URN - `GET /tenants/{urn}`
 
+Get a Tenant by its URN.
+
 ----
 GET /tenants/urn:tenant:uuid:346e742e-2f1e-4d91-9ffe-7b38eec6219c
 ----
+
 .Response
 ----
 200 OK
@@ -214,9 +234,12 @@ GET /tenants/urn:tenant:uuid:346e742e-2f1e-4d91-9ffe-7b38eec6219c
 [[tenantread2]]
 ===== Find by Name - `GET /tenants/?name={name}`
 
+Get a Tenant by its name.
+
 ----
 GET /tenants?name=My%20Example%20Company
 ----
+
 .Response
 ----
 200 OK
@@ -259,6 +282,8 @@ GET /tenants
 
 [[usercreate1]]
 ===== Create - `POST /users`
+
+Create a new User belonging to the Tenant of the authenticated User.
 
 ----
 POST /users
@@ -327,9 +352,12 @@ POST /users
 [[userupdate1]]
 ===== Update - `PUT /users/{urn}`
 
+Update the existing User with the specified URN.
+
 ----
 PUT /users/urn:user:uuid:68a76616-3748-4bc2-93c1-3940b47abb7f
 ----
+
 [source,json]
 ----
 {
@@ -345,9 +373,12 @@ PUT /users/urn:user:uuid:68a76616-3748-4bc2-93c1-3940b47abb7f
 [[userread1]]
 ===== Find by URN - `GET /users/{urn}`
 
+Get the User with the specified URN.
+
 ----
 GET /users/urn:user:uuid:68a76616-3748-4bc2-93c1-3940b47abb7f
 ----
+
 .Response
 ----
 200 OK
@@ -371,9 +402,12 @@ GET /users/urn:user:uuid:68a76616-3748-4bc2-93c1-3940b47abb7f
 [[userread2]]
 ==== Find by Name - `GET /users?name={name}`
 
+Get the User with the specified name.
+
 ----
 GET /users
 ----
+
 .Response
 ----
 200 OK
@@ -411,9 +445,12 @@ GET /users
 [[userdelete1]]
 ===== Delete - `DELETE /users/{urn}`
 
+Delete the User with the specified URN.
+
 ----
 DELETE /users/urn:role:uuid:fcdf5432-49a8-45ef-96a2-94a022022860
 ----
+
 .Response
 ----
 204 NO CONTENT
@@ -425,9 +462,12 @@ DELETE /users/urn:role:uuid:fcdf5432-49a8-45ef-96a2-94a022022860
 [[rolecreate1]]
 ===== Create - `POST /roles/`
 
+Create a Role.
+
 ----
 POST /roles/
 ----
+
 [source,json]
 ----
 {
@@ -458,9 +498,12 @@ POST /roles/
 [[roleupdate1]]
 ===== Update - `PUT /roles/{urn}`
 
+Update an existing Role.
+
 ----
 PUT /roles/urn:role:uuid:fcdf5432-49a8-45ef-96a2-94a022022860
 ----
+
 [source,json]
 ----
 {
@@ -478,9 +521,12 @@ PUT /roles/urn:role:uuid:fcdf5432-49a8-45ef-96a2-94a022022860
 [[roleread1]]
 ===== Find by URN - `GET /roles/{urn}`
 
+Get the Role with the specified URN.
+
 ----
 GET /roles/urn:role:uuid:318a9fae-0218-486c-b9f6-86f76b2ff6af
 ----
+
 .Response
 ----
 200 OK
@@ -502,9 +548,11 @@ GET /roles/urn:role:uuid:318a9fae-0218-486c-b9f6-86f76b2ff6af
 [[roleread2]]
 ===== Find by Name - `GET /roles?name={name}`
 
+Get the Role with the specified name.
 ----
 GET /roles
 ----
+
 .Response
 ----
 200 OK
@@ -537,9 +585,12 @@ GET /roles
 [[roledelete1]]
 ===== Delete - `DELETE /roles/{urn}`
 
+Delete the Role with the specified URN.
+
 ----
 DELETE /roles/urn:role:uuid:fcdf5432-49a8-45ef-96a2-94a022022860
 ----
+
 .Response
 ----
 204 NO CONTENT
