@@ -4,6 +4,7 @@
 
 === New Features
 
+* OBJECTS-1133 Add authority to admin role to create Interactions
 * OBJECTS-980 Add Prometheus-compatible `/metrics` endpoint
 
 === Bugfixes & Improvements

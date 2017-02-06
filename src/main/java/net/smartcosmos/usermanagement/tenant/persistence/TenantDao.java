@@ -30,6 +30,7 @@ public interface TenantDao {
         "https://authorities.smartcosmos.net/relationships/create",
         "https://authorities.smartcosmos.net/relationships/read",
         "https://authorities.smartcosmos.net/relationships/delete",
+        "https://authorities.smartcosmos.net/interactions/create",
         "https://authorities.smartcosmos.net/tenants/read",
         "https://authorities.smartcosmos.net/tenants/update",
         "https://authorities.smartcosmos.net/users/create",
